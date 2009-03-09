@@ -31,7 +31,9 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 		$result = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
 		$info = $this->ConvertXML2Array( $result );
 		if ( 'yes' == $info['appears'] ) {
-			$message = 'Spam IP' . $ip;
+			$message =  'Spam IP	' . $ip.'\n';
+			$message .= 'Last Seen	' . $info['lastseen'].'\n';
+			$message .= 'Frequency	' . $info['frequency'];
 			wp_mail( 'pdoes@avirtualhome.com', sprintf( __( '[%s] Spammer detected' ), get_option( 'blogname' ) ), $message );
 		}
 	}
