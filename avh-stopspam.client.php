@@ -70,6 +70,7 @@ class AVHStopSpamCore {
 		$this->default_general_options = array (
 				'version' => $this->version,
 				'action' => 1,
+				'die' => false,
 			);
 
 		/**
@@ -85,6 +86,7 @@ class AVHStopSpamCore {
 		$this->handleOptions ();
 
 		// Determine installation path & url
+		//$info['home_path'] = get_home_path();
 		$path = str_replace ( '\\', '/', dirname ( __FILE__ ) );
 		$path = substr ( $path, strpos ( $path, 'plugins' ) + 8, strlen ( $path ) );
 
@@ -116,7 +118,9 @@ class AVHStopSpamCore {
 				'install_uri' => $info['install_uri'],
 				'install_dir' => $info['install_dir'],
 				'graphics_url' => $info['install_url'] . '/images',
-				'wordpress_version' => $this->getWordpressVersion () );
+				'home_path' => $info['home_path'],
+				'wordpress_version' => $this->getWordpressVersion ()
+		);
 		
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
 		

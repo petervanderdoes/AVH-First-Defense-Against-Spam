@@ -39,30 +39,42 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 
 	function handleSpammer ( $ip, $info, $time )
 	{
-		$action=$this->getOption('action','general');
-		$actions=strrev(str_pad(decbin($action),4,'0',STR_PAD_LEFT));
+		$action = $this->getOption( 'action', 'general' );
+		$actions = strrev( str_pad( decbin( $action ), 4, '0', STR_PAD_LEFT ) );
 		
-		// Option 1 is email
-		if ('1' == $actions{0}) {
-			$message = 'Spam IP	' . $ip . '\n';
-			$message .= 'Last Seen	' . $info['lastseen'] . '\n\n';
-			$message .= 'Frequency	' . $info['frequency'] . '\n\n';
-			$message .= 'Call took	' . $time . '\n\n';
-			wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] Spammer detected' ), get_option( 'blogname' ) ), $message );
+		// First option: Email
+		if ( '1' == $actions{0} ) {
+			$site_name =  str_replace('"', "'", get_option( 'blogname' ));
+			
+			$to = get_option( 'admin_email' );
+			$site_email = str_replace(array('<', '>'), array('', ''), $to);
+			
+			$subject = sprintf( __( '[%s] Spammer detected' ), $site_name) ;
+			
+			$message =  sprintf('Spam IP:	%s',$ip) ."\r\n";
+			$message .= sprintf('Last Seen:	%s', $info['lastseen']) . "\r\n";
+			$message .= sprintf('Frequency:	%s', $info['frequency']) . "\r\n";
+			$message .= sprintf('Call took:	%s',$time) . "\r\n";
+			
+			$charset = get_settings('blog_charset');
+
+//			$headers  = "From: \"{$site_name}\" <{$site_email}>\n";
+//			$headers .= "MIME-Version: 1.0\n";
+//			$headers .= "Content-Type: text/plain; charset=\"{$charset}\"\n";
+			
+			wp_mail($to, $subject, $message);
+			
+		}
+		
+		// Second Option: Add the the .htaccess file
+		if ('1' == $actions{1}) {
+			
+		}
+		// This should be the very last option
+		if ( $this->options['general']['die'] ) {
+			die();
 		}
 	}
-	
-	function getActions($action)
-	{
-		$actions=array();
-		$w=decbin($action);
-		$w=str_pad($w,4,'0',STR_PAD_LEFT);
-		$l=strlen($w);
-		for ($i=$l-1; $i==0;$i--) {
-			if ($w{$i} = '1') {
-				
-			}
-		}
-	}
+
 }
 ?>
