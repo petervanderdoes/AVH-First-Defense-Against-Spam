@@ -29,8 +29,7 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 	{
 		$time_start = microtime( true );
 		$ip = $_SERVER['REMOTE_ADDR'];
-		$result = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
-		$spaminfo = $this->ConvertXML2Array( $result );
+		$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
 		$time_end = microtime( true );
 		$time = $time_end - $time_start;
 		if ( 'yes' == $spaminfo['appears'] ) {
