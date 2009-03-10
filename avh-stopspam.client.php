@@ -69,6 +69,7 @@ class AVHStopSpamCore {
 		 */
 		$this->default_general_options = array (
 				'version' => $this->version,
+				'action' => 1,
 			);
 
 		/**

@@ -40,11 +40,30 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 
 	function handleSpammer ( $ip, $info, $time )
 	{
-		$message = 'Spam IP	' . $ip . '\n';
-		$message .= 'Last Seen	' . $info['lastseen'] . '\n';
-		$message .= 'Frequency	' . $info['frequency'] . '\n';
-		$message .= 'Call took	' . $time . '\n';
-		wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] Spammer detected' ), get_option( 'blogname' ) ), $message );
+		$action=getOption('action','general');
+		$actions=strrev(str_pad(decbin($action),4,'0',STR_PAD_LEFT));
+		
+		// Option 1 is email
+		if ('1' == $actions{0}) {
+			$message = 'Spam IP	' . $ip . '\n';
+			$message .= 'Last Seen	' . $info['lastseen'] . '\n';
+			$message .= 'Frequency	' . $info['frequency'] . '\n';
+			$message .= 'Call took	' . $time . '\n';
+			wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] Spammer detected' ), get_option( 'blogname' ) ), $message );
+		}
+	}
+	
+	function getActions($action)
+	{
+		$actions=array();
+		$w=decbin($action);
+		$w=str_pad($w,4,'0',STR_PAD_LEFT);
+		$l=strlen($w);
+		for ($i=$l-1; $i==0;$i--) {
+			if ($w{$i} = '1') {
+				
+			}
+		}
 	}
 }
 ?>
