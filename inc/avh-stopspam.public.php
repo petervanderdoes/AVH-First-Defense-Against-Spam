@@ -68,6 +68,10 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 		
 		// Second Option: Add the the .htaccess file
 		if ('1' == $actions{1}) {
+			$counter=$this->options['spam']['counter'];
+			$counter++;
+			$this->options['spam']['counter'] = $counter;
+			update_option($this->db_options_name_core,$this->options);
 			
 		}
 		// This should be the very last option

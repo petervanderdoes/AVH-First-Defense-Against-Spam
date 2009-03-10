@@ -36,7 +36,7 @@ class AVHStopSpamCore {
 	 */
 	var $default_general_options;
 	var $default_options;
-
+	var $default_spam;
 	/**
 	 * Name of the options field in the WordPress database options table.
 	 *
@@ -69,15 +69,20 @@ class AVHStopSpamCore {
 		 */
 		$this->default_general_options = array (
 				'version' => $this->version,
-				'action' => 1,
+				'action' => 3,
 				'die' => false,
 			);
-
+		$this->default_spam = array (
+				'counter' => 0,
+			);
+			
 		/**
 		 * Default Options - All as stored in the DB
 		 */
 		$this->default_options = array (
-				'general' => $this->default_general_options);
+				'general' => $this->default_general_options,
+				'spam' => $this->default_spam,
+			);		
 
 		/**
 		 * Set the options for the program
