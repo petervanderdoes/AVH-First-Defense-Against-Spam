@@ -45,9 +45,9 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 		// Option 1 is email
 		if ('1' == $actions{0}) {
 			$message = 'Spam IP	' . $ip . '\n';
-			$message .= 'Last Seen	' . $info['lastseen'] . '\n';
-			$message .= 'Frequency	' . $info['frequency'] . '\n';
-			$message .= 'Call took	' . $time . '\n';
+			$message .= 'Last Seen	' . $info['lastseen'] . '\n\n';
+			$message .= 'Frequency	' . $info['frequency'] . '\n\n';
+			$message .= 'Call took	' . $time . '\n\n';
 			wp_mail( get_option( 'admin_email' ), sprintf( __( '[%s] Spammer detected' ), get_option( 'blogname' ) ), $message );
 		}
 	}
