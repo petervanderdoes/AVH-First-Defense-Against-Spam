@@ -56,11 +56,9 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 			$message .= sprintf('Frequency:	%s', $info['frequency']) . "\r\n";
 			$message .= sprintf('Call took:	%s',$time) . "\r\n";
 			
-			$charset = get_settings('blog_charset');
-
-//			$headers  = "From: \"{$site_name}\" <{$site_email}>\n";
-//			$headers .= "MIME-Version: 1.0\n";
-//			$headers .= "Content-Type: text/plain; charset=\"{$charset}\"\n";
+			if ($info['frequency'] >= $this->options['spam']['whentodie']) {
+				$message .= sprinf('Treshhold for dying: %s',$this->options['spam']['whentodie']) ."\r\n";
+			}
 			
 			wp_mail($to, $subject, $message);
 			
@@ -76,7 +74,9 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 		}
 		// This should be the very last option
 		if ( $this->options['general']['die'] ) {
-			die();
+			if ($info['frequency'] >= $this->options['spam']['whentodie']) {
+				die();
+			}
 		}
 	}
 

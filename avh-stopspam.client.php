@@ -70,10 +70,11 @@ class AVHStopSpamCore {
 		$this->default_general_options = array (
 				'version' => $this->version,
 				'action' => 3,
-				'die' => false,
+				'die' => true,
 			);
 		$this->default_spam = array (
 				'counter' => 0,
+				'whentodie' => 3,
 			);
 			
 		/**
