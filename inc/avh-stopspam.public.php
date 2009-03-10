@@ -39,7 +39,7 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 
 	function handleSpammer ( $ip, $info, $time )
 	{
-		$action=getOption('action','general');
+		$action=$this->getOption('action','general');
 		$actions=strrev(str_pad(decbin($action),4,'0',STR_PAD_LEFT));
 		
 		// Option 1 is email
