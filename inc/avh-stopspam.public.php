@@ -44,37 +44,38 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 		
 		// First option: Email
 		if ( '1' == $actions{0} ) {
-			$site_name =  str_replace('"', "'", get_option( 'blogname' ));
+			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 			
 			$to = get_option( 'admin_email' );
-			$site_email = str_replace(array('<', '>'), array('', ''), $to);
 			
-			$subject = sprintf( __( '[%s] Spammer detected' ), $site_name) ;
+			$subject = sprintf( __( '[%s] Spammer detected' ), $site_name );
 			
-			$message =  sprintf('Spam IP:	%s',$ip) ."\r\n";
-			$message .= sprintf('Last Seen:	%s', $info['lastseen']) . "\r\n";
-			$message .= sprintf('Frequency:	%s', $info['frequency']) . "\r\n";
-			$message .= sprintf('Call took:	%s',$time) . "\r\n";
+			$message = sprintf( 'Spam IP:	%s', $ip ) . "\r\n";
+			$message .= sprintf( 'Last Seen:	%s', $info['lastseen'] ) . "\r\n";
+			$message .= sprintf( 'Frequency:	%s', $info['frequency'] ) . "\r\n";
 			
-			if ($info['frequency'] >= $this->options['spam']['whentodie']) {
-				$message .= sprinf('Treshhold for dying: %s',$this->options['spam']['whentodie']) ."\r\n";
+			if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
+				$message .= sprinf( 'Treshhold:	%s', $this->options['spam']['whentodie'] ) . "\r\n";
 			}
 			
-			wp_mail($to, $subject, $message);
+			$message .= sprinf( 'Accessing:	%s', $_SERVER['SCRIPT_URI'] ) . "\r\n";
 			
+			$message .= sprintf( 'Call took:	%s', $time ) . "\r\n";
+			wp_mail( $to, $subject, $message );
+		
 		}
 		
 		// Second Option: Add the the .htaccess file
-		if ('1' == $actions{1}) {
-			$counter=$this->options['spam']['counter'];
-			$counter++;
+		if ( '1' == $actions{1} ) {
+			$counter = $this->options['spam']['counter'];
+			$counter ++;
 			$this->options['spam']['counter'] = $counter;
-			update_option($this->db_options_name_core,$this->options);
-			
+			update_option( $this->db_options_name_core, $this->options );
+		
 		}
 		// This should be the very last option
 		if ( $this->options['general']['die'] ) {
-			if ($info['frequency'] >= $this->options['spam']['whentodie']) {
+			if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
 				die();
 			}
 		}
