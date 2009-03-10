@@ -73,7 +73,7 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 				$message .= sprintf( 'Treshhold:	%s', $this->options['spam']['whentodie'] ) . "\r\n";
 			}
 			
-			$message .= sprintf( 'Accessing:	%s', $_SERVER['SCRIPT_URI'] ) . "\r\n";
+			$message .= sprintf( 'Accessing:	%s', $_SERVER['REQUEST_URI'] ) . "\r\n";
 			
 			$message .= sprintf( 'Call took:	%s', $time ) . "\r\n";
 			wp_mail( $to, $subject, $message );
