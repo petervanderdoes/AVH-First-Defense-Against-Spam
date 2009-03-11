@@ -54,12 +54,12 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 	 */
 	function handleSpammer ( $ip, $info, $time )
 	{
-
+		
 		// Update the counter
-			$counter = $this->options['spam']['counter'];
-			$counter ++;
-			$this->options['spam']['counter'] = $counter;
-			update_option( $this->db_options_name_core, $this->options );
+		$counter = $this->options['spam']['counter'];
+		$counter ++;
+		$this->options['spam']['counter'] = $counter;
+		update_option( $this->db_options_name_core, $this->options );
 		
 		// Email
 		if ( $info['frequency'] >= $this->options['spam']['whentoemail'] ) {
@@ -67,27 +67,30 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 			
 			$to = get_option( 'admin_email' );
 			
-			$subject = sprintf( __( '[%s] AVH Stop Spam - Spammer detected','avhstopspam' ), $site_name );
+			$subject = sprintf( __( '[%s] AVH Stop Spam - Spammer detected', 'avhstopspam' ), $site_name );
 			
-			$message = __('Stop Forum Spam has the following statistics:','avhstopspam')."\r\n";
-			$message .= sprintf( __('Spam IP:	%s','avhstopspam'), $ip ) . "\r\n";
-			$message .= sprintf( __('Last Seen:	%s','avhstopspam'), $info['lastseen'] ) . "\r\n";
-			$message .= sprintf( __('Frequency:	%s','avhstopspam'), $info['frequency'] ) . "\r\n";
+			$message = __( 'Stop Forum Spam has the following statistics:', 'avhstopspam' ) . "\r\n";
+			$message .= sprintf( __( 'Spam IP:	%s', 'avhstopspam' ), $ip ) . "\r\n";
+			$message .= sprintf( __( 'Last Seen:	%s', 'avhstopspam' ), $info['lastseen'] ) . "\r\n";
+			$message .= sprintf( __( 'Frequency:	%s', 'avhstopspam' ), $info['frequency'] ) . "\r\n";
 			
 			if ( $info['frequency'] >= $this->options['spam']['whentoblock'] ) {
-				$message .= sprintf( __('Treshhold:	%s','avhstopspam'), $this->options['spam']['whentoblock'] ) . "\r\n";
+				$message .= sprintf( __( 'Treshhold:	%s', 'avhstopspam' ), $this->options['spam']['whentoblock'] ) . "\r\n";
 			}
 			
-			$message .= sprintf( __('Accessing:	%s','avhstopspam'), $_SERVER['REQUEST_URI'] ) . "\r\n";
+			$message .= sprintf( __( 'Accessing:	%s', 'avhstopspam' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 			
-			$message .= sprintf( __('Call took:	%s','avhastopspam'), $time ) . "\r\n";
+			$message .= sprintf( __( 'Call took:	%s', 'avhastopspam' ), $time ) . "\r\n";
 			wp_mail( $to, $subject, $message );
 		
 		}
-				
+		
 		// This should be the very last option.
 		if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
-				wp_die(__('Access has been blocked.<BR />Your IP is registered in the Stop Forum Spam database. If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a>'));;
+			if ( $this->options['spam']['diewithmessage'] ) {
+				wp_die( sprintf( __( 'Access has been blocked.<BR />Your IP [$s] is registered in the Stop Forum Spam database. If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a>', 'avhstopspam' ), $ip ) );
+				;
+			}
 		}
 	}
 }
