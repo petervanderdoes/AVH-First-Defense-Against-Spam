@@ -107,7 +107,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	function pageOptions ()
 	{
 		$option_data = array (
-			'general' => array (
+			'spam' => array (
 				array (
 					'avhstopspam[spam][whentoemail]',
 					'Email threshold:',
@@ -413,7 +413,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	function getNiceTitleOptions ( $id = '' )
 	{
 		switch ( $id ) {
-			case 'general' :
+			case 'spam' :
 				return __( 'General', 'avhstopspam' );
 				break;
 			case 'faq' :

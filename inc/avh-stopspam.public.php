@@ -12,7 +12,7 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 		parent::__construct();
 		
 		// Public actions and filters
-		add_action( 'get_header', array (&$this, 'handleMainAction' ) );
+		//add_action( 'get_header', array (&$this, 'handleMainAction' ) );
 	}
 
 	/**
