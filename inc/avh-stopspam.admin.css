@@ -10,9 +10,9 @@
 .avh_wrap .avhstopspam_submenu li{height:25px;display:inline;line-height:200%;list-style:none;text-align:center;white-space:nowrap;}
 .avh_wrap .avhstopspam_submenu li a{border:none;color:#fff;font-size:12px;padding:.3em .4em .4em;text-decoration:none;}
 .avh_wrap .avhstopspam_submenu li a:hover{background:#D54E21;color:#fff;}
-.avh_wrap .avhstopspam_submenu li.tabs-selected {font-weight:700;background:#E4F2FD;color:#464646;padding:.3em 0 .4em;}
-.avh_wrap .avhstopspam_submenu li.tabs-selected a{color:#464646;}
-.avh_wrap .avhstopspam_submenu li.tabs-selected a:hover{background:#D54E21;color:#fff;}
+.avh_wrap .avhstopspam_submenu li.ui-tabs-selected {font-weight:700;background:#E4F2FD;color:#464646;padding:.3em 0 .4em;}
+.avh_wrap .avhstopspam_submenu li.ui-tabs-selected a{color:#464646;}
+.avh_wrap .avhstopspam_submenu li.ui-tabs-selected a:hover{background:#D54E21;color:#fff;}
 
 @media projection, screen{.tabs-hide {display:none;}}
 @media print{.tabs-nav {display:none;}}

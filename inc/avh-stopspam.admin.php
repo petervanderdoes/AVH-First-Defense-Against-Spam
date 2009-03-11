@@ -178,6 +178,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 			$this->message = 'Options saved';
 			$this->status = 'updated';
 		} elseif ( isset( $_POST['reset_options'] ) ) {
+			check_admin_referer( 'avhstopspam-options' );
 			$this->resetToDefaultOptions();
 			$this->message = __( 'AVH Stop Spam options set to default options!', 'avhstopspam' );
 		}
@@ -186,7 +187,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		
 		echo '<script type="text/javascript">';
 		echo 'jQuery(document).ready( function() {';
-		echo 'jQuery(\'#printOptions\').tabs({fxSlide: true});';
+		echo 'jQuery(\'#printOptions > ul\').tabs();';
 		echo '});';
 		echo '</script>';
 		
