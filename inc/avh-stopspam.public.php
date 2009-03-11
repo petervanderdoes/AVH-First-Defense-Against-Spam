@@ -80,14 +80,14 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 			
 			$message .= sprintf( __('Accessing:	%s','avhstopspam'), $_SERVER['REQUEST_URI'] ) . "\r\n";
 			
-			$message .= sprintf( __('Call took:	%s','avhamazon'), $time ) . "\r\n";
+			$message .= sprintf( __('Call took:	%s','avhastopspam'), $time ) . "\r\n";
 			wp_mail( $to, $subject, $message );
 		
 		}
 				
 		// This should be the very last option.
 		if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
-				die();
+				wp_die(__('Access has been blocked.<BR />Your IP is registered in the Stop Forum Spam database. If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a>'));;
 		}
 	}
 }

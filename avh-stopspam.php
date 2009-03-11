@@ -30,7 +30,7 @@ global $wp_version;
 if ( ( float ) $wp_version >= 2.7 ) {
 	require (dirname ( __FILE__ ) . '/avh-stopspam.client.php');
 } else {
-	$message = '<div class="updated fade"><p><strong>' . __ ( 'AVH Amazon can\'t work with this WordPress version !', 'avhamazon' ) . '</strong></p></div>';
+	$message = '<div class="updated fade"><p><strong>' . __ ( 'AVH Stop Spam can\'t work with this WordPress version !', 'avhstopspam' ) . '</strong></p></div>';
 	add_action ( 'admin_notices', create_function ( '', "echo '$message';" ) );
 
 }

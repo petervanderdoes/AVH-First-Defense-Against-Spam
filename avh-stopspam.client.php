@@ -136,7 +136,7 @@ class AVHStopSpamCore {
 		//$locale = get_locale();
 		//if ( !empty( $locale ) ) {
 		//	$mofile = $this->info['install_dir'].'/languages/avhamazon-'.$locale.'.mo';
-		//	load_textdomain('avhamazon', $mofile);
+		//	load_textdomain('avhstopspam', $mofile);
 		//}
 
 
