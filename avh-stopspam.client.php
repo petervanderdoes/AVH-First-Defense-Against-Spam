@@ -528,10 +528,10 @@ function avhStopSpam_init ()
 	
 	// Admin
 	if ( is_admin() ) {
-		//require (dirname( __FILE__ ) . '/inc/avh-stopspam.admin.php');
-		//$avhstopspam_admin = & new AVHStopSpamAdmin( );
-		// Installation
-		//register_activation_hook( __FILE__, array (& $avhstopspam_admin, 'installPlugin' ) );
+		require (dirname( __FILE__ ) . '/inc/avh-stopspam.admin.php');
+		$avhstopspam_admin = & new AVHStopSpamAdmin( );
+		//Installation
+		register_activation_hook( __FILE__, array (& $avhstopspam_admin, 'installPlugin' ) );
 	}
 	
 	// Include the public class
