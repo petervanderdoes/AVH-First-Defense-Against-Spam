@@ -88,7 +88,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		static $this_plugin;
 
 		if ( ! $this_plugin )
-			$this_plugin = $this->getBaseDirectory( plugin_basename( $this->info['install_dir'] ) );
+			$this_plugin = plugin_basename( $this->info['install_dir']);
 		if ( $file )
 			$file = $this->getBaseDirectory( $file );
 		if ( $file == $this_plugin ) {
