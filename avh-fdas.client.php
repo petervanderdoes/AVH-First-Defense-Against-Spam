@@ -1,7 +1,7 @@
 <?php
-class AVHStopSpamCore {
+class AVH_FDAS_Core {
 	/**
-	 * Version of AVH Stop Spam
+	 * Version of AVH First Defense Against Spam
 	 *
 	 * @var string
 	 */
@@ -63,11 +63,11 @@ class AVHStopSpamCore {
 	function __construct () {
 
 		$this->version = "1.0-rc1";
-		$this->comment_begin = '<!-- AVH Stop Spam version ' . $this->version . ' Begin -->';
-		$this->comment_end = '<!-- AVH Stop Spam version ' . $this->version . ' End -->';
+		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
+		$this->comment_end = '<!-- AVH First Defense Against Spam version ' . $this->version . ' End -->';
 
-		$this->db_options_name_core = 'avhstopspam';
-		$this->db_data = 'avhstopspam_data';
+		$this->db_options_name_core = 'avhfdas';
+		$this->db_data = 'avhfdas_data';
 		/**
 		 * Default options - General Purpose
 		 */
@@ -147,7 +147,7 @@ class AVHStopSpamCore {
 		//$locale = get_locale();
 		//if ( !empty( $locale ) ) {
 		//	$mofile = $this->info['install_dir'].'/languages/avhamazon-'.$locale.'.mo';
-		//	load_textdomain('avhstopspam', $mofile);
+		//	load_textdomain('avhfdas', $mofile);
 		//}
 
 
@@ -160,7 +160,7 @@ class AVHStopSpamCore {
 	 *
 	 * @return
 	 */
-	function AVHStopSpamCore () {
+	function AVH_FDAS_Core () {
 
 		$this->__construct ();
 	}
@@ -399,7 +399,7 @@ class AVHStopSpamCore {
 			$error_short = $key;
 			$error_long = $value[0];
 		}
-		return '<strong>avhstopspam error:' . $error_short . ' - ' . $error_long . '</strong>';
+		return '<strong>avhfdas error:' . $error_short . ' - ' . $error_long . '</strong>';
 	}
 	
 	/**
@@ -583,23 +583,23 @@ class AVHStopSpamCore {
  * Initialize the plugin
  *
  */
-function avhStopSpam_init ()
+function avh_FDAS__init ()
 {
 	
 	// Admin
 	if ( is_admin() ) {
-		require (dirname( __FILE__ ) . '/inc/avh-stopspam.admin.php');
-		$avhstopspam_admin = & new AVHStopSpamAdmin( );
+		require (dirname( __FILE__ ) . '/inc/avh-fdas.admin.php');
+		$avhfdas_admin = & new AVH_FDAS_Admin( );
 		//Installation
-		register_activation_hook( __FILE__, array (& $avhstopspam_admin, 'installPlugin' ) );
+		register_activation_hook( __FILE__, array (& $avhfdas_admin, 'installPlugin' ) );
 	}
 	
 	// Include the public class
-	require (dirname( __FILE__ ) . '/inc/avh-stopspam.public.php');
-	$avhstopspam_public = & new AVHStopSpamPublic( );
+	require (dirname( __FILE__ ) . '/inc/avh-fdas.public.php');
+	$avhfdas_public = & new AVH_FDAS_Public( );
 
 } // End avhamazon_init()
 
 
-add_action ( 'plugins_loaded', 'avhStopSpam_init' );
+add_action ( 'plugins_loaded', 'avh_FDAS__init' );
 ?>

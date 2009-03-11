@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: AVH Stop Spam
+Plugin Name: AVH First Defense Against Spam
 Plugin URI: http://blog.avirtualhome.com/wordpress-plugins
-Description: This plugin gives you the ability to block spammers and add them to the htaccess file to deny access.
+Description: This plugin gives you the ability to block spammers before content is served.
 Version: 1.0
 Author: Peter van der Does
 Author URI: http://blog.avirtualhome.com/
@@ -28,9 +28,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 global $wp_version;
 
 if ( ( float ) $wp_version >= 2.7 ) {
-	require (dirname ( __FILE__ ) . '/avh-stopspam.client.php');
+	require (dirname ( __FILE__ ) . '/avh-fdas.client.php');
 } else {
-	$message = '<div class="updated fade"><p><strong>' . __ ( 'AVH Stop Spam can\'t work with this WordPress version !', 'avhstopspam' ) . '</strong></p></div>';
+	$message = '<div class="updated fade"><p><strong>' . __ ( 'AVH First Defense Against Spam can\'t work with this WordPress version !', 'avhfdas' ) . '</strong></p></div>';
 	add_action ( 'admin_notices', create_function ( '', "echo '$message';" ) );
 
 }

@@ -1,5 +1,5 @@
 <?php
-class AVHStopSpamAdmin extends AVHStopSpamCore 
+class AVH_FDAS_Admin extends AVH_FDAS_Core 
 {
 
 	/**
@@ -30,11 +30,11 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		add_action( 'admin_head', array (&$this, 'helperCSS' ) );
 
 		// Helper JS & jQuery & Prototype
-		$avhstopspam_pages = array ('avhstopspam_options' );
+		$avhfdas_pages = array ('avhfdas_options' );
 		/**
 		 * TODO  With WordPress 2.5 the Tabs UI is build in :)
 		 */
-		if ( in_array( $_GET['page'], $avhstopspam_pages ) ) {
+		if ( in_array( $_GET['page'], $avhfdas_pages ) ) {
 			wp_enqueue_script( 'jquery-ui-tabs' );
 		}
 		return;
@@ -45,7 +45,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	 *
 	 * @return
 	 */
-	function AVHStopSpamAdmin ()
+	function AVH_FDAS_Admin ()
 	{
 		$this->__construct();
 	}
@@ -58,11 +58,11 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	{
 		if ( function_exists( 'get_role' ) ) {
 			$role = get_role( 'administrator' );
-			if ( $role != null && ! $role->has_cap( 'avh_stopspam' ) ) {
-				$role->add_cap( 'avh_stopspam' );
+			if ( $role != null && ! $role->has_cap( 'avh_fdas' ) ) {
+				$role->add_cap( 'avh_fdas' );
 			}
-			if ( $role != null && ! $role->has_cap( 'admin_avh_stopspam' ) ) {
-				$role->add_cap( 'admin_avh_stopspam' );
+			if ( $role != null && ! $role->has_cap( 'admin_avh_fdas' ) ) {
+				$role->add_cap( 'admin_avh_fdas' );
 			}
 			// Clean var
 			unset( $role );
@@ -75,7 +75,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	 */
 	function adminMenu ()
 	{
-		add_options_page( __( 'AVH StopSpam: Options', 'avhstopspam' ), 'AVH Stop Spam', 'avh_stopspam', 'avhstopspam_options', array (&$this, 'pageOptions' ) );
+		add_options_page( __( 'AVH First Defense Against Spam: Options', 'avhfdas' ), 'AVH First Defense Against Spam', 'avh_fdas', 'avhfdas_options', array (&$this, 'pageOptions' ) );
 		add_filter( 'plugin_action_links', array (&$this, 'filterPluginActions' ), 10, 2 );
 	}
 
@@ -92,7 +92,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		if ( $file )
 			$file = $this->getBaseDirectory( $file );
 		if ( $file == $this_plugin ) {
-			$settings_link = '<a href="options-general.php?page=avhstopspam_options">' . __( 'Settings', 'avhstopspam' ) . '</a>';
+			$settings_link = '<a href="options-general.php?page=avhfdas_options">' . __( 'Settings', 'avhfdas' ) . '</a>';
 			array_unshift( $links, $settings_link ); // before other links
 		//$links = array_merge ( array (	$settings_link ), $links ); // before other links
 		}
@@ -109,21 +109,21 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		$option_data = array (
 			'spam' => array (
 				array (
-					'avhstopspam[spam][whentoemail]',
+					'avhfdas[spam][whentoemail]',
 					'Email threshold:',
 					'text',
 					3,
 					'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
 				),
 				array(
-					'avhstopspam[spam][whentodie]',
+					'avhfdas[spam][whentodie]',
 					'Termination threshold:',
 					'text',
 					3,
 					'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>'
 				),
 				array (
-					'avhstopspam[spam][diewithmessage]',
+					'avhfdas[spam][diewithmessage]',
 					'Show message:',
 					'checkbox',
 					1,
@@ -145,7 +145,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 					'text-helper',
 					'helper',
 					'',
-					'<p>The AVH Stop Spam plugin gives you the ability to block potential spammers based on the Stop Forum Spam database<br />' . 
+					'<p>The AVH First Defense Against Spam plugin gives you the ability to block potential spammers based on the Stop Forum Spam database<br />' . 
 					'<b>Support</b><br />' . 
 					'For support visit the AVH support forums at <a href="http://forums.avirtualhome.com/">http://forums.avirtualhome.com/</a><br /><br />' . 
 					'<b>Developer</b><br />' . 'Peter van der Does'
@@ -155,7 +155,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 			
 		// Update or reset options
 		if ( isset( $_POST['updateoptions'] ) ) {
-			check_admin_referer( 'avhstopspam-options' );
+			check_admin_referer( 'avhfdas-options' );
 			// Set all checkboxes unset
 			if ( isset( $_POST['avh_checkboxes'] ) ) {
 				$checkboxes = explode( '|', $_POST['avh_checkboxes'] );
@@ -166,7 +166,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 					$this->setOption( $keys, 0 );
 				}
 			}
-			$formoptions = $_POST['avhstopspam'];
+			$formoptions = $_POST['avhfdas'];
 			foreach ( $this->options as $key => $value ) {
 				if ( ! ('general' == $key) ) {
 					foreach ( $value as $key2 => $value2 ) {
@@ -187,9 +187,9 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 			$this->message = 'Options saved';
 			$this->status = 'updated';
 		} elseif ( isset( $_POST['reset_options'] ) ) {
-			check_admin_referer( 'avhstopspam-options' );
+			check_admin_referer( 'avhfdas-options' );
 			$this->resetToDefaultOptions();
-			$this->message = __( 'AVH Stop Spam options set to default options!', 'avhstopspam' );
+			$this->message = __( 'AVH First Defense Against Spam options set to default options!', 'avhfdas' );
 		}
 		
 		$this->displayMessage();
@@ -202,11 +202,11 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		
 		echo '<div class="wrap avh_wrap">';
 		echo '<h2>';
-		_e( 'AVH Stop Spam: Options', 'avhstopspam' );
+		_e( 'AVH First Defense Against Spam: Options', 'avhfdas' );
 		echo '</h2>';
-		echo '<form	action="' . $this->admin_base_url . 'avhstopspam_options' . '"method="post">';
+		echo '<form	action="' . $this->admin_base_url . 'avhfdas_options' . '"method="post">';
 		echo '<div id="printOptions">';
-		echo '<ul class="avhstopspam_submenu">';
+		echo '<ul class="avhfdas_submenu">';
 		foreach ( $option_data as $key => $value ) {
 			echo '<li><a href="#' . sanitize_title( $key ) . '">' . $this->getNiceTitleOptions( $key ) . '</a></li>';
 		}
@@ -216,9 +216,9 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		
 		$buttonprimary = ($this->info['wordpress_version'] < 2.7) ? '' : 'button-primary';
 		$buttonsecondary = ($this->info['wordpress_version'] < 2.7) ? '' : 'button-secondary';
-		echo '<p class="submit"><input	class="' . $buttonprimary . '"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhstopspam' ) . '" />';
-		echo '<input class="' . $buttonsecondary . '" type="submit" name="reset_options" onclick="return confirm(\'' . __( 'Do you really want to restore the default options?', 'avhstopspam' ) . '\')" value="' . __( 'Reset Options', 'avhstopspam' ) . '" /></p>';
-		wp_nonce_field( 'avhstopspam-options' );
+		echo '<p class="submit"><input	class="' . $buttonprimary . '"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" />';
+		echo '<input class="' . $buttonsecondary . '" type="submit" name="reset_options" onclick="return confirm(\'' . __( 'Do you really want to restore the default options?', 'avhfdas' ) . '\')" value="' . __( 'Reset Options', 'avhfdas' ) . '" /></p>';
+		wp_nonce_field( 'avhfdas-options' );
 		echo '</form>';
 		
 		$this->printAdminFooter();
@@ -226,7 +226,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	}
 
 	/**
-	 * Add initial avh-stopspam options in DB
+	 * Add initial avh-fdas options in DB
 	 *
 	 */
 	function installPlugin ()
@@ -307,7 +307,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	function printAdminFooter ()
 	{
 		echo '<p class="footer_avhamazon">';
-		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH Stop Spam Version %s', 'avhstopspam' ), $this->version );
+		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->version );
 		echo '</p>';
 	}
 
@@ -337,7 +337,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	function helperCSS ()
 	{
 		if ( $this->info['wordpress_version'] >= 2.7 ) {
-			$this->handleCssFile( 'avhstopspamadmin', '/inc/avh-stopspam.admin.css' );
+			$this->handleCssFile( 'avhfdasadmin', '/inc/avh-fdas.admin.css' );
 		}
 	}
 
@@ -400,7 +400,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 				// Additional Information
 				$extra = '';
 				if ( $explanation ) {
-					$extra = '<div class="avhstopspam_explain">' . __( $explanation ) . '</div>' . "\n";
+					$extra = '<div class="avhfdas_explain">' . __( $explanation ) . '</div>' . "\n";
 				}
 
 				// Output
@@ -425,13 +425,13 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	{
 		switch ( $id ) {
 			case 'spam' :
-				return __( 'General', 'avhstopspam' );
+				return __( 'General', 'avhfdas' );
 				break;
 			case 'faq' :
-				return __( 'FAQ', 'avhstopspam' );
+				return __( 'FAQ', 'avhfdas' );
 				break;
 			case 'about' :
-				return __( 'About', 'avhstopspam' );
+				return __( 'About', 'avhfdas' );
 				break;
 		}
 		return 'Unknown';
