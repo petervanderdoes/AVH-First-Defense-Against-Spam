@@ -30,13 +30,12 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		add_action( 'admin_head', array (&$this, 'helperCSS' ) );
 
 		// Helper JS & jQuery & Prototype
-		$avhstopspam_pages = array ('avhstopspam_options', 'avhstopspam_tools' );
+		$avhstopspam_pages = array ('avhstopspam_options' );
 		/**
 		 * TODO  With WordPress 2.5 the Tabs UI is build in :)
 		 */
 		if ( in_array( $_GET['page'], $avhstopspam_pages ) ) {
-			wp_enqueue_script( 'jquery-tabs', $this->info['install_url'] . '/inc/js/jquery.tabs.pack.js', array ('jquery' ), '3' );
-			wp_enqueue_script( 'jquery-forms', $this->info['install_url'] . '/inc/js/jquery.form.js', array ('jquery' ), '3' );
+			wp_enqueue_script( 'jquery-ui-tabs' );
 		}
 		return;
 	}
