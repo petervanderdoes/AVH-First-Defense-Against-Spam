@@ -67,20 +67,20 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 			
 			$to = get_option( 'admin_email' );
 			
-			$subject = sprintf( __( '[%s] AVH Stop Spam - Spammer detected','avh-stopspam' ), $site_name );
+			$subject = sprintf( __( '[%s] AVH Stop Spam - Spammer detected','avhstopspam' ), $site_name );
 			
-			$message = __('Stop Forum Spam has the following statistics:','avh-stopspam')."\r\n";
-			$message .= sprintf( __('Spam IP:	%s','avh-stopspam'), $ip ) . "\r\n";
-			$message .= sprintf( __('Last Seen:	%s','avh-stopspam'), $info['lastseen'] ) . "\r\n";
-			$message .= sprintf( __('Frequency:	%s','avh_stopspam'), $info['frequency'] ) . "\r\n";
+			$message = __('Stop Forum Spam has the following statistics:','avhstopspam')."\r\n";
+			$message .= sprintf( __('Spam IP:	%s','avhstopspam'), $ip ) . "\r\n";
+			$message .= sprintf( __('Last Seen:	%s','avhstopspam'), $info['lastseen'] ) . "\r\n";
+			$message .= sprintf( __('Frequency:	%s','avhstopspam'), $info['frequency'] ) . "\r\n";
 			
 			if ( $info['frequency'] >= $this->options['spam']['whentoblock'] ) {
-				$message .= sprintf( __('Treshhold:	%s','avh_stopspam'), $this->options['spam']['whentoblock'] ) . "\r\n";
+				$message .= sprintf( __('Treshhold:	%s','avhstopspam'), $this->options['spam']['whentoblock'] ) . "\r\n";
 			}
 			
-			$message .= sprintf( __('Accessing:	%s','avh-stopspam'), $_SERVER['REQUEST_URI'] ) . "\r\n";
+			$message .= sprintf( __('Accessing:	%s','avhstopspam'), $_SERVER['REQUEST_URI'] ) . "\r\n";
 			
-			$message .= sprintf( __('Call took:	%s','avh-amazon'), $time ) . "\r\n";
+			$message .= sprintf( __('Call took:	%s','avhamazon'), $time ) . "\r\n";
 			wp_mail( $to, $subject, $message );
 		
 		}
