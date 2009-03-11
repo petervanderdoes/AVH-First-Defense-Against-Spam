@@ -160,10 +160,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 			if ( isset( $_POST['avh_checkboxes'] ) ) {
 				$checkboxes = explode( '|', $_POST['avh_checkboxes'] );
 				foreach ( $checkboxes as $value ) {
-					// So this is strange
-					// ltrim ('avhstopspam[spam][a]', 'avhstopspam[') results in ][a]
-					$value = ltrim( $value, 'avhstopspam' );
-					$value = ltrim( $value, '[' );
+					$value = preg_replace( '#^[[:alpha:]]+[[:alnum:]]*\[#', '', $value );
 					$value = rtrim( $value, ']' );
 					$keys = explode( '][', $value );
 					$this->setOption( $keys, 0 );
@@ -234,11 +231,15 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	 */
 	function installPlugin ()
 	{
-		$options_from_table = get_option( $this->db_options_name_core );
-		if ( ! $options_from_table ) {
+		if ( ! (get_option( $this->db_options_name_core )) ) {
 			$this->resetToDefaultOptions();
 		}
-
+		
+		if ( ! (get_option( $this->db_data )) ) {
+			$this->data = $this->default_data;
+			update_option( $this->db_data, $this->data );
+			wp_cache_flush(); // Delete cache
+		}
 	}
 
 	############## WP Options ##############
