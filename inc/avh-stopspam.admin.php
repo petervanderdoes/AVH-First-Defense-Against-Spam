@@ -160,7 +160,10 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 			if ( isset( $_POST['avh_checkboxes'] ) ) {
 				$checkboxes = explode( '|', $_POST['avh_checkboxes'] );
 				foreach ( $checkboxes as $value ) {
-					$value = ltrim( $value, 'option[' );
+					// So this is strange
+					// ltrim ('avhstopspam[spam][a]', 'avhstopspam[') results in ][a]
+					$value = ltrim( $value, 'avhstopspam' );
+					$value = ltrim( $value, '[' );
 					$value = rtrim( $value, ']' );
 					$keys = explode( '][', $value );
 					$this->setOption( $keys, 0 );
@@ -168,16 +171,18 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 			}
 			$formoptions = $_POST['avhstopspam'];
 			foreach ( $this->options as $key => $value ) {
-				foreach ( $value as $key2 => $value2 ) {
-					$newval = (isset( $formoptions[$key][$key2] )) ? attribute_escape( $formoptions[$key][$key2] ) : '0';
-					// Check numeric entries
-					if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
-						if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
-							$newval = $this->default_options[$key][$key2];
+				if ( ! ('general' == $key) ) {
+					foreach ( $value as $key2 => $value2 ) {
+						$newval = (isset( $formoptions[$key][$key2] )) ? attribute_escape( $formoptions[$key][$key2] ) : '0';
+						// Check numeric entries
+						if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
+							if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
+								$newval = $this->default_options[$key][$key2];
+							}
 						}
-					}
-					if ( $newval != $value2 ) {
-						$this->setOption( array ($key, $key2 ), $newval );
+						if ( $newval != $value2 ) {
+							$this->setOption( array ($key, $key2 ), $newval );
+						}
 					}
 				}
 			}
