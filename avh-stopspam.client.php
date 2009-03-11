@@ -37,13 +37,17 @@ class AVHStopSpamCore {
 	var $default_general_options;
 	var $default_options;
 	var $default_spam;
+	
+	var $data;
+	var $default_data;
+	var $default_spam_data;
 	/**
 	 * Name of the options field in the WordPress database options table.
 	 *
 	 * @var string
 	 */
 	var $db_options_name_core;
-
+	var $db_data;
 	/**
 	* Endpoint of the stopforumspam.com API
 	* 
@@ -63,7 +67,7 @@ class AVHStopSpamCore {
 		$this->comment_end = '<!-- AVH Stop Spam version ' . $this->version . ' End -->';
 
 		$this->db_options_name_core = 'avhstopspam';
-
+		$this->db_data = 'avhstopspam_data';
 		/**
 		 * Default options - General Purpose
 		 */
@@ -71,12 +75,14 @@ class AVHStopSpamCore {
 				'version' => $this->version,
 			);
 		$this->default_spam = array (
-				'counter' => 0,
 				'whentoemail' => 1,
 				'whentodie' => 3,
 				'diewithmessage' => 1,
 			);
-			
+		$this->default_spam_data = array(
+				'counter' => 0,
+		);
+		
 		/**
 		 * Default Options - All as stored in the DB
 		 */
@@ -85,12 +91,16 @@ class AVHStopSpamCore {
 				'spam' => $this->default_spam,
 			);		
 
+		$this->default_data = array (
+				'spam' => $this->default_spam_data,
+		);
 		/**
 		 * Set the options for the program
 		 *
 		 */
 		$this->handleOptions ();
-
+		$this->handleData();
+		
 		// Determine installation path & url
 		//$info['home_path'] = get_home_path();
 		$path = str_replace ( '\\', '/', dirname ( __FILE__ ) );
@@ -168,6 +178,55 @@ class AVHStopSpamCore {
 		return false;
 	}
 
+	/**
+	 * Sets the class property "data" to the data stored in the DB and if they do not exists set them to the default data
+	 *
+	 * @since 1.0
+	 *
+	 */
+	function handleData () {
+
+		$default_data = $this->default_data;
+
+		// Get options from WP options
+		$data_from_table = get_option ( $this->db_data );
+
+		if ( empty ( $data_from_table ) ) {
+			$data_from_table = $this->default_data; // New installation
+		} else {
+			// Update default options by getting not empty values from options table
+			foreach ( $default_data as $section_key => $section_array ) {
+				foreach ( $section_array as $name => $value ) {
+					if ( ! is_null ( $data_from_table[$section_key][$name] ) ) {
+						if ( is_int ( $value ) ) {
+							$default_data[$section_key][$name] = ( int ) $data_from_table[$section_key][$name];
+						} else {
+							$default_data[$section_key][$name] = $data_from_table[$section_key][$name];
+						}
+					}
+				}
+			}
+		}
+		// Set the class property for data
+		$this->data = $default_data;
+	}
+	
+	/**
+	 * Get the value for data. If there's no data return the default value.
+	 *
+	 * @param string $key
+	 * @param string $option
+	 * @return mixed
+	 */
+	function getData ( $key, $option ) {
+
+		if ( $this->data[$option][$key] ) {
+			$return = $this->data[$option][$key]; // From Admin Page
+		} else {
+			$return = $this->default_data[$option][$key]; // Default
+		}
+		return ($return);
+	}
 	/**
 	 * Sets the class property "options" to the options stored in the DB and if they do not exists set them to the default options
 	 * Checks if upgrades are necessary based on the version number

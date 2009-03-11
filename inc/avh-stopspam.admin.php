@@ -283,9 +283,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 	 */
 	function resetToDefaultOptions ()
 	{
-		$c=$this->options['general']['counter'];
 		$this->options = $this->default_options;
-		$this->options['general']['counter']=$c;
 		update_option( $this->db_options_name_core, $this->options );
 		wp_cache_flush(); // Delete cache
 	}

@@ -56,10 +56,10 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 	{
 		
 		// Update the counter
-		$counter = $this->options['spam']['counter'];
+		$counter = $this->data['spam']['counter'];
 		$counter ++;
-		$this->options['spam']['counter'] = $counter;
-		update_option( $this->db_options_name_core, $this->options );
+		$this->data['spam']['counter'] = $counter;
+		update_option( $this->db_data, $this->data );
 		
 		// Email
 		if ( $info['frequency'] >= $this->options['spam']['whentoemail'] ) {
