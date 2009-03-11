@@ -54,46 +54,40 @@ class AVHStopSpamPublic extends AVHStopSpamCore
 	 */
 	function handleSpammer ( $ip, $info, $time )
 	{
-		$action = $this->getOption( 'action', 'general' );
-		$actions = strrev( str_pad( decbin( $action ), 4, '0', STR_PAD_LEFT ) );
-		
-		// First option: Email
-		if ( '1' == $actions{0} ) {
-			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-			
-			$to = get_option( 'admin_email' );
-			
-			$subject = sprintf( __( '[%s] Spammer detected' ), $site_name );
-			
-			$message = sprintf( 'Spam IP:	%s', $ip ) . "\r\n";
-			$message .= sprintf( 'Last Seen:	%s', $info['lastseen'] ) . "\r\n";
-			$message .= sprintf( 'Frequency:	%s', $info['frequency'] ) . "\r\n";
-			
-			if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
-				$message .= sprintf( 'Treshhold:	%s', $this->options['spam']['whentodie'] ) . "\r\n";
-			}
-			
-			$message .= sprintf( 'Accessing:	%s', $_SERVER['REQUEST_URI'] ) . "\r\n";
-			
-			$message .= sprintf( 'Call took:	%s', $time ) . "\r\n";
-			wp_mail( $to, $subject, $message );
-		
-		}
-		
-		// Second Option: Update a counter
-		if ( '1' == $actions{1} ) {
+
+		// Update the counter
 			$counter = $this->options['spam']['counter'];
 			$counter ++;
 			$this->options['spam']['counter'] = $counter;
 			update_option( $this->db_options_name_core, $this->options );
 		
-		}
-		
-		// This should be the very last option
-		if ( $this->options['general']['die'] ) {
-			if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) { // Only die when the threshhold is reached.
-				die();
+		// Email
+		if ( $info['frequency'] >= $this->options['spam']['whentoemail'] ) {
+			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+			
+			$to = get_option( 'admin_email' );
+			
+			$subject = sprintf( __( '[%s] AVH Stop Spam - Spammer detected','avh-stopspam' ), $site_name );
+			
+			$message = __('Stop Forum Spam has the following statistics:','avh-stopspam')."\r\n";
+			$message .= sprintf( __('Spam IP:	%s','avh-stopspam'), $ip ) . "\r\n";
+			$message .= sprintf( __('Last Seen:	%s','avh-stopspam'), $info['lastseen'] ) . "\r\n";
+			$message .= sprintf( __('Frequency:	%s','avh_stopspam'), $info['frequency'] ) . "\r\n";
+			
+			if ( $info['frequency'] >= $this->options['spam']['whentoblock'] ) {
+				$message .= sprintf( __('Treshhold:	%s','avh_stopspam'), $this->options['spam']['whentoblock'] ) . "\r\n";
 			}
+			
+			$message .= sprintf( __('Accessing:	%s','avh-stopspam'), $_SERVER['REQUEST_URI'] ) . "\r\n";
+			
+			$message .= sprintf( __('Call took:	%s','avh-amazon'), $time ) . "\r\n";
+			wp_mail( $to, $subject, $message );
+		
+		}
+				
+		// This should be the very last option.
+		if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
+				die();
 		}
 	}
 }

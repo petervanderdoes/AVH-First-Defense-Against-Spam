@@ -1,4 +1,4 @@
-=== AVH Amazon ===
+=== AVH Stop Spam ===
 Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam
@@ -17,7 +17,7 @@ The AVH Stop Spam plugin gives you the ability to block spammers and add them to
 
 == Installation ==
 
-The avh-stospam plugin can be installed in 3 easy steps:
+The avh-stopspam plugin can be installed in 3 easy steps:
 
 1. Unzip the "avh-stopspam" archive and put the directory "avh-stopspam" into your "plugins" folder (wp-content/plugins).
 1. Activate the plugin.
