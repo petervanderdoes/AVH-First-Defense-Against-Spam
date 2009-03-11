@@ -88,7 +88,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 		static $this_plugin;
 
 		if ( ! $this_plugin )
-			$this_plugin = plugin_basename( $this->info['install_dir']);
+			$this_plugin = plugin_basename( $this->info['install_dir'] );
 		if ( $file )
 			$file = $this->getBaseDirectory( $file );
 		if ( $file == $this_plugin ) {
@@ -116,7 +116,7 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 					'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
 				),
 				array(
-					'avhstopspam[spam][whentodie]'.
+					'avhstopspam[spam][whentodie]',
 					'Termination threshold:',
 					'text',
 					3,
