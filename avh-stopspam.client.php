@@ -74,6 +74,7 @@ class AVHStopSpamCore {
 				'counter' => 0,
 				'whentoemail' => 1,
 				'whentodie' => 3,
+				'diewithmessage' => 1,
 			);
 			
 		/**

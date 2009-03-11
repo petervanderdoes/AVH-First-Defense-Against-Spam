@@ -122,6 +122,13 @@ class AVHStopSpamAdmin extends AVHStopSpamCore
 					3,
 					'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>'
 				),
+				array (
+					'avhstopspam[spam][diewithmessage]',
+					'Show message:',
+					'checkbox',
+					1,
+					'Show a message when the connection has been terminated'
+				)
 			),
 			'faq' => array (
 				array (
