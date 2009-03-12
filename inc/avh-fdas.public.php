@@ -49,11 +49,12 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
 			
-			$message = __( 'Stop Forum Spam has the following statistics:', 'avhfdas' ) . "\r\n";
-			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
+			$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
+			$message .= sprintf(__('Error:	%s','avhfdas'),$error). "\r\n\r\n";
+			$message .= sprintf( __( 'IP:			%s', 'avhfdas' ), $ip ) . "\r\n";
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 			$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
-			$message .= sprintf(__('Error:	%s','avhfdas'),$error). "\r\n";
+			
 			wp_mail( $to, $subject, $message );
 		}
 			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
