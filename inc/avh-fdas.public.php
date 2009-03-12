@@ -34,6 +34,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function handleMainAction ()
 	{
+
 		$time_start = microtime( true );
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
@@ -55,7 +56,17 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$message .= sprintf(__('Error:	%s','avhfdas'),$error). "\r\n";
 			wp_mail( $to, $subject, $message );
 		}
-		
+			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+			
+			$to = get_option( 'admin_email' );
+			
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Debug', 'avhfdas' ), $site_name );
+			
+			$message = sprintf( __( 'IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
+			$message .= var_export($spaminfo, TRUE);
+			wp_mail( $to, $subject, $message );
+
+
 		if ( 'yes' == $spaminfo['appears'] ) {
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
@@ -89,10 +100,10 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$message = __( 'Stop Forum Spam has the following statistics:', 'avhfdas' ) . "\r\n";
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
 			$message .= sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['lastseen'] ) . "\r\n";
-			$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['frequency'] ) . "\r\n";
+			$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['frequency'] ) . "\r\n\r\n";
 			
-			if ( $info['frequency'] >= $this->options['spam']['whentoblock'] ) {
-				$message .= sprintf( __( 'Treshhold:	%s', 'avhfdas' ), $this->options['spam']['whentoblock'] ) . "\r\n";
+			if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
+				$message .= sprintf( __( 'Treshhold (%s) reached. Connection terminated', 'avhfdas' ), $this->options['spam']['whentodie'] ) . "\r\n";
 			}
 			
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
