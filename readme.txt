@@ -15,7 +15,7 @@ Spammers are identified by checking if the visitors IP exists in a database serv
 
 
 = Features =
-* Based on the frequency a spammer has been reported at stopforumspam.com a separate threshold can be set for the following features:
+* Based on the frequency a spammer has been reported at stopforumspam.com, a separate threshold can be set for the following features:
 	* Send an email to the board administrator with information about the spammer.
 	* Block the spammer before content is server. 
 * When an IP is blocked a message can be displayed to the visitor with the reason why access was blocked and a link to stopforumspam.com if they want to resolve the issue.
@@ -25,7 +25,8 @@ Blocking a potential spammer before content is served has the following advantag
 * Save CPU cycles. The spammer is actually checked and blocked before WordPress starts building the page.
 * If you keep track of how many visitors your site has, either by using Google's Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives. 
 
-This plugin is fully compatible with other anti-spam plugins. I run this plugin in combination with WP-Spam and Akismet.
+This plugin is fully compatible with other anti-spam plugins, I have tested it with WP-Spamfree and Akismet.
+
 == Installation ==
 
 The AVH First Defense Against Spam plugin can be installed in 3 easy steps:
