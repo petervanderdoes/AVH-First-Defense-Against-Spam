@@ -139,6 +139,28 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'None yet'
 				)
 			),
+			'tips' => array (
+				array (
+					'text-helper',
+					'text-helper',
+					'helper',
+					'',
+					'Here are some handy Tips and Tricks to stop spammers<br />' .
+					'<strong>Deny direct access to add comments</strong><br />' .
+					'Add the following lines to your .htaccess file above the WordPress section. <br />' .
+					'<IfModule mod_rewrite.c> <br />' .
+					'RewriteEngine On <br />' .
+					'RewriteBase / <br />' .
+					'RewriteCond %{REQUEST_METHOD} POST <br />' .
+					'RewriteCond %{THE_REQUEST} .wp-comments-post\.php.* <br />' .
+					'RewriteCond %{HTTP_REFERER} !.*example\.com/.*$ [OR] <br />' .
+					'RewriteCond %{HTTP_USER_AGENT} ^$ <br />' .
+					'RewriteRule (.*) http://%{REMOTE_ADDR}/ [R=301,L] <br />' .
+					'</IfModule><br /><br />' .
+					'Replace example\.com with your domain, for me it would be avirtualhome\.com<br /><br />' .
+					'Spammers are known to call the file wp-comments-post.php directly. Normal users would never do this, the above part will block this behavior.'
+				)
+			),
 			'about' => array (
 				array (
 					'text-helper',
@@ -432,6 +454,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				break;
 			case 'about' :
 				return __( 'About', 'avhfdas' );
+				break;
+			case 'tips' :
+				return __( 'Tips and Tricks', 'avhfdas');
 				break;
 		}
 		return 'Unknown';

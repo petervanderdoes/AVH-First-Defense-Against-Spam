@@ -34,40 +34,47 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function handleMainAction ()
 	{
-
+		
 		$time_start = microtime( true );
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
 		$time_end = microtime( true );
 		$time = $time_end - $time_start;
 		
-		if (isset($spaminfo['Error'])) {
-			$error = $this->getHttpError( $spaminfo['Error'] );
-			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-			
-			$to = get_option( 'admin_email' );
-			
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
-			
-			$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
-			$message .= sprintf(__('Error:	%s','avhfdas'),$error). "\r\n\r\n";
-			$message .= sprintf( __( 'IP:			%s', 'avhfdas' ), $ip ) . "\r\n";
-			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
-			$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
-			
-			wp_mail( $to, $subject, $message );
+		if ( isset( $spaminfo['Error'] ) ) {
+			// Let's give it one more try.
+			$time_start = microtime( true );
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
+			$time_end = microtime( true );
+			$time = $time_end - $time_start;
+			if ( isset( $spaminfo['Error'] ) ) {
+				$error = $this->getHttpError( $spaminfo['Error'] );
+				$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+				
+				$to = get_option( 'admin_email' );
+				
+				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
+				
+				$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
+				$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
+				$message .= sprintf( __( 'IP:			%s', 'avhfdas' ), $ip ) . "\r\n";
+				$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
+				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
+				
+				wp_mail( $to, $subject, $message );
+			}
 		}
-			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-			
-			$to = get_option( 'admin_email' );
-			
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Debug', 'avhfdas' ), $site_name );
-			
-			$message = sprintf( __( 'IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
-			$message .= var_export($spaminfo, TRUE);
-			wp_mail( $to, $subject, $message );
-
-
+		$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+		
+		$to = get_option( 'admin_email' );
+		
+		$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Debug', 'avhfdas' ), $site_name );
+		
+		$message = sprintf( __( 'IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
+		$message .= var_export( $spaminfo, TRUE );
+		wp_mail( $to, $subject, $message );
+		
 		if ( 'yes' == $spaminfo['appears'] ) {
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
@@ -85,9 +92,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	{
 		
 		// Update the counter
-		$counter = $this->data['spam']['counter'];
-		$counter ++;
-		$this->data['spam']['counter'] = $counter;
+		$this->data['spam']['counter']++;
 		update_option( $this->db_data, $this->data );
 		
 		// Email

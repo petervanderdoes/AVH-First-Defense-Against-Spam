@@ -27,6 +27,8 @@ Blocking a potential spammer before content is served has the following advantag
 
 This plugin is fully compatible with other anti-spam plugins, I have tested it with WP-Spamfree and Akismet.
 
+The plugin also gives you some extra tips and tricks to stop spam by editing your htaccess file. To access them go to the settings of the plugin and click Tips and Tricks
+
 == Installation ==
 
 The AVH First Defense Against Spam plugin can be installed in 3 easy steps:
