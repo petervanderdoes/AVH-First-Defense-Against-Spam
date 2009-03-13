@@ -65,15 +65,12 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 				wp_mail( $to, $subject, $message );
 			}
 		}
-		$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-		
+		/*$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 		$to = get_option( 'admin_email' );
-		
 		$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Debug', 'avhfdas' ), $site_name );
-		
 		$message = sprintf( __( 'IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
 		$message .= var_export( $spaminfo, TRUE );
-		wp_mail( $to, $subject, $message );
+		wp_mail( $to, $subject, $message );*/
 		
 		if ( 'yes' == $spaminfo['appears'] ) {
 			$this->handleSpammer( $ip, $spaminfo, $time );
@@ -101,7 +98,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			
 			$to = get_option( 'admin_email' );
 			
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected', 'avhfdas' ), $site_name );
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), $site_name, $ip );
 			
 			$message = __( 'Stop Forum Spam has the following statistics:', 'avhfdas' ) . "\r\n";
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
