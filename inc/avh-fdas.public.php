@@ -84,8 +84,8 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		$blacklist = $this->options['spam']['blacklist'];
 		if (in_array($ip,$blacklist)) {
 			$spaminfo['appears']='yes';
-			$spaminfo['frequency']=$this->options['spam']['whentodie']; // Blaclisted IP's will always be terminated.
-			$info = 'Blacklisted';
+			$spaminfo['frequency']=abs($this->options['spam']['whentodie']); // Blaclisted IP's will always be terminated.
+			$time = 'Blacklisted';
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
 	}

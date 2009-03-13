@@ -128,7 +128,21 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'checkbox',
 					1,
 					'Show a message when the connection has been terminated'
-				)
+				),
+				array (
+					'avhfdas[spam][useblacklist]',
+					'Use internal blacklist:',
+					'checkbox',
+					1,
+					'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.'
+				),
+				array (
+					'avhfdas[spam][blacklist]',
+					'Blacklist IP\'s:',
+					'textarea',
+					15,
+					'Each IP should be on a seperate line',
+					15)
 			),
 			'faq' => array (
 				array (
@@ -198,7 +212,13 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 							if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
 								$newval = $this->default_options[$key][$key2];
 							}
-							(int) $newval = $newval;
+							$newval = ( int ) $newval;
+						}
+
+						if ('blacklist' ==  $key2) {
+							if (! empty($newval)) {
+								$newval = explode('\n',$newval);
+							}
 						}
 						if ( $newval != $value2 ) {
 							$this->setOption( array ($key, $key2 ), $newval );
@@ -375,6 +395,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		// Get actual options
 		$option_actual = ( array ) $this->options;
 
+		// Blacklist is stored in an array
+		if (!empty($option_actual['spam']['blacklist'])) {
+			$option_actual['spam']['blacklist']=implode('\n',$this->options['spam']['blacklist']);
+		}
 		// Generate output
 		$output = '';
 		$checkbox = '|';
@@ -410,6 +434,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 
 					case 'text-color' :
 						$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( $option_actual[$section][$option_key] ) . '" size="' . $option[3] . '" /><div class="box_color ' . $option[0] . '"></div>' . "\n";
+						$explanation = $option[4];
+						break;
+
+					case 'textarea' :
+						$input_type = '<textarea rows="'.$option[5].'" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" size="' . $option[3] . '" />'.attribute_escape( $option_actual[$section][$option_key] ) . '</textarea>';
 						$explanation = $option[4];
 						break;
 

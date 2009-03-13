@@ -82,7 +82,7 @@ class AVH_FDAS_Core {
 			);
 		$this->default_spam_data = array(
 				'counter' => 0,
-				'blacklist' => '',
+				'blacklist' => array(),
 		);
 
 		/**
