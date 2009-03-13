@@ -115,11 +115,13 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			wp_mail( $to, $subject, $message );
 		
 		}
-		
+			
 		// This should be the very last option.
 		if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
 			if ( '1' == $this->options['spam']['diewithmessage'] ) {
-				wp_die( sprintf( __( 'Access has been blocked.<BR />Your IP [%s] is registered in the Stop Forum Spam database.<BR />If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a>', 'avhfdas' ), $ip ) );
+				$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam database.<BR />If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a></p>', 'avhfdas' ), $ip );
+				$m .= __('<p>Protected by: AVH First Defense Against Spam</p>','avhfdas');
+				wp_die( $m );
 			} else {
 				die();
 			}
