@@ -117,10 +117,10 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		}
 			
 		// This should be the very last option.
-		if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
-			if ( '1' == $this->options['spam']['diewithmessage'] ) {
+		if ( ( int ) $info['frequency'] >= $this->options['spam']['whentodie'] ) {
+			if ( 1 == $this->options['spam']['diewithmessage'] ) {
 				$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam database.<BR />If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a></p>', 'avhfdas' ), $ip );
-				$m .= __('<p>Protected by: AVH First Defense Against Spam</p>','avhfdas');
+				$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
 				wp_die( $m );
 			} else {
 				die();
