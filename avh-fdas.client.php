@@ -37,7 +37,7 @@ class AVH_FDAS_Core {
 	var $default_general_options;
 	var $default_options;
 	var $default_spam;
-	
+
 	var $data;
 	var $default_data;
 	var $default_spam_data;
@@ -50,10 +50,10 @@ class AVH_FDAS_Core {
 	var $db_data;
 	/**
 	* Endpoint of the stopforumspam.com API
-	* 
+	*
 	* @var string
 	*/
-	
+
 	var $stopforumspam_endpoint;
 
 	/**
@@ -78,18 +78,20 @@ class AVH_FDAS_Core {
 				'whentoemail' => 1,
 				'whentodie' => 3,
 				'diewithmessage' => 1,
+				'useblacklist' => 1,
 			);
 		$this->default_spam_data = array(
 				'counter' => 0,
+				'blacklist' => '',
 		);
-		
+
 		/**
 		 * Default Options - All as stored in the DB
 		 */
 		$this->default_options = array (
 				'general' => $this->default_general_options,
 				'spam' => $this->default_spam,
-			);		
+			);
 
 		$this->default_data = array (
 				'spam' => $this->default_spam_data,
@@ -100,7 +102,7 @@ class AVH_FDAS_Core {
 		 */
 		$this->handleOptions ();
 		$this->handleData();
-		
+
 		// Determine installation path & url
 		//$info['home_path'] = get_home_path();
 		$path = str_replace ( '\\', '/', dirname ( __FILE__ ) );
@@ -137,9 +139,9 @@ class AVH_FDAS_Core {
 				'home_path' => $info['home_path'],
 				'wordpress_version' => $this->getWordpressVersion ()
 		);
-		
+
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
-		
+
 		/**
 		 * TODO Localization
 		 */
@@ -210,7 +212,7 @@ class AVH_FDAS_Core {
 		// Set the class property for data
 		$this->data = $default_data;
 	}
-	
+
 	/**
 	 * Get the value for data. If there's no data return the default value.
 	 *
@@ -337,7 +339,7 @@ class AVH_FDAS_Core {
 			wp_enqueue_style ( $handle );
 		}
 	}
-	
+
 	/**
 	 * Actual Rest Call
 	 *
@@ -401,7 +403,7 @@ class AVH_FDAS_Core {
 		}
 		return '<strong>avhfdas error:' . $error_short . ' - ' . $error_long . '</strong>';
 	}
-	
+
 	/**
 	 * Convert an array into a query string
 	 *
@@ -585,7 +587,7 @@ class AVH_FDAS_Core {
  */
 function avh_FDAS__init ()
 {
-	
+
 	// Admin
 	if ( is_admin() ) {
 		require (dirname( __FILE__ ) . '/inc/avh-fdas.admin.php');
@@ -593,7 +595,7 @@ function avh_FDAS__init ()
 		//Installation
 		register_activation_hook( __FILE__, array (& $avhfdas_admin, 'installPlugin' ) );
 	}
-	
+
 	// Include the public class
 	require (dirname( __FILE__ ) . '/inc/avh-fdas.public.php');
 	$avhfdas_public = & new AVH_FDAS_Public( );

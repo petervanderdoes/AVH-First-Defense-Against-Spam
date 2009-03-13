@@ -1,5 +1,5 @@
 <?php
-class AVH_FDAS_Admin extends AVH_FDAS_Core 
+class AVH_FDAS_Admin extends AVH_FDAS_Core
 {
 
 	/**
@@ -167,14 +167,14 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'text-helper',
 					'helper',
 					'',
-					'<p>The AVH First Defense Against Spam plugin gives you the ability to block potential spammers based on the Stop Forum Spam database<br />' . 
-					'<b>Support</b><br />' . 
-					'For support visit the AVH support forums at <a href="http://forums.avirtualhome.com/">http://forums.avirtualhome.com/</a><br /><br />' . 
+					'<p>The AVH First Defense Against Spam plugin gives you the ability to block potential spammers based on the Stop Forum Spam database<br />' .
+					'<b>Support</b><br />' .
+					'For support visit the AVH support forums at <a href="http://forums.avirtualhome.com/">http://forums.avirtualhome.com/</a><br /><br />' .
 					'<b>Developer</b><br />' . 'Peter van der Does'
 				)
 			)
 		);
-			
+
 		// Update or reset options
 		if ( isset( $_POST['updateoptions'] ) ) {
 			check_admin_referer( 'avhfdas-options' );
@@ -190,14 +190,15 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			}
 			$formoptions = $_POST['avhfdas'];
 			foreach ( $this->options as $key => $value ) {
-				if ( ! ('general' == $key) ) {
+				if ( 'general' != $key ) {
 					foreach ( $value as $key2 => $value2 ) {
-						$newval = (isset( $formoptions[$key][$key2] )) ? attribute_escape( $formoptions[$key][$key2] ) : '0';
+						$newval = (isset( $formoptions[$key][$key2] )) ? attribute_escape( $formoptions[$key][$key2] ) : $this->default_options[$key][$key2];
 						// Check numeric entries
 						if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
 							if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
 								$newval = $this->default_options[$key][$key2];
 							}
+							(int) $newval = $newval;
 						}
 						if ( $newval != $value2 ) {
 							$this->setOption( array ($key, $key2 ), $newval );
@@ -213,15 +214,15 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			$this->resetToDefaultOptions();
 			$this->message = __( 'AVH First Defense Against Spam options set to default options!', 'avhfdas' );
 		}
-		
+
 		$this->displayMessage();
-		
+
 		echo '<script type="text/javascript">';
 		echo 'jQuery(document).ready( function() {';
 		echo 'jQuery(\'#printOptions > ul\').tabs();';
 		echo '});';
 		echo '</script>';
-		
+
 		echo '<div class="wrap avh_wrap">';
 		echo '<h2>';
 		_e( 'AVH First Defense Against Spam: Options', 'avhfdas' );
@@ -235,14 +236,14 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		echo '</ul>';
 		echo $this->printOptions( $option_data );
 		echo '</div>';
-		
+
 		$buttonprimary = ($this->info['wordpress_version'] < 2.7) ? '' : 'button-primary';
 		$buttonsecondary = ($this->info['wordpress_version'] < 2.7) ? '' : 'button-secondary';
 		echo '<p class="submit"><input	class="' . $buttonprimary . '"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" />';
 		echo '<input class="' . $buttonsecondary . '" type="submit" name="reset_options" onclick="return confirm(\'' . __( 'Do you really want to restore the default options?', 'avhfdas' ) . '\')" value="' . __( 'Reset Options', 'avhfdas' ) . '" /></p>';
 		wp_nonce_field( 'avhfdas-options' );
 		echo '</form>';
-		
+
 		$this->printAdminFooter();
 		echo '</div>';
 	}
@@ -256,7 +257,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		if ( ! (get_option( $this->db_options_name_core )) ) {
 			$this->resetToDefaultOptions();
 		}
-		
+
 		if ( ! (get_option( $this->db_data )) ) {
 			$this->data = $this->default_data;
 			update_option( $this->db_data, $this->data );
@@ -461,7 +462,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 		return 'Unknown';
 	}
-	
+
 	function isChecked ( $checked, $current )
 	{
 		if ( $checked == $current )
