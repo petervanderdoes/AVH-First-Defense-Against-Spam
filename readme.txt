@@ -41,7 +41,7 @@ The AVH First Defense Against Spam plugin can be installed in 3 easy steps:
 
 == Screenshots ==
 
-None
+1. This message is shown when you select the option to show a message. 
 
 == Arbitrary section ==
 * Version 1.0
