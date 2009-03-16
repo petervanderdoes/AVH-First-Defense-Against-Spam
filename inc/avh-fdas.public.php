@@ -124,7 +124,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 
 			if ( 'Blacklisted' == $time ) {
-				$message .= _( 'IP was in black list table', 'avhfdas' ) . "\r\n";
+				$message .= __( 'IP was in black list table', 'avhfdas' ) . "\r\n";
 			} else {
 				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
 			}
