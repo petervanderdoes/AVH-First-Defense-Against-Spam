@@ -37,7 +37,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		$ip = $_SERVER['REMOTE_ADDR'];
 
 		if ( 1 == $this->options['spam']['useblacklist'] ) {
-
+			$this->checkBlacklist($ip);
 		}
 		$time_start = microtime( true );
 		$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
@@ -81,8 +81,8 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	}
 
 	function checkBlacklist($ip) {
-		$blacklist = $this->options['spam']['blacklist'];
-		if (in_array($ip,$blacklist)) {
+		$b=explode("\r\n",$this->options['spam']['blacklist']);
+		if (in_array($ip,$b)) {
 			$spaminfo['appears']='yes';
 			$spaminfo['frequency']=abs($this->options['spam']['whentodie']); // Blaclisted IP's will always be terminated.
 			$time = 'Blacklisted';
@@ -131,7 +131,11 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		// This should be the very last option.
 		if ( $this->options['spam']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $this->options['spam']['whentodie'] ) {
 			if ( 1 == $this->options['spam']['diewithmessage'] ) {
-				$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam database.<BR />If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a></p>', 'avhfdas' ), $ip );
+				if ('Blacklisted' == $time){
+					$m=sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );
+				} else {
+					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam database.<BR />If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a></p>', 'avhfdas' ), $ip );
+				}
 				$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
 				wp_die( $m );
 			} else {

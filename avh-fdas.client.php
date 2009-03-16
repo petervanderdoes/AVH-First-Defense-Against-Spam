@@ -79,10 +79,10 @@ class AVH_FDAS_Core {
 				'whentodie' => 3,
 				'diewithmessage' => 1,
 				'useblacklist' => 1,
+				'blacklist' => '',
 			);
 		$this->default_spam_data = array(
 				'counter' => 0,
-				'blacklist' => array(),
 		);
 
 		/**

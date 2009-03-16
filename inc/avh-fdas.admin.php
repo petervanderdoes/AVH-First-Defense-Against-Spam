@@ -214,12 +214,6 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 							}
 							$newval = ( int ) $newval;
 						}
-
-						if ('blacklist' ==  $key2) {
-							if (! empty($newval)) {
-								$newval = explode('\n',$newval);
-							}
-						}
 						if ( $newval != $value2 ) {
 							$this->setOption( array ($key, $key2 ), $newval );
 						}
@@ -395,10 +389,6 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		// Get actual options
 		$option_actual = ( array ) $this->options;
 
-		// Blacklist is stored in an array
-		if (!empty($option_actual['spam']['blacklist'])) {
-			$option_actual['spam']['blacklist']=implode('\n',$this->options['spam']['blacklist']);
-		}
 		// Generate output
 		$output = '';
 		$checkbox = '|';
