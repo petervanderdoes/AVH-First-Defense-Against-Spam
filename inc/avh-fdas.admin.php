@@ -204,9 +204,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			}
 			$formoptions = $_POST['avhfdas'];
 			foreach ( $this->options as $key => $value ) {
-				if ( 'general' != $key ) {
+				if ( 'general' != $key ) { // The data in General is used for internal usage.
 					foreach ( $value as $key2 => $value2 ) {
-						$newval = (isset( $formoptions[$key][$key2] )) ? attribute_escape( $formoptions[$key][$key2] ) : $this->default_options[$key][$key2];
+						if (isset( $formoptions[$key][$key2] )) {
+							$newval =  attribute_escape( $formoptions[$key][$key2] );
+						}
 						// Check numeric entries
 						if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
 							if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
