@@ -251,10 +251,8 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		echo $this->printOptions( $option_data );
 		echo '</div>';
 
-		$buttonprimary = ($this->info['wordpress_version'] < 2.7) ? '' : 'button-primary';
-		$buttonsecondary = ($this->info['wordpress_version'] < 2.7) ? '' : 'button-secondary';
-		echo '<p class="submit"><input	class="' . $buttonprimary . '"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" />';
-		echo '<input class="' . $buttonsecondary . '" type="submit" name="reset_options" onclick="return confirm(\'' . __( 'Do you really want to restore the default options?', 'avhfdas' ) . '\')" value="' . __( 'Reset Options', 'avhfdas' ) . '" /></p>';
+		echo '<p class="submit"><input	class="button-primary" type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" />';
+		echo '<input class="button-secondary" type="submit" name="reset_options" onclick="return confirm(\'' . __( 'Do you really want to restore the default options?', 'avhfdas' ) . '\')" value="' . __( 'Reset Options', 'avhfdas' ) . '" /></p>';
 		wp_nonce_field( 'avhfdas-options' );
 		echo '</form>';
 
@@ -277,19 +275,6 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			update_option( $this->db_data, $this->data );
 			wp_cache_flush(); // Delete cache
 		}
-	}
-
-	############## WP Options ##############
-	/**
-	 * Removes the plugin, old style of doing it.
-	 *
-	 * @param string $plugin
-	 */
-	function removePlugin ( $plugin )
-	{
-		$current = get_option( 'active_plugins' );
-		array_splice( $current, array_search( $plugin, $current ), 1 ); // Array-fu!
-		update_option( 'active_plugins', $current );
 	}
 
 	/**
@@ -373,9 +358,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function helperCSS ()
 	{
-		if ( $this->info['wordpress_version'] >= 2.7 ) {
-			$this->handleCssFile( 'avhfdasadmin', '/inc/avh-fdas.admin.css' );
-		}
+		$this->handleCssFile( 'avhfdasadmin', '/inc/avh-fdas.admin.css' );
 	}
 
 	/**
@@ -428,7 +411,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 						break;
 
 					case 'textarea' :
-						$input_type = '<textarea rows="'.$option[5].'" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" size="' . $option[3] . '" />'.attribute_escape( $option_actual[$section][$option_key] ) . '</textarea>';
+						$input_type = '<textarea rows="' . $option[5] . '" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" size="' . $option[3] . '" />' . attribute_escape( $option_actual[$section][$option_key] ) . '</textarea>';
 						$explanation = $option[4];
 						break;
 
@@ -476,12 +459,19 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				return __( 'About', 'avhfdas' );
 				break;
 			case 'tips' :
-				return __( 'Tips and Tricks', 'avhfdas');
+				return __( 'Tips and Tricks', 'avhfdas' );
 				break;
 		}
 		return 'Unknown';
 	}
 
+	/**
+	 * Used in forms to set an option checked
+	 *
+	 * @param mixed $checked
+	 * @param mixed $current
+	 * @return strings
+	 */
 	function isChecked ( $checked, $current )
 	{
 		if ( $checked == $current )

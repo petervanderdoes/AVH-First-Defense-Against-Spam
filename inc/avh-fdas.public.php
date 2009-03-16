@@ -37,7 +37,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		$ip = $_SERVER['REMOTE_ADDR'];
 
 		if ( 1 == $this->options['spam']['useblacklist'] ) {
-			$this->checkBlacklist($ip);
+			$this->checkBlacklist( $ip );
 		}
 		$time_start = microtime( true );
 		$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
@@ -68,23 +68,23 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 				wp_mail( $to, $subject, $message );
 			}
 		}
-		/*$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-		$to = get_option( 'admin_email' );
-		$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Debug', 'avhfdas' ), $site_name );
-		$message = sprintf( __( 'IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
-		$message .= var_export( $spaminfo, TRUE );
-		wp_mail( $to, $subject, $message );*/
 
 		if ( 'yes' == $spaminfo['appears'] ) {
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
 	}
 
-	function checkBlacklist($ip) {
-		$b=explode("\r\n",$this->options['spam']['blacklist']);
-		if (in_array($ip,$b)) {
-			$spaminfo['appears']='yes';
-			$spaminfo['frequency']=abs($this->options['spam']['whentodie']); // Blaclisted IP's will always be terminated.
+	/**
+	 * Check blacklist table
+	 *
+	 * @param string $ip
+	 */
+	function checkBlacklist ( $ip )
+	{
+		$b = explode( "\r\n", $this->options['spam']['blacklist'] );
+		if ( in_array( $ip, $b ) ) {
+			$spaminfo['appears'] = 'yes';
+			$spaminfo['frequency'] = abs( $this->options['spam']['whentodie'] ); // Blaclisted IP's will always be terminated.
 			$time = 'Blacklisted';
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
@@ -123,7 +123,11 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 
-			$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
+			if ( 'Blacklisted' == $time ) {
+				$message .= _( 'IP was in black list table', 'avhfdas' ) . "\r\n";
+			} else {
+				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
+			}
 			wp_mail( $to, $subject, $message );
 
 		}
@@ -131,8 +135,8 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		// This should be the very last option.
 		if ( $this->options['spam']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $this->options['spam']['whentodie'] ) {
 			if ( 1 == $this->options['spam']['diewithmessage'] ) {
-				if ('Blacklisted' == $time){
-					$m=sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );
+				if ( 'Blacklisted' == $time ) {
+					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );
 				} else {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam database.<BR />If you feel this is incorrect please contact <a href="http://www.stopforumspam.com">Stop Forum Spam</a></p>', 'avhfdas' ), $ip );
 				}

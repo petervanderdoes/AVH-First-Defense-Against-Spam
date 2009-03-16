@@ -43,7 +43,7 @@ The AVH First Defense Against Spam plugin can be installed in 3 easy steps:
 
 1. This message is shown when you select the option to show a message and the visitors IP is found in the Stop Forum Spam database. 
 
-2. This message is shown when the visitors IP is blacklisted.
+2. This message is shown when you select the option to show a message and the visitors IP is blacklisted.
 
 == Arbitrary section ==
 * Version 1.0

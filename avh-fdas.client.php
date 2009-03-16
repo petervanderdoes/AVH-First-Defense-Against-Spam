@@ -105,11 +105,11 @@ class AVH_FDAS_Core {
 
 		// Determine installation path & url
 		//$info['home_path'] = get_home_path();
-		$path = str_replace ( '\\', '/', dirname ( __FILE__ ) );
-		$path = substr ( $path, strpos ( $path, 'plugins' ) + 8, strlen ( $path ) );
+		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
+		$path = substr( $path, strpos( $path, 'plugins' ) + 8, strlen( $path ) );
 
-		$info['siteurl'] = get_option ( 'siteurl' );
-		if ( $this->isMuPlugin () ) {
+		$info['siteurl'] = get_option( 'siteurl' );
+		if ( $this->isMuPlugin() ) {
 			$info['install_url'] = $info['siteurl'] . '/wp-content/mu-plugins';
 			$info['install_dir'] = ABSPATH . 'wp-content/mu-plugins';
 
@@ -186,21 +186,22 @@ class AVH_FDAS_Core {
 	 * @since 1.0
 	 *
 	 */
-	function handleData () {
+	function handleData ()
+	{
 
 		$default_data = $this->default_data;
 
 		// Get options from WP options
-		$data_from_table = get_option ( $this->db_data );
+		$data_from_table = get_option( $this->db_data );
 
-		if ( empty ( $data_from_table ) ) {
+		if ( empty( $data_from_table ) ) {
 			$data_from_table = $this->default_data; // New installation
 		} else {
 			// Update default options by getting not empty values from options table
 			foreach ( $default_data as $section_key => $section_array ) {
 				foreach ( $section_array as $name => $value ) {
-					if ( ! is_null ( $data_from_table[$section_key][$name] ) ) {
-						if ( is_int ( $value ) ) {
+					if ( ! is_null( $data_from_table[$section_key][$name] ) ) {
+						if ( is_int( $value ) ) {
 							$default_data[$section_key][$name] = ( int ) $data_from_table[$section_key][$name];
 						} else {
 							$default_data[$section_key][$name] = $data_from_table[$section_key][$name];
@@ -220,7 +221,8 @@ class AVH_FDAS_Core {
 	 * @param string $option
 	 * @return mixed
 	 */
-	function getData ( $key, $option ) {
+	function getData ( $key, $option )
+	{
 
 		if ( $this->data[$option][$key] ) {
 			$return = $this->data[$option][$key]; // From Admin Page
@@ -229,6 +231,7 @@ class AVH_FDAS_Core {
 		}
 		return ($return);
 	}
+
 	/**
 	 * Sets the class property "options" to the options stored in the DB and if they do not exists set them to the default options
 	 * Checks if upgrades are necessary based on the version number
@@ -236,21 +239,22 @@ class AVH_FDAS_Core {
 	 * @since 1.0
 	 *
 	 */
-	function handleOptions () {
+	function handleOptions ()
+	{
 
 		$default_options = $this->default_options;
 
 		// Get options from WP options
-		$options_from_table = get_option ( $this->db_options_name_core );
+		$options_from_table = get_option( $this->db_options_name_core );
 
-		if ( empty ( $options_from_table ) ) {
+		if ( empty( $options_from_table ) ) {
 			$options_from_table = $this->default_options; // New installation
 		} else {
 			// Update default options by getting not empty values from options table
 			foreach ( $default_options as $section_key => $section_array ) {
 				foreach ( $section_array as $name => $value ) {
-					if ( ! is_null ( $options_from_table[$section_key][$name] ) ) {
-						if ( is_int ( $value ) ) {
+					if ( ! is_null( $options_from_table[$section_key][$name] ) ) {
+						if ( is_int( $value ) ) {
 							$default_options[$section_key][$name] = ( int ) $options_from_table[$section_key][$name];
 						} else {
 							$default_options[$section_key][$name] = $options_from_table[$section_key][$name];
@@ -262,12 +266,13 @@ class AVH_FDAS_Core {
 			// If a newer version is running do upgrades if neccesary and update the database.
 			if ( $this->version > $options_from_table['general']['version'] ) {
 				$default_options['general']['version'] = $this->version;
-				update_option ( $this->db_options_name_core, $default_options );
+				update_option( $this->db_options_name_core, $default_options );
 			}
 		}
 		// Set the class property for options
 		$this->options = $default_options;
 	} // End handleOptions()
+
 
 	/**
 	 * Get the value for an option. If there's no option is set on the Admin page, return the default value.
@@ -276,7 +281,8 @@ class AVH_FDAS_Core {
 	 * @param string $option
 	 * @return mixed
 	 */
-	function getOption ( $key, $option ) {
+	function getOption ( $key, $option )
+	{
 
 		if ( $this->options[$option][$key] ) {
 			$return = $this->options[$option][$key]; // From Admin Page
@@ -295,14 +301,15 @@ class AVH_FDAS_Core {
 	 * @since 1.0
 	 *
 	 */
-	function getBaseDirectory ( $directory ) {
+	function getBaseDirectory ( $directory )
+	{
 
 		//get public directory structure eg "/top/second/third"
-		$public_directory = dirname ( $directory );
+		$public_directory = dirname( $directory );
 		//place each directory into array
-		$directory_array = explode ( '/', $public_directory );
+		$directory_array = explode( '/', $public_directory );
 		//get highest or top level in array of directory strings
-		$public_base = max ( $directory_array );
+		$public_base = max( $directory_array );
 
 		return $public_base;
 	}
@@ -315,7 +322,8 @@ class AVH_FDAS_Core {
 	 *
 	 * @since 1.0
 	 */
-	function getWordpressVersion () {
+	function getWordpressVersion ()
+	{
 
 		global $wp_version;
 		$version = ( float ) $wp_version;
@@ -330,13 +338,14 @@ class AVH_FDAS_Core {
 	 *
 	 * @since 1.0
 	 */
-	function handleCssFile ( $handle, $cssfile ) {
+	function handleCssFile ( $handle, $cssfile )
+	{
 
-		wp_register_style ( $handle, $this->info['install_uri'] . $cssfile, array (), $this->version, 'all' );
-		if ( did_action ( 'wp_print_styles' ) ) { // we already printed the style queue.  Print this one immediately
-			wp_print_styles ( $handle );
+		wp_register_style( $handle, $this->info['install_uri'] . $cssfile, array (), $this->version, 'all' );
+		if ( did_action( 'wp_print_styles' ) ) { // we already printed the style queue.  Print this one immediately
+			wp_print_styles( $handle );
 		} else {
-			wp_enqueue_style ( $handle );
+			wp_enqueue_style( $handle );
 		}
 	}
 
@@ -379,7 +388,7 @@ class AVH_FDAS_Core {
 		if ( ! empty( $xml_array ) ) {
 			// Did the call succeed?
 			if ( 'true' == $xml_array['response_attr']['success'] ) {
-				$return_array=$xml_array['response'];
+				$return_array = $xml_array['response'];
 			} else {
 				$return_array = array ('Error' => 'Invalid call to stopforumspam' );
 			}
@@ -580,6 +589,7 @@ class AVH_FDAS_Core {
 		return $iplookup;
 	}
 } //End Class avh_amazon
+
 
 /**
  * Initialize the plugin
