@@ -11,7 +11,7 @@ The AVH First Defense Against Spam plugin gives you the ability to block spammer
 == Description ==
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
-Spammers are identified by checking if the visitors IP exists in a database served by stopforumspam.com.
+Spammers are identified by checking if the visitors IP exists in a database served by stopforumspam.com or by a local blacklist.
 
 
 = Features =
