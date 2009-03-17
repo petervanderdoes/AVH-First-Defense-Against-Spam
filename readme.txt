@@ -42,7 +42,7 @@ Unfortunately not.
 I don't believe there is one solution to block all spam. Personally I have great success with the plugin in combination with Akismet.
 
 = Does it conflicts with other spam solutions? =
-I'm currently not aware of any conflicts with other spam solutions.
+I'm currently not aware of any conflicts with other anti-spam solutions.
 
 == Screenshots ==
 
