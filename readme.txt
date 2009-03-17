@@ -21,9 +21,9 @@ Spammers are identified by checking if the visitors IP exists in a database serv
 * When an IP is blocked a message can be displayed to the visitor with the reason why access was blocked and a link to stopforumspam.com if they want to resolve the issue.
 
 Blocking a potential spammer before content is served has the following advantages:
-* Save bandwidth.
-* Save CPU cycles. The spammer is actually checked and blocked before WordPress starts building the page.
-* If you keep track of how many visitors your site has, either by using Google's Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives. 
+1. It saves bandwidth.
+1. It saves CPU cycles. The spammer is actually checked and blocked before WordPress starts building the page.
+1. If you keep track of how many visitors your site has, either by using Google's Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives. 
 
 This plugin is fully compatible with other anti-spam plugins, I have tested it with WP-Spamfree and Akismet.
 
@@ -37,7 +37,12 @@ The AVH First Defense Against Spam plugin can be installed in 3 easy steps:
 1. Activate the plugin.
 
 == Frequently Asked Questions ==
+= Is this plugin enough to block all spam? =
+Unfortunately not.
+I don't believe there is one solution to block all spam. Personally I have great success with the plugin in combination with Akismet.
 
+= Does it conflicts with other spam solutions? =
+I'm currently not aware of any conflicts with other spam solutions.
 
 == Screenshots ==
 
