@@ -150,7 +150,25 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'text-helper',
 					'helper',
 					'',
-					'None yet'
+					'<h3>Why is the default threshold for terminating set to 3?</h3>'.
+					'<p>People, like you and me, report spammers to Stop Forum Spam. Sometimes a mistake is made and a normal IP is reported as a spammer.<br />'.
+					'To be safe not to block a non-spammer, I have set the threshold to 3.</p>'.
+					'<h3>Is this plugin enough to block all spam?</h3>'.
+					'<p>Unfortunately not. I don\'t believe there is one solution to block all spam.<br />'.
+					'Personally I have great success with the plugin in combination with Akismet.</p>'.
+					'<h3>Why bother with this plugin? My other solutions keep my blog free from spam.</h3>'.
+					'<p>The way a potential spammer is blocked is different from other solutions so far.<br />'.
+					'This plugin blocks the spammer before WordPress generates the page and shows it to the visitor.<br/>'.
+					'This has the following advantages:<br />'.
+					'<nbsp>* It saves bandwidth.<br/>'.
+					'<nbsp>* It saves CPU cycles.<br/>'.
+					'<nbsp>* If you keep track of how many visitors your site has, either by using Google\'s Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives.<br/>'.
+					'</p>'.
+					'<h3>Does it conflicts with other spam solutions?</h3>'.
+					'<p>I\'m currently not aware of any conflicts with other spam solutions.</p>'.
+					'<h3>Can I report a spammer at Stop Forum Spam?</h3>'.
+					'<p>You can by visiting their site at <a href="http://www.stopforumspam.com/add" target="_blank">http://www.stopforumspam.com/add</a><br/>'.
+					'I\'m looking to see if I can integrate the reporting of spammers in WordPress.</p>'
 				)
 			),
 			'tips' => array (
@@ -159,10 +177,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'text-helper',
 					'helper',
 					'',
-					'Here are some handy Tips and Tricks to stop spammers<br />' .
-					'<strong>Deny direct access to add comments</strong><br />' .
-					'Add the following lines to your .htaccess file above the WordPress section. <br />' .
-					'<IfModule mod_rewrite.c> <br />' .
+					'<h3>Deny direct access to add comments.</h3>' .
+					'<p>Add the following lines to your .htaccess file above the WordPress section. <br />' .
+					'<pre>&#60;IfModule mod_rewrite.c> <br />' .
 					'RewriteEngine On <br />' .
 					'RewriteBase / <br />' .
 					'RewriteCond %{REQUEST_METHOD} POST <br />' .
@@ -170,9 +187,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'RewriteCond %{HTTP_REFERER} !.*example\.com/.*$ [OR] <br />' .
 					'RewriteCond %{HTTP_USER_AGENT} ^$ <br />' .
 					'RewriteRule (.*) http://%{REMOTE_ADDR}/ [R=301,L] <br />' .
-					'</IfModule><br /><br />' .
-					'Replace example\.com with your domain, for me it would be avirtualhome\.com<br /><br />' .
-					'Spammers are known to call the file wp-comments-post.php directly. Normal users would never do this, the above part will block this behavior.'
+					'&#60;/IfModule></pre>' .
+					'<p>Replace example\.com with your domain, for me it would be avirtualhome\.com<br /><br />' .
+					'Spammers are known to call the file wp-comments-post.php directly. Normal users would never do this, the above part will block this behavior.</p>'
 				)
 			),
 			'about' => array (
@@ -181,7 +198,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'text-helper',
 					'helper',
 					'',
-					'<p>The AVH First Defense Against Spam plugin gives you the ability to block potential spammers based on the Stop Forum Spam database<br />' .
+					'<p>The AVH First Defense Against Spam plugin gives you the ability to block potential spammers based on the Stop Forum Spam database or the local blacklist<br />' .
 					'<b>Support</b><br />' .
 					'For support visit the AVH support forums at <a href="http://forums.avirtualhome.com/">http://forums.avirtualhome.com/</a><br /><br />' .
 					'<b>Developer</b><br />' . 'Peter van der Does'
