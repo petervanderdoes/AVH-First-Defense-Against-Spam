@@ -37,6 +37,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		if ( in_array( $_GET['page'], $avhfdas_pages ) ) {
 			wp_enqueue_script( 'jquery-ui-tabs' );
 		}
+
+		// Add Filter
+		add_filter('comment_row_actions',array(&$this,'addtocommentrow'));
 		return;
 	}
 
@@ -100,6 +103,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 
 	}
 
+	function filterCommentRowActions($actions,$comment){
+		$actions['report'] = '<a href="">Report</a>';
+		return $actions;
+	}
 	/**
 	 * WP Page Options- AVH Amazon options
 	 *
