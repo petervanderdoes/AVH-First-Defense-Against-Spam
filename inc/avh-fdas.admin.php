@@ -37,6 +37,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		if ( in_array( $_GET['page'], $avhfdas_pages ) ) {
 			wp_enqueue_script( 'jquery-ui-tabs' );
 		}
+
+		// Add Filter
+		add_filter('comment_row_actions',array(&$this,'filterCommentRowActions'),10,2);
 		return;
 	}
 
@@ -100,6 +103,12 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 
 	}
 
+	function filterCommentRowActions($actions,$comment){
+		if ( (! empty( $this->options['spam']['sfsapikey'] )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
+			$actions['report'] = '<a href="">Report</a>';
+		}
+		return $actions;
+	}
 	/**
 	 * WP Page Options- AVH Amazon options
 	 *
@@ -127,7 +136,14 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'Show message:',
 					'checkbox',
 					1,
-					'Show a message when the connection has been terminated'
+					'Show a message when the connection has been terminated.'
+				),
+				array (
+					'avhfdas[spam][sfsapikey]',
+					'API Key:',
+					'text',
+					15,
+					'You need a Stop Forum Spam API key to report spam.'
 				),
 				array (
 					'avhfdas[spam][useblacklist]',
@@ -167,8 +183,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'<h3>Does it conflicts with other spam solutions?</h3>'.
 					'<p>I\'m currently not aware of any conflicts with other spam solutions.</p>'.
 					'<h3>Can I report a spammer at Stop Forum Spam?</h3>'.
-					'<p>You can by visiting their site at <a href="http://www.stopforumspam.com/add" target="_blank">http://www.stopforumspam.com/add</a><br/>'.
-					'I\'m looking to see if I can integrate the reporting of spammers in WordPress.</p>'
+					'<p>You need an API key which you can get by visiting <a href="http://www.stopforumspam.com/add" target="_blank">http://www.stopforumspam.com/add</a><br/>'.
+					'When you enter your API key in this plugin you\'ll be able to report comments marked as spam to Stop Forum Spam.<br />'.
+					'There will be an extra option called Report for comments marked as spam.</p>'
 				)
 			),
 			'tips' => array (
