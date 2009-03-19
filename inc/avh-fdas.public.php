@@ -118,7 +118,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['frequency'] ) . "\r\n\r\n";
 
 			if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
-				$message .= sprintf( __( 'Treshhold (%s) reached. Connection terminated', 'avhfdas' ), $this->options['spam']['whentodie'] ) . "\r\n";
+				$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $this->options['spam']['whentodie'] ) . "\r\n";
 			}
 
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
