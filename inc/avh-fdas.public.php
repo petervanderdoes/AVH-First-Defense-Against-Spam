@@ -118,7 +118,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['frequency'] ) . "\r\n\r\n";
 
 			if ( $info['frequency'] >= $this->options['spam']['whentodie'] ) {
-				$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $this->options['spam']['whentodie'] ) . "\r\n";
+				$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $this->options['spam']['whentodie'] ) . "\r\n\r\n";
 			}
 
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
@@ -128,6 +128,9 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			} else {
 				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
 			}
+
+			$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
+
 			wp_mail( $to, $subject, $message );
 
 		}
