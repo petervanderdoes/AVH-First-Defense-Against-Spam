@@ -39,8 +39,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			wp_enqueue_script( 'jquery-ui-tabs' );
 		}
 
+		// Add the ajax action
 		add_action('admin_init', array(&$this, 'ajaxCheck'));
 		add_action ( 'wp_ajax_avh-fdas-reportcomment', array ( &$this, 'ajaxCheck' ) );
+
 		// Add Filter
 		add_filter('comment_row_actions',array(&$this,'filterCommentRowActions'),10,2);
 		return;
@@ -118,7 +120,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	}
 
 	/**
-	 * Everytime admin is initialized this function is called. It checks of the user clicked to report a spammer
+	 * Checks if the user clicked on the Report & Delete link.
 	 *
 	 */
 	function ajaxCheck ()
@@ -140,14 +142,14 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			$snoopy_formvar['api_key']= $this->options['spam']['sfsapikey'];
 			$snoopy = new Snoopy( );
 			$snoopy->agent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
-			//$snoopy->submit('http://www.stopforumspam.com/add', $snoopy_formvar);
-			die(1);
+			$snoopy->submit('http://www.stopforumspam.com/add', $snoopy_formvar);
 			// @TODO See if we can revert the
 			//$result=$snoopy->results;
 			//<div class="msg info">Data submitted successfully</div>
-			// Delete the comment if the call was successful.
-			//$r = wp_delete_comment( $comment->comment_ID );
-			//die( $r ? '1' : '0' );
+
+			// Delete the comment
+			$r = wp_delete_comment( $comment->comment_ID );
+			die( $r ? '1' : '0' );
 		}
 	}
 	/**
