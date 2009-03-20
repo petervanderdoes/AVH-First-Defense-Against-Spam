@@ -228,7 +228,16 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'<h3>Can I report a spammer at Stop Forum Spam?</h3>'.
 					'<p>You need an API key which you can get by visiting <a href="http://www.stopforumspam.com/add" target="_blank">http://www.stopforumspam.com/add</a><br/>'.
 					'When you enter your API key in this plugin you\'ll be able to report comments marked as spam to Stop Forum Spam.<br />'.
-					'There will be an extra option called Report for comments marked as spam.</p>'
+					'There will be an extra option called Report for comments marked as spam.</p>'.
+					'<h3>What do the emails mean that I receive?</h3>'.
+					'<p><em>AVH First Defense Against Spam - Error detected</em><br/>'.
+					'This means the call to Stop Forum Spam failed. The error explains the problem. I actually check the connection again if the first one fails and only then report the error.<br />'.
+					'The plugin was unable to check if the visiting IP is in the database and therefor does not block it.</p>'.
+					'<p><em>AVH First Defense Against Spam - Spammer detected</em><br />'.
+					'The call to the database was successful and the IP was found in the database.<br />'.
+					'You can actually receive two sort of emails with this subject line.<br />'.
+					'One will have the line: <em>Threshold (3) reached. Connection terminated.</em> This means because the Threshold, set in the admin section, was reached the connection was terminated. In other words the spammer is stopped before any content was served.<br />'.
+					'The other message is without the Threshold message. This means the IP is in the database but the connection is not terminate because the threshold was not reached. In this case the normal content is served to the visitor.</p>'
 				)
 			),
 			'tips' => array (
