@@ -1,4 +1,5 @@
 <?php
+require_once( ABSPATH . 'wp-includes/class-snoopy.php' );
 class AVH_FDAS_Admin extends AVH_FDAS_Core
 {
 
@@ -38,6 +39,8 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			wp_enqueue_script( 'jquery-ui-tabs' );
 		}
 
+		add_action('admin_init', array(&$this, 'ajaxCheck'));
+		add_action ( 'wp_ajax_avh-fdas-reportcomment', array ( &$this, 'ajaxCheck' ) );
 		// Add Filter
 		add_filter('comment_row_actions',array(&$this,'filterCommentRowActions'),10,2);
 		return;
@@ -79,35 +82,73 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	function adminMenu ()
 	{
 		add_options_page( __( 'AVH First Defense Against Spam: Options', 'avhfdas' ), 'AVH First Defense Against Spam', 'avh_fdas', 'avhfdas_options', array (&$this, 'pageOptions' ) );
-		add_filter( 'plugin_action_links', array (&$this, 'filterPluginActions' ), 10, 2 );
+		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ) );
 	}
 
 	/**
 	 * Adds Settings next to the plugin actions
 	 *
+	 * @param array $links
+	 * @return array
+	 *
+	 * @since 1.0
 	 */
-	function filterPluginActions ( $links, $file )
+	function filterPluginActions ( $links )
 	{
-		static $this_plugin;
-
-		if ( ! $this_plugin )
-			$this_plugin = plugin_basename( $this->info['install_dir'] );
-		if ( $file )
-			$file = $this->getBaseDirectory( $file );
-		if ( $file == $this_plugin ) {
-			$settings_link = '<a href="options-general.php?page=avhfdas_options">' . __( 'Settings', 'avhfdas' ) . '</a>';
-			array_unshift( $links, $settings_link ); // before other links
-		//$links = array_merge ( array (	$settings_link ), $links ); // before other links
-		}
+		$settings_link = '<a href="options-general.php?page=avhfdas_options">' . __( 'Settings', 'avhfdas' ) . '</a>';
+		array_unshift( $links, $settings_link ); // before other links
 		return $links;
 
 	}
 
+	/**
+	 * Adds an extra option on the comment row
+	 *
+	 * @param array $actions
+	 * @param class $comment
+	 * @return array
+	 * @since 1.0
+	 */
 	function filterCommentRowActions($actions,$comment){
 		if ( (! empty( $this->options['spam']['sfsapikey'] )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
-			$actions['report'] = '<a href="">Report</a>';
+			$report_url = clean_url( wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID" ) );
+			$actions['report'] = '<a class=\'delete:the-comment-list:comment-'.$comment->comment_ID.':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="'.$report_url.'">Report & Delete</a>';
 		}
 		return $actions;
+	}
+
+	/**
+	 * Everytime admin is initialized this function is called. It checks of the user clicked to report a spammer
+	 *
+	 */
+	function ajaxCheck ()
+	{
+		if ( 'avh-fdas-reportcomment' == $_POST['action'] ) {
+			$comment_id = absint( $_REQUEST['id'] );
+			check_ajax_referer( 'report-comment_' . $comment_id );
+
+			if ( ! $comment = get_comment( $comment_id ) ) {
+				comment_footer_die( __( 'Oops, no comment with this ID.' ) . sprintf( ' <a href="%s">' . __( 'Go back' ) . '</a>!', 'edit-comments.php' ) );
+			}
+			if ( ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
+				comment_footer_die( __( 'You are not allowed to edit comments on this post.' ) );
+			}
+
+			$snoopy_formvar['username']= $comment->comment_author;
+			$snoopy_formvar['email']= empty($comment->comment_author_email) ? 'no@email.address' : $comment->comment_author_email;
+			$snoopy_formvar['ip_addr']= $comment->comment_author_IP;
+			$snoopy_formvar['api_key']= $this->options['spam']['sfsapikey'];
+			$snoopy = new Snoopy( );
+			$snoopy->agent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
+			//$snoopy->submit('http://www.stopforumspam.com/add', $snoopy_formvar);
+			die(1);
+			// @TODO See if we can revert the
+			//$result=$snoopy->results;
+			//<div class="msg info">Data submitted successfully</div>
+			// Delete the comment if the call was successful.
+			//$r = wp_delete_comment( $comment->comment_ID );
+			//die( $r ? '1' : '0' );
+		}
 	}
 	/**
 	 * WP Page Options- AVH Amazon options
