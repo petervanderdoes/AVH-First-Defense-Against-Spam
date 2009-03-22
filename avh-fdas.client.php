@@ -60,7 +60,8 @@ class AVH_FDAS_Core {
 	 * PHP5 constructor
 	 *
 	 */
-	function __construct () {
+	function __construct ()
+	{
 
 		$this->version = "1.1-rc1";
 		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
@@ -84,7 +85,7 @@ class AVH_FDAS_Core {
 			);
 		$this->default_spam_data = array(
 				'counter' => 0,
-		);
+			);
 
 		/**
 		 * Default Options - All as stored in the DB
@@ -96,24 +97,24 @@ class AVH_FDAS_Core {
 
 		$this->default_data = array (
 				'spam' => $this->default_spam_data,
-		);
+			);
 		/**
 		 * Set the options for the program
 		 *
 		 */
-		$this->handleOptions ();
+		$this->handleOptions();
 		$this->handleData();
-
+		
 		// Determine installation path & url
 		//$info['home_path'] = get_home_path();
 		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
 		$path = substr( $path, strpos( $path, 'plugins' ) + 8, strlen( $path ) );
-
+		
 		$info['siteurl'] = get_option( 'siteurl' );
 		if ( $this->isMuPlugin() ) {
 			$info['install_url'] = $info['siteurl'] . '/wp-content/mu-plugins';
 			$info['install_dir'] = ABSPATH . 'wp-content/mu-plugins';
-
+			
 			if ( $path != 'mu-plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
@@ -121,7 +122,7 @@ class AVH_FDAS_Core {
 		} else {
 			$info['install_url'] = $info['siteurl'] . '/wp-content/plugins';
 			$info['install_dir'] = ABSPATH . 'wp-content/plugins';
-
+			
 			if ( $path != 'plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
@@ -152,10 +153,7 @@ class AVH_FDAS_Core {
 		//	$mofile = $this->info['install_dir'].'/languages/avhamazon-'.$locale.'.mo';
 		//	load_textdomain('avhfdas', $mofile);
 		//}
-
-
 		return;
-
 	}
 
 	/**
@@ -163,9 +161,9 @@ class AVH_FDAS_Core {
 	 *
 	 * @return
 	 */
-	function AVH_FDAS_Core () {
-
-		$this->__construct ();
+	function AVH_FDAS_Core ()
+	{
+		$this->__construct();
 	}
 
 	/**
@@ -173,9 +171,9 @@ class AVH_FDAS_Core {
 	 *
 	 * @return boolean
 	 */
-	function isMuPlugin () {
-
-		if ( strpos ( dirname ( __FILE__ ), 'mu-plugins' ) ) {
+	function isMuPlugin ()
+	{
+		if ( strpos( dirname( __FILE__ ), 'mu-plugins' ) ) {
 			return true;
 		}
 		return false;
@@ -189,7 +187,6 @@ class AVH_FDAS_Core {
 	 */
 	function handleData ()
 	{
-
 		$default_data = $this->default_data;
 
 		// Get options from WP options
@@ -224,7 +221,6 @@ class AVH_FDAS_Core {
 	 */
 	function getData ( $key, $option )
 	{
-
 		if ( $this->data[$option][$key] ) {
 			$return = $this->data[$option][$key]; // From Admin Page
 		} else {
@@ -242,7 +238,6 @@ class AVH_FDAS_Core {
 	 */
 	function handleOptions ()
 	{
-
 		$default_options = $this->default_options;
 
 		// Get options from WP options
@@ -284,7 +279,6 @@ class AVH_FDAS_Core {
 	 */
 	function getOption ( $key, $option )
 	{
-
 		if ( $this->options[$option][$key] ) {
 			$return = $this->options[$option][$key]; // From Admin Page
 		} else {
@@ -304,7 +298,6 @@ class AVH_FDAS_Core {
 	 */
 	function getBaseDirectory ( $directory )
 	{
-
 		//get public directory structure eg "/top/second/third"
 		$public_directory = dirname( $directory );
 		//place each directory into array
@@ -325,7 +318,6 @@ class AVH_FDAS_Core {
 	 */
 	function getWordpressVersion ()
 	{
-
 		// Include WordPress version
 		require (ABSPATH . WPINC . '/version.php');
 		$version = ( float ) $wp_version;
@@ -342,7 +334,6 @@ class AVH_FDAS_Core {
 	 */
 	function handleCssFile ( $handle, $cssfile )
 	{
-
 		wp_register_style( $handle, $this->info['install_uri'] . $cssfile, array (), $this->version, 'all' );
 		if ( did_action( 'wp_print_styles' ) ) { // we already printed the style queue.  Print this one immediately
 			wp_print_styles( $handle );
@@ -590,7 +581,7 @@ class AVH_FDAS_Core {
 		$iplookup = array ('ip' => $ip );
 		return $iplookup;
 	}
-} //End Class avh_amazon
+} //End Class AVH_FDAS_Core
 
 
 /**
@@ -599,7 +590,6 @@ class AVH_FDAS_Core {
  */
 function avh_FDAS__init ()
 {
-
 	// Admin
 	if ( is_admin() ) {
 		require (dirname( __FILE__ ) . '/inc/avh-fdas.admin.php');
@@ -612,7 +602,7 @@ function avh_FDAS__init ()
 	require (dirname( __FILE__ ) . '/inc/avh-fdas.public.php');
 	$avhfdas_public = & new AVH_FDAS_Public( );
 
-} // End avhamazon_init()
+} // End avh_FDAS__init()
 
 
 add_action ( 'plugins_loaded', 'avh_FDAS__init' );

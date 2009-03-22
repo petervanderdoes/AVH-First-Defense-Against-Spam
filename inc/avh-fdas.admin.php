@@ -416,7 +416,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function printAdminFooter ()
 	{
-		echo '<p class="footer_avhamazon">';
+		echo '<p class="footer_avhfdas">';
 		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->version );
 		echo '</p>';
 	}
