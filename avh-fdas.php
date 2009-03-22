@@ -25,7 +25,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 // Check version.
-global $wp_version;
+// Include WordPress version
+require (ABSPATH . WPINC . '/version.php');
 
 if ( ( float ) $wp_version >= 2.7 ) {
 	require (dirname ( __FILE__ ) . '/avh-fdas.client.php');

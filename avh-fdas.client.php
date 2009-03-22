@@ -326,7 +326,8 @@ class AVH_FDAS_Core {
 	function getWordpressVersion ()
 	{
 
-		global $wp_version;
+		// Include WordPress version
+		require (ABSPATH . WPINC . '/version.php');
 		$version = ( float ) $wp_version;
 		return $version;
 	}
