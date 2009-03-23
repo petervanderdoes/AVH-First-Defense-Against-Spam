@@ -104,17 +104,17 @@ class AVH_FDAS_Core {
 		 */
 		$this->handleOptions();
 		$this->handleData();
-		
+
 		// Determine installation path & url
 		//$info['home_path'] = get_home_path();
 		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
 		$path = substr( $path, strpos( $path, 'plugins' ) + 8, strlen( $path ) );
-		
+
 		$info['siteurl'] = get_option( 'siteurl' );
 		if ( $this->isMuPlugin() ) {
 			$info['install_url'] = $info['siteurl'] . '/wp-content/mu-plugins';
 			$info['install_dir'] = ABSPATH . 'wp-content/mu-plugins';
-			
+
 			if ( $path != 'mu-plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
@@ -122,7 +122,7 @@ class AVH_FDAS_Core {
 		} else {
 			$info['install_url'] = $info['siteurl'] . '/wp-content/plugins';
 			$info['install_dir'] = ABSPATH . 'wp-content/plugins';
-			
+
 			if ( $path != 'plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
@@ -340,6 +340,49 @@ class AVH_FDAS_Core {
 		} else {
 			wp_enqueue_style( $handle );
 		}
+	}
+
+	/**
+	 * Local nonce creation. WordPress uses the UID and sometimes I don't want that
+	 * Creates a random, one time use token.
+	 *
+	 * @param string|int $action Scalar value to add context to the nonce.
+	 * @return string The one use form token
+	 *
+	 * @since 1.0
+	 */
+	function avh_create_nonce ( $action = -1 )
+	{
+		$i = wp_nonce_tick();
+		return substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 );
+	}
+
+	/**
+	 * Local nonce verification. WordPress uses the UID and sometimes I don't want that
+	 * Verify that correct nonce was used with time limit.
+	 *
+	 * The user is given an amount of time to use the token, so therefore, since the
+	 * UID and $action remain the same, the independent variable is the time.
+	 *
+	 * @since 1.0
+	 *
+	 * @param string $nonce Nonce that was used in the form to verify
+	 * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
+	 * @return bool Whether the nonce check passed or failed.
+	 */
+	function avh_verify_nonce ( $nonce, $action = -1 )
+	{
+
+		$i = wp_nonce_tick();
+
+		// Nonce generated 0-12 hours ago
+		if ( substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 ) == $nonce )
+			return 1;
+			// Nonce generated 12-24 hours ago
+		if ( substr( wp_hash( ($i - 1) . $action, 'nonce' ), - 12, 10 ) == $nonce )
+			return 2;
+			// Invalid nonce
+		return false;
 	}
 
 	/**
