@@ -167,22 +167,18 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 
 		$ip = $_REQUEST['i'];
+		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
 
-		if ( isset( $_REQUEST['noredir'] ) )
-			$noredir = true;
-		else
-			$noredir = false;
-
-		if ( ! empty( $this->options['spam']['blacklist'] ) ) {
-			$b = explode( "\r\n", $this->options['spam']['blacklist'] );
-		} else {
-			$b = array ();
+			if ( ! empty( $this->options['spam']['blacklist'] ) ) {
+				$b = explode( "\r\n", $this->options['spam']['blacklist'] );
+			} else {
+				$b = array ();
+			}
+			if ( ! (in_array( $ip, $b )) ) {
+				array_push( $b, $ip );
+				$this->setBlacklistOption( $b );
+			}
 		}
-		if ( ! (in_array( $ip, $b )) ) {
-			array_push( $b, $ip );
-			$this->setBlacklistOption( $b );
-		}
-
 		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options' ) );
 	}
 

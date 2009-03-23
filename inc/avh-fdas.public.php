@@ -127,8 +127,8 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 				$message .= __( 'IP was in black list table', 'avhfdas' ) . "\r\n\r\n";
 			} else {
 				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n\r\n";
-				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip;
-				$message .= sprintf( __( 'To add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
+				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip .'&_avhnonce='.$this->avh_create_nonce($ip);
+				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
 
 			$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
