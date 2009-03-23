@@ -324,8 +324,8 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		// Update or reset options
 		if ( isset( $_POST['updateoptions'] ) ) {
 			check_admin_referer( 'avhfdas-options' );
-			// Set all checkboxes unset
-			if ( isset( $_POST['avh_checkboxes'] ) ) {
+				// Set all checkboxes unset
+			/*if ( isset( $_POST['avh_checkboxes'] ) ) {
 				$checkboxes = explode( '|', $_POST['avh_checkboxes'] );
 				foreach ( $checkboxes as $value ) {
 					$value = preg_replace( '#^[[:alpha:]]+[[:alnum:]]*\[#', '', $value );
@@ -333,14 +333,18 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					$keys = explode( '][', $value );
 					$this->setOption( $keys, 0 );
 				}
-			}
+			}*/
 			$formoptions = $_POST['avhfdas'];
 			foreach ( $this->options as $key => $value ) {
 				if ( 'general' != $key ) { // The data in General is used for internal usage.
 					foreach ( $value as $key2 => $value2 ) {
-						if (isset( $formoptions[$key][$key2] )) {
-							$newval =  attribute_escape( $formoptions[$key][$key2] );
+						// Every field in a form is filled except unchecked checkboxes. Set an unchecked checkbox to 0.
+						if ( isset( $formoptions[$key][$key2] ) ) {
+							$newval = attribute_escape( $formoptions[$key][$key2] );
+						} else {
+							$newval = 0;
 						}
+
 						// Check numeric entries
 						if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
 							if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
@@ -348,11 +352,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 							}
 							$newval = ( int ) $newval;
 						}
-						if ('blacklist' == $key2) {
-							$b=explode("\r\n",$newval);
-							natsort($b);
-							$newval=implode("\r\n",$b);
-							unset($b);
+						if ( 'blacklist' == $key2 ) {
+							$b = explode( "\r\n", $newval );
+							natsort( $b );
+							$newval = implode( "\r\n", $b );
+							unset( $b );
 						}
 						if ( $newval != $value2 ) {
 							$this->setOption( array ($key, $key2 ), $newval );
