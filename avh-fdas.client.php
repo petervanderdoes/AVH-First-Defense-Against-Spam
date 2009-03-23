@@ -349,7 +349,7 @@ class AVH_FDAS_Core {
 	 * @param string|int $action Scalar value to add context to the nonce.
 	 * @return string The one use form token
 	 *
-	 * @since 1.0
+	 * @since 1.1
 	 */
 	function avh_create_nonce ( $action = -1 )
 	{
@@ -362,9 +362,9 @@ class AVH_FDAS_Core {
 	 * Verify that correct nonce was used with time limit.
 	 *
 	 * The user is given an amount of time to use the token, so therefore, since the
-	 * UID and $action remain the same, the independent variable is the time.
+	 * $action remain the same, the independent variable is the time.
 	 *
-	 * @since 1.0
+	 * @since 1.1
 	 *
 	 * @param string $nonce Nonce that was used in the form to verify
 	 * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
@@ -372,17 +372,16 @@ class AVH_FDAS_Core {
 	 */
 	function avh_verify_nonce ( $nonce, $action = -1 )
 	{
-
+		$r = false;
 		$i = wp_nonce_tick();
 
 		// Nonce generated 0-12 hours ago
-		if ( substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 ) == $nonce )
-			return 1;
-			// Nonce generated 12-24 hours ago
-		if ( substr( wp_hash( ($i - 1) . $action, 'nonce' ), - 12, 10 ) == $nonce )
-			return 2;
-			// Invalid nonce
-		return false;
+		if ( substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 ) == $nonce ) {
+			$r = 1;
+		} elseif ( substr( wp_hash( ($i - 1) . $action, 'nonce' ), - 12, 10 ) == $nonce ) { // Nonce generated 12-24 hours ago
+			$r = 2;
+		}
+		return $r;
 	}
 
 	/**
