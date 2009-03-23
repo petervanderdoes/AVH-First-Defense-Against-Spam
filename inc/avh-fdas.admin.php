@@ -40,8 +40,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 
 		// Add the ajax action
-		add_action('admin_init', array(&$this, 'ajaxCheck'));
+		//add_action('admin_init', array(&$this, 'ajaxCheck'));
 		add_action ( 'wp_ajax_avh-fdas-reportcomment', array ( &$this, 'ajaxCheck' ) );
+
+		// Add admin actions
+		add_action('admin_action_blacklist',array(&$this,'handleBlacklistUrl'));
 
 		// Add Filter
 		add_filter('comment_row_actions',array(&$this,'filterCommentRowActions'),10,2);
@@ -151,6 +154,49 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			$r = wp_delete_comment( $comment->comment_ID );
 			die( $r ? '1' : '0' );
 		}
+	}
+
+	/**
+	 * Handles the admin_action_blacklist call
+	 *
+	 */
+	function handleBlacklistUrl ()
+	{
+		if ( ! (isset( $_REQUEST['action'] ) && 'blacklist' == $_REQUEST['action']) ) {
+			return;
+		}
+
+		$ip = $_REQUEST['i'];
+
+		if ( isset( $_REQUEST['noredir'] ) )
+			$noredir = true;
+		else
+			$noredir = false;
+
+		if ( ! empty( $this->options['spam']['blacklist'] ) ) {
+			$b = explode( "\r\n", $this->options['spam']['blacklist'] );
+		} else {
+			$b = array ();
+		}
+		if ( ! (in_array( $ip, $b )) ) {
+			array_push( $b, $ip );
+			$this->setBlacklistOption( $b );
+		}
+
+		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options' ) );
+	}
+
+	/**
+	 * Update the blacklist in the proper format
+	 *
+	 * @param array $b
+	 */
+	function setBlacklistOption($b)
+	{
+		natsort($b);
+		$x=implode("\r\n",$b);
+		$this->options['spam']['blacklist']=$x;
+		$this->saveOptions();
 	}
 	/**
 	 * WP Page Options- AVH Amazon options
@@ -301,6 +347,12 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 								$newval = $this->default_options[$key][$key2];
 							}
 							$newval = ( int ) $newval;
+						}
+						if ('blacklist' == $key2) {
+							$b=explode("\r\n",$newval);
+							natsort($b);
+							$newval=implode("\r\n",$b);
+							unset($b);
 						}
 						if ( $newval != $value2 ) {
 							$this->setOption( array ($key, $key2 ), $newval );

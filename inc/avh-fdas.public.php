@@ -124,9 +124,11 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 
 			if ( 'Blacklisted' == $time ) {
-				$message .= __( 'IP was in black list table', 'avhfdas' ) . "\r\n";
+				$message .= __( 'IP was in black list table', 'avhfdas' ) . "\r\n\r\n";
 			} else {
-				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
+				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n\r\n";
+				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip;
+				$message .= sprintf( __( 'To add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
 
 			$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
