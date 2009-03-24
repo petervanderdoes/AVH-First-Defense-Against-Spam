@@ -112,21 +112,20 @@ class AVH_FDAS_Core {
 
 		$info['siteurl'] = get_option( 'siteurl' );
 		if ( $this->isMuPlugin() ) {
-			$info['install_url'] = $info['siteurl'] . '/wp-content/mu-plugins';
-			$info['install_dir'] = ABSPATH . 'wp-content/mu-plugins';
+			$info['install_url'] = WPMU_PLUGIN_URL;
+			$info['install_dir'] = WPMU_PLUGIN_DIR;
 
 			if ( $path != 'mu-plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
 			}
 		} else {
-			$info['install_url'] = $info['siteurl'] . '/wp-content/plugins';
-			$info['install_dir'] = ABSPATH . 'wp-content/plugins';
+			$info['install_url'] = WP_PLUGIN_URL;
+			$info['install_dir'] = WP_PLUGIN_DIR;
 
 			if ( $path != 'plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
-				$info['install_uri'] = '/wp-content/plugins/' . $path;
 			}
 		}
 
@@ -135,7 +134,6 @@ class AVH_FDAS_Core {
 				'home' => get_option ( 'home' ),
 				'siteurl' => $info['siteurl'],
 				'install_url' => $info['install_url'],
-				'install_uri' => $info['install_uri'],
 				'install_dir' => $info['install_dir'],
 				'graphics_url' => $info['install_url'] . '/images',
 				'home_path' => $info['home_path'],
@@ -334,7 +332,7 @@ class AVH_FDAS_Core {
 	 */
 	function handleCssFile ( $handle, $cssfile )
 	{
-		wp_register_style( $handle, $this->info['install_uri'] . $cssfile, array (), $this->version, 'all' );
+		wp_register_style( $handle, $this->info['install_url'] . $cssfile, array (), $this->version, 'all' );
 		if ( did_action( 'wp_print_styles' ) ) { // we already printed the style queue.  Print this one immediately
 			wp_print_styles( $handle );
 		} else {

@@ -28,13 +28,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		add_action( 'admin_menu', array (&$this, 'adminMenu' ) );
 
 		// CSS Helper
-		add_action( 'admin_head', array (&$this, 'helperCSS' ) );
+		add_action( 'admin_print_styles-settings_page_avhfdas_options', array (&$this, 'injectCSS' ) );
 
 		// Helper JS & jQuery & Prototype
 		$avhfdas_pages = array ('avhfdas_options' );
-		/**
-		 * TODO  With WordPress 2.5 the Tabs UI is build in :)
-		 */
 		if ( in_array( $_GET['page'], $avhfdas_pages ) ) {
 			wp_enqueue_script( 'jquery-ui-tabs' );
 		}
@@ -483,9 +480,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 * Print link to CSS
 	 *
 	 */
-	function helperCSS ()
+	function injectCSS ()
 	{
-		$this->handleCssFile( 'avhfdasadmin', '/inc/avh-fdas.admin.css' );
+		wp_enqueue_style( 'avhfdasadmin', $this->info['install_url'] . '/inc/avh-fdas.admin.css', array (), $this->version, 'screen' );
 	}
 
 	/**
