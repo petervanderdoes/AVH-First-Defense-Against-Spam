@@ -192,6 +192,18 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$this->saveOptions();
 	}
 	/**
+	 * Update the whitelist in the proper format
+	 *
+	 * @param array $b
+	 */
+	function setWhitelistOption($b)
+	{
+		natsort($b);
+		$x=implode("\r\n",$b);
+		$this->options['spam']['whitelist']=$x;
+		$this->saveOptions();
+	}
+	/**
 	 * WP Page Options- AVH Amazon options
 	 *
 	 */
@@ -237,6 +249,20 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				array (
 					'avhfdas[spam][blacklist]',
 					'Blacklist IP\'s:',
+					'textarea',
+					15,
+					'Each IP should be on a seperate line',
+					15),
+				array (
+					'avhfdas[spam][usewhitelist]',
+					'Use internal whitelist:',
+					'checkbox',
+					1,
+					'Check the internal whitelist first. If the IP is found don\t do any further checking.'
+				),
+				array (
+					'avhfdas[spam][whitelist]',
+					'Whitelist IP\'s:',
 					'textarea',
 					15,
 					'Each IP should be on a seperate line',
@@ -332,7 +358,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 							}
 							$newval = ( int ) $newval;
 						}
-						if ( 'blacklist' == $key2 ) {
+						if ( 'blacklist' == $key2 || 'whitelist' == $key2) {
 							$b = explode( "\r\n", $newval );
 							natsort( $b );
 							$newval = implode( "\r\n", $b );

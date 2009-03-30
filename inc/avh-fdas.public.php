@@ -35,42 +35,50 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	function handleMainAction ()
 	{
 		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip_in_whitelist = false;
 
-		if ( 1 == $this->options['spam']['useblacklist'] ) {
-			$this->checkBlacklist( $ip );
+		if ( 1 == $this->options['spam']['usewhitelist'] && $this->options['spam']['whitelist']) {
+			$ip_in_whitelist = $this->checkWhitelist( $ip );
 		}
-		$time_start = microtime( true );
-		$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
-		$time_end = microtime( true );
-		$time = $time_end - $time_start;
 
-		if ( isset( $spaminfo['Error'] ) ) {
-			// Let's give it one more try.
+		if ( ! $ip_in_whitelist ) {
+			if ( 1 == $this->options['spam']['useblacklist'] && $this->options['spam']['blacklist']) {
+				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
+			}
+
 			$time_start = microtime( true );
-			$ip = $_SERVER['REMOTE_ADDR'];
 			$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
+
 			if ( isset( $spaminfo['Error'] ) ) {
-				$error = $this->getHttpError( $spaminfo['Error'] );
-				$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+				// Let's give it one more try.
+				$time_start = microtime( true );
+				$ip = $_SERVER['REMOTE_ADDR'];
+				$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
+				$time_end = microtime( true );
+				$time = $time_end - $time_start;
+				if ( isset( $spaminfo['Error'] ) ) {
+					$error = $this->getHttpError( $spaminfo['Error'] );
+					$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 
-				$to = get_option( 'admin_email' );
+					$to = get_option( 'admin_email' );
 
-				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
+					$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
 
-				$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
-				$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
-				$message .= sprintf( __( 'IP:			%s', 'avhfdas' ), $ip ) . "\r\n";
-				$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
-				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
+					$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
+					$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
+					$message .= sprintf( __( 'IP:			%s', 'avhfdas' ), $ip ) . "\r\n";
+					$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
+					$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
 
-				wp_mail( $to, $subject, $message );
+					wp_mail( $to, $subject, $message );
+				}
 			}
-		}
 
-		if ( 'yes' == $spaminfo['appears'] ) {
-			$this->handleSpammer( $ip, $spaminfo, $time );
+			if ( 'yes' == $spaminfo['appears'] ) {
+				$this->handleSpammer( $ip, $spaminfo, $time );
+			}
 		}
 	}
 
@@ -89,6 +97,25 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
 	}
+
+	/**
+	 * Check the White list table. Return TRUE if in the table
+	 *
+	 * @param string $ip
+	 * @return boolean
+	 *
+	 * @since 1.1
+	 */
+	function checkWhitelist ( $ip )
+	{
+		$return = false;
+		$b = explode( "\r\n", $this->options['spam']['whitelist'] );
+		if ( in_array( $ip, $b ) ) {
+			$return = true;
+		}
+		return $return;
+	}
+
 	/**
 	 * Handle a known spam IP
 	 *

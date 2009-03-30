@@ -66,5 +66,6 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 	* Abillity to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
 	* Added a link in the emails to add an IP to the local blacklist.
 	* Bugfix: Uninstall did not work.
+	* RFC: A white list was added.
 * Version 1.0
 	* Initial version

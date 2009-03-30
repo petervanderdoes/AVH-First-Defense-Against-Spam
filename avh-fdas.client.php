@@ -81,6 +81,8 @@ class AVH_FDAS_Core {
 				'diewithmessage' => 1,
 				'useblacklist' => 1,
 				'blacklist' => '',
+				'usewhitelist' => 1,
+				'whitelist' => '',
 				'sfsapikey' => '',
 			);
 		$this->default_spam_data = array(
