@@ -35,11 +35,6 @@ if ( ( float ) $wp_version >= 2.7 ) {
 
 }
 
-function avh_incompatible_wordpress_warning ()
-{
-	echo '<div class="updated fade"><p><strong>' . __( 'AVH First Defense Against Spam can\'t work with this WordPress version !', 'avhfdas' ) . '</strong></p></div>';
-}
-
 function avh_remove_plugin ()
 {
 	$current = get_option( 'active_plugins' );
