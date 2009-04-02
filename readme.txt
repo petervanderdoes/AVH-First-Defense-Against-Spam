@@ -67,5 +67,6 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 	* Added a link in the emails to add an IP to the local blacklist.
 	* Bugfix: Uninstall did not work.
 	* RFC: A white list was added.
+
 * Version 1.0
 	* Initial version
