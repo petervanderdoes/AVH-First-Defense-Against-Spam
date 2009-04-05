@@ -54,7 +54,6 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			if ( isset( $spaminfo['Error'] ) ) {
 				// Let's give it one more try.
 				$time_start = microtime( true );
-				$ip = $_SERVER['REMOTE_ADDR'];
 				$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
 				$time_end = microtime( true );
 				$time = $time_end - $time_start;
