@@ -43,6 +43,16 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	function checkNonceFieldToComment ($commentdata)
 	{
 		if (wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID']) != $_POST['_avh_first_defense_against_spam'] ) {
+			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+
+			$to = get_option( 'admin_email' );
+
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Invalid nonce field', 'avhfdas' ), $site_name );
+			$message = sprintf( __( 'IP:			%s', 'avhfdas' ), $_SERVER['REMOTE_ADDR'] ) . "\r\n";
+			$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
+
+			wp_mail( $to, $subject, $message );
+
 			die('Cheating huh');
 		}
 	}
