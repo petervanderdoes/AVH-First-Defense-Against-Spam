@@ -13,6 +13,9 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'handleMainAction' ) );
+
+		add_action('comment_form',array(&$this,'addNonceFieldToComment'));
+		add_filter('preprocess_comment',array(&$this,'checkNonceFieldToComment'),1);
 	}
 
 	/**
@@ -26,6 +29,23 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 
 	}
 
+	function addNonceFieldToComment ()
+	{
+		global $post;
+
+		$post_id = 0;
+		if ( ! empty( $post ) ) {
+			$post_id = $post->ID;
+		}
+		wp_nonce_field( 'avh-first-defense-against-spam_' . $post_id, '_avh_first_defense_against_spam', false );
+	}
+
+	function checkNonceFieldToComment ($commentdata)
+	{
+		if (wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID']) != $_POST['_avh_first_defense_against_spam'] ) {
+			die('Cheating huh');
+		}
+	}
 	/**
 	 * Handle the main action.
 	 * Get the visitors IP and call the stopforumspam API to check if it's a known spammer
@@ -37,12 +57,12 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$ip_in_whitelist = false;
 
-		if ( 1 == $this->options['spam']['usewhitelist'] && $this->options['spam']['whitelist']) {
+		if ( 1 == $this->options['spam']['usewhitelist'] && $this->options['spam']['whitelist'] ) {
 			$ip_in_whitelist = $this->checkWhitelist( $ip );
 		}
 
 		if ( ! $ip_in_whitelist ) {
-			if ( 1 == $this->options['spam']['useblacklist'] && $this->options['spam']['blacklist']) {
+			if ( 1 == $this->options['spam']['useblacklist'] && $this->options['spam']['blacklist'] ) {
 				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
 
