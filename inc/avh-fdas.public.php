@@ -68,7 +68,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Invalid nonce field', 'avhfdas' ), $site_name );
 			$message = sprintf( __( 'Username:	%s', 'avhfdas' ), $commentdata['comment_author'] ) . "\r\n";
-			$message .= sprintf( __( 'Email:	%s', 'avhfdas' ), $commentdata['comment_author_email'] ) . "\r\n";
+			$message .= sprintf( __( 'Email:		%s', 'avhfdas' ), $commentdata['comment_author_email'] ) . "\r\n";
 			$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
 
 			if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
@@ -168,7 +168,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 
 					$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
 					$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
-					$message .= sprintf( __( 'IP:			%s', 'avhfdas' ), $ip ) . "\r\n";
+					$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
 					$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 					$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
 
