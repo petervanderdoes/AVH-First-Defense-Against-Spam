@@ -21,6 +21,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			$this->actual_page = ( int ) $_GET['pagination'];
 		}
 
+		$this->installPlugin();
 		// Admin Capabilities
 		add_action( 'init', array (&$this, 'initRoles' ) );
 
@@ -42,6 +43,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 
 		// Add admin actions
 		add_action('admin_action_blacklist',array(&$this,'handleBlacklistUrl'));
+		add_action('admin_action_emailreportspammer',array(&$this,'handleEmailReportingUrl'));
 
 		// Add Filter
 		add_filter('comment_row_actions',array(&$this,'filterCommentRowActions'),10,2);
@@ -136,16 +138,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				comment_footer_die( __( 'You are not allowed to edit comments on this post.' ) );
 			}
 
-			$snoopy_formvar['username']= $comment->comment_author;
-			$snoopy_formvar['email']= empty($comment->comment_author_email) ? 'no@email.address' : $comment->comment_author_email;
-			$snoopy_formvar['ip_addr']= $comment->comment_author_IP;
-			$snoopy_formvar['api_key']= $this->options['spam']['sfsapikey'];
-			$snoopy = new Snoopy( );
-			$snoopy->agent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
-			$snoopy->submit('http://www.stopforumspam.com/add', $snoopy_formvar);
-			// @TODO See if we can revert the
-			//$result=$snoopy->results;
-			//<div class="msg info">Data submitted successfully</div>
+			$this->handleReportSpammer($comment->comment_author,$comment->comment_author_email,$comment->comment_author_IP);
 
 			// Delete the comment
 			$r = wp_delete_comment( $comment->comment_ID );
@@ -153,6 +146,52 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 	}
 
+	/**
+	 * Handles the admin_action emailreportspammer call.
+	 *
+	 * @since 1.2
+	 *
+	 */
+	function handleEmailReportingUrl ()
+	{
+		if ( ! (isset( $_REQUEST['action'] ) && 'emailreportspammer' == $_REQUEST['action']) ) {
+			return;
+		}
+
+		$a = wp_specialchars( $_REQUEST['a'] );
+		$e = wp_specialchars( $_REQUEST['e'] );
+		$i = wp_specialchars( $_REQUEST['i'] );
+		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
+			$this->handleReportSpammer( $a, $e, $i );
+			$all = get_option( $this->db_emailreport );
+			unset( $all[$_REQUEST['_avhnonce']] );
+			update_option( $this->db_emailreport, $all );
+			unset( $all );
+		}
+		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options' ) );
+	}
+
+	/**
+	 * Do the HTTP call to and report the spammer
+	 *
+	 * @param unknown_type $username
+	 * @param unknown_type $email
+	 * @param unknown_type $ip_addr
+	 */
+	function handleReportSpammer ( $username, $email, $ip_addr )
+	{
+		$snoopy_formvar['username'] = $username;
+		$snoopy_formvar['email'] = empty( $email ) ? 'no@email.address' : $email;
+		$snoopy_formvar['ip_addr'] = $ip_addr;
+		$snoopy_formvar['api_key'] = $this->options['spam']['sfsapikey'];
+		$snoopy = new Snoopy( );
+		$snoopy->agent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
+		$snoopy->submit( 'http://www.stopforumspam.com/add', $snoopy_formvar );
+		// @TODO See if we can revert the
+		//$result=$snoopy->results;
+		//<div class="msg info">Data submitted successfully</div>
+
+	}
 	/**
 	 * Handles the admin_action_blacklist call
 	 *
@@ -423,6 +462,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		if ( ! (get_option( $this->db_data )) ) {
 			$this->data = $this->default_data;
 			update_option( $this->db_data, $this->data );
+			wp_cache_flush(); // Delete cache
+		}
+
+		if ( ! (get_option( $this->db_emailreport )) ) {
+			update_option( $this->db_emailreport, $this->default_emailreport );
 			wp_cache_flush(); // Delete cache
 		}
 	}
