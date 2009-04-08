@@ -66,30 +66,36 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$ip = $_SERVER['REMOTE_ADDR'];
 			$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'no@email.address' : $commentdata['comment_author_email'];
 
-			$q['action'] = 'emailreportspammer';
-			$q['a'] = $commentdata['comment_author'];
-			$q['e'] = $commentdata['comment_author_email'];
-			$q['i'] = $ip;
-			$q['_avhnonce'] = $this->avh_create_nonce( $q['a'] . $q['e'] . $q['i'] );
-			$query = $this->BuildQuery( $q );
-			$report_url = admin_url( 'admin.php?' . $query );
-
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Invalid nonce field', 'avhfdas' ), $site_name );
 			$message = sprintf( __( 'Username:	%s', 'avhfdas' ), $commentdata['comment_author'] ) . "\r\n";
 			$message .= sprintf( __( 'Email:	%s', 'avhfdas' ), $commentdata['comment_author_email'] ) . "\r\n";
 			$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
-			$message .= sprintf( __( 'Report spammer: %s' ), $report_url ) . "\r\n";
+
+			if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
+				$q['action'] = 'emailreportspammer';
+				$q['a'] = $commentdata['comment_author'];
+				$q['e'] = $commentdata['comment_author_email'];
+				$q['i'] = $ip;
+				$q['_avhnonce'] = $this->avh_create_nonce( $q['a'] . $q['e'] . $q['i'] );
+				$query = $this->BuildQuery( $q );
+				$report_url = admin_url( 'admin.php?' . $query );
+				$message .= sprintf( __( 'Report spammer: %s' ), $report_url ) . "\r\n";
+			}
+
 			$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 
 			wp_mail( $to, $subject, $message );
 
-			// Prevent a spam attack to overflow the database.
-			if ( ! ($this->checkEmailReportData( $q['_avhnonce'] )) ) {
-				$option = get_option( $this->db_emailreport );
+			// Only keep track if we have the ability to report add Stop Forum Spam
+			if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
+				// Prevent a spam attack to overflow the database.
+				if ( ! ($this->checkEmailReportData( $q['_avhnonce'] )) ) {
+					$option = get_option( $this->db_emailreport );
 
-				$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
+					$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
 
-				update_option( $this->db_emailreport, $option );
+					update_option( $this->db_emailreport, $option );
+				}
 			}
 
 			$m = __( '<p>Cheating huh</p>', 'avhfdas' );
