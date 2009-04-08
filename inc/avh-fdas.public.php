@@ -122,11 +122,21 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	function checkBlacklist ( $ip )
 	{
 		$b = explode( "\r\n", $this->options['spam']['blacklist'] );
+
 		if ( in_array( $ip, $b ) ) {
 			$spaminfo['appears'] = 'yes';
 			$spaminfo['frequency'] = abs( $this->options['spam']['whentodie'] ); // Blaclisted IP's will always be terminated.
 			$time = 'Blacklisted';
 			$this->handleSpammer( $ip, $spaminfo, $time );
+		}
+
+		foreach ( $b as $check ) {
+			if ( $this->checkNetworkMatch( $check, $ip ) ) {
+				$spaminfo['appears'] = 'yes';
+				$spaminfo['frequency'] = abs( $this->options['spam']['whentodie'] ); // Blaclisted IP's will always be terminated.
+				$time = 'Blacklisted';
+				$this->handleSpammer( $ip, $spaminfo, $time );
+			}
 		}
 	}
 
@@ -146,6 +156,40 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$return = true;
 		}
 		return $return;
+	}
+
+	/**
+	 * Check if an IP exist in a range
+	 * Range can be formatted as:
+	 * ip-ip (192.168.1.100-192.168.1.103)
+	 * ip/mask (192.168.1.0/24)
+	 *
+	 * @param string $network
+	 * @param string $ip
+	 * @return boolean
+	 */
+	function checkNetworkMatch ( $network, $ip )
+	{
+		$network = trim( $network );
+		$ip = trim( $ip );
+		$d = strpos( $network, '-' );
+
+		if ( $d === false ) {
+			$ip_arr = explode( '/', $network );
+
+			$network_long = ip2long( $ip_arr[0] );
+			$x = ip2long( $ip_arr[1] );
+			$mask = long2ip( $x ) == $ip_arr[1] ? $x : (0xffffffff << (32 - $ip_arr[1]));
+			$ip_long = ip2long( $ip );
+
+			return ($ip_long & $mask) == ($network_long & $mask);
+		} else {
+			$from = ip2long( trim( substr( $network, 0, $d ) ) );
+			$to = ip2long( trim( substr( $network, $d + 1 ) ) );
+			$ip = ip2long( $ip );
+
+			return ($ip >= $from and $ip <= $to);
+		}
 	}
 
 	/**
