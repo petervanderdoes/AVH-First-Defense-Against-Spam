@@ -46,15 +46,18 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 
 			$to = get_option( 'admin_email' );
-
+			$ip = $_SERVER['REMOTE_ADDR'];
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Invalid nonce field', 'avhfdas' ), $site_name );
-			$message = sprintf( __( 'IP:			%s', 'avhfdas' ), $_SERVER['REMOTE_ADDR'] ) . "\r\n";
+			$message =  sprintf( __('Username:	%s','avhfdas'),$commentdata['comment_author'])."\r\n";
+			$message .= sprintf( __( 'Email:			%s', 'avhfdas' ), $commentdata['comment_author_email'])."\r\n";
+			$message .= sprintf( __( 'IP:				%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
 			$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 
 			wp_mail( $to, $subject, $message );
 
 			die('Cheating huh');
 		}
+		return $commentdata;
 	}
 	/**
 	 * Handle the main action.
