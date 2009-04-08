@@ -47,6 +47,11 @@ I don't believe there is one solution to block all spam. Personally I have great
 = Does it conflicts with other spam solutions? =
 I'm currently not aware of any conflicts with other anti-spam solutions.
 
+= How do I define a range in the blacklist or white list? =
+You can define two sorts of ranges:
+From IP to IP. i.e. 192.168.1.100-192.168.1.105
+A network in CIDR format. i.e. 192.168.1.0/24
+
 = How do I report a spammer to Stop Forum Spam? =
 You need to have an API key from Stop Forum Spam. If you do on the Edit Comments pages there is an extra option called, Report & Delete, in the messages identified as spam.
 
@@ -64,6 +69,8 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 == Arbitrary section ==
 * Version 1.2
  	* Added security to protect against spammers directly posting to wp-comments-post.php.
+ 	* An email can be received of a spammer trying posting directly. The email holds a link to report the spammer at Stop Forum Spam ( an API key is required).
+ 	* The black and white list can now hold ranges besides single IP adressess.
  	* Some small improvemnts.
 * Version 1.1
 	* Abillity to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
