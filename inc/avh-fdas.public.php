@@ -223,6 +223,12 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		if ( in_array( $ip, $b ) ) {
 			$return = true;
 		}
+		foreach ( $b as $check ) {
+			if ( $this->checkNetworkMatch( $check, $ip ) ) {
+				$return = true;
+				break;
+			}
+		}
 		return $return;
 	}
 
@@ -238,6 +244,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function checkNetworkMatch ( $network, $ip )
 	{
+		$return = false;
 		$network = trim( $network );
 		$ip = trim( $ip );
 		$d = strpos( $network, '-' );
@@ -245,19 +252,22 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		if ( $d === false ) {
 			$ip_arr = explode( '/', $network );
 
-			$network_long = ip2long( $ip_arr[0] );
-			$x = ip2long( $ip_arr[1] );
-			$mask = long2ip( $x ) == $ip_arr[1] ? $x : (0xffffffff << (32 - $ip_arr[1]));
-			$ip_long = ip2long( $ip );
+			if ( exists( $ip_arr[1] ) ) {
+				$network_long = ip2long( $ip_arr[0] );
+				$x = ip2long( $ip_arr[1] );
+				$mask = long2ip( $x ) == $ip_arr[1] ? $x : (0xffffffff << (32 - $ip_arr[1]));
+				$ip_long = ip2long( $ip );
 
-			return ($ip_long & $mask) == ($network_long & $mask);
+				$return = ($ip_long & $mask) == ($network_long & $mask);
+			}
 		} else {
 			$from = ip2long( trim( substr( $network, 0, $d ) ) );
 			$to = ip2long( trim( substr( $network, $d + 1 ) ) );
 			$ip = ip2long( $ip );
 
-			return ($ip >= $from and $ip <= $to);
+			$return = ($ip >= $from and $ip <= $to);
 		}
+		return ($return);
 	}
 
 	/**
