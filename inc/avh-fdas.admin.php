@@ -161,14 +161,19 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$a = wp_specialchars( $_REQUEST['a'] );
 		$e = wp_specialchars( $_REQUEST['e'] );
 		$i = wp_specialchars( $_REQUEST['i'] );
+		$extra='&m=10&i='.$i;
 		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
-			$this->handleReportSpammer( $a, $e, $i );
 			$all = get_option( $this->db_emailreport );
-			unset( $all[$_REQUEST['_avhnonce']] );
-			update_option( $this->db_emailreport, $all );
+			$extra='&m=11&i='.$i;
+			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
+				$this->handleReportSpammer( $a, $e, $i );
+				unset( $all[$_REQUEST['_avhnonce']] );
+				update_option( $this->db_emailreport, $all );
+				$extra='&m=12&i='.$i;
+			}
 			unset( $all );
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options' ) );
+		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options'.$extra ) );
 	}
 
 	/**
@@ -215,7 +220,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				$this->setBlacklistOption( $b );
 			}
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options' ) );
+		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options&m=2&i='.$ip ) );
 	}
 
 	/**
@@ -418,6 +423,33 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			$this->message = __( 'AVH First Defense Against Spam options set to default options!', 'avhfdas' );
 		}
 
+		// Show messages if needed.
+		if ( isset( $_REQUEST['m'] ) ) {
+			switch ( $_REQUEST['m'] ) {
+				case '1' :
+					$this->status = 'updated';
+					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), $_REQUEST['i'] );
+					break;
+				case '2' :
+					$this->status = 'updated';
+					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), $_REQUEST['i'] );
+					break;
+				case '10' :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'Invalid request.', 'avhfdas' ) );
+					break;
+				case '11' :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), $_REQUEST['i'] );
+					break;
+				case '12' :
+					$this->status = 'updated';
+					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), $_REQUEST['i'] );
+					break;
+				default :
+					$this->message = '';
+			}
+		}
 		$this->displayMessage();
 
 		echo '<script type="text/javascript">';
