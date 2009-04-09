@@ -428,11 +428,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			switch ( $_REQUEST['m'] ) {
 				case '1' :
 					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), $_REQUEST['i'] );
+					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
 				case '2' :
 					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), $_REQUEST['i'] );
+					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
 				case '10' :
 					$this->status = 'error';
@@ -440,11 +440,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					break;
 				case '11' :
 					$this->status = 'error';
-					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), $_REQUEST['i'] );
+					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
 				case '12' :
 					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), $_REQUEST['i'] );
+					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
 				default :
 					$this->message = '';
