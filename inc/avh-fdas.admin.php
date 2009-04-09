@@ -416,7 +416,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			}
 			$this->saveOptions();
 			$this->message = 'Options saved';
-			$this->status = 'updated';
+			$this->status = 'updated fade';
 		} elseif ( isset( $_POST['reset_options'] ) ) {
 			check_admin_referer( 'avhfdas-options' );
 			$this->resetToDefaultOptions();
@@ -427,11 +427,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		if ( isset( $_REQUEST['m'] ) ) {
 			switch ( $_REQUEST['m'] ) {
 				case '1' :
-					$this->status = 'updated';
+					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), $_REQUEST['i'] );
 					break;
 				case '2' :
-					$this->status = 'updated';
+					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), $_REQUEST['i'] );
 					break;
 				case '10' :
@@ -443,7 +443,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), $_REQUEST['i'] );
 					break;
 				case '12' :
-					$this->status = 'updated';
+					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), $_REQUEST['i'] );
 					break;
 				default :
@@ -572,8 +572,8 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 
 		if ( $message ) {
-			$status = ($status != '') ? $status : 'updated';
-			echo '<div id="message"	class="' . $status . ' fade">';
+			$status = ($status != '') ? $status : 'updated fade';
+			echo '<div id="message"	class="' . $status . '">';
 			echo '<p><strong>' . $message . '</strong></p></div>';
 		}
 	}
