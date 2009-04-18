@@ -438,6 +438,8 @@ class AVH_FDAS_Core {
 			} else {
 				$return_array = array ('Error' => 'Invalid call to stopforumspam' );
 			}
+		} else {
+			$return_array = array ('Error' => 'Unknown response from stopforumspam' );
 		}
 		return ($return_array);
 	}
