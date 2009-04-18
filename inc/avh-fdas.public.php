@@ -252,7 +252,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		if ( $d === false ) {
 			$ip_arr = explode( '/', $network );
 
-			if ( exists( $ip_arr[1] ) ) {
+			if ( isset( $ip_arr[1] ) ) {
 				$network_long = ip2long( $ip_arr[0] );
 				$x = ip2long( $ip_arr[1] );
 				$mask = long2ip( $x ) == $ip_arr[1] ? $x : (0xffffffff << (32 - $ip_arr[1]));
