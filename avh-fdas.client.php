@@ -12,6 +12,7 @@ class AVH_FDAS_Core {
 	 *
 	 * @var string
 	 */
+	var $comment_general;
 	var $comment_begin;
 	var $comment_end;
 
@@ -68,6 +69,7 @@ class AVH_FDAS_Core {
 	{
 
 		$this->version = "1.2-rc2";
+		$this->comment_general = '<!-- AVH First Defense Against Spam version ' . $this->version . ' -->';
 		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
 		$this->comment_end = '<!-- AVH First Defense Against Spam version ' . $this->version . ' End -->';
 

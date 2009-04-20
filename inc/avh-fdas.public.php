@@ -48,6 +48,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		if ( ! empty( $post ) ) {
 			$post_id = $post->ID;
 		}
+		echo $this->comment_general;
 		wp_nonce_field( 'avh-first-defense-against-spam_' . $post_id, '_avh_first_defense_against_spam', false );
 	}
 
@@ -81,7 +82,9 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 				$message .= sprintf( __( 'Email:		%s', 'avhfdas' ), $commentdata['comment_author_email'] ) . "\r\n";
 				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
 				$message .= __( 'Comment trying to post:', 'avhfdas' ) . "\r\n";
-				$message .= $commentdata['comment_content'] . "\r\n\r\n";
+				$message .= __( '--- START OF COMMENT ---', 'avhfdas' ) . "\r\n";
+				$message .= $commentdata['comment_content'] . "\r\n";
+				$message .= __( '--- END OF COMMENT ---', 'avhfdas' ) . "\r\n\r\n";
 
 				if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
 					$q['action'] = 'emailreportspammer';
