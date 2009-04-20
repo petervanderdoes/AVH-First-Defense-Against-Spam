@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block
 Requires at least: 2.7
 Tested up to: 2.7.1
-Stable tag: 1.2-rc1
+Stable tag: 1.2-rc2
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -71,7 +71,7 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
  	* Added security to protect against spammers directly posting to wp-comments-post.php.
  	* An email can be received of a spammer trying posting directly. The email holds a link to report the spammer at Stop Forum Spam ( an API key is required).
  	* The black and white list can now hold ranges besides single IP adressess.
- 	* Some small improvemnts.
+ 	* Some small improvemnts and bug fixes.
 * Version 1.1
 	* Abillity to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
 	* Added a link in the emails to add an IP to the local blacklist.
