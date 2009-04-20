@@ -163,7 +163,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$i = wp_specialchars( $_REQUEST['i'] );
 		$extra = '&m=10&i=' . $i;
 		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
-			$all = get_option( $this->db_nonces );
+			$all = get_option( $this->db_options_nonces );
 			$extra = '&m=11&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
 				$this->handleReportSpammer( $a, $e, $i );
@@ -507,18 +507,18 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 
 		// Set the options if they don't exist
-		if ( ! (get_option( $this->db_options_name_core )) ) {
+		if ( ! (get_option( $this->db_options_core )) ) {
 			$this->resetToDefaultOptions();
 		}
 
-		if ( ! (get_option( $this->db_data )) ) {
+		if ( ! (get_option( $this->db_options_data )) ) {
 			$this->data = $this->default_data;
-			update_option( $this->db_data, $this->data );
+			update_option( $this->db_options_data, $this->data );
 			wp_cache_flush(); // Delete cache
 		}
 
-		if ( ! (get_option( $this->db_nonces )) ) {
-			update_option( $this->db_nonces, $this->default_emailreport );
+		if ( ! (get_option( $this->db_options_nonces )) ) {
+			update_option( $this->db_options_nonces, $this->default_emailreport );
 			wp_cache_flush(); // Delete cache
 		}
 	}
@@ -552,7 +552,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function saveOptions ()
 	{
-		update_option( $this->db_options_name_core, $this->options );
+		update_option( $this->db_options_core, $this->options );
 		wp_cache_flush(); // Delete cache
 	}
 
@@ -563,7 +563,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	function resetToDefaultOptions ()
 	{
 		$this->options = $this->default_options;
-		update_option( $this->db_options_name_core, $this->options );
+		update_option( $this->db_options_core, $this->options );
 		wp_cache_flush(); // Delete cache
 	}
 
@@ -573,7 +573,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function deleteAllOptions ()
 	{
-		delete_option( $this->db_options_name_core, $this->default_options );
+		delete_option( $this->db_options_core, $this->default_options );
 		wp_cache_flush(); // Delete cache
 	}
 

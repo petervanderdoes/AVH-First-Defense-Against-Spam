@@ -103,11 +103,11 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 			if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
 				// Prevent a spam attack to overflow the database.
 				if ( ! ($this->checkDB_Nonces( $q['_avhnonce'] )) ) {
-					$option = get_option( $this->db_nonces );
+					$option = get_option( $this->db_options_nonces );
 
 					$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
 
-					update_option( $this->db_nonces, $option );
+					update_option( $this->db_options_nonces, $option );
 				}
 			}
 
@@ -129,14 +129,14 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function handleCronCleanNonce ()
 	{
-		$all = get_option( $this->db_nonces );
+		$all = get_option( $this->db_options_nonces );
 		if ( is_array( $all ) ) {
 			foreach ( $all as $key => $value ) {
 				if ( ! $this->avh_verify_nonce( $key, $value ) ) {
 					unset( $all[$key] );
 				}
 			}
-			update_option( $this->db_nonces, $all );
+			update_option( $this->db_options_nonces, $all );
 		}
 	}
 
@@ -150,7 +150,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	function checkDB_Nonces ( $nonce )
 	{
 		$return = false;
-		$all = get_option( $this->db_nonces );
+		$all = get_option( $this->db_options_nonces );
 		if ( is_array( $all ) ) {
 			if ( array_key_exists( $nonce, $all ) ) {
 				$return = true;
@@ -316,7 +316,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 
 		// Update the counter
 		$this->data['spam']['counter'] ++;
-		update_option( $this->db_data, $this->data );
+		update_option( $this->db_options_data, $this->data );
 
 		// Email
 		if ( $this->options['spam']['whentoemail'] >= 0 && ( int ) $info['frequency'] >= $this->options['spam']['whentoemail'] ) {

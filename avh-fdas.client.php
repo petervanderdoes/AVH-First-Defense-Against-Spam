@@ -49,15 +49,15 @@ class AVH_FDAS_Core {
 	 *
 	 * @var string
 	 */
-	var $db_options_name_core;
-	var $db_data;
-	var $db_nonces;
+	var $db_options_core;
+	var $db_options_data;
+	var $db_options_nonces;
+
 	/**
 	* Endpoint of the stopforumspam.com API
 	*
 	* @var string
 	*/
-
 	var $stopforumspam_endpoint;
 
 	/**
@@ -71,9 +71,9 @@ class AVH_FDAS_Core {
 		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
 		$this->comment_end = '<!-- AVH First Defense Against Spam version ' . $this->version . ' End -->';
 
-		$this->db_options_name_core = 'avhfdas';
-		$this->db_data = 'avhfdas_data';
-		$this->db_nonces ='avhfdas_nonces';
+		$this->db_options_core = 'avhfdas';
+		$this->db_options_data = 'avhfdas_data';
+		$this->db_options_nonces ='avhfdas_nonces';
 
 		/**
 		 * Default options - General Purpose
@@ -112,6 +112,7 @@ class AVH_FDAS_Core {
 		$this->default_nonces = array (
 				'default' => $this->default_nonces_data
 			);
+
 		/**
 		 * Set the options for the program
 		 *
@@ -202,7 +203,7 @@ class AVH_FDAS_Core {
 		$default_data = $this->default_data;
 
 		// Get options from WP options
-		$data_from_table = get_option( $this->db_data );
+		$data_from_table = get_option( $this->db_options_data );
 
 		if ( empty( $data_from_table ) ) {
 			$data_from_table = $this->default_data; // New installation
@@ -253,7 +254,7 @@ class AVH_FDAS_Core {
 		$default_options = $this->default_options;
 
 		// Get options from WP options
-		$options_from_table = get_option( $this->db_options_name_core );
+		$options_from_table = get_option( $this->db_options_core );
 
 		if ( empty( $options_from_table ) ) {
 			$options_from_table = $this->default_options; // New installation
@@ -274,7 +275,7 @@ class AVH_FDAS_Core {
 			// If a newer version is running do upgrades if neccesary and update the database.
 			if ( $this->version > $options_from_table['general']['version'] ) {
 				$default_options['general']['version'] = $this->version;
-				update_option( $this->db_options_name_core, $default_options );
+				update_option( $this->db_options_core, $default_options );
 			}
 		}
 		// Set the class property for options
