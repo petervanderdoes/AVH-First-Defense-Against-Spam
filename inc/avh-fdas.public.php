@@ -63,64 +63,64 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function checkNonceFieldToComment ( $commentdata )
 	{
-		$nonce = wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'] );
-		if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
-			if ( 1 == $this->options['spam']['emailsecuritycheck'] ) {
-				$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+		// When we're in Admin no need to check the nonce.
+		if ( ! defined( 'WP_ADMIN' ) ) {
+			$nonce = wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'] );
+			if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
+				if ( 1 == $this->options['spam']['emailsecuritycheck'] ) {
+					$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 
-				$to = get_option( 'admin_email' );
-				$ip = $_SERVER['REMOTE_ADDR'];
-				$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'no@email.address' : $commentdata['comment_author_email'];
+					$to = get_option( 'admin_email' );
+					$ip = $_SERVER['REMOTE_ADDR'];
+					$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'no@email.address' : $commentdata['comment_author_email'];
 
-				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), $site_name );
-				if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
-					$message = __( 'Reason:	The nonce check failed.', 'avhfdas' ) . "\r\n";
-				} else {
-					$message = __( 'Reason:	An attempt was made to directly access wp-comment-post.php', 'avhfdas' ) . "\r\n";
+					$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), $site_name );
+					if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
+						$message = __( 'Reason:	The nonce check failed.', 'avhfdas' ) . "\r\n";
+					} else {
+						$message = __( 'Reason:	An attempt was made to directly access wp-comment-post.php', 'avhfdas' ) . "\r\n";
+					}
+					$message .= sprintf( __( 'Username:	%s', 'avhfdas' ), $commentdata['comment_author'] ) . "\r\n";
+					$message .= sprintf( __( 'Email:		%s', 'avhfdas' ), $commentdata['comment_author_email'] ) . "\r\n";
+					$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
+					$message .= __( 'Comment trying to post:', 'avhfdas' ) . "\r\n";
+					$message .= __( '--- START OF COMMENT ---', 'avhfdas' ) . "\r\n";
+					$message .= $commentdata['comment_content'] . "\r\n";
+					$message .= __( '--- END OF COMMENT ---', 'avhfdas' ) . "\r\n\r\n";
+
+					if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
+						$q['action'] = 'emailreportspammer';
+						$q['a'] = $commentdata['comment_author'];
+						$q['e'] = $commentdata['comment_author_email'];
+						$q['i'] = $ip;
+						$q['_avhnonce'] = $this->avh_create_nonce( $q['a'] . $q['e'] . $q['i'] );
+						$query = $this->BuildQuery( $q );
+						$report_url = admin_url( 'admin.php?' . $query );
+						$message .= sprintf( __( 'Report spammer: %s' ), $report_url ) . "\r\n";
+					}
+
+					$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
+
+					wp_mail( $to, $subject, $message );
 				}
-				$message .= sprintf( __( 'Username:	%s', 'avhfdas' ), $commentdata['comment_author'] ) . "\r\n";
-				$message .= sprintf( __( 'Email:		%s', 'avhfdas' ), $commentdata['comment_author_email'] ) . "\r\n";
-				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
-				$message .= __( 'Comment trying to post:', 'avhfdas' ) . "\r\n";
-				$message .= __( '--- START OF COMMENT ---', 'avhfdas' ) . "\r\n";
-				$message .= $commentdata['comment_content'] . "\r\n";
-				$message .= __( '--- END OF COMMENT ---', 'avhfdas' ) . "\r\n\r\n";
 
+				// Only keep track if we have the ability to report add Stop Forum Spam
 				if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
-					$q['action'] = 'emailreportspammer';
-					$q['a'] = $commentdata['comment_author'];
-					$q['e'] = $commentdata['comment_author_email'];
-					$q['i'] = $ip;
-					$q['_avhnonce'] = $this->avh_create_nonce( $q['a'] . $q['e'] . $q['i'] );
-					$query = $this->BuildQuery( $q );
-					$report_url = admin_url( 'admin.php?' . $query );
-					$message .= sprintf( __( 'Report spammer: %s' ), $report_url ) . "\r\n";
+					// Prevent a spam attack to overflow the database.
+					if ( ! ($this->checkDB_Nonces( $q['_avhnonce'] )) ) {
+						$option = get_option( $this->db_options_nonces );
+
+						$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
+
+						update_option( $this->db_options_nonces, $option );
+					}
 				}
 
-				$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
+				$m = __( '<p>Cheating huh</p>', 'avhfdas' );
+				$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
 
-				wp_mail( $to, $subject, $message );
+				wp_die( $m );
 			}
-
-			// Only keep track if we have the ability to report add Stop Forum Spam
-			if ( ! empty( $this->options['spam']['sfsapikey'] ) ) {
-				// Prevent a spam attack to overflow the database.
-				if ( ! ($this->checkDB_Nonces( $q['_avhnonce'] )) ) {
-					$option = get_option( $this->db_options_nonces );
-
-					$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
-
-					update_option( $this->db_options_nonces, $option );
-				}
-			}
-
-			$m = __( '<p>Cheating huh</p>', 'avhfdas' );
-			$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
-			if ( defined( 'DOING_AJAX' ) ) {
-				die( $m );
-			}
-
-			wp_die( $m );
 		}
 		return $commentdata;
 	}
