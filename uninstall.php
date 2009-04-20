@@ -7,5 +7,6 @@ global $file;
 if ( 'avh-first-defense-against-spam' == dirname ( $file ) ) {
 	delete_option ( 'avhfdas' );
 	delete_option ( 'avhfdas_data' );
+	delete_option ( 'avhfdas_nonces' );
 }
 ?>

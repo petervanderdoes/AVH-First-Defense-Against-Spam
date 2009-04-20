@@ -496,11 +496,17 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	}
 
 	/**
-	 * Add initial avh-fdas options in DB
+	 * Called on activation of the plugin.
 	 *
 	 */
 	function installPlugin ()
 	{
+		// Add Cron Job, the action is added in the Public class.
+		if ( ! wp_next_scheduled( 'avhfdas_clean_nonce' ) ) {
+			wp_schedule_event( time(), 'daily', 'avhfdas_clean_nonce' );
+		}
+
+		// Set the options if they don't exist
 		if ( ! (get_option( $this->db_options_name_core )) ) {
 			$this->resetToDefaultOptions();
 		}
@@ -515,6 +521,16 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			update_option( $this->db_nonces, $this->default_emailreport );
 			wp_cache_flush(); // Delete cache
 		}
+	}
+
+	/**
+	 * Called on deactivation of the plugin.
+	 *
+	 */
+	function deactivatePlugin ()
+	{
+		// Deactivate the cron action as the the plugin is deactivated.
+		wp_clear_scheduled_hook( 'avhfdas_clean_nonce' );
 	}
 
 	/**

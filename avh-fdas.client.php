@@ -650,8 +650,12 @@ function avh_FDAS_init ()
 	if ( is_admin() ) {
 		require (dirname( __FILE__ ) . '/inc/avh-fdas.admin.php');
 		$avhfdas_admin = & new AVH_FDAS_Admin( );
-		//Installation
+
+		// Activation Hook
 		register_activation_hook( __FILE__, array (& $avhfdas_admin, 'installPlugin' ) );
+
+		// Deactivation Hook
+		register_deactivation_hook( __FILE__, array (&$avhfdas_admin, 'deactivatePlugin'));;
 	}
 
 	// Include the public class

@@ -17,11 +17,9 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		add_action( 'comment_form', array (&$this, 'addNonceFieldToComment' ) );
 		add_filter( 'preprocess_comment', array (&$this, 'checkNonceFieldToComment' ), 1 );
 
-		// Add Cron Job
-		if ( ! wp_next_scheduled( 'avhfdas_clean_nonce' ) ) {
-			wp_schedule_event( time(), 'daily', 'avhfdas_clean_nonce' );
-		}
+		// Private action for Cron
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'handleCronCleanNonce' ) );
+
 	}
 
 	/**
