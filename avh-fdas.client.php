@@ -37,12 +37,12 @@ class AVH_FDAS_Core {
 	var $default_general_options;
 	var $default_options;
 	var $default_spam;
-	var $default_emailreport;
+	var $default_nonces;
 
 	var $data;
 	var $default_data;
 	var $default_spam_data;
-	var $default_emailreport_data;
+	var $default_nonces_data;
 
 	/**
 	 * Name of the options field in the WordPress database options table.
@@ -51,7 +51,7 @@ class AVH_FDAS_Core {
 	 */
 	var $db_options_name_core;
 	var $db_data;
-	var $db_emailreport;
+	var $db_nonces;
 	/**
 	* Endpoint of the stopforumspam.com API
 	*
@@ -73,7 +73,7 @@ class AVH_FDAS_Core {
 
 		$this->db_options_name_core = 'avhfdas';
 		$this->db_data = 'avhfdas_data';
-		$this->db_emailreport ='avhfdas_emailreport';
+		$this->db_nonces ='avhfdas_nonces';
 
 		/**
 		 * Default options - General Purpose
@@ -89,14 +89,14 @@ class AVH_FDAS_Core {
 				'blacklist' => '',
 				'usewhitelist' => 1,
 				'whitelist' => '',
-				'emailsecuritycheck' => 0,
+				'emailsecuritycheck' => 1,
 				'sfsapikey' => '',
 			);
 		$this->default_spam_data = array(
 				'counter' => 0,
 			);
 
-		$this->default_emailreport_data = 'default';
+		$this->default_nonces_data = 'default';
 
 		/**
 		 * Default Options - All as stored in the DB
@@ -109,8 +109,8 @@ class AVH_FDAS_Core {
 		$this->default_data = array (
 				'spam' => $this->default_spam_data,
 			);
-		$this->default_emailreport = array (
-				'default' => $this->default_emailreport_data
+		$this->default_nonces = array (
+				'default' => $this->default_nonces_data
 			);
 		/**
 		 * Set the options for the program
@@ -644,7 +644,7 @@ class AVH_FDAS_Core {
  * Initialize the plugin
  *
  */
-function avh_FDAS__init ()
+function avh_FDAS_init ()
 {
 	// Admin
 	if ( is_admin() ) {
@@ -661,5 +661,5 @@ function avh_FDAS__init ()
 } // End avh_FDAS__init()
 
 
-add_action ( 'plugins_loaded', 'avh_FDAS__init' );
+add_action ( 'plugins_loaded', 'avh_FDAS_init' );
 ?>

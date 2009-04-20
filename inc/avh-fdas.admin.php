@@ -161,19 +161,19 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$a = wp_specialchars( $_REQUEST['a'] );
 		$e = wp_specialchars( $_REQUEST['e'] );
 		$i = wp_specialchars( $_REQUEST['i'] );
-		$extra='&m=10&i='.$i;
+		$extra = '&m=10&i=' . $i;
 		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
-			$all = get_option( $this->db_emailreport );
-			$extra='&m=11&i='.$i;
+			$all = get_option( $this->db_nonces );
+			$extra = '&m=11&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
 				$this->handleReportSpammer( $a, $e, $i );
 				unset( $all[$_REQUEST['_avhnonce']] );
-				update_option( $this->db_emailreport, $all );
-				$extra='&m=12&i='.$i;
+				update_option( $this->db_nonce, $all );
+				$extra = '&m=12&i=' . $i;
 			}
 			unset( $all );
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options'.$extra ) );
+		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options' . $extra ) );
 	}
 
 	/**
@@ -190,13 +190,13 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$snoopy_formvar['ip_addr'] = $ip_addr;
 		$snoopy_formvar['api_key'] = $this->options['spam']['sfsapikey'];
 		$snoopy = new Snoopy( );
-		$snoopy->agent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
+		$snoopy->agent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko/2009032608 Firefox/3.0.8 GTB5";
 		$snoopy->submit( 'http://www.stopforumspam.com/add', $snoopy_formvar );
 		// @TODO See if we can revert the
-		//$result=$snoopy->results;
-		//<div class="msg info">Data submitted successfully</div>
-
+	//$result=$snoopy->results;
+	//<div class="msg info">Data submitted successfully</div>
 	}
+
 	/**
 	 * Handles the admin_action_blacklist call
 	 *
@@ -220,7 +220,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				$this->setBlacklistOption( $b );
 			}
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options&m=2&i='.$ip ) );
+		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options&m=2&i=' . $ip ) );
 	}
 
 	/**
@@ -511,8 +511,8 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			wp_cache_flush(); // Delete cache
 		}
 
-		if ( ! (get_option( $this->db_emailreport )) ) {
-			update_option( $this->db_emailreport, $this->default_emailreport );
+		if ( ! (get_option( $this->db_nonces )) ) {
+			update_option( $this->db_nonces, $this->default_emailreport );
 			wp_cache_flush(); // Delete cache
 		}
 	}
