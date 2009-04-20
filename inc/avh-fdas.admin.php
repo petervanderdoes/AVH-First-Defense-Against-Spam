@@ -277,6 +277,13 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'Show a message when the connection has been terminated.'
 				),
 				array (
+					'avhfdas[spam][emailsecuritycheck]',
+					'Email on failed security check:',
+					'checkbox',
+					1,
+					'Receive an email when a comment is posted and the security check failed.'
+				),
+				array (
 					'avhfdas[spam][sfsapikey]',
 					'API Key:',
 					'text',
@@ -346,7 +353,13 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'The call to the database was successful and the IP was found in the database.<br />'.
 					'You can actually receive two sort of emails with this subject line.<br />'.
 					'One will have the line: <em>Threshold (3) reached. Connection terminated.</em> This means because the Threshold, set in the admin section, was reached the connection was terminated. In other words the spammer is stopped before any content was served.<br />'.
-					'The other message is without the Threshold message. This means the IP is in the database but the connection is not terminate because the threshold was not reached. In this case the normal content is served to the visitor.</p>'
+					'The other message is without the Threshold message. This means the IP is in the database but the connection is not terminate because the threshold was not reached. In this case the normal content is served to the visitor.</p>'.
+					'<p><em>AVH First Defense Against Spam - Comment security check failed</em><br />'.
+					'Somebody tried to post a comment but it failed the security check.<br />'.
+					'Some spammers try to comment by directly accessing the WordPress core file responsible for posting the comment (wp-comments-post.php).<br />'.
+					'This file does not trigger the check of AVH First Defense Against Spam to the site Stop Forum Spam.<br />'.
+					'For this reason I added an extra security option that will check if the posting of the comment is coming from the blog itself.<br />'.
+					'If it fails and you have checked the option <em>Email on failed security check</em>, you will receive this email.</p>'
 				)
 			),
 			'tips' => array (
@@ -367,7 +380,8 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'RewriteRule (.*) http://%{REMOTE_ADDR}/ [R=301,L] <br />' .
 					'&#60;/IfModule></pre>' .
 					'<p>Replace example\.com with your domain, for me it would be avirtualhome\.com<br /><br />' .
-					'Spammers are known to call the file wp-comments-post.php directly. Normal users would never do this, the above part will block this behavior.</p>'
+					'Spammers are known to call the file wp-comments-post.php directly. Normal users would never do this, the above part will block this behavior.<br />'.
+					'As of version 1.2 of this plugin you no longer need this, the plugin has a security feature that takes care of these kind of spammers</p>'
 				)
 			),
 			'about' => array (

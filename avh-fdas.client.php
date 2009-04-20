@@ -89,6 +89,7 @@ class AVH_FDAS_Core {
 				'blacklist' => '',
 				'usewhitelist' => 1,
 				'whitelist' => '',
+				'emailsecuritycheck' => 0,
 				'sfsapikey' => '',
 			);
 		$this->default_spam_data = array(
