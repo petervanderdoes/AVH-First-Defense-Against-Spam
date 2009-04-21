@@ -302,7 +302,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					'Blacklist IP\'s:',
 					'textarea',
 					15,
-					'Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24',
+					'Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24',
 					15),
 				array (
 					'avhfdas[spam][usewhitelist]',

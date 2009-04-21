@@ -1,10 +1,10 @@
 === AVH First Defense Against Spam ===
 Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
-Tags: spam, block
+Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.7
 Tested up to: 2.7.1
-Stable tag: 1.2-rc2
+Stable tag: 1.2
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -23,7 +23,7 @@ Spammers are identified by checking if the visitors IP exists in a database serv
 * Bypass the checks for the IP at Stop Forum Spam and the local blacklist based on IP in the local whitelist.
 * Ability to add single IP's and/or IP ranges to the blacklist and whitelist.
 * When an IP is blocked a message can be displayed to the visitor with the reason why access was blocked and a link to stopforumspam.com if they want to resolve the issue.
-* Report a spammer to Stop Forum Spam. A valid API key from Stop Forum Spam is neccesary.
+* Report a spammer to Stop Forum Spam. A valid API key from Stop Forum Spam is necessary.
 * Add a spammer to the local blacklist by clicking a link in the received email.
 
  
@@ -76,11 +76,11 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 * Version 1.2
  	* Added security to protect against spammers directly posting comments by accessing wp-comments-post.php.
  	* An email can be received of a spammer trying posting directly. The email holds a link to report the spammer at Stop Forum Spam ( an API key is required).
- 	* The black and white list can now hold ranges besides single IP adressess.
- 	* Some small improvemnts and bug fixes.
+ 	* The black and white list can now hold ranges besides single IP addresses.
+ 	* Some small improvements and bug fixes.
  
 * Version 1.1
-	* Abillity to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
+	* Ability to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
 	* Added a link in the emails to add an IP to the local blacklist.
 	* Bugfix: Uninstall did not work.
 	* RFC: A white list was added.
