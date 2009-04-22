@@ -68,7 +68,7 @@ class AVH_FDAS_Core {
 	function __construct ()
 	{
 
-		$this->version = "1.2";
+		$this->version = "1.2.1";
 		$this->comment_general = '<!-- AVH First Defense Against Spam version ' . $this->version . ' -->';
 		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
 		$this->comment_end = '<!-- AVH First Defense Against Spam version ' . $this->version . ' End -->';
@@ -339,6 +339,33 @@ class AVH_FDAS_Core {
 		return $version;
 	}
 
+	/**
+	 * Get the user's IP
+	 *
+	 * @return string
+	 */
+	function getUserIP ()
+	{
+		if ( isset( $_SERVER ) ) {
+
+			if ( isset( $_SERVER["HTTP_X_FORWARDED_FOR"] ) )
+				return $_SERVER["HTTP_X_FORWARDED_FOR"];
+
+			if ( isset( $_SERVER["HTTP_CLIENT_IP"] ) )
+				return $_SERVER["HTTP_CLIENT_IP"];
+
+			return $_SERVER["REMOTE_ADDR"];
+		}
+
+		if ( getenv( 'HTTP_X_FORWARDED_FOR' ) )
+			return getenv( 'HTTP_X_FORWARDED_FOR' );
+
+		if ( getenv( 'HTTP_CLIENT_IP' ) )
+			return getenv( 'HTTP_CLIENT_IP' );
+
+		return getenv( 'REMOTE_ADDR' );
+
+	}
 	/**
 	 * Insert the CSS file
 	 *

@@ -71,7 +71,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 					$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 
 					$to = get_option( 'admin_email' );
-					$ip = $_SERVER['REMOTE_ADDR'];
+					$ip = getUserIP();
 					$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'no@email.address' : $commentdata['comment_author_email'];
 
 					$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), $site_name );
@@ -171,7 +171,7 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function handleMainAction ()
 	{
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = getUserIP();
 		$ip_in_whitelist = false;
 
 		if ( 1 == $this->options['spam']['usewhitelist'] && $this->options['spam']['whitelist'] ) {
