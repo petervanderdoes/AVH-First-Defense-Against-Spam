@@ -636,6 +636,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function printOptions ( $option_data )
 	{
+
 		// Get actual options
 		$option_actual = ( array ) $this->options;
 
@@ -655,6 +656,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				}
 
 				switch ( $option[2] ) {
+
 					case 'checkbox' :
 						$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( $option[3] ) . '" ' . $this->isChecked( '1', $option_actual[$section][$option_key] ) . ' />' . "\n";
 						$checkbox .= $option[0] . '|';
@@ -741,8 +743,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function isChecked ( $checked, $current )
 	{
-		if ( $checked == $current )
-			return (' checked="checked"');
+		$return ='';
+		if ( $checked == $current ) {
+			$return =' checked="checked"';
+		}
+		return $return;
 	}
 }
 ?>
