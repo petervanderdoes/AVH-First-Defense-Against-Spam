@@ -227,22 +227,13 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function checkBlacklist ( $ip )
 	{
-		$b = explode( "\r\n", $this->options['spam']['blacklist'] );
+		$found = $this->checkList( $ip, $this->options['spam']['blacklist'] );
 
-		if ( in_array( $ip, $b ) ) {
+		if ( $found ) {
 			$spaminfo['appears'] = 'yes';
-			$spaminfo['frequency'] = abs( $this->options['spam']['whentodie'] ); // Blaclisted IP's will always be terminated.
+			$spaminfo['frequency'] = abs( $this->options['spam']['whentodie'] ); // Blacklisted IP's will always be terminated.
 			$time = 'Blacklisted';
 			$this->handleSpammer( $ip, $spaminfo, $time );
-		}
-
-		foreach ( $b as $check ) {
-			if ( $this->checkNetworkMatch( $check, $ip ) ) {
-				$spaminfo['appears'] = 'yes';
-				$spaminfo['frequency'] = abs( $this->options['spam']['whentodie'] ); // Blaclisted IP's will always be terminated.
-				$time = 'Blacklisted';
-				$this->handleSpammer( $ip, $spaminfo, $time );
-			}
 		}
 	}
 
@@ -256,18 +247,35 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	 */
 	function checkWhitelist ( $ip )
 	{
-		$return = false;
-		$b = explode( "\r\n", $this->options['spam']['whitelist'] );
-		if ( in_array( $ip, $b ) ) {
-			$return = true;
-		}
-		foreach ( $b as $check ) {
-			if ( $this->checkNetworkMatch( $check, $ip ) ) {
-				$return = true;
-				break;
+		$found = $this->checkList( $ip, $this->options['spam']['whitelist'] );
+		return $found;
+	}
+
+	/**
+	 * Check if an IP exists in a list
+	 *
+	 * @param string $ip
+	 * @param string $list
+	 * @return boolean
+	 *
+	 * @since 1.2.3
+	 */
+	function checkList ( $ip, $list )
+	{
+		$list = explode( "\r\n", $list );
+
+		// Check for single IP's, this is much quicker as going through the list
+		$inlist = in_array( $ip, $list ) ? true : false;
+
+		if ( ! $inlist ) { // Not found yet
+			foreach ( $list as $check ) {
+				if ( $this->checkNetworkMatch( $check, $ip ) ) {
+					$inlist = true;
+					break;
+				}
 			}
 		}
-		return $return;
+		return ($inlist);
 	}
 
 	/**
