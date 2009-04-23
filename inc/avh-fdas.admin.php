@@ -405,24 +405,30 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			$formoptions = $_POST['avhfdas'];
 			foreach ( $this->options as $key => $value ) {
 				if ( 'general' != $key ) { // The data in General is used for internal usage.
+
 					foreach ( $value as $key2 => $value2 ) {
 						// Every field in a form is filled except unchecked checkboxes. Set an unchecked checkbox to 0.
 						$newval = (isset( $formoptions[$key][$key2] ) ? attribute_escape( $formoptions[$key][$key2] ) : 0);
 
-						// Check numeric entries
-						if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
-							if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
-								$newval = $this->default_options[$key][$key2];
+						if ( $newval != $value2 ) { // Only process changed fields.
+
+							// Check numeric entries
+							if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
+								if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
+									$newval = $this->default_options[$key][$key2];
+								}
+								$newval = ( int ) $newval;
 							}
-							$newval = ( int ) $newval;
-						}
-						if ( 'blacklist' == $key2 || 'whitelist' == $key2) {
-							$b = explode( "\r\n", $newval );
-							natsort( $b );
-							$newval = implode( "\r\n", $b );
-							unset( $b );
-						}
-						if ( $newval != $value2 ) {
+
+							// Sort the lists
+							if ( 'blacklist' == $key2 || 'whitelist' == $key2 ) {
+								$b = explode( "\r\n", $newval );
+								natsort( $b );
+								$newval = implode( "\r\n", $b );
+								unset( $b );
+							}
+
+							// Set the option to it's new value
 							$this->setOption( array ($key, $key2 ), $newval );
 						}
 					}
