@@ -398,7 +398,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			)
 		);
 
-		// Update or reset options
+		// Update options
 		if ( isset( $_POST['updateoptions'] ) ) {
 			check_admin_referer( 'avhfdas-options' );
 
@@ -429,9 +429,12 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				}
 			}
 			$this->saveOptions();
-			$this->message = 'Options saved';
+			$this->message = __('Options saved', 'avhfdas');
 			$this->status = 'updated fade';
-		} elseif ( isset( $_POST['reset_options'] ) ) {
+		}
+
+		// Reset options
+		if ( isset( $_POST['reset_options'] ) ) {
 			check_admin_referer( 'avhfdas-options' );
 			$this->resetToDefaultOptions();
 			$this->message = __( 'AVH First Defense Against Spam options set to default options!', 'avhfdas' );
@@ -461,9 +464,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
 				default :
-					$this->message = '';
+					$this->message = 'Unknown message request';
 			}
 		}
+
+		// Actually display the message
 		$this->displayMessage();
 
 		echo '<script type="text/javascript">';
