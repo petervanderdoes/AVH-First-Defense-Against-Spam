@@ -445,33 +445,21 @@ class AVH_FDAS_Core {
 			$response = wp_remote_request( $url );
 			if ( ! is_wp_error( $response ) ) {
 				$xml_array = $this->ConvertXML2Array( $response['body'] );
+				if ( ! empty( $xml_array ) ) {
+					// Did the call succeed?
+					if ( 'true' == $xml_array['response_attr']['success'] ) {
+						$return_array = $xml_array['response'];
+					} else {
+						$return_array = array ('Error' => 'Invalid call to stopforumspam' );
+					}
+				} else {
+					$return_array = array ('Error' => 'Unknown response from stopforumspam' );
+				}
 			} else {
 				$return_array = array ('Error' => $response->errors );
 			}
-		} else { // Prior to WordPress 2.7 we'll use the Snoopy Class.
-			require_once (ABSPATH . 'wp-includes/class-snoopy.php');
-			$snoopy = new Snoopy( );
-			$snoopy->fetch( $url );
-			if ( ! $snoopy->error ) {
-				$response = $snoopy->results;
-				$xml_array = $this->ConvertXML2Array( $response );
-			} else {
-				$response = array ($snoopy->error => array (0 => $url ) );
-				$return_array = array ('Error' => $response );
-			}
 		}
 
-		// It will be empty if we had an error.
-		if ( ! empty( $xml_array ) ) {
-			// Did the call succeed?
-			if ( 'true' == $xml_array['response_attr']['success'] ) {
-				$return_array = $xml_array['response'];
-			} else {
-				$return_array = array ('Error' => 'Invalid call to stopforumspam' );
-			}
-		} else {
-			$return_array = array ('Error' => 'Unknown response from stopforumspam' );
-		}
 		return ($return_array);
 	}
 
@@ -485,11 +473,16 @@ class AVH_FDAS_Core {
 	 */
 	function getHttpError ( $error )
 	{
-		foreach ( $error as $key => $value ) {
-			$error_short = $key;
-			$error_long = $value[0];
+		if ( is_array( $error ) ) {
+			foreach ( $error as $key => $value ) {
+				$error_short = $key;
+				$error_long = $value[0];
+				$return = 'Error:' . $error_short . ' - ' . $error_long;
+			}
+		} else {
+			$return = 'Error:' . $error;
 		}
-		return '<strong>avhfdas error:' . $error_short . ' - ' . $error_long . '</strong>';
+		return $return;
 	}
 
 	/**
