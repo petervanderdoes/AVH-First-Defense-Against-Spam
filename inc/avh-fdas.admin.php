@@ -161,15 +161,15 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$a = wp_specialchars( $_REQUEST['a'] );
 		$e = wp_specialchars( $_REQUEST['e'] );
 		$i = wp_specialchars( $_REQUEST['i'] );
-		$extra = '&m=10&i=' . $i;
+		$extra = '&m='.AVHFDAS_ERROR_INVALID_REQUEST.'&i=' . $i;
 		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
 			$all = get_option( $this->db_options_nonces );
-			$extra = '&m=11&i=' . $i;
+			$extra = '&m='.AVHFDAS_ERROR_NOT_REPORTED.'&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
 				$this->handleReportSpammer( $a, $e, $i );
 				unset( $all[$_REQUEST['_avhnonce']] );
 				update_option( $this->db_nonce, $all );
-				$extra = '&m=12&i=' . $i;
+				$extra = '&m='.AVHFDAS_REPORTED.'&i=' . $i;
 			}
 			unset( $all );
 		}
@@ -220,7 +220,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 				$this->setBlacklistOption( $b );
 			}
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options&m=2&i=' . $ip ) );
+		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options&m='.AVHFDAS_ADDED_BLACKLIST.'&i=' . $ip ) );
 	}
 
 	/**
@@ -449,27 +449,33 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		// Show messages if needed.
 		if ( isset( $_REQUEST['m'] ) ) {
 			switch ( $_REQUEST['m'] ) {
-				case '1' :
+				case AVHFDAS_REPORTED_DELETED :
 					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
-				case '2' :
+
+				case AVHFDAS_ADDED_BLACKLIST :
 					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
-				case '10' :
-					$this->status = 'error';
-					$this->message = sprintf( __( 'Invalid request.', 'avhfdas' ) );
-					break;
-				case '11' :
-					$this->status = 'error';
-					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
-					break;
-				case '12' :
+
+				case AVHFDAS_REPORTED :
 					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
+
+				case AVHFDAS_ERROR_INVALID_REQUEST :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'Invalid request.', 'avhfdas' ) );
+					break;
+
+				case AVHFDAS_ERROR_NOT_REPORTED :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+
 				default :
+					$this->status = 'error';
 					$this->message = 'Unknown message request';
 			}
 		}
