@@ -23,13 +23,13 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 
 		$this->installPlugin();
 		// Admin Capabilities
-		add_action( 'init', array (&$this, 'initRoles' ) );
+		add_action( 'init', array (&$this, 'actionInitRoles' ) );
 
 		// Admin menu
-		add_action( 'admin_menu', array (&$this, 'adminMenu' ) );
+		add_action( 'admin_menu', array (&$this, 'actionAdminMenu' ) );
 
 		// CSS Helper
-		add_action( 'admin_print_styles-settings_page_avhfdas_options', array (&$this, 'injectCSS' ) );
+		add_action( 'admin_print_styles-settings_page_avhfdas_options', array (&$this, 'actionInjectCSS' ) );
 
 		// Helper JS & jQuery & Prototype
 		$avhfdas_pages = array ('avhfdas_options' );
@@ -39,11 +39,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 
 		// Add the ajax action
 		//add_action('admin_init', array(&$this, 'ajaxCheck'));
-		add_action ( 'wp_ajax_avh-fdas-reportcomment', array ( &$this, 'ajaxCheck' ) );
+		add_action ( 'wp_ajax_avh-fdas-reportcomment', array ( &$this, 'actionAjaxReportComment' ) );
 
 		// Add admin actions
-		add_action('admin_action_blacklist',array(&$this,'handleBlacklistUrl'));
-		add_action('admin_action_emailreportspammer',array(&$this,'handleEmailReportingUrl'));
+		add_action('admin_action_blacklist',array(&$this,'actionHandleBlacklistUrl'));
+		add_action('admin_action_emailreportspammer',array(&$this,'actionHandleEmailReportingUrl'));
 
 		// Add Filter
 		add_filter('comment_row_actions',array(&$this,'filterCommentRowActions'),10,2);
@@ -63,8 +63,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Setup Roles
 	 *
+	 * @WordPress Action init
+	 * @since 1.0
 	 */
-	function initRoles ()
+	function actionInitRoles ()
 	{
 		if ( function_exists( 'get_role' ) ) {
 			$role = get_role( 'administrator' );
@@ -82,8 +84,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Add the Tools and Options to the Management and Options page repectively
 	 *
+	 * @WordPress Action admin_menu
+	 *
 	 */
-	function adminMenu ()
+	function actionAdminMenu ()
 	{
 		add_options_page( __( 'AVH First Defense Against Spam: Options', 'avhfdas' ), 'AVH First Defense Against Spam', 'avh_fdas', 'avhfdas_options', array (&$this, 'pageOptions' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ) );
@@ -92,6 +96,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Adds Settings next to the plugin actions
 	 *
+	 * @WordPress Filter plugin_action_links_avh-first-defense-against-spam/avh-fdas.php
 	 * @param array $links
 	 * @return array
 	 *
@@ -108,6 +113,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Adds an extra option on the comment row
 	 *
+	 * @WordPress Filter comment_row_actions
 	 * @param array $actions
 	 * @param class $comment
 	 * @return array
@@ -124,8 +130,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Checks if the user clicked on the Report & Delete link.
 	 *
+	 * @WordPress Action wp_ajax_avh-fdas-reportcomment
+	 *
 	 */
-	function ajaxCheck ()
+	function actionAjaxReportComment ()
 	{
 		if ( 'avh-fdas-reportcomment' == $_POST['action'] ) {
 			$comment_id = absint( $_REQUEST['id'] );
@@ -149,10 +157,11 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Handles the admin_action emailreportspammer call.
 	 *
+	 * @WordPress Action admin_action_emailreportspammer
 	 * @since 1.2
 	 *
 	 */
-	function handleEmailReportingUrl ()
+	function actionHandleEmailReportingUrl ()
 	{
 		if ( ! (isset( $_REQUEST['action'] ) && 'emailreportspammer' == $_REQUEST['action']) ) {
 			return;
@@ -200,8 +209,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Handles the admin_action_blacklist call
 	 *
+	 * @WordPress Action admin_action_blacklist
+	 *
 	 */
-	function handleBlacklistUrl ()
+	function actionHandleBlacklistUrl ()
 	{
 		if ( ! (isset( $_REQUEST['action'] ) && 'blacklist' == $_REQUEST['action']) ) {
 			return;
@@ -628,8 +639,9 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	/**
 	 * Print link to CSS
 	 *
+	 * @WordPress Action admin_print_styles-settings_page_avhfdas_options
 	 */
-	function injectCSS ()
+	function actionInjectCSS ()
 	{
 		wp_enqueue_style( 'avhfdasadmin', $this->info['install_url'] . '/inc/avh-fdas.admin.css', array (), $this->version, 'screen' );
 	}

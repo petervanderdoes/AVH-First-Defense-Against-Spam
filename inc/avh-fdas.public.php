@@ -12,13 +12,13 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		parent::__construct();
 
 		// Public actions and filters
-		add_action( 'get_header', array (&$this, 'handleMainAction' ) );
+		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
 
-		add_action( 'comment_form', array (&$this, 'addNonceFieldToComment' ) );
-		add_filter( 'preprocess_comment', array (&$this, 'checkNonceFieldToComment' ), 1 );
+		add_action( 'comment_form', array (&$this, 'actionAddNonceFieldToComment' ) );
+		add_filter( 'preprocess_comment', array (&$this, 'filterCheckNonceFieldToComment' ), 1 );
 
 		// Private action for Cron
-		add_action( 'avhfdas_clean_nonce', array (&$this, 'handleCronCleanNonce' ) );
+		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
 
 	}
 
@@ -35,12 +35,12 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 
 	/**
 	 * Add a nonce field to the comments.
-	 * Action: comment_form
 	 *
+	 * @WordPress Action - comment_form
 	 * @since 1.2
 	 *
 	 */
-	function addNonceFieldToComment ()
+	function actionAddNonceFieldToComment ()
 	{
 		global $post;
 
@@ -53,15 +53,35 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	}
 
 	/**
-	 * Check the nonce field set with a comment.
-	 * Filter: preprocess_comment
+	 * Clean up the nonce DB by using Cron
 	 *
+	 * @WordPress: Action avhfdas_clean_nonce
+	 * @since 1.2
+	 *
+	 */
+	function actionHandleCronCleanNonce ()
+	{
+		$all = get_option( $this->db_options_nonces );
+		if ( is_array( $all ) ) {
+			foreach ( $all as $key => $value ) {
+				if ( ! $this->avh_verify_nonce( $key, $value ) ) {
+					unset( $all[$key] );
+				}
+			}
+			update_option( $this->db_options_nonces, $all );
+		}
+	}
+
+	/**
+	 * Check the nonce field set with a comment.
+	 *
+	 * @WordPress Filter preprocess_comment
 	 * @param mixed $commentdata
 	 * @return mixed
 	 * @since 1.2
 	 *
 	 */
-	function checkNonceFieldToComment ( $commentdata )
+	function filterCheckNonceFieldToComment ( $commentdata )
 	{
 		// When we're in Admin no need to check the nonce.
 		if ( ! defined( 'WP_ADMIN' ) ) {
@@ -127,23 +147,6 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 		return $commentdata;
 	}
 
-	/**
-	 * Clean up the nonce DB by using Cron
-	 * @since 1.2
-	 *
-	 */
-	function handleCronCleanNonce ()
-	{
-		$all = get_option( $this->db_options_nonces );
-		if ( is_array( $all ) ) {
-			foreach ( $all as $key => $value ) {
-				if ( ! $this->avh_verify_nonce( $key, $value ) ) {
-					unset( $all[$key] );
-				}
-			}
-			update_option( $this->db_options_nonces, $all );
-		}
-	}
 
 	/**
 	 * Checks if the spammer is in our database.
@@ -167,11 +170,11 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 	/**
 	 * Handle the main action.
 	 * Get the visitors IP and call the stopforumspam API to check if it's a known spammer
-	 * Action: get_header
 	 *
+	 * @WordPress Action get_header
 	 * @since 1.0
 	 */
-	function handleMainAction ()
+	function actionHandleMainAction ()
 	{
 		$ip = $this->getUserIP();
 		$ip_in_whitelist = false;
