@@ -325,9 +325,28 @@ class AVH_FDAS_Core {
 	function getUserIP ()
 	{
 		if ( isset( $_SERVER ) ) {
+			if ( isset( $_SERVER["HTTP_X_REAL_IP"] ) )
+				return $_SERVER["HTTP_X_REAL_IP"];
 
-			if ( isset( $_SERVER["HTTP_X_FORWARDED_FOR"] ) )
-				return $_SERVER["HTTP_X_FORWARDED_FOR"];
+			if ( isset( $_SERVER["HTTP_X_FORWARDED_FOR"] ) ) {
+				$long = ip2long( $_SERVER["HTTP_X_FORWARDED_FOR"] );
+				/**
+				 * Private Ip Ranges
+				 * 167772160 - 10.0.0.0
+				 * 184549375 - 10.255.255.255
+				 * -1408237568 - 172.16.0.0
+				 * -1407188993 - 172.31.255.255
+				 * -1062731776 - 192.168.0.0
+				 * -1062666241 - 192.168.255.255
+				 * -1442971648 - 169.254.0.0
+				 * -1442906113 - 169.254.255.255
+				 * 2130706432 - 127.0.0.0
+				 * 2147483647 - 127.255.255.255 (32 bit integer limit!!!)
+				 * */
+				if ( ! (($long >= 167772160 and $long <= 184549375) or ($long >= - 1408237568 and $long <= - 1407188993) or ($long >= - 1062731776 and $long <= - 1062666241) or ($long >= 2130706432 and $long <= 2147483647) or $long == - 1) ) {
+					return $_SERVER["HTTP_X_FORWARDED_FOR"];
+				}
+			}
 
 			if ( isset( $_SERVER["HTTP_CLIENT_IP"] ) )
 				return $_SERVER["HTTP_CLIENT_IP"];
@@ -335,14 +354,20 @@ class AVH_FDAS_Core {
 			return $_SERVER["REMOTE_ADDR"];
 		}
 
-		if ( getenv( 'HTTP_X_FORWARDED_FOR' ) )
-			return getenv( 'HTTP_X_FORWARDED_FOR' );
+		if ( getenv( 'HTTP_X_REAL_IP' ) )
+			return getenv( 'HTTP_X_REAL_IP' );
+
+		if ( getenv( 'HTTP_X_FORWARDED_FOR' ) ) {
+			$long = ip2long( $_SERVER["HTTP_X_FORWARDED_FOR"] );
+			if ( ! (($long >= 167772160 and $long <= 184549375) or ($long >= - 1408237568 and $long <= - 1407188993) or ($long >= - 1062731776 and $long <= - 1062666241) or ($long >= 2130706432 and $long <= 2147483647) or $long == - 1) ) {
+				return getenv( 'HTTP_X_FORWARDED_FOR' );
+			}
+		}
 
 		if ( getenv( 'HTTP_CLIENT_IP' ) )
 			return getenv( 'HTTP_CLIENT_IP' );
 
 		return getenv( 'REMOTE_ADDR' );
-
 	}
 
 	/**
