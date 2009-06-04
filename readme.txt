@@ -3,8 +3,8 @@ Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.7
-Tested up to: 2.7.1
-Stable tag: 1.2.3
+Tested up to: 2.8
+Stable tag: 1.3
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -73,6 +73,9 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 3. The option Report & Delete
 
 == Arbitrary section ==
+* Version 1.3
+	* Updateded determination of users ip. Now also detects right IP if Apache with nginx proxy is used.
+	
 * Version 1.2.3
 	* Bugfix: HTTP Error messages didn't work properly
 	* Refactoring of some of the code.
