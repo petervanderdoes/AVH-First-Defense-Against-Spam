@@ -74,7 +74,7 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 
 == Arbitrary section ==
 * Version 1.3
-	* Updateded determination of users ip. Now also detects right IP if Apache with nginx proxy is used.
+	* Updateded determination of users ip. Now also detects right IP if the server is running Apache with nginx proxy.
 	
 * Version 1.2.3
 	* Bugfix: HTTP Error messages didn't work properly
