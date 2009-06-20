@@ -72,31 +72,31 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 
 3. The option Report & Delete
 
-== Arbitrary section ==
-* Version 1.3
-	* Updateded determination of users ip. Now also detects right IP if the server is running Apache with nginx proxy.
+== Changelog ==
+= Version 1.3 =
+* Updateded determination of users ip. Now also detects right IP if the server is running Apache with nginx proxy.
 	
-* Version 1.2.3
-	* Bugfix: HTTP Error messages didn't work properly
-	* Refactoring of some of the code.
+= Version 1.2.3 =
+* Bugfix: HTTP Error messages didn't work properly
+* Refactoring of some of the code.
 	
-* Version 1.2.2
-	* Bugfix: Trackback and Pingback comments were blocked as well
+= Version 1.2.2 =
+* Bugfix: Trackback and Pingback comments were blocked as well
 	
-* Version 1.2.1
-	* Better implementation for getting the remote IP.
+= Version 1.2.1 =
+* Better implementation for getting the remote IP.
 	
-* Version 1.2
- 	* Added security to protect against spammers directly posting comments by accessing wp-comments-post.php.
- 	* An email can be received of a spammer trying posting directly. The email holds a link to report the spammer at Stop Forum Spam ( an API key is required).
- 	* The black and white list can now hold ranges besides single IP addresses.
- 	* Some small improvements and bug fixes.
+= Version 1.2 =
+ * Added security to protect against spammers directly posting comments by accessing wp-comments-post.php.
+ * An email can be received of a spammer trying posting directly. The email holds a link to report the spammer at Stop Forum Spam ( an API key is required).
+ * The black and white list can now hold ranges besides single IP addresses.
+ * Some small improvements and bug fixes.
  
-* Version 1.1
-	* Ability to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
-	* Added a link in the emails to add an IP to the local blacklist.
-	* Bugfix: Uninstall did not work.
-	* RFC: A white list was added.
+= Version 1.1 =
+* Ability to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
+* Added a link in the emails to add an IP to the local blacklist.
+* Bugfix: Uninstall did not work.
+* RFC: A white list was added.
 
-* Version 1.0
-	* Initial version
+= Version 1.0 =
+* Initial version
