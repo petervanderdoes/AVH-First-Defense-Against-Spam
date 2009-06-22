@@ -3,8 +3,8 @@
 if ( preg_match( '#' . basename( __FILE__ ) . '#', $_SERVER['PHP_SELF'] ) ) {
 	die( 'You are not allowed to call this page directly.' );
 }
-
-class AVH_FDAS_Core {
+class AVH_FDAS_Core
+{
 	/**
 	 * Version of AVH First Defense Against Spam
 	 *
@@ -44,7 +44,6 @@ class AVH_FDAS_Core {
 	var $default_options;
 	var $default_spam;
 	var $default_nonces;
-
 	var $data;
 	var $default_data;
 	var $default_spam_data;
@@ -60,10 +59,10 @@ class AVH_FDAS_Core {
 	var $db_options_nonces;
 
 	/**
-	* Endpoint of the stopforumspam.com API
-	*
-	* @var string
-	*/
+	 * Endpoint of the stopforumspam.com API
+	 *
+	 * @var string
+	 */
 	var $stopforumspam_endpoint;
 
 	/**
@@ -72,53 +71,28 @@ class AVH_FDAS_Core {
 	 */
 	function __construct ()
 	{
-
 		$this->version = "2.0-rc1";
 		$this->comment_general = '<!-- AVH First Defense Against Spam version ' . $this->version . ' -->';
 		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
 		$this->comment_end = '<!-- AVH First Defense Against Spam version ' . $this->version . ' End -->';
-
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
-		$this->db_options_nonces ='avhfdas_nonces';
+		$this->db_options_nonces = 'avhfdas_nonces';
 
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array (
-				'version' => $this->version,
-			);
-		$this->default_spam = array (
-				'whentoemail' => 1,
-				'whentodie' => 3,
-				'diewithmessage' => 1,
-				'useblacklist' => 1,
-				'blacklist' => '',
-				'usewhitelist' => 1,
-				'whitelist' => '',
-				'emailsecuritycheck' => 1,
-				'sfsapikey' => '',
-			);
-		$this->default_spam_data = array(
-				'counter' => 0,
-			);
-
+		$this->default_general_options = array ('version' => $this->version );
+		$this->default_spam = array ('whentoemail' => 1, 'whentodie' => 3, 'diewithmessage' => 1, 'useblacklist' => 1, 'blacklist' => '', 'usewhitelist' => 1, 'whitelist' => '', 'emailsecuritycheck' => 1, 'sfsapikey' => '' );
+		$this->default_spam_data = array ('counter' => 0 );
 		$this->default_nonces_data = 'default';
 
 		/**
 		 * Default Options - All as stored in the DB
 		 */
-		$this->default_options = array (
-				'general' => $this->default_general_options,
-				'spam' => $this->default_spam,
-			);
-
-		$this->default_data = array (
-				'spam' => $this->default_spam_data,
-			);
-		$this->default_nonces = array (
-				'default' => $this->default_nonces_data
-			);
+		$this->default_options = array ('general' => $this->default_general_options, 'spam' => $this->default_spam );
+		$this->default_data = array ('spam' => $this->default_spam_data );
+		$this->default_nonces = array ('default' => $this->default_nonces_data );
 
 		/**
 		 * Set the options for the program
@@ -134,12 +108,10 @@ class AVH_FDAS_Core {
 		//$info['home_path'] = get_home_path();
 		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
 		$path = substr( $path, strpos( $path, 'plugins' ) + 8, strlen( $path ) );
-
 		$info['siteurl'] = get_option( 'siteurl' );
 		if ( $this->isMuPlugin() ) {
 			$info['install_url'] = WPMU_PLUGIN_URL;
 			$info['install_dir'] = WPMU_PLUGIN_DIR;
-
 			if ( $path != 'mu-plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
@@ -147,7 +119,6 @@ class AVH_FDAS_Core {
 		} else {
 			$info['install_url'] = WP_PLUGIN_URL;
 			$info['install_dir'] = WP_PLUGIN_DIR;
-
 			if ( $path != 'plugins' ) {
 				$info['install_url'] .= '/' . $path;
 				$info['install_dir'] .= '/' . $path;
@@ -155,16 +126,7 @@ class AVH_FDAS_Core {
 		}
 
 		// Set class property for info
-		$this->info = array (
-				'home' => get_option ( 'home' ),
-				'siteurl' => $info['siteurl'],
-				'install_url' => $info['install_url'],
-				'install_dir' => $info['install_dir'],
-				'graphics_url' => $info['install_url'] . '/images',
-				'home_path' => $info['home_path'],
-				'wordpress_version' => $this->getWordpressVersion ()
-		);
-
+		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'install_url' => $info['install_url'], 'install_dir' => $info['install_dir'], 'graphics_url' => $info['install_url'] . '/images', 'home_path' => $info['home_path'], 'wordpress_version' => $this->getWordpressVersion() );
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
 
 		/**
@@ -213,10 +175,8 @@ class AVH_FDAS_Core {
 	 */
 	function handleOptionsDB ( $default_data, $optionsdb )
 	{
-
 		// Get options from WP options
 		$data_from_table = get_option( $optionsdb );
-
 		if ( is_array( $data_from_table ) ) {
 			// Update default options by getting not empty values from options table
 			foreach ( $default_data as $section_key => $section_array ) {
@@ -302,7 +262,6 @@ class AVH_FDAS_Core {
 		$directory_array = explode( '/', $public_directory );
 		//get highest or top level in array of directory strings
 		$public_base = max( $directory_array );
-
 		return $public_base;
 	}
 
@@ -332,7 +291,6 @@ class AVH_FDAS_Core {
 		if ( isset( $_SERVER ) ) {
 			if ( isset( $_SERVER["HTTP_X_REAL_IP"] ) )
 				return $_SERVER["HTTP_X_REAL_IP"];
-
 			if ( isset( $_SERVER["HTTP_X_FORWARDED_FOR"] ) ) {
 				$long = ip2long( $_SERVER["HTTP_X_FORWARDED_FOR"] );
 				/**
@@ -352,26 +310,20 @@ class AVH_FDAS_Core {
 					return $_SERVER["HTTP_X_FORWARDED_FOR"];
 				}
 			}
-
 			if ( isset( $_SERVER["HTTP_CLIENT_IP"] ) )
 				return $_SERVER["HTTP_CLIENT_IP"];
-
 			return $_SERVER["REMOTE_ADDR"];
 		}
-
 		if ( getenv( 'HTTP_X_REAL_IP' ) )
 			return getenv( 'HTTP_X_REAL_IP' );
-
 		if ( getenv( 'HTTP_X_FORWARDED_FOR' ) ) {
 			$long = ip2long( $_SERVER["HTTP_X_FORWARDED_FOR"] );
 			if ( ! (($long >= 167772160 and $long <= 184549375) or ($long >= - 1408237568 and $long <= - 1407188993) or ($long >= - 1062731776 and $long <= - 1062666241) or ($long >= 2130706432 and $long <= 2147483647) or $long == - 1) ) {
 				return getenv( 'HTTP_X_FORWARDED_FOR' );
 			}
 		}
-
 		if ( getenv( 'HTTP_CLIENT_IP' ) )
 			return getenv( 'HTTP_CLIENT_IP' );
-
 		return getenv( 'REMOTE_ADDR' );
 	}
 
@@ -425,7 +377,6 @@ class AVH_FDAS_Core {
 	{
 		$r = false;
 		$i = wp_nonce_tick();
-
 		// Nonce generated 0-12 hours ago
 		if ( substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 ) == $nonce ) {
 			$r = 1;
@@ -445,10 +396,8 @@ class AVH_FDAS_Core {
 	function handleRESTcall ( $query_array )
 	{
 		$xml_array = array ();
-
 		$querystring = $this->BuildQuery( $query_array );
 		$url = $this->stopforumspam_endpoint . '?' . $querystring;
-
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if ( function_exists( 'wp_remote_request' ) ) {
 			$response = wp_remote_request( $url );
@@ -468,7 +417,6 @@ class AVH_FDAS_Core {
 				$return_array = array ('Error' => $response->errors );
 			}
 		}
-
 		return ($return_array);
 	}
 
@@ -546,36 +494,25 @@ class AVH_FDAS_Core {
 		$attributes = array ();
 		if ( function_exists( 'xml_parser_create' ) ) {
 			$parser = xml_parser_create( 'UTF-8' );
-
 			xml_parser_set_option( $parser, XML_OPTION_TARGET_ENCODING, "UTF-8" );
 			xml_parser_set_option( $parser, XML_OPTION_CASE_FOLDING, 0 );
 			xml_parser_set_option( $parser, XML_OPTION_SKIP_WHITE, 1 );
 			xml_parse_into_struct( $parser, trim( $contents ), $xml_values );
 			xml_parser_free( $parser );
-
 			//Initializations
 			$xml_array = array ();
 			$parent = array ();
-
 			$current = & $xml_array; // Reference
-
-
 			// Go through the tags.
 			$repeated_tag_index = array ();
-
 			// Multiple tags with same name will be turned into an array
 			foreach ( $xml_values as $data ) {
 				unset( $attributes, $value ); //Remove existing values, or there will be trouble
-
-
 				// This command will extract these variables into the foreach scope
 				// tag(string), type(string), level(int), attributes(array).
 				extract( $data ); //We could use the array by itself, but this cooler.
-
-
 				$result = array ();
 				$attributes_data = array ();
-
 				if ( isset( $value ) ) {
 					if ( $priority == 'tag' ) {
 						$result = $value;
@@ -583,7 +520,6 @@ class AVH_FDAS_Core {
 						$result['value'] = $value; //Put the value in an associate array if we are in the 'Attribute' mode
 					}
 				}
-
 				// Set the attributes too
 				if ( isset( $attributes ) and $get_attributes ) {
 					foreach ( $attributes as $attr => $val ) {
@@ -593,22 +529,16 @@ class AVH_FDAS_Core {
 							$result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
 					}
 				}
-
 				// See tag status and do what's needed
 				if ( $type == "open" ) { // The starting of the tag '<tag>'
 					$parent[$level - 1] = & $current;
-
 					if ( ! is_array( $current ) or (! in_array( $tag, array_keys( $current ) )) ) { //Insert New tag
 						$current[$tag] = $result;
 						if ( $attributes_data )
 							$current[$tag . '_attr'] = $attributes_data;
 						$repeated_tag_index[$tag . '_' . $level] = 1;
-
 						$current = & $current[$tag];
-
 					} else { // There was another element with the same tag name
-
-
 						if ( isset( $current[$tag][0] ) ) { //If there is a 0th element it is already an array
 							$current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 							$repeated_tag_index[$tag . '_' . $level] ++;
@@ -616,7 +546,6 @@ class AVH_FDAS_Core {
 							$current[$tag] = array ($current[$tag], $result );
 							//This will combine the existing item and the new item together to make an array
 							$repeated_tag_index[$tag . '_' . $level] = 2;
-
 							if ( isset( $current[$tag . '_attr'] ) ) { // The attribute of the last(0th) tag must be moved as well
 								$current[$tag]['0_attr'] = $current[$tag . '_attr'];
 								unset( $current[$tag . '_attr'] );
@@ -670,5 +599,4 @@ class AVH_FDAS_Core {
 		return $iplookup;
 	}
 } //End Class AVH_FDAS_Core
-
 ?>

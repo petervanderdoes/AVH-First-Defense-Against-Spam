@@ -10,17 +10,13 @@ class AVH_FDAS_Public
 	function __construct ()
 	{
 		// Initialize the plugin
-		$this->core = & AVH_FDAS_Singleton::getInstance('AVH_FDAS_Core');
-
+		$this->core = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Core' );
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
-
 		add_action( 'comment_form', array (&$this, 'actionAddNonceFieldToComment' ) );
 		add_filter( 'preprocess_comment', array (&$this, 'filterCheckNonceFieldToComment' ), 1 );
-
 		// Private action for Cron
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
-
 	}
 
 	/**
@@ -31,7 +27,6 @@ class AVH_FDAS_Public
 	function AVH_FDAS_Public ()
 	{
 		$this->__construct();
-
 	}
 
 	/**
@@ -44,7 +39,6 @@ class AVH_FDAS_Public
 	function actionAddNonceFieldToComment ()
 	{
 		global $post;
-
 		$post_id = 0;
 		if ( ! empty( $post ) ) {
 			$post_id = $post->ID;
@@ -91,11 +85,9 @@ class AVH_FDAS_Public
 				if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
 					if ( 1 == $this->core->options['spam']['emailsecuritycheck'] ) {
 						$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-
 						$to = get_option( 'admin_email' );
 						$ip = $this->core->getUserIP();
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'no@email.address' : $commentdata['comment_author_email'];
-
 						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), $site_name );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
 							$message = __( 'Reason:	The nonce check failed.', 'avhfdas' ) . "\r\n";
@@ -109,7 +101,6 @@ class AVH_FDAS_Public
 						$message .= __( '--- START OF COMMENT ---', 'avhfdas' ) . "\r\n";
 						$message .= $commentdata['comment_content'] . "\r\n";
 						$message .= __( '--- END OF COMMENT ---', 'avhfdas' ) . "\r\n\r\n";
-
 						if ( ! empty( $this->core->options['spam']['sfsapikey'] ) ) {
 							$q['action'] = 'emailreportspammer';
 							$q['a'] = $commentdata['comment_author'];
@@ -120,34 +111,26 @@ class AVH_FDAS_Public
 							$report_url = admin_url( 'admin.php?' . $query );
 							$message .= sprintf( __( 'Report spammer: %s' ), $report_url ) . "\r\n";
 						}
-
 						$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
-
 						wp_mail( $to, $subject, $message );
 					}
-
 					// Only keep track if we have the ability to report add Stop Forum Spam
 					if ( ! empty( $this->core->options['spam']['sfsapikey'] ) ) {
 						// Prevent a spam attack to overflow the database.
 						if ( ! ($this->core->checkDB_Nonces( $q['_avhnonce'] )) ) {
 							$option = get_option( $this->core->db_options_nonces );
-
 							$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
-
 							update_option( $this->core->db_options_nonces, $option );
 						}
 					}
-
 					$m = __( '<p>Cheating huh</p>', 'avhfdas' );
 					$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
-
 					wp_die( $m );
 				}
 			}
 		}
 		return $commentdata;
 	}
-
 
 	/**
 	 * Checks if the spammer is in our database.
@@ -179,108 +162,102 @@ class AVH_FDAS_Public
 	{
 		$ip = $this->core->getUserIP();
 		$ip_in_whitelist = false;
-
 		if ( 1 == $this->core->options['spam']['usewhitelist'] && $this->core->options['spam']['whitelist'] ) {
 			$ip_in_whitelist = $this->checkWhitelist( $ip );
 		}
-
 		if ( ! $ip_in_whitelist ) {
 			if ( 1 == $this->core->options['spam']['useblacklist'] && $this->core->options['spam']['blacklist'] ) {
 				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
-
-			$spaminfo=null;
+			$spaminfo = null;
 			$spaminfo['detected'] = FALSE;
-			$spaminfo['sfs'] = $this->checkStopForumSpam($ip);
-			if ('yes' == $spaminfo['sfs']['appears']) {
+			$spaminfo['sfs'] = $this->checkStopForumSpam( $ip );
+			if ( 'yes' == $spaminfo['sfs']['appears'] ) {
 				$spaminfo['detected'] = true;
 			}
-			$spaminfo['php'] = $this->checkProjectHoneyPot($ip);
-
+			$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
 			if ( $spaminfo['detected'] ) {
 				$this->handleSpammer( $ip, $spaminfo, $time );
 			}
 		}
 	}
 
-	function checkStopForumSpam ($ip){
-					$time_start = microtime( true );
+	function checkStopForumSpam ( $ip )
+	{
+		$time_start = microtime( true );
+		$spaminfo = $this->core->handleRESTcall( $this->core->getRestIPLookup( $ip ) );
+		$time_end = microtime( true );
+		$time = $time_end - $time_start;
+		if ( isset( $spaminfo['Error'] ) ) {
+			// Let's give it one more try.
+			$time_start = microtime( true );
 			$spaminfo = $this->core->handleRESTcall( $this->core->getRestIPLookup( $ip ) );
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
-
 			if ( isset( $spaminfo['Error'] ) ) {
-				// Let's give it one more try.
-				$time_start = microtime( true );
-				$spaminfo = $this->core->handleRESTcall( $this->core->getRestIPLookup( $ip ) );
-				$time_end = microtime( true );
-				$time = $time_end - $time_start;
-				if ( isset( $spaminfo['Error'] ) ) {
-					$error = $this->core->getHttpError( $spaminfo['Error'] );
-					$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-
-					$to = get_option( 'admin_email' );
-
-					$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
-
-					$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
-					$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
-					$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
-					$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
-					$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
-
-					wp_mail( $to, $subject, $message );
-				}
+				$error = $this->core->getHttpError( $spaminfo['Error'] );
+				$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
+				$to = get_option( 'admin_email' );
+				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
+				$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
+				$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
+				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
+				$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
+				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
+				wp_mail( $to, $subject, $message );
 			}
+		}
 		return ($spaminfo);
 	}
-    function checkProjectHoneyPot ($ip)
-    {
-        $rev = implode('.', array_reverse(explode('.', $ip)));
-        $projecthoneypot_api_key = 'oufobohxcevj';
-        //
-        // Check the IP against projecthoneypot.org
-        //
-        $spaminfo=null;
-        $lookup = $projecthoneypot_api_key . '.' . $rev . '.dnsbl.httpbl.org';
-        if ($lookup != gethostbyname($lookup)) {
-            $sTempArr = explode('.', gethostbyname($lookup));
-            $spaminfo['days'] = $sTempArr[1];
-            switch ($sTempArr[3]) {
-                case "0":
-                    $spaminfo['type'] = "Search Engine";
-                    break;
-                case "1":
-                    $spaminfo['type'] = "Suspicious";
-                    break;
-                case "2":
-                    $spaminfo['type'] = "Harvester";
-                    break;
-                case "3":
-                    $spaminfo['type'] = "Suspicious & Harvester";
-                    break;
-                case "4":
-                    $spaminfo['type'] = "Comment Spammer";
-                    break;
-                case "5":
-                    $spaminfo['type'] = "Suspicious & Comment Spammer";
-                    break;
-                case "6":
-                    $spaminfo['type'] = "Harvester & Comment Spammer";
-                    break;
-                case "7":
-                    $spaminfo['type'] = "Suspicious & Harvester & Comment Spammer";
-                    break;
-            }
-            if ('0' == $sTempArr[3]) {
-            	$spaminfo['score'] = '0';
-            	$spaminfo['engine'] = $this->searchengine[$sTempArr[2]];
-            } else {
-            	$spaminfo['score'] = $sTempArr[2];
-            }
-        }
-        return ($spaminfo);
-    }
+
+	function checkProjectHoneyPot ( $ip )
+	{
+		$rev = implode( '.', array_reverse( explode( '.', $ip ) ) );
+		$projecthoneypot_api_key = 'oufobohxcevj';
+		//
+		// Check the IP against projecthoneypot.org
+		//
+		$spaminfo = null;
+		$lookup = $projecthoneypot_api_key . '.' . $rev . '.dnsbl.httpbl.org';
+		if ( $lookup != gethostbyname( $lookup ) ) {
+			$sTempArr = explode( '.', gethostbyname( $lookup ) );
+			$spaminfo['days'] = $sTempArr[1];
+			switch ( $sTempArr[3] ) {
+				case "0" :
+					$spaminfo['type'] = "Search Engine";
+					break;
+				case "1" :
+					$spaminfo['type'] = "Suspicious";
+					break;
+				case "2" :
+					$spaminfo['type'] = "Harvester";
+					break;
+				case "3" :
+					$spaminfo['type'] = "Suspicious & Harvester";
+					break;
+				case "4" :
+					$spaminfo['type'] = "Comment Spammer";
+					break;
+				case "5" :
+					$spaminfo['type'] = "Suspicious & Comment Spammer";
+					break;
+				case "6" :
+					$spaminfo['type'] = "Harvester & Comment Spammer";
+					break;
+				case "7" :
+					$spaminfo['type'] = "Suspicious & Harvester & Comment Spammer";
+					break;
+			}
+			if ( '0' == $sTempArr[3] ) {
+				$spaminfo['score'] = '0';
+				$spaminfo['engine'] = $this->searchengine[$sTempArr[2]];
+			} else {
+				$spaminfo['score'] = $sTempArr[2];
+			}
+		}
+		return ($spaminfo);
+	}
+
 	/**
 	 * Check blacklist table
 	 *
@@ -289,7 +266,6 @@ class AVH_FDAS_Public
 	function checkBlacklist ( $ip )
 	{
 		$found = $this->checkList( $ip, $this->core->options['spam']['blacklist'] );
-
 		if ( $found ) {
 			$spaminfo['appears'] = 'yes';
 			$spaminfo['frequency'] = abs( $this->core->options['spam']['whentodie'] ); // Blacklisted IP's will always be terminated.
@@ -324,10 +300,8 @@ class AVH_FDAS_Public
 	function checkList ( $ip, $list )
 	{
 		$list = explode( "\r\n", $list );
-
 		// Check for single IP's, this is much quicker as going through the list
 		$inlist = in_array( $ip, $list ) ? true : false;
-
 		if ( ! $inlist ) { // Not found yet
 			foreach ( $list as $check ) {
 				if ( $this->checkNetworkMatch( $check, $ip ) ) {
@@ -355,23 +329,19 @@ class AVH_FDAS_Public
 		$network = trim( $network );
 		$ip = trim( $ip );
 		$d = strpos( $network, '-' );
-
 		if ( $d === false ) {
 			$ip_arr = explode( '/', $network );
-
 			if ( isset( $ip_arr[1] ) ) {
 				$network_long = ip2long( $ip_arr[0] );
 				$x = ip2long( $ip_arr[1] );
 				$mask = long2ip( $x ) == $ip_arr[1] ? $x : (0xffffffff << (32 - $ip_arr[1]));
 				$ip_long = ip2long( $ip );
-
 				$return = ($ip_long & $mask) == ($network_long & $mask);
 			}
 		} else {
 			$from = ip2long( trim( substr( $network, 0, $d ) ) );
 			$to = ip2long( trim( substr( $network, $d + 1 ) ) );
 			$ip = ip2long( $ip );
-
 			$return = ($ip >= $from and $ip <= $to);
 		}
 		return ($return);
@@ -387,30 +357,22 @@ class AVH_FDAS_Public
 	 */
 	function handleSpammer ( $ip, $info, $time )
 	{
-
 		// Update the counter
 		$this->core->data['spam']['counter'] ++;
 		update_option( $this->core->db_options_data, $this->core->data );
-
 		// Email
 		if ( $this->core->options['spam']['whentoemail'] >= 0 && ( int ) $info['frequency'] >= $this->core->options['spam']['whentoemail'] ) {
 			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
-
 			$to = get_option( 'admin_email' );
-
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), $site_name, $ip );
-
 			$message = __( 'Stop Forum Spam has the following statistics:', 'avhfdas' ) . "\r\n";
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
 			$message .= sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['lastseen'] ) . "\r\n";
 			$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['frequency'] ) . "\r\n\r\n";
-
 			if ( $info['frequency'] >= $this->core->options['spam']['whentodie'] ) {
 				$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $this->core->options['spam']['whentodie'] ) . "\r\n\r\n";
 			}
-
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
-
 			if ( 'Blacklisted' == $time ) {
 				$message .= __( 'IP was in black list table', 'avhfdas' ) . "\r\n\r\n";
 			} else {
@@ -418,13 +380,9 @@ class AVH_FDAS_Public
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
 				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
-
 			$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
-
 			wp_mail( $to, $subject, $message );
-
 		}
-
 		// This should be the very last option.
 		if ( $this->core->options['spam']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $this->core->options['spam']['whentodie'] ) {
 			if ( 1 == $this->core->options['spam']['diewithmessage'] ) {
