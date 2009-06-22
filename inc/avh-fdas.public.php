@@ -188,7 +188,22 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
 
-			$time_start = microtime( true );
+			$spaminfo=null;
+			$spaminfo['detected'] = FALSE;
+			$spaminfo['sfs'] = $this->checkStopForumSpam($ip);
+			if ('yes' == $spaminfo['sfs']['appears']) {
+				$spaminfo['detected'] = true;
+			}
+			$spaminfo['php'] = $this->checkProjectHoneyPot($ip);
+
+			if ( $spaminfo['detected'] ) {
+				$this->handleSpammer( $ip, $spaminfo, $time );
+			}
+		}
+	}
+
+	function checkStopForumSpam ($ip){
+					$time_start = microtime( true );
 			$spaminfo = $this->handleRESTcall( $this->getRestIPLookup( $ip ) );
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
@@ -216,13 +231,55 @@ class AVH_FDAS_Public extends AVH_FDAS_Core
 					wp_mail( $to, $subject, $message );
 				}
 			}
-
-			if ( 'yes' == $spaminfo['appears'] ) {
-				$this->handleSpammer( $ip, $spaminfo, $time );
-			}
-		}
+		return ($spaminfo);
 	}
-
+    function checkProjectHoneyPot ($ip)
+    {
+        $rev = implode('.', array_reverse(explode('.', $ip)));
+        $projecthoneypot_api_key = 'oufobohxcevj';
+        //
+        // Check the IP against projecthoneypot.org
+        //
+        $spaminfo=null;
+        $lookup = $projecthoneypot_api_key . '.' . $rev . '.dnsbl.httpbl.org';
+        if ($lookup != gethostbyname($lookup)) {
+            $sTempArr = explode('.', gethostbyname($lookup));
+            $spaminfo['days'] = $sTempArr[1];
+            switch ($sTempArr[3]) {
+                case "0":
+                    $spaminfo['type'] = "Search Engine";
+                    break;
+                case "1":
+                    $spaminfo['type'] = "Suspicious";
+                    break;
+                case "2":
+                    $spaminfo['type'] = "Harvester";
+                    break;
+                case "3":
+                    $spaminfo['type'] = "Suspicious & Harvester";
+                    break;
+                case "4":
+                    $spaminfo['type'] = "Comment Spammer";
+                    break;
+                case "5":
+                    $spaminfo['type'] = "Suspicious & Comment Spammer";
+                    break;
+                case "6":
+                    $spaminfo['type'] = "Harvester & Comment Spammer";
+                    break;
+                case "7":
+                    $spaminfo['type'] = "Suspicious & Harvester & Comment Spammer";
+                    break;
+            }
+            if ('0' == $sTempArr[3]) {
+            	$spaminfo['score'] = '0';
+            	$spaminfo['engine'] = $this->searchengine[$sTempArr[2]];
+            } else {
+            	$spaminfo['score'] = $sTempArr[2];
+            }
+        }
+        return ($spaminfo);
+    }
 	/**
 	 * Check blacklist table
 	 *
