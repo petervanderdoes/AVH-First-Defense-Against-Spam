@@ -68,7 +68,7 @@ class AVH_FDAS_Core {
 	function __construct ()
 	{
 
-		$this->version = "1.3";
+		$this->version = "2.0-rc1";
 		$this->comment_general = '<!-- AVH First Defense Against Spam version ' . $this->version . ' -->';
 		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
 		$this->comment_end = '<!-- AVH First Defense Against Spam version ' . $this->version . ' End -->';
