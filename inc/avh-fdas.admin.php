@@ -89,8 +89,12 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function actionAdminMenu ()
 	{
-		add_options_page( __( 'AVH First Defense Against Spam: Options', 'avhfdas' ), 'AVH First Defense Against Spam', 'avh_fdas', 'avhfdas_options', array (&$this, 'pageOptions' ) );
-		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ) );
+		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
+		add_menu_page( __( 'AVH First Defense Against Spam' ), __( 'AVH First Defense Against Spam' ), 10, $folder, array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'Stop Forum Spam Options' ), __( 'Stop Forum Spam Options' ), 10, 'avh-tbb-options', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'Project Honey Pot Options' ), __( 'Project Honey Pot Options' ), 10, 'avh-tbb-browser', array (&$this, 'handleMenu' ) );
+		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ),10 ,2 );
 	}
 
 	/**
