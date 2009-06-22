@@ -1,6 +1,6 @@
 <?php
 require_once( ABSPATH . 'wp-includes/class-snoopy.php' );
-class AVH_FDAS_Admin extends AVH_FDAS_Core
+class AVH_FDAS_Admin
 {
 
 	/**
@@ -9,16 +9,17 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	var $message = '';
 	var $status = '';
+	var $core;
 
 	function __construct ()
 	{
 		// Initialize the plugin
-		parent::__construct();
+		$this->core = & AVH_FDAS_Singleton::getInstance('AVH_FDAS_Core');
 
 		// Admin URL and Pagination
-		$this->admin_base_url = $this->info['siteurl'] . '/wp-admin/admin.php?page=';
+		$this->core->admin_base_url = $this->core->info['siteurl'] . '/wp-admin/admin.php?page=';
 		if ( isset( $_GET['pagination'] ) ) {
-			$this->actual_page = ( int ) $_GET['pagination'];
+			$this->core->actual_page = ( int ) $_GET['pagination'];
 		}
 
 		$this->installPlugin();
@@ -124,7 +125,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 * @since 1.0
 	 */
 	function filterCommentRowActions($actions,$comment){
-		if ( (! empty( $this->options['spam']['sfsapikey'] )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
+		if ( (! empty( $this->core->options['spam']['sfsapikey'] )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
 			$report_url = clean_url( wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID" ) );
 			$actions['report'] = '<a class=\'delete:the-comment-list:comment-'.$comment->comment_ID.':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="'.$report_url.'">Report & Delete</a>';
 		}
@@ -175,13 +176,13 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$e = wp_specialchars( $_REQUEST['e'] );
 		$i = wp_specialchars( $_REQUEST['i'] );
 		$extra = '&m='.AVHFDAS_ERROR_INVALID_REQUEST.'&i=' . $i;
-		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
-			$all = get_option( $this->db_options_nonces );
+		if ( $this->core->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
+			$all = get_option( $this->core->db_options_nonces );
 			$extra = '&m='.AVHFDAS_ERROR_NOT_REPORTED.'&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
 				$this->handleReportSpammer( $a, $e, $i );
 				unset( $all[$_REQUEST['_avhnonce']] );
-				update_option( $this->db_nonce, $all );
+				update_option( $this->core->db_nonce, $all );
 				$extra = '&m='.AVHFDAS_REPORTED.'&i=' . $i;
 			}
 			unset( $all );
@@ -201,7 +202,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		$snoopy_formvar['username'] = $username;
 		$snoopy_formvar['email'] = empty( $email ) ? 'no@email.address' : $email;
 		$snoopy_formvar['ip_addr'] = $ip_addr;
-		$snoopy_formvar['api_key'] = $this->options['spam']['sfsapikey'];
+		$snoopy_formvar['api_key'] = $this->core->options['spam']['sfsapikey'];
 		$snoopy = new Snoopy( );
 		$snoopy->agent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko/2009032608 Firefox/3.0.8 GTB5";
 		$snoopy->submit( 'http://www.stopforumspam.com/add', $snoopy_formvar );
@@ -223,10 +224,10 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 
 		$ip = $_REQUEST['i'];
-		if ( $this->avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
+		if ( $this->core->avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
 
-			if ( ! empty( $this->options['spam']['blacklist'] ) ) {
-				$b = explode( "\r\n", $this->options['spam']['blacklist'] );
+			if ( ! empty( $this->core->options['spam']['blacklist'] ) ) {
+				$b = explode( "\r\n", $this->core->options['spam']['blacklist'] );
 			} else {
 				$b = array ();
 			}
@@ -247,7 +248,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	{
 		natsort($b);
 		$x=implode("\r\n",$b);
-		$this->options['spam']['blacklist']=$x;
+		$this->core->options['spam']['blacklist']=$x;
 		$this->saveOptions();
 	}
 	/**
@@ -259,7 +260,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	{
 		natsort($b);
 		$x=implode("\r\n",$b);
-		$this->options['spam']['whitelist']=$x;
+		$this->core->options['spam']['whitelist']=$x;
 		$this->saveOptions();
 	}
 	/**
@@ -418,7 +419,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 			check_admin_referer( 'avhfdas-options' );
 
 			$formoptions = $_POST['avhfdas'];
-			foreach ( $this->options as $key => $value ) {
+			foreach ( $this->core->options as $key => $value ) {
 				if ( 'general' != $key ) { // The data in General is used for internal usage.
 
 					foreach ( $value as $key2 => $value2 ) {
@@ -430,7 +431,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 							// Check numeric entries
 							if ( 'whentoemail' == $key2 || 'whentodie' == $key2 ) {
 								if ( ! is_numeric( $formoptions[$key][$key2] ) ) {
-									$newval = $this->default_options[$key][$key2];
+									$newval = $this->core->default_options[$key][$key2];
 								}
 								$newval = ( int ) $newval;
 							}
@@ -444,7 +445,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 							}
 
 							// Set the option to it's new value
-							$this->setOption( array ($key, $key2 ), $newval );
+							$this->core->setOption( array ($key, $key2 ), $newval );
 						}
 					}
 				}
@@ -508,7 +509,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		echo '<h2>';
 		_e( 'AVH First Defense Against Spam: Options', 'avhfdas' );
 		echo '</h2>';
-		echo '<form	action="' . $this->admin_base_url . 'avhfdas_options' . '"method="post">';
+		echo '<form	action="' . $this->core->admin_base_url . 'avhfdas_options' . '"method="post">';
 		echo '<div id="printOptions">';
 		echo '<ul class="avhfdas_submenu">';
 		foreach ( $option_data as $key => $value ) {
@@ -539,18 +540,18 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 		}
 
 		// Set the options if they don't exist
-		if ( ! (get_option( $this->db_options_core )) ) {
+		if ( ! (get_option( $this->core->db_options_core )) ) {
 			$this->resetToDefaultOptions();
 		}
 
-		if ( ! (get_option( $this->db_options_data )) ) {
-			$this->data = $this->default_data;
-			update_option( $this->db_options_data, $this->data );
+		if ( ! (get_option( $this->core->db_options_data )) ) {
+			$this->core->data = $this->core->default_data;
+			update_option( $this->core->db_options_data, $this->core->data );
 			wp_cache_flush(); // Delete cache
 		}
 
-		if ( ! (get_option( $this->db_options_nonces )) ) {
-			update_option( $this->db_options_nonces, $this->default_emailreport );
+		if ( ! (get_option( $this->core->db_options_nonces )) ) {
+			update_option( $this->core->db_options_nonces, $this->core->default_emailreport );
 			wp_cache_flush(); // Delete cache
 		}
 	}
@@ -575,7 +576,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	{
 		$key1 = $optkeys[0];
 		$key2 = $optkeys[1];
-		$this->options[$key1][$key2] = $optval;
+		$this->core->options[$key1][$key2] = $optval;
 	}
 
 	/**
@@ -584,7 +585,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function saveOptions ()
 	{
-		update_option( $this->db_options_core, $this->options );
+		update_option( $this->core->db_options_core, $this->core->options );
 		wp_cache_flush(); // Delete cache
 	}
 
@@ -594,8 +595,8 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function resetToDefaultOptions ()
 	{
-		$this->options = $this->default_options;
-		update_option( $this->db_options_core, $this->options );
+		$this->core->options = $this->core->default_options;
+		update_option( $this->core->db_options_core, $this->core->options );
 		wp_cache_flush(); // Delete cache
 	}
 
@@ -605,7 +606,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function deleteAllOptions ()
 	{
-		delete_option( $this->db_options_core, $this->default_options );
+		delete_option( $this->core->db_options_core, $this->core->default_options );
 		wp_cache_flush(); // Delete cache
 	}
 
@@ -617,7 +618,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	function printAdminFooter ()
 	{
 		echo '<p class="footer_avhfdas">';
-		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->version );
+		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->core->version );
 		echo '</p>';
 	}
 
@@ -647,7 +648,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	 */
 	function actionInjectCSS ()
 	{
-		wp_enqueue_style( 'avhfdasadmin', $this->info['install_url'] . '/inc/avh-fdas.admin.css', array (), $this->version, 'screen' );
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['install_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 	}
 
 	/**
@@ -660,7 +661,7 @@ class AVH_FDAS_Admin extends AVH_FDAS_Core
 	{
 
 		// Get actual options
-		$option_actual = ( array ) $this->options;
+		$option_actual = ( array ) $this->core->options;
 
 		// Generate output
 		$output = '';
