@@ -551,7 +551,7 @@ class AVH_FDAS_Admin
 	 * @param array $option_data
 	 * @return string
 	 */
-	function printOptions ( $option_data, $current_options )
+	function printOptions ( $option_data, $option_actual )
 	{
 		// Generate output
 		$output = '';
