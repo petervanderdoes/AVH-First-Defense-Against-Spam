@@ -109,7 +109,9 @@ class AVH_FDAS_Core
 		//$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
 
 		// Check if we have to do upgrades
-		$this->checkForUpgrade();
+		if ($this->version > $this->options['general']['version']) {
+			$this->doUpgrade();
+		}
 
 		$this->searchengines = array ('0'=>'Undocumented','1'=>'AltaVista','2'=>'Ask','3'=>'Baidu','4'=>'Excite','5'=>'Google','6'=>'Looksmart','7'=>'Lycos','8'=>'MSN','9'=>'Yahoo','10'=>'Cuil','11'=>'InfoSeek','12'=>'Miscellaneous');
 
@@ -212,33 +214,37 @@ class AVH_FDAS_Core
 	 * @since 1.2.3
 	 *
 	 */
-	function checkForUpgrade ()
+	function doUpgrade ()
 	{
 		$options = $this->getOptions();
-		if ( $this->version > '1.3' ) {
-			$this->doUpgrade20( $options );
+		$data = $this->getData();
+
+		if ( $options['general']['version'] < '2.0' ) {
+			list($options, $data) = $this->doUpgrade20( $options, $data );
 		}
-		if ( $this->version > $options['general']['version'] ) {
-			$options['general']['version'] = $this->version;
-			$this->saveOptions( $options );
-		}
+		$options['general']['version'] = $this->version;
+		$this->saveOptions( $options );
+		$this->saveData($data);
 	}
 
-	function doUpgrade20 ( $old_options )
+	function doUpgrade20 ( $old_options, $old_data )
 	{
-		$options = $this->default_options;
-		$data = $this->default_data;
+		$new_options = $old_options;
+		$new_data = $old_data;
 
-		$options['general']['diewithmessage'] = $old_options['spam']['diewithmessage'];
-		$options['general']['useblacklist'] = $old_options['spam']['useblacklist'];
-		$options['general']['usewhitelist'] = $old_options['spam']['usewhitelist'];
-		$options['general']['emailsecuritycheck'] = $old_options['spam']['emailsecuritycheck'];
+		$keys=array('diewithmessage','useblacklist','usewhitelist','emailsecuritycheck');
+		foreach ($keys as $value) {
+			$new_options['general'][$value] = $old_options['spam'][$value];
+			unset ($new_options['spam'][$value]);
+		}
 
-		$data['lists']['blacklist'] = $old_options['spam']['blacklist'];
-		$data['lists']['whitelist'] = $old_options['spam']['whitelist'];
+		$keys=array('blacklist','whitelist');
+		foreach ($keys as $value) {
+			$new_data['list'][$value] = $old_options['spam'][$value];
+			unset ($new_options['spam'][$value]);
+		}
 
-		$this->saveOptions( $options );
-		$this->saveData( $data );
+		return array($new_options, $new_data);
 	}
 
 	/**
