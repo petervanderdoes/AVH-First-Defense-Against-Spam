@@ -144,7 +144,6 @@ class AVH_FDAS_Admin
 	{
 
 		$option_data = array (
-		'general' => array (
 			array (
 			'avhfdas[general][diewithmessage]',
 			'Show message:',
@@ -164,20 +163,36 @@ class AVH_FDAS_Admin
 			1,
 			'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.' ),
 			array (
+			'avhfdas[lists][blacklist]',
+			'Blacklist IP\'s:',
+			'textarea',
+			15,
+			'Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24',
+			 15 ),
+			array (
 			'avhfdas[general][usewhitelist]',
 			'Use internal whitelist:',
-			'checkbox', 1,
-			'Check the internal whitelist first. If the IP is found don\t do any further checking.' )
-			)
+			'checkbox',
+			 1,
+			'Check the internal whitelist first. If the IP is found don\t do any further checking.',
+			),
+			array (
+			'avhfdas[lists][whitelist]',
+			'Whitelist IP\'s:',
+			'textarea',
+			15,
+			'Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24',
+			15 ),
 		) ;
 
+		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
 		echo '<h2>'.__('General Options', 'avhfdas').'</h2>';
 		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_tbb_generaloptions' );
 
 		echo '<div id="printOptions">';
-		echo $this->printOptions( $option_data, $this->core->getOptions() );
+		echo $this->printOptions( $option_data, $actual_options );
 		echo '</div>';
 
 		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhamazon' ) . '" />';
@@ -556,9 +571,10 @@ class AVH_FDAS_Admin
 		// Generate output
 		$output = '';
 		$checkbox = '|';
-		foreach ( $option_data as $section => $options ) {
-			$output .= "\n" . '<div id="' . sanitize_title( $section ) . '"><fieldset class="options"><table class="form-table">' . "\n";
-			foreach ( ( array ) $options as $option ) {
+			$output .= "\n" . '<fieldset class="options"><table class="form-table">' . "\n";
+			foreach ( $option_data as $option ) {
+				$section = ltrim( $option[0], '[' );
+				$section = rtrim($section,'][');
 				$option_key = rtrim( $option[0], ']' );
 				$option_key = substr( $option_key, strpos( $option_key, '][' ) + 2 );
 				// Helper
@@ -608,8 +624,7 @@ class AVH_FDAS_Admin
 			if ( '|' !== $checkbox )
 				$checkbox = ltrim( $checkbox, '|' );
 			$output .= '<input	type="hidden" name="avh_checkboxes" value="' . rtrim( $checkbox, '|' ) . '" />';
-			$output .= '</fieldset></div>' . "\n";
-		}
+			$output .= '</fieldset>' . "\n";
 		return $output;
 	}
 
