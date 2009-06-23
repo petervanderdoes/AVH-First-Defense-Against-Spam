@@ -91,7 +91,7 @@ class AVH_FDAS_Admin
 	function actionAdminMenu ()
 	{
 		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
-		add_menu_page( __( 'AVH First Defense Against Spam' ), __( 'AVH First Defense Against Spam' ), 10, $folder, array (&$this, 'handleMenu' ) );
+		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'Stop Forum Spam Options' ), __( 'Stop Forum Spam Options' ), 10, 'avh-tbb-options', array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'Project Honey Pot Options' ), __( 'Project Honey Pot Options' ), 10, 'avh-tbb-browser', array (&$this, 'handleMenu' ) );
