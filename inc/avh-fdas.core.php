@@ -105,7 +105,8 @@ class AVH_FDAS_Core
 		 *
 		 */
 		$this->loadOptions();
-		$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
+		$this->loadData();
+		//$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
 
 		// Check if we have to do upgrades
 		$this->checkForUpgrade();
