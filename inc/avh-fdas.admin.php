@@ -99,6 +99,27 @@ class AVH_FDAS_Admin
 	}
 
 	/**
+	 * Handle the menu options
+	 *
+	 */
+	function handleMenu ()
+	{
+		switch ( $_GET['page'] ) {
+			case 'avh-fdas-options' :
+				$this->handleGeneralOptions();
+				break;
+			case 'avh-fdas-browser' :
+				$this->handleCorrelation();
+				break;
+			case 'avh-themed-by-browser' :
+			default :
+				$this->handleOverview();
+
+		}
+		$this->printAdminFooter();
+	}
+
+	/**
 	 * Adds Settings next to the plugin actions
 	 *
 	 * @WordPress Filter plugin_action_links_avh-first-defense-against-spam/avh-fdas.php
