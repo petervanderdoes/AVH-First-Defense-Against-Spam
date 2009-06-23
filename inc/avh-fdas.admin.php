@@ -93,8 +93,8 @@ class AVH_FDAS_Admin
 		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'Stop Forum Spam Options' ), __( 'Stop Forum Spam Options' ), 10, 'avh-tbb-options', array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'Project Honey Pot Options' ), __( 'Project Honey Pot Options' ), 10, 'avh-tbb-browser', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 	}
 
@@ -105,20 +105,87 @@ class AVH_FDAS_Admin
 	function handleMenu ()
 	{
 		switch ( $_GET['page'] ) {
-			case 'avh-fdas-options' :
-				$this->handleGeneralOptions();
+			case 'avh-fdas-general' :
+				$this->doMenuGeneralOptions();
 				break;
-			case 'avh-fdas-browser' :
-				$this->handleCorrelation();
+			case 'avh-fdas-3rd-party' :
+				$this->doMenu3rdPartyOptions();
 				break;
 			case 'avh-themed-by-browser' :
 			default :
-				$this->handleOverview();
+				$this->doMenuOverview();
 
 		}
 		$this->printAdminFooter();
 	}
 
+	/**
+	 * Overview of settings
+	 *
+	 */
+	function doMenuOverview() {
+		echo '<div class="wrap">';
+		echo '<h2>' . __( 'Overview', 'avfdas' ) . '</h2>';
+		echo '<h3>' . __('General Options','avhfdas') .'</h3>';
+		echo '<p>';
+		echo __('Use Stop Forum Spam','avhfdas').': ';
+		echo ($this->core->options['general']['use_sfs'] ? __('Yes','avhfdas') : __('No','avhfdas'));
+		echo '</p>';
+
+		echo '<p>';
+		echo __('Use Project Honey Pot','avhfdas').': ';
+		echo ($this->core->options['general']['use_php'] ? __('Yes','avhfdas') : __('No','avhfdas'));
+		echo '<h3>' . __('Stop Forum Spam Settings','avhfdas') .'</h3>';
+		echo '</p>';
+
+	}
+
+	function doMenuGeneralOptions ()
+	{
+
+		$option_data = array (
+		'general' => array (
+			array (
+			'avhfdas[general][diewithmessage]',
+			'Show message:',
+			'checkbox',
+			1,
+			'Show a message when the connection has been terminated.' ),
+			array (
+			'avhfdas[general][emailsecuritycheck]',
+			'Email on failed security check:',
+			'checkbox',
+			1,
+			'Receive an email when a comment is posted and the security check failed.' ),
+			array (
+			'avhfdas[general][useblacklist]',
+			'Use internal blacklist:',
+			'checkbox',
+			1,
+			'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.' ),
+			array (
+			'avhfdas[general][usewhitelist]',
+			'Use internal whitelist:',
+			'checkbox', 1,
+			'Check the internal whitelist first. If the IP is found don\t do any further checking.' )
+			)
+		) ;
+
+		echo '<div class="wrap">';
+		echo '<h2>'.__('General Options', 'avhfdas').'</h2>';
+		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" accept-charset="utf-8" >';
+		wp_nonce_field( 'avh_tbb_generaloptions' );
+
+		echo '<div id="printOptions">';
+		echo $this->printOptions( $option_data, $this->core->getOptions );
+		echo '</div>';
+
+		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhamazon' ) . '" />';
+		echo '<input class="button-secondary" type="submit" name="reset_options" onclick="return confirm(\'' . __( 'Do you really want to restore the default options?', 'avhamazon' ) . '\')" value="' . __( 'Reset Options', 'avhamazon' ) . '" /></p>';
+		echo '</form>';
+
+
+	}
 	/**
 	 * Adds Settings next to the plugin actions
 	 *
@@ -484,15 +551,13 @@ class AVH_FDAS_Admin
 	 * @param array $option_data
 	 * @return string
 	 */
-	function printOptions ( $option_data )
+	function printOptions ( $option_data, $current_options )
 	{
-		// Get actual options
-		$option_actual = ( array ) $this->core->options;
 		// Generate output
 		$output = '';
 		$checkbox = '|';
 		foreach ( $option_data as $section => $options ) {
-			$output .= "\n" . '<div id="' . sanitize_title( $section ) . '"><fieldset class="options"><legend>' . $this->getNiceTitleOptions( $section ) . '</legend><table class="form-table">' . "\n";
+			$output .= "\n" . '<div id="' . sanitize_title( $section ) . '"><fieldset class="options"><table class="form-table">' . "\n";
 			foreach ( ( array ) $options as $option ) {
 				$option_key = rtrim( $option[0], ']' );
 				$option_key = substr( $option_key, strpos( $option_key, '][' ) + 2 );
