@@ -119,23 +119,23 @@ class AVH_FDAS_Core
 		$path = substr( $path, strpos( $path, 'plugins' ) + 8, strlen( $path ) );
 		$info['siteurl'] = get_option( 'siteurl' );
 		if ( $this->isMuPlugin() ) {
-			$info['install_url'] = WPMU_PLUGIN_URL;
-			$info['install_dir'] = WPMU_PLUGIN_DIR;
+			$info['plugin_url'] = WPMU_PLUGIN_URL;
+			$info['plugin_dir'] = WPMU_PLUGIN_DIR;
 			if ( $path != 'mu-plugins' ) {
-				$info['install_url'] .= '/' . $path;
-				$info['install_dir'] .= '/' . $path;
+				$info['plugin_url'] .= '/' . $path;
+				$info['plugin_dir'] .= '/' . $path;
 			}
 		} else {
-			$info['install_url'] = WP_PLUGIN_URL;
-			$info['install_dir'] = WP_PLUGIN_DIR;
+			$info['plugin_url'] = WP_PLUGIN_URL;
+			$info['plugin_dir'] = WP_PLUGIN_DIR;
 			if ( $path != 'plugins' ) {
-				$info['install_url'] .= '/' . $path;
-				$info['install_dir'] .= '/' . $path;
+				$info['plugin_url'] .= '/' . $path;
+				$info['plugin_dir'] .= '/' . $path;
 			}
 		}
 
 		// Set class property for info
-		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'install_url' => $info['install_url'], 'install_dir' => $info['install_dir'], 'graphics_url' => $info['install_url'] . '/images', 'home_path' => $info['home_path'], 'wordpress_version' => $this->getWordpressVersion() );
+		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'plugin_url' => $info['plugin_url'], 'plugin_dir' => $info['plugin_dir'], 'graphics_url' => $info['plugin_url'] . '/images', 'home_path' => $info['home_path'], 'wordpress_version' => $this->getWordpressVersion() );
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
 
 		/**
@@ -144,7 +144,7 @@ class AVH_FDAS_Core
 		// Localization.
 		//$locale = get_locale();
 		//if ( !empty( $locale ) ) {
-		//	$mofile = $this->info['install_dir'].'/languages/avhamazon-'.$locale.'.mo';
+		//	$mofile = $this->info['plugin_dir'].'/languages/avhamazon-'.$locale.'.mo';
 		//	load_textdomain('avhfdas', $mofile);
 		//}
 		return;
@@ -333,7 +333,7 @@ class AVH_FDAS_Core
 	 */
 	function handleCssFile ( $handle, $cssfile )
 	{
-		wp_register_style( $handle, $this->info['install_url'] . $cssfile, array (), $this->version, 'all' );
+		wp_register_style( $handle, $this->info['plugin_url'] . $cssfile, array (), $this->version, 'all' );
 		if ( did_action( 'wp_print_styles' ) ) { // we already printed the style queue.  Print this one immediately
 			wp_print_styles( $handle );
 		} else {

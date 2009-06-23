@@ -474,7 +474,7 @@ class AVH_FDAS_Admin
 	 */
 	function actionInjectCSS ()
 	{
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['install_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 	}
 
 	/**
