@@ -223,7 +223,7 @@ class AVH_FDAS_Core
 		}
 	}
 
-	function doUpgrade20 ( $old_options, $old_data )
+	function doUpgrade20 ( $old_options )
 	{
 		$options = $this->default_options;
 		$data = $this->default_data;
