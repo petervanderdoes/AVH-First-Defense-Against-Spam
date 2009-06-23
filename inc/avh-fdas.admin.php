@@ -177,7 +177,7 @@ class AVH_FDAS_Admin
 		wp_nonce_field( 'avh_tbb_generaloptions' );
 
 		echo '<div id="printOptions">';
-		echo $this->printOptions( $option_data, $this->core->getOptions );
+		echo $this->printOptions( $option_data, $this->core->getOptions() );
 		echo '</div>';
 
 		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhamazon' ) . '" />';
