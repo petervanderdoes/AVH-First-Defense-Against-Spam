@@ -219,9 +219,10 @@ class AVH_FDAS_Admin
 			return;
 		}
 		$ip = $_REQUEST['i'];
+		$blacklist = $this->core->data['lists']['blacklist'];
 		if ( $this->core->avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
-			if ( ! empty( $this->core->options['spam']['blacklist'] ) ) {
-				$b = explode( "\r\n", $this->core->options['spam']['blacklist'] );
+			if ( ! empty( $blacklist ) ) {
+				$b = explode( "\r\n", $blacklist );
 			} else {
 				$b = array ();
 			}
@@ -242,8 +243,8 @@ class AVH_FDAS_Admin
 	{
 		natsort( $b );
 		$x = implode( "\r\n", $b );
-		$this->core->options['spam']['blacklist'] = $x;
-		$this->saveOptions();
+		$this->core->data['lists']['blacklist'] = $x;
+		$this->core->saveData();
 	}
 
 	/**
@@ -255,8 +256,8 @@ class AVH_FDAS_Admin
 	{
 		natsort( $b );
 		$x = implode( "\r\n", $b );
-		$this->core->options['spam']['whitelist'] = $x;
-		$this->saveOptions();
+		$this->core->data['lists']['whitelist'] = $x;
+		$this->core->saveData();
 	}
 
 	/**
@@ -303,7 +304,7 @@ class AVH_FDAS_Admin
 		// Reset options
 		if ( isset( $_POST['reset_options'] ) ) {
 			check_admin_referer( 'avhfdas-options' );
-			$this->resetToDefaultOptions();
+			$this->core->resetToDefaultOptions();
 			$this->message = __( 'AVH First Defense Against Spam options set to default options!', 'avhfdas' );
 		}
 		// Show messages if needed.
@@ -372,17 +373,12 @@ class AVH_FDAS_Admin
 		if ( ! wp_next_scheduled( 'avhfdas_clean_nonce' ) ) {
 			wp_schedule_event( time(), 'daily', 'avhfdas_clean_nonce' );
 		}
-		// Set the options if they don't exist
-		if ( ! (get_option( $this->core->db_options_core )) ) {
-			$this->resetToDefaultOptions();
-		}
-		if ( ! (get_option( $this->core->db_options_data )) ) {
-			$this->core->data = $this->core->default_data;
-			update_option( $this->core->db_options_data, $this->core->data );
-			wp_cache_flush(); // Delete cache
-		}
+
+		$this->core->loadOptions(); // Options will be created if not in DB
+		$this->core->loadData();  // Data will be created if not in DB
+
 		if ( ! (get_option( $this->core->db_options_nonces )) ) {
-			update_option( $this->core->db_options_nonces, $this->core->default_emailreport );
+			update_option( $this->core->db_options_nonces, $this->core->default_nonces );
 			wp_cache_flush(); // Delete cache
 		}
 	}
@@ -408,27 +404,6 @@ class AVH_FDAS_Admin
 		$key1 = $optkeys[0];
 		$key2 = $optkeys[1];
 		$this->core->options[$key1][$key2] = $optval;
-	}
-
-	/**
-	 * Save all current options
-	 *
-	 */
-	function saveOptions ()
-	{
-		update_option( $this->core->db_options_core, $this->core->options );
-		wp_cache_flush(); // Delete cache
-	}
-
-	/**
-	 * Reset to default options
-	 *
-	 */
-	function resetToDefaultOptions ()
-	{
-		$this->core->options = $this->core->default_options;
-		update_option( $this->core->db_options_core, $this->core->options );
-		wp_cache_flush(); // Delete cache
 	}
 
 	/**

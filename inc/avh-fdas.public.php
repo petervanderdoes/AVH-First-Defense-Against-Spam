@@ -162,7 +162,7 @@ class AVH_FDAS_Public
 	{
 		$ip = $this->core->getUserIP();
 		$ip_in_whitelist = false;
-		if ( 1 == $this->core->options['spam']['usewhitelist'] && $this->core->options['spam']['whitelist'] ) {
+		if ( 1 == $this->core->options['general']['usewhitelist'] && $this->core->data['lists']['whitelist'] ) {
 			$ip_in_whitelist = $this->checkWhitelist( $ip );
 		}
 		if ( ! $ip_in_whitelist ) {
@@ -250,7 +250,7 @@ class AVH_FDAS_Public
 			}
 			if ( '0' == $sTempArr[3] ) {
 				$spaminfo['score'] = '0';
-				$spaminfo['engine'] = $this->searchengine[$sTempArr[2]];
+				$spaminfo['engine'] = $this->core->searchengines[$sTempArr[2]];
 			} else {
 				$spaminfo['score'] = $sTempArr[2];
 			}
@@ -284,7 +284,7 @@ class AVH_FDAS_Public
 	 */
 	function checkWhitelist ( $ip )
 	{
-		$found = $this->checkList( $ip, $this->core->options['spam']['whitelist'] );
+		$found = $this->checkList( $ip, $this->core->data['lists']['whitelist'] );
 		return $found;
 	}
 

@@ -3,6 +3,7 @@
 if ( preg_match( '#' . basename( __FILE__ ) . '#', $_SERVER['PHP_SELF'] ) ) {
 	die( 'You are not allowed to call this page directly.' );
 }
+
 class AVH_FDAS_Core
 {
 	/**
@@ -43,9 +44,11 @@ class AVH_FDAS_Core
 	var $default_general_options;
 	var $default_options;
 	var $default_spam;
+	var $default_honey;
 	var $default_nonces;
 	var $data;
 	var $default_data;
+	var $default_data_lists;
 	var $default_spam_data;
 	var $default_nonces_data;
 
@@ -65,6 +68,7 @@ class AVH_FDAS_Core
 	 */
 	var $stopforumspam_endpoint;
 
+	var $searchengines;
 	/**
 	 * PHP5 constructor
 	 *
@@ -82,27 +86,31 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version );
-		$this->default_spam = array ('whentoemail' => 1, 'whentodie' => 3, 'diewithmessage' => 1, 'useblacklist' => 1, 'blacklist' => '', 'usewhitelist' => 1, 'whitelist' => '', 'emailsecuritycheck' => 1, 'sfsapikey' => '' );
+		$this->default_general_options = array ('version' => $this->version, 'use_sfs' => 1, 'use_php' => 1, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1 );
+		$this->default_spam = array ('whentoemail' => 1, 'whentodie' => 3, 'sfsapikey' => '' );
+		$this->default_honey = array ('whentoemail' => 0, 'whentodie' => 4, 'phpapikey' => '' );
 		$this->default_spam_data = array ('counter' => 0 );
+		$this->default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
 		$this->default_nonces_data = 'default';
 
 		/**
 		 * Default Options - All as stored in the DB
 		 */
-		$this->default_options = array ('general' => $this->default_general_options, 'spam' => $this->default_spam );
-		$this->default_data = array ('spam' => $this->default_spam_data );
+		$this->default_options = array ('general' => $this->default_general_options, 'spam' => $this->default_spam, 'php' => $this->default_honey );
+		$this->default_data = array ('spam' => $this->default_spam_data, 'lists' => $this->default_data_lists );
 		$this->default_nonces = array ('default' => $this->default_nonces_data );
 
 		/**
 		 * Set the options for the program
 		 *
 		 */
-		$this->options = $this->handleOptionsDB( $this->default_options, $this->db_options_core );
+		$this->loadOptions();
 		$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
 
 		// Check if we have to do upgrades
 		$this->checkForUpgrade();
+
+		$this->searchengines = array ('0'=>'Undocumented','1'=>'AltaVista','2'=>'Ask','3'=>'Baidu','4'=>'Excite','5'=>'Google','6'=>'Looksmart','7'=>'Lycos','8'=>'MSN','9'=>'Yahoo','10'=>'Cuil','11'=>'InfoSeek','12'=>'Miscellaneous');
 
 		// Determine installation path & url
 		//$info['home_path'] = get_home_path();
@@ -198,40 +206,6 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * Get the value for data. If there's no data return the default value.
-	 *
-	 * @param string $key
-	 * @param string $option
-	 * @return mixed
-	 */
-	function getData ( $key, $option )
-	{
-		if ( $this->data[$option][$key] ) {
-			$return = $this->data[$option][$key]; // From Admin Page
-		} else {
-			$return = $this->default_data[$option][$key]; // Default
-		}
-		return ($return);
-	}
-
-	/**
-	 * Get the value for an option. If there's no option is set on the Admin page, return the default value.
-	 *
-	 * @param string $key
-	 * @param string $option
-	 * @return mixed
-	 */
-	function getOption ( $key, $option )
-	{
-		if ( $this->options[$option][$key] ) {
-			$return = $this->options[$option][$key]; // From Admin Page
-		} else {
-			$return = $this->default_options[$option][$key]; // Default
-		}
-		return ($return);
-	}
-
-	/**
 	 * Checks if running version is newer and do upgrades if necessary
 	 *
 	 * @since 1.2.3
@@ -239,10 +213,31 @@ class AVH_FDAS_Core
 	 */
 	function checkForUpgrade ()
 	{
-		if ( $this->version > $this->options['general']['version'] ) {
-			$this->options['general']['version'] = $this->version;
-			update_option( $this->db_options_core, $this->options );
+		$options = $this->getOptions();
+		if ( $this->version > '1.3' ) {
+			$this->doUpgrade20( $options );
 		}
+		if ( $this->version > $options['general']['version'] ) {
+			$options['general']['version'] = $this->version;
+			$this->saveOptions( $options );
+		}
+	}
+
+	function doUpgrade20 ( $old_options, $old_data )
+	{
+		$options = $this->default_options;
+		$data = $this->default_data;
+
+		$options['general']['diewithmessage'] = $old_options['spam']['diewithmessage'];
+		$options['general']['useblacklist'] = $old_options['spam']['useblacklist'];
+		$options['general']['usewhitelist'] = $old_options['spam']['usewhitelist'];
+		$options['general']['emailsecuritycheck'] = $old_options['spam']['emailsecuritycheck'];
+
+		$data['lists']['blacklist'] = $old_options['spam']['blacklist'];
+		$data['lists']['whitelist'] = $old_options['spam']['whitelist'];
+
+		$this->saveOptions( $options );
+		$this->saveData( $data );
 	}
 
 	/**
@@ -598,5 +593,153 @@ class AVH_FDAS_Core
 		$iplookup = array ('ip' => $ip );
 		return $iplookup;
 	}
+
+	/*********************************
+	 *                               *
+	 * Methods for variable: options *
+	 *                               *
+	 ********************************/
+
+	/**
+	 * @param array $data
+	 */
+	function setOptions ( $options )
+	{
+		$this->options = $options;
+	}
+
+	/**
+	 * return array
+	 */
+	function getOptions ()
+	{
+		return ($this->options);
+	}
+
+	/**
+	 * Save all current data and set the data
+	 *
+	 */
+	function saveOptions ( $options )
+	{
+		update_option( $this->db_options_core, $options );
+		wp_cache_flush(); // Delete cache
+		$this->setOptions( $options );
+	}
+
+	function loadOptions ()
+	{
+		$options = get_option( $this->db_options_core );
+		if ( false === $options ) { // New installation
+			$this->resetToDefaultOptions();
+		} else {
+			$this->setOptions( $options );
+		}
+	}
+
+	/**
+	 * Get the value for an option element. If there's no option is set on the Admin page, return the default value.
+	 *
+	 * @param string $key
+	 * @param string $option
+	 * @return mixed
+	 */
+	function getOptionElement ( $option, $key )
+	{
+		if ( $this->options[$option][$key] ) {
+			$return = $this->options[$option][$key]; // From Admin Page
+		} else {
+			$return = $this->default_options[$option][$key]; // Default
+		}
+		return ($return);
+	}
+
+	/**
+	 * Reset to default options and save in DB
+	 *
+	 */
+	function resetToDefaultOptions ()
+	{
+		$this->options = $this->default_options;
+		$this->saveOptions( $this->default_options );
+	}
+
+	/******************************
+	 *                            *
+	 * Methods for variable: data *
+	 *                            *
+	 *****************************/
+
+	/**
+	 * @param array $data
+	 */
+	function setData ( $data )
+	{
+		$this->data = $data;
+	}
+
+	/**
+	 * @return array
+	 */
+	function getData ()
+	{
+		return ($this->data);
+	}
+
+	/**
+	 * Save all current data to the DB
+	 * @param array $data
+	 *
+	 */
+	function saveData ( $data )
+	{
+		update_option( $this->db_options_data, $data );
+		wp_cache_flush(); // Delete cache
+		$this->setData( $data );
+	}
+
+	/**
+	 * Retrieve the data from the DB
+	 *
+	 * @return array
+	 */
+	function loadData ()
+	{
+		$data = get_option( $this->db_options_data );
+		if ( false === $data ) { // New installation
+		} else {
+			$this->setData( $data );
+		}
+		return;
+	}
+
+	/**
+	 * Get the value of a data element. If there is no value return false
+	 *
+	 * @param string $option
+	 * @param string $key
+	 * @return mixed
+	 * @since 0.1
+	 */
+	function getDataElement ( $option, $key )
+	{
+		if ( $this->data[$option][$key] ) {
+			$return = $this->data[$option][$key];
+		} else {
+			$return = false;
+		}
+		return ($return);
+	}
+
+	/**
+	 * Reset to default data and save in DB
+	 *
+	 */
+	function resetToDefaultData ()
+	{
+		$this->data = $this->default_data;
+		$this->saveData( $this->default_data );
+	}
+
 } //End Class AVH_FDAS_Core
 ?>
