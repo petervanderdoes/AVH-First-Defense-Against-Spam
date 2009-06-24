@@ -573,8 +573,8 @@ class AVH_FDAS_Admin
 		$checkbox = '|';
 			$output .= "\n" . '<fieldset class="options"><table class="form-table">' . "\n";
 			foreach ( $option_data as $option ) {
-				$section = ltrim( $option[0], '[' );
-				$section = rtrim($section,'][');
+				$section = substr($option[0],strpos($option[0],'[')+1);
+				$section = substr($section,0,strpos($section,']['));
 				$option_key = rtrim( $option[0], ']' );
 				$option_key = substr( $option_key, strpos( $option_key, '][' ) + 2 );
 				// Helper
