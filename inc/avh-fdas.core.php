@@ -240,7 +240,7 @@ class AVH_FDAS_Core
 
 		$keys=array('blacklist','whitelist');
 		foreach ($keys as $value) {
-			$new_data['list'][$value] = $old_options['spam'][$value];
+			$new_data['lists'][$value] = $old_options['spam'][$value];
 			unset ($new_options['spam'][$value]);
 		}
 

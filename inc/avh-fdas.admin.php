@@ -142,7 +142,6 @@ class AVH_FDAS_Admin
 
 	function doMenuGeneralOptions ()
 	{
-
 		$option_data = array (
 			array (
 			'avhfdas[general][diewithmessage]',
@@ -185,6 +184,55 @@ class AVH_FDAS_Admin
 			15 ),
 		) ;
 
+		if ( isset( $_POST['updateoptions'] ) ) {
+			check_admin_referer( 'avh_tbb_generaloptions' );
+
+			$formoptions = $_POST['avhfdas'];
+			$options = $this->core->getOptions();
+			$data = $this->core->getData();
+
+			foreach ( $option_data as $option ) {
+				$section = substr( $option[0], strpos( $option[0], '[' ) + 1 );
+				$section = substr( $section, 0, strpos( $section, '][' ) );
+				$option_key = rtrim( $option[0], ']' );
+				$option_key = substr( $option_key, strpos( $option_key, '][' ) + 2 );
+
+				switch ( $section ) {
+					case 'general' :
+						$current_value = $options[$section][$option_key];
+						break;
+					case 'lists' :
+						$current_value = $data[$section][$option_key];
+						break;
+				}
+				// Every field in a form is set except unchecked checkboxes. Set an unchecked checkbox to 0.
+
+
+				$newval = (isset( $formoptions[$section][$option_key] ) ? attribute_escape( $formoptions[$section][$option_key] ) : 0);
+				if ( $newval != $current_value ) { // Only process changed fields.
+					// Sort the lists
+					if ( 'blacklist' == $option_key || 'whitelist' == $option_key ) {
+						$b = explode( "\r\n", $newval );
+						natsort( $b );
+						$newval = implode( "\r\n", $b );
+						unset( $b );
+					}
+					switch ( $section ) {
+						case 'general' :
+							$options[$section][$option_key] = $newval;
+							break;
+						case 'lists' :
+							$data[$section][$option_key] = $newval;
+							break;
+					}
+				}
+			}
+			$this->core->saveOptions($options);
+			$this->core->saveData($data);
+			$this->message = __( 'Options saved', 'avhfdas' );
+			$this->status = 'updated fade';
+		}
+
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
 		echo '<h2>'.__('General Options', 'avhfdas').'</h2>';
@@ -195,8 +243,7 @@ class AVH_FDAS_Admin
 		echo $this->printOptions( $option_data, $actual_options );
 		echo '</div>';
 
-		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhamazon' ) . '" />';
-		echo '<input class="button-secondary" type="submit" name="reset_options" onclick="return confirm(\'' . __( 'Do you really want to restore the default options?', 'avhamazon' ) . '\')" value="' . __( 'Reset Options', 'avhamazon' ) . '" /></p>';
+		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
 		echo '</form>';
 
 
