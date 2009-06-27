@@ -38,11 +38,11 @@ require (ABSPATH . WPINC . '/version.php');
 if ( ( float ) $wp_version >= 2.7 ) {
 	require (dirname( __FILE__ ) . '/avh-fdas.client.php');
 } else {
-	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_remove_plugin' );
+	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_fdas_remove_plugin' );
 
 }
 
-function avh_remove_plugin ()
+function avh_fdas_remove_plugin ()
 {
 	$current = get_option( 'active_plugins' );
 	$num = array_search( 'avh-first-defense-against-spam/avh-fdas.php', $current );
