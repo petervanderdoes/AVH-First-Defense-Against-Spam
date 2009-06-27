@@ -43,7 +43,7 @@ class AVH_FDAS_Public
 		if ( ! empty( $post ) ) {
 			$post_id = $post->ID;
 		}
-		echo $this->core->comment_general;
+		echo $this->core->getComment();
 		wp_nonce_field( 'avh-first-defense-against-spam_' . $post_id, '_avh_first_defense_against_spam', false );
 	}
 

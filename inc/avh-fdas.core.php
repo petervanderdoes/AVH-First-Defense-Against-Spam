@@ -18,9 +18,7 @@ class AVH_FDAS_Core
 	 *
 	 * @var string
 	 */
-	var $comment_general;
-	var $comment_begin;
-	var $comment_end;
+	var $comment;
 
 	/**
 	 * Paths and URI's of the WordPress information, 'home', 'siteurl', 'install_url', 'install_dir'
@@ -76,9 +74,7 @@ class AVH_FDAS_Core
 	function __construct ()
 	{
 		$this->version = "2.0-rc1";
-		$this->comment_general = '<!-- AVH First Defense Against Spam version ' . $this->version . ' -->';
-		$this->comment_begin = '<!-- AVH First Defense Against Spam version ' . $this->version . ' Begin -->';
-		$this->comment_end = '<!-- AVH First Defense Against Spam version ' . $this->version . ' End -->';
+		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
 		$this->db_options_nonces = 'avhfdas_nonces';
@@ -747,6 +743,21 @@ class AVH_FDAS_Core
 		$this->data = $this->default_data;
 		$this->saveData( $this->default_data );
 	}
+
+	/*********************************
+	 *                               *
+	 * Methods for variable: comment *
+	 *                               *
+	 *********************************/
+
+	/**
+	 * @return string
+	 */
+	function getComment ($str='')
+	{
+		return $this->comment.' '.trim($str).' -->';
+	}
+
 
 } //End Class AVH_FDAS_Core
 ?>
