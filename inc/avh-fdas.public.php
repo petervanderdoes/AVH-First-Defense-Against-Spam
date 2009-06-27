@@ -83,7 +83,7 @@ class AVH_FDAS_Public
 			if ( empty( $commentdata['comment_type'] ) ) { // If it's a trackback or pingback this has a value
 				$nonce = wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'] );
 				if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
-					if ( 1 == $this->core->options['spam']['emailsecuritycheck'] ) {
+					if ( 1 == $this->core->options['general']['emailsecuritycheck'] ) {
 						$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 						$to = get_option( 'admin_email' );
 						$ip = $this->core->getUserIP();
@@ -167,7 +167,7 @@ class AVH_FDAS_Public
 			$ip_in_whitelist = $this->checkWhitelist( $ip );
 		}
 		if ( ! $ip_in_whitelist ) {
-			if ( 1 == $this->core->options['spam']['useblacklist'] && $this->core->options['spam']['blacklist'] ) {
+			if ( 1 == $this->core->options['general']['useblacklist'] && $this->core->data['lists']['blacklist'] ) {
 				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
 			$spaminfo = null;
@@ -266,7 +266,7 @@ class AVH_FDAS_Public
 	 */
 	function checkBlacklist ( $ip )
 	{
-		$found = $this->checkList( $ip, $this->core->options['spam']['blacklist'] );
+		$found = $this->checkList( $ip, $this->core->data['lists']['blacklist'] );
 		if ( $found ) {
 			$spaminfo['appears'] = 'yes';
 			$spaminfo['frequency'] = abs( $this->core->options['spam']['whentodie'] ); // Blacklisted IP's will always be terminated.
@@ -386,7 +386,7 @@ class AVH_FDAS_Public
 		}
 		// This should be the very last option.
 		if ( $this->core->options['spam']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $this->core->options['spam']['whentodie'] ) {
-			if ( 1 == $this->core->options['spam']['diewithmessage'] ) {
+			if ( 1 == $this->core->options['general']['diewithmessage'] ) {
 				if ( 'Blacklisted' == $time ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );
 				} else {
