@@ -128,6 +128,7 @@ class AVH_FDAS_Public
 					wp_die( $m );
 				}
 			}
+			$this->actionHandleMainAction();
 		}
 		return $commentdata;
 	}
