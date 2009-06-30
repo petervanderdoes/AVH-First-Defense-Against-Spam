@@ -259,6 +259,7 @@ class AVH_FDAS_Admin
 			$this->core->saveData($data);
 			$this->message = __( 'Options saved', 'avhfdas' );
 			$this->status = 'updated fade';
+			$this->displayMessage();
 		}
 
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
@@ -363,6 +364,7 @@ class AVH_FDAS_Admin
 			$this->core->saveOptions($options);
 			$this->message = __( 'Options saved', 'avhfdas' );
 			$this->status = 'updated fade';
+			$this->displayMessage();
 		}
 
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
