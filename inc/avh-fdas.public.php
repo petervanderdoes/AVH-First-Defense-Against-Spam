@@ -101,7 +101,7 @@ class AVH_FDAS_Public
 						$message .= __( '--- START OF COMMENT ---', 'avhfdas' ) . "\r\n";
 						$message .= $commentdata['comment_content'] . "\r\n";
 						$message .= __( '--- END OF COMMENT ---', 'avhfdas' ) . "\r\n\r\n";
-						if ( ! empty( $this->core->options['spam']['sfsapikey'] ) ) {
+						if ( ! empty( $this->core->options['sfs']['sfsapikey'] ) ) {
 							$q['action'] = 'emailreportspammer';
 							$q['a'] = $commentdata['comment_author'];
 							$q['e'] = $commentdata['comment_author_email'];
@@ -115,7 +115,7 @@ class AVH_FDAS_Public
 						wp_mail( $to, $subject, $message );
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam
-					if ( ! empty( $this->core->options['spam']['sfsapikey'] ) ) {
+					if ( ! empty( $this->core->options['sfs']['sfsapikey'] ) ) {
 						// Prevent a spam attack to overflow the database.
 						if ( ! ($this->core->checkDB_Nonces( $q['_avhnonce'] )) ) {
 							$option = get_option( $this->core->db_options_nonces );
@@ -247,7 +247,7 @@ class AVH_FDAS_Public
 		$found = $this->checkList( $ip, $this->core->data['lists']['blacklist'] );
 		if ( $found ) {
 			$spaminfo['appears'] = 'yes';
-			$spaminfo['frequency'] = abs( $this->core->options['spam']['whentodie'] ); // Blacklisted IP's will always be terminated.
+			$spaminfo['frequency'] = abs( $this->core->options['sfs']['whentodie'] ); // Blacklisted IP's will always be terminated.
 			$time = 'Blacklisted';
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
@@ -341,7 +341,7 @@ class AVH_FDAS_Public
 		// Update the counter
 		$data['spam']['counter'] ++;
 		// Email
-		if ( ($options['spam']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['spam']['whentoemail']) || ($options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail']) ) {
+		if ( ($options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail']) || ($options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail']) ) {
 			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), $site_name, $ip );
@@ -349,13 +349,13 @@ class AVH_FDAS_Public
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
 
 			// Stop Forum Spam Mail Part
-			if ( $options['spam']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['spam']['whentoemail'] ) {
+			if ( $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'] ) {
 				$message .= __( 'Stop Forum Spam has the following statistics:', 'avhfdas' ) . "\r\n";
 				$message .= sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] ) . "\r\n";
 				$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] ) . "\r\n\r\n";
 
-				if ( $info['sfs']['frequency'] >= $options['spam']['whentodie'] ) {
-					$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['spam']['whentodie'] ) . "\r\n\r\n";
+				if ( $info['sfs']['frequency'] >= $options['sfs']['whentodie'] ) {
+					$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] ) . "\r\n\r\n";
 				}
 				$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 			}
@@ -410,7 +410,7 @@ class AVH_FDAS_Public
 		}
 		wp_mail( $to, $subject, $message );
 		// This should be the very last option.
-		if ( ($options['spam']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $options['spam']['whentodie']) || ($options['php']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $options['php']['whentodie']) ) {
+		if ( ($options['sfs']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $options['sfs']['whentodie']) || ($options['php']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $options['php']['whentodie']) ) {
 			if ( 1 == $options['general']['diewithmessage'] ) {
 				if ( 'Blacklisted' == $time ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );

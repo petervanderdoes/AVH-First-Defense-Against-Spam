@@ -93,7 +93,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default Options - All as stored in the DB
 		 */
-		$this->default_options = array ('general' => $this->default_general_options, 'spam' => $this->default_spam, 'php' => $this->default_honey );
+		$this->default_options = array ('general' => $this->default_general_options, 'sfs' => $this->default_spam, 'php' => $this->default_honey );
 		$this->default_data = array ('spam' => $this->default_spam_data, 'lists' => $this->default_data_lists );
 		$this->default_nonces = array ('default' => $this->default_nonces_data );
 
@@ -225,6 +225,14 @@ class AVH_FDAS_Core
 		$this->saveData( $data );
 	}
 
+	/**
+	 * Upgrade to version 2.0
+	 *
+	 * @param array $old_options
+	 * @param array $old_data
+	 * @return array
+	 *
+	 */
 	function doUpgrade20 ( $old_options, $old_data )
 	{
 		$new_options = $old_options;
@@ -243,11 +251,14 @@ class AVH_FDAS_Core
 			$new_data['lists'][$value] = $old_options['spam'][$value];
 			unset( $new_options['spam'][$value] );
 		}
+		// Section renamed
+		$new_options['sfs'] = $new_options['spam'];
+		unset( $new_options['spam'] );
 
 		// Add none existing sections to the options
 		foreach ( $this->default_options as $section => $default_options ) {
-			if (!array_key_exists($section,$new_options)) {
-				$new_options[$section]=$default_options;
+			if ( ! array_key_exists( $section, $new_options ) ) {
+				$new_options[$section] = $default_options;
 				continue;
 			}
 			foreach ( $default_options as $element => $default_value ) {
@@ -259,8 +270,8 @@ class AVH_FDAS_Core
 
 		// Add none existing sections to the data
 		foreach ( $this->default_data as $section => $default_data ) {
-			if (!array_key_exists($section,$new_data)) {
-				$new_data[$section]=$default_data;
+			if ( ! array_key_exists( $section, $new_data ) ) {
+				$new_data[$section] = $default_data;
 				continue;
 			}
 			foreach ( $default_data as $element => $default_value ) {
