@@ -334,7 +334,7 @@ class AVH_FDAS_Admin
 				'API Key:',
 				'text',
 				15,
-				'You need a Project Honey Pot API key to check the database.'
+				'You need a Project Honey Pot API key to check the Honey Pot Project database.'
 			)
 		);
 
