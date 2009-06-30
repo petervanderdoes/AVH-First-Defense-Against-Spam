@@ -353,8 +353,6 @@ class AVH_FDAS_Public
 	{
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
-		// Update the counter
-		$data['spam']['counter'] ++;
 
 		// Email
 		$sfs_email = $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
@@ -441,7 +439,15 @@ class AVH_FDAS_Public
 		$php_die = $options['general']['use_php'] && $info['php']['score'] >= $options['php']['whentodie'];
 		$blacklist_die = 'Blacklisted' == $time;
 
-		if ( $sfs_die || $php_die || $blacklist_die) {
+		if ( $sfs_die || $php_die || $blacklist_die ) {
+			// Update the counter
+			$period = date( 'Ym' );
+			if ( array_key_exists( $period, $data['counters'] ) ) {
+				$data['counters'][$period] ++;
+			} else {
+				$data['counter'][$period] = 1;
+			}
+			$this->core->saveData( $data );
 			if ( 1 == $options['general']['diewithmessage'] ) {
 				if ( 'Blacklisted' == $time ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );

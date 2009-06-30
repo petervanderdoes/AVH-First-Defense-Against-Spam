@@ -86,7 +86,7 @@ class AVH_FDAS_Core
 		$this->default_general_options = array ('version' => $this->version, 'use_sfs' => 1, 'use_php' => 1, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1 );
 		$this->default_spam = array ('whentoemail' => 1, 'whentodie' => 3, 'sfsapikey' => '' );
 		$this->default_honey = array ('whentoemail' => 0, 'whentodie' => 4, 'phpapikey' => '' );
-		$this->default_spam_data = array ('counter' => 0 );
+		$this->default_spam_data = array ('190001' => 0 );
 		$this->default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
 		$this->default_nonces_data = 'default';
 
@@ -94,7 +94,7 @@ class AVH_FDAS_Core
 		 * Default Options - All as stored in the DB
 		 */
 		$this->default_options = array ('general' => $this->default_general_options, 'sfs' => $this->default_spam, 'php' => $this->default_honey );
-		$this->default_data = array ('spam' => $this->default_spam_data, 'lists' => $this->default_data_lists );
+		$this->default_data = array ('counters' => $this->default_spam_data, 'lists' => $this->default_data_lists );
 		$this->default_nonces = array ('default' => $this->default_nonces_data );
 
 		/**
@@ -245,15 +245,19 @@ class AVH_FDAS_Core
 			unset( $new_options['spam'][$value] );
 		}
 
-		// Move elements from one section to another
+		// Move elements from options to data
 		$keys = array ('blacklist', 'whitelist' );
 		foreach ( $keys as $value ) {
 			$new_data['lists'][$value] = $old_options['spam'][$value];
 			unset( $new_options['spam'][$value] );
 		}
+
 		// Section renamed
 		$new_options['sfs'] = $new_options['spam'];
 		unset( $new_options['spam'] );
+
+		// New counter system
+		unset ($new_data['spam']['counter']);
 
 		// Add none existing sections to the options
 		foreach ( $this->default_options as $section => $default_options ) {

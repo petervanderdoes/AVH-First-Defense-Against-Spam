@@ -126,6 +126,28 @@ class AVH_FDAS_Admin
 	function doMenuOverview() {
 		echo '<div class="wrap">';
 		echo '<h2>' . __( 'Overview', 'avfdas' ) . '</h2>';
+		echo '<h3>'.__('Statistics','avhfdas').'</h3>';
+		echo '<p>';
+		echo '<table>';
+		$data = $this->core->getData();
+		$spam_count=$data['counters'];
+		krsort($spam_count);
+		$have_spam_count_data=false;
+		foreach ($spam_count as $key => $value) {
+			if ('190001' == $key) {
+				continue;
+			}
+			$have_spam_count_data=true;
+			$date=date_i18n('Y - F',mktime(0,0,0,substr($key,4,2),1,substr($key,0,4)));
+			echo '<tr><th>'.__('Period','avhfdas').'</th><th>'.__('Spam Stopped','avhfdas').'</th></tr>';
+			echo '<td>'.$date.'</td>';
+			echo '<td>'.$value.'</td>';
+			echo '</tr>';
+		}
+		if (!$have_spam_count_data) {
+			_e('No statistics yet','avhfdas');
+		}
+		echo '</table>';
 		echo '<h3>' . __('General Options','avhfdas') .'</h3>';
 		echo '<p>';
 		echo __('Use Stop Forum Spam','avhfdas').': ';
