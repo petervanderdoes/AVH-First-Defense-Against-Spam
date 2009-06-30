@@ -185,7 +185,7 @@ class AVH_FDAS_Admin
 		) ;
 
 		if ( isset( $_POST['updateoptions'] ) ) {
-			check_admin_referer( 'avh_tbb_generaloptions' );
+			check_admin_referer( 'avh_fdas_generaloptions' );
 
 			$formoptions = $_POST['avhfdas'];
 			$options = $this->core->getOptions();
@@ -237,7 +237,7 @@ class AVH_FDAS_Admin
 		echo '<div class="wrap">';
 		echo '<h2>'.__('General Options', 'avhfdas').'</h2>';
 		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" accept-charset="utf-8" >';
-		wp_nonce_field( 'avh_tbb_generaloptions' );
+		wp_nonce_field( 'avh_fdas_generaloptions' );
 
 		echo '<div id="printOptions">';
 		echo $this->printOptions( $option_data, $actual_options );
@@ -245,8 +245,99 @@ class AVH_FDAS_Admin
 
 		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
 		echo '</form>';
+	}
+
+	function doMenu3rdPartyOptions(){
+		$options_sfs = array (
+			array (
+				'avhfdas[spam][whentoemail]',
+				'Email threshold:',
+				'text',
+				3,
+				'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
+			),
+			array (
+				'avhfdas[spam][whentodie]',
+				'Termination threshold:',
+				'text',
+				3,
+				'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>'
+			),
+			array (
+				'avhfdas[spam][sfsapikey]',
+				'API Key:',
+				'text',
+				15,
+				'You need a Stop Forum Spam API key to report spam.'
+			)
+		);
+
+		$options_php = array (
+			array (
+				'avhfdas[php][whentoemail]',
+				'Email threshold:',
+				'text',
+				3,
+				'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
+			),
+			array (
+				'avhfdas[php][whentodie]',
+				'Termination threshold:',
+				'text',
+				3,
+				'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>'
+			),
+			array (
+				'avhfdas[php][phpapikey]',
+				'API Key:',
+				'text',
+				15,
+				'You need a Project Honey Pot API key to check the database.'
+			)
+		);
+
+		if ( isset( $_POST['updateoptions'] ) ) {
+			check_admin_referer( 'avh_fdas_options' );
+
+			$formoptions = $_POST['avhfdas'];
+			$options = $this->core->getOptions();
+
+			$all_data=array_merge($options_sfs,$options_php);
+			foreach ( $all_data as $option ) {
+				$section = substr( $option[0], strpos( $option[0], '[' ) + 1 );
+				$section = substr( $section, 0, strpos( $section, '][' ) );
+				$option_key = rtrim( $option[0], ']' );
+				$option_key = substr( $option_key, strpos( $option_key, '][' ) + 2 );
+
+				$current_value = $options[$section][$option_key];
+				// Every field in a form is set except unchecked checkboxes. Set an unchecked checkbox to 0.
 
 
+				$newval = (isset( $formoptions[$section][$option_key] ) ? attribute_escape( $formoptions[$section][$option_key] ) : 0);
+				if ( $newval != $current_value ) { // Only process changed fields
+					$options[$section][$option_key] = $newval;
+				}
+			}
+			$this->core->saveOptions($options);
+			$this->message = __( 'Options saved', 'avhfdas' );
+			$this->status = 'updated fade';
+		}
+
+		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
+		echo '<div class="wrap">';
+		echo '<h2>'.__('Options', 'avhfdas').'</h2>';
+		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" accept-charset="utf-8" >';
+		wp_nonce_field( 'avh_fdas_options' );
+
+		echo '<div id="printOptions">';
+		echo '<h3>'.__('Stop Forum Spam','avhfdas').'</h3>';
+		echo $this->printOptions( $options_sfs, $actual_options );
+		echo '<h3>'.__('Project Honey Pot','avhfdas').'</h3>';
+		echo $this->printOptions( $options_php, $actual_options );
+		echo '</div>';
+
+		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
+		echo '</form>';
 	}
 	/**
 	 * Adds Settings next to the plugin actions

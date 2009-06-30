@@ -351,17 +351,17 @@ class AVH_FDAS_Public
 			// Stop Forum Spam Mail Part
 			if ( $options['spam']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['spam']['whentoemail'] ) {
 				$message .= __( 'Stop Forum Spam has the following statistics:', 'avhfdas' ) . "\r\n";
-				$message .= sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['spam']['lastseen'] ) . "\r\n";
-				$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['spam']['frequency'] ) . "\r\n\r\n";
+				$message .= sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] ) . "\r\n";
+				$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] ) . "\r\n\r\n";
 
-				if ( $info['frequency'] >= $options['spam']['whentodie'] ) {
+				if ( $info['sfs']['frequency'] >= $options['spam']['whentodie'] ) {
 					$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['spam']['whentodie'] ) . "\r\n\r\n";
 				}
 				$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 			}
 
 			// Project Honey pot Mail Part
-			if ( $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['frequency'] >= $options['php']['whentoemail'] ) {
+			if ( $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail'] ) {
 				$message .= __( 'Project Honey Pot has the following statistics:', 'avhfdas' ) . "\r\n";
 				$message .= sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) . "\r\n";
 				switch ( $info['php']['type'] ) {
@@ -393,7 +393,7 @@ class AVH_FDAS_Public
 
 				$message .= sprintf( __( 'Type:						%s', 'avhfdas' ), $type ) . "\r\n";
 				if ( $info['php']['score'] > 0 ) {
-					$message .= sprintf( __( 'Score:					%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n\r\n";
+					$message .= sprintf( __( 'Score:						%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n\r\n";
 				} else {
 					$message .= sprintf( __( 'Search Engine:			%s', 'avhfdas' ), $this->core->searchengines[$info['score']] ). "\r\n\r\n";
 				}
