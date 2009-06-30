@@ -163,25 +163,36 @@ class AVH_FDAS_Public
 	{
 		$ip = $this->core->getUserIP();
 		$ip_in_whitelist = false;
-		if ( 1 == $this->core->options['general']['usewhitelist'] && $this->core->data['lists']['whitelist'] ) {
+		$options = $this->core->getOptions();
+		$data = $this->core->getData();
+		if ( 1 == $options['general']['usewhitelist'] && $data['lists']['whitelist'] ) {
 			$ip_in_whitelist = $this->checkWhitelist( $ip );
 		}
 		if ( ! $ip_in_whitelist ) {
-			if ( 1 == $this->core->options['general']['useblacklist'] && $this->core->data['lists']['blacklist'] ) {
+			if ( 1 == $options['general']['useblacklist'] && $data['lists']['blacklist'] ) {
 				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
-			$spaminfo = null;
-			$spaminfo['detected'] = FALSE;
-			$spaminfo['sfs'] = $this->checkStopForumSpam( $ip );
-			if ( 'yes' == $spaminfo['sfs']['appears'] ) {
-				$spaminfo['detected'] = true;
-			}
-			$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
-			if ( $spaminfo['php']['type'] > 4 ) { //@TODO Make selectable in Admin
-				$spaminfo['detected'] = true;
-			}
-			if ( $spaminfo['detected'] ) {
-				$this->handleSpammer( $ip, $spaminfo, $time );
+			if ( $options['general']['use_sfs'] || $options['general']['use_php'] ) {
+				$spaminfo = null;
+				$spaminfo['detected'] = FALSE;
+
+				if ( $options['general']['use_sfs'] ) {
+					$spaminfo['sfs'] = $this->checkStopForumSpam( $ip );
+					if ( 'yes' == $spaminfo['sfs']['appears'] ) {
+						$spaminfo['detected'] = true;
+					}
+				}
+
+				if ( $options['general']['use_php'] ) {
+					$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
+					if ( $spaminfo['php']['type'] > 4 ) { //@TODO Make selectable in Admin
+						$spaminfo['detected'] = true;
+					}
+				}
+
+				if ( $spaminfo['detected'] ) {
+					$this->handleSpammer( $ip, $spaminfo );
+				}
 			}
 		}
 	}
@@ -198,6 +209,7 @@ class AVH_FDAS_Public
 			$spaminfo = $this->core->handleRESTcall( $this->core->getRestIPLookup( $ip ) );
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
+			$spaminfo['time'] = $time;
 			if ( isset( $spaminfo['Error'] ) ) {
 				$error = $this->core->getHttpError( $spaminfo['Error'] );
 				$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
@@ -217,21 +229,25 @@ class AVH_FDAS_Public
 	function checkProjectHoneyPot ( $ip )
 	{
 		$rev = implode( '.', array_reverse( explode( '.', $ip ) ) );
-		$projecthoneypot_api_key = 'oufobohxcevj';
+		$projecthoneypot_api_key = $this->core->getOptionElement('php','phpapikey');
 		//
 		// Check the IP against projecthoneypot.org
 		//
 		$spaminfo = null;
+		$time_start = microtime( true );
 		$lookup = $projecthoneypot_api_key . '.' . $rev . '.dnsbl.httpbl.org';
 		if ( $lookup != gethostbyname( $lookup ) ) {
-			$sTempArr = explode( '.', gethostbyname( $lookup ) );
-			$spaminfo['days'] = $sTempArr[1];
-			$spaminfo['type'] = $sTempArr[3];
-			if ( '0' == $sTempArr[3] ) {
+			$time_end = microtime( true );
+			$time = $time_end - $time_start;
+			$spaminfo['time'] = $time;
+			$info = explode( '.', gethostbyname( $lookup ) );
+			$spaminfo['days'] = $info[1];
+			$spaminfo['type'] = $info[3];
+			if ( '0' == $info[3] ) {
 				$spaminfo['score'] = '0';
-				$spaminfo['engine'] = $this->core->searchengines[$sTempArr[2]];
+				$spaminfo['engine'] = $this->core->searchengines[$info[2]];
 			} else {
-				$spaminfo['score'] = $sTempArr[2];
+				$spaminfo['score'] = $info[2];
 			}
 		}
 		return ($spaminfo);
@@ -247,7 +263,6 @@ class AVH_FDAS_Public
 		$found = $this->checkList( $ip, $this->core->data['lists']['blacklist'] );
 		if ( $found ) {
 			$spaminfo['appears'] = 'yes';
-			$spaminfo['frequency'] = abs( $this->core->options['sfs']['whentodie'] ); // Blacklisted IP's will always be terminated.
 			$time = 'Blacklisted';
 			$this->handleSpammer( $ip, $spaminfo, $time );
 		}
@@ -330,8 +345,8 @@ class AVH_FDAS_Public
 	 * Handle a known spam IP
 	 *
 	 * @param string $ip - The spammers IP
-	 * @param array $info - Information from stopforumspam
-	 * @param string $time - Time it took the call to stopforumspam
+	 * @param array $info - Information
+	 * @param string $time -
 	 *
 	 */
 	function handleSpammer ( $ip, $info, $time )
@@ -340,8 +355,14 @@ class AVH_FDAS_Public
 		$options = $this->core->getOptions();
 		// Update the counter
 		$data['spam']['counter'] ++;
+
 		// Email
-		if ( ($options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail']) || ($options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail']) ) {
+		$sfs_email = $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
+		$php_email = $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail'];
+
+		if ( $sfs_email || $php_email ) {
+
+			// General part of the email
 			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), $site_name, $ip );
@@ -349,10 +370,11 @@ class AVH_FDAS_Public
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n\r\n";
 
 			// Stop Forum Spam Mail Part
-			if ( $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'] ) {
+			if ( $options['general']['use_sfs'] && $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'] ) {
 				$message .= __( 'Stop Forum Spam has the following statistics:', 'avhfdas' ) . "\r\n";
 				$message .= sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] ) . "\r\n";
-				$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] ) . "\r\n\r\n";
+				$message .= sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] ) . "\r\n";
+				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['sfs']['time'] ) . "\r\n\r\n";
 
 				if ( $info['sfs']['frequency'] >= $options['sfs']['whentodie'] ) {
 					$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] ) . "\r\n\r\n";
@@ -361,7 +383,7 @@ class AVH_FDAS_Public
 			}
 
 			// Project Honey pot Mail Part
-			if ( $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail'] ) {
+			if ( $options['general']['use_php'] && $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail'] ) {
 				$message .= __( 'Project Honey Pot has the following statistics:', 'avhfdas' ) . "\r\n";
 				$message .= sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) . "\r\n";
 				switch ( $info['php']['type'] ) {
@@ -393,24 +415,33 @@ class AVH_FDAS_Public
 
 				$message .= sprintf( __( 'Type:						%s', 'avhfdas' ), $type ) . "\r\n";
 				if ( $info['php']['score'] > 0 ) {
-					$message .= sprintf( __( 'Score:						%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n\r\n";
+					$message .= sprintf( __( 'Score:						%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n";
 				} else {
-					$message .= sprintf( __( 'Search Engine:			%s', 'avhfdas' ), $this->core->searchengines[$info['score']] ). "\r\n\r\n";
+					$message .= sprintf( __( 'Search Engine:			%s', 'avhfdas' ), $this->core->searchengines[$info['score']] ). "\r\n";
 				}
+				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n\r\n";
 
 				if ( $info['php']['score'] >= $options['php']['whentodie'] ) {
 					$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n\r\n";
 				}
 			}
+
+			// General End
+			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
+			if ( 'Blacklisted' != $time ) {
+				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
+				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
+			}
+			wp_mail( $to, $subject, $message );
 		}
-		$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
-		if ( 'Blacklisted' != $time ) {
-			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
-			$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
-		}
-		wp_mail( $to, $subject, $message );
+
+		// Check if we have to terminate the connection.
 		// This should be the very last option.
-		if ( ($options['sfs']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $options['sfs']['whentodie']) || ($options['php']['whentodie'] >= 0 && ( int ) $info['frequency'] >= $options['php']['whentodie']) ) {
+		$sfs_die = $options['general']['use_sfs'] && $info['sfs']['frequency'] >= $options['sfs']['whentodie'];
+		$php_die = $options['general']['use_php'] && $info['php']['score'] >= $options['php']['whentodie'];
+		$blacklist_die = 'Blacklisted' == $time;
+
+		if ( $sfs_die || $php_die || $blacklist_die) {
 			if ( 1 == $options['general']['diewithmessage'] ) {
 				if ( 'Blacklisted' == $time ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );
