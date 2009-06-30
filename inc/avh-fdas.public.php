@@ -417,7 +417,7 @@ class AVH_FDAS_Public
 				} else {
 					$message .= sprintf( __( 'Search Engine:			%s', 'avhfdas' ), $this->core->searchengines[$info['score']] ). "\r\n";
 				}
-				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n\r\n";
+				$message .= sprintf( __( 'Call took:					%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n\r\n";
 
 				if ( $info['php']['score'] >= $options['php']['whentodie'] ) {
 					$message .= sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n\r\n";
