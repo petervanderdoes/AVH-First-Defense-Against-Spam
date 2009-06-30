@@ -67,6 +67,7 @@ class AVH_FDAS_Core
 	var $stopforumspam_endpoint;
 
 	var $searchengines;
+
 	/**
 	 * PHP5 constructor
 	 *
@@ -104,12 +105,13 @@ class AVH_FDAS_Core
 		$this->loadData();
 		//$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
 
+
 		// Check if we have to do upgrades
-		if ($this->version > $this->options['general']['version']) {
+		if ( version_compare( $this->version, $this->options['general']['version'], '>' ) ) {
 			$this->doUpgrade();
 		}
 
-		$this->searchengines = array ('0'=>'Undocumented','1'=>'AltaVista','2'=>'Ask','3'=>'Baidu','4'=>'Excite','5'=>'Google','6'=>'Looksmart','7'=>'Lycos','8'=>'MSN','9'=>'Yahoo','10'=>'Cuil','11'=>'InfoSeek','12'=>'Miscellaneous');
+		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
 
 		// Determine installation path & url
 		//$info['home_path'] = get_home_path();
@@ -215,12 +217,12 @@ class AVH_FDAS_Core
 		$options = $this->getOptions();
 		$data = $this->getData();
 
-		if ( $options['general']['version'] < '2.0' ) {
-			list($options, $data) = $this->doUpgrade20( $options, $data );
+		if ( version_compare( $options['general']['version'], '2.0', '<' ) ) {
+			list ( $options, $data ) = $this->doUpgrade20( $options, $data );
 		}
 		$options['general']['version'] = $this->version;
 		$this->saveOptions( $options );
-		$this->saveData($data);
+		$this->saveData( $data );
 	}
 
 	function doUpgrade20 ( $old_options, $old_data )
@@ -228,19 +230,47 @@ class AVH_FDAS_Core
 		$new_options = $old_options;
 		$new_data = $old_data;
 
-		$keys=array('diewithmessage','useblacklist','usewhitelist','emailsecuritycheck');
-		foreach ($keys as $value) {
+		// Move elements from one section to another
+		$keys = array ('diewithmessage', 'useblacklist', 'usewhitelist', 'emailsecuritycheck' );
+		foreach ( $keys as $value ) {
 			$new_options['general'][$value] = $old_options['spam'][$value];
-			unset ($new_options['spam'][$value]);
+			unset( $new_options['spam'][$value] );
 		}
 
-		$keys=array('blacklist','whitelist');
-		foreach ($keys as $value) {
+		// Move elements from one section to another
+		$keys = array ('blacklist', 'whitelist' );
+		foreach ( $keys as $value ) {
 			$new_data['lists'][$value] = $old_options['spam'][$value];
-			unset ($new_options['spam'][$value]);
+			unset( $new_options['spam'][$value] );
 		}
 
-		return array($new_options, $new_data);
+		// Add none existing sections to the options
+		foreach ( $this->default_options as $section => $default_options ) {
+			if (!array_key_exists($section,$new_options)) {
+				$new_options[$section]=$default_options;
+				continue;
+			}
+			foreach ( $default_options as $element => $default_value ) {
+				if ( ! array_key_exists( $element, $new_options[$section] ) ) {
+					$new_options[$section][$element] = $default_value;
+				}
+			}
+		}
+
+		// Add none existing sections to the data
+		foreach ( $this->default_data as $section => $default_data ) {
+			if (!array_key_exists($section,$new_data)) {
+				$new_data[$section]=$default_data;
+				continue;
+			}
+			foreach ( $default_data as $element => $default_value ) {
+				if ( ! array_key_exists( $element, $new_data[$section] ) ) {
+					$new_data[$section][$element] = $default_value;
+				}
+			}
+		}
+
+		return array ($new_options, $new_data );
 	}
 
 	/**
@@ -753,11 +783,10 @@ class AVH_FDAS_Core
 	/**
 	 * @return string
 	 */
-	function getComment ($str='')
+	function getComment ( $str = '' )
 	{
-		return $this->comment.' '.trim($str).' -->';
+		return $this->comment . ' ' . trim( $str ) . ' -->';
 	}
-
 
 } //End Class AVH_FDAS_Core
 ?>
