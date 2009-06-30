@@ -278,6 +278,13 @@ class AVH_FDAS_Admin
 	function doMenu3rdPartyOptions(){
 		$options_sfs = array (
 			array (
+				'avhfdas[general][use_sfs]',
+				'Check with Stop Forum Spam:',
+				'checkbox',
+				1,
+				'If checked, the visitor\'s IP will be checked with Stop Forum Spam'
+			),
+			array (
 				'avhfdas[sfs][whentoemail]',
 				'Email threshold:',
 				'text',
@@ -301,6 +308,13 @@ class AVH_FDAS_Admin
 		);
 
 		$options_php = array (
+		array (
+				'avhfdas[general][use_php]',
+				'Check with Honey Pot Project:',
+				'checkbox',
+				1,
+				'If checked, the visitor\'s IP will be checked with Honey Pot Project'
+			),
 			array (
 				'avhfdas[php][whentoemail]',
 				'Email threshold:',
