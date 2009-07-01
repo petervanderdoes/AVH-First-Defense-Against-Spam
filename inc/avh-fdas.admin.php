@@ -553,8 +553,9 @@ class AVH_FDAS_Admin
 				$this->setBlacklistOption( $b );
 			}
 			wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
+		} else {
+			wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $ip ) );
 		}
-		wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $ip ) );
 	}
 
 	/**
