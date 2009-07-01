@@ -412,10 +412,10 @@ class AVH_FDAS_Public
 				}
 
 				$message .= sprintf( __( 'Type:						%s', 'avhfdas' ), $type ) . "\r\n";
-				if ( $info['php']['score'] > 0 ) {
-					$message .= sprintf( __( 'Score:						%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n";
-				} else {
+				if ( 0 == $info['php']['type']  ) {
 					$message .= sprintf( __( 'Search Engine:			%s', 'avhfdas' ), $this->core->searchengines[$info['score']] ). "\r\n";
+				} else {
+					$message .= sprintf( __( 'Score:						%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n";
 				}
 				$message .= sprintf( __( 'Call took:					%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n\r\n";
 
