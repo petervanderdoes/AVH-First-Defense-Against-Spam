@@ -361,11 +361,50 @@ class AVH_FDAS_Admin
 					$options[$section][$option_key] = $newval;
 				}
 			}
+			$note='';
+			if (empty($options['php']['phpapikey'])) {
+				$options['general']['use_php'] =0;
+				$note = '<br \><br \>'.__('You can not use Project Honey Pot without an API key. Use of Project Honey Pot has been disabled','avhfdas');
+			}
 			$this->core->saveOptions($options);
 			$this->message = __( 'Options saved', 'avhfdas' );
+			$this->message .= $note;
 			$this->status = 'updated fade';
-			$this->displayMessage();
 		}
+
+		// Show messages if needed.
+		if ( isset( $_REQUEST['m'] ) ) {
+			switch ( $_REQUEST['m'] ) {
+				case AVHFDAS_REPORTED_DELETED :
+					$this->status = 'updated fade';
+					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				case AVHFDAS_ADDED_BLACKLIST :
+					$this->status = 'updated fade';
+					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				case AVHFDAS_REPORTED :
+					$this->status = 'updated fade';
+					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				case AVHFDAS_ERROR_INVALID_REQUEST :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'Invalid request.', 'avhfdas' ) );
+					break;
+				case AVHFDAS_ERROR_NOT_REPORTED :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				default :
+					$this->status = 'error';
+					$this->message = 'Unknown message request';
+			}
+		}
+
+		// Actually display the message
+		$this->displayMessage();
+			$this->displayMessage();
+
 
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
@@ -469,7 +508,7 @@ class AVH_FDAS_Admin
 			}
 			unset( $all );
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options' . $extra ) );
+		wp_redirect( admin_url( 'options-general.php?page=avh-fdas-general' . $extra ) );
 	}
 
 	/**
@@ -517,7 +556,7 @@ class AVH_FDAS_Admin
 				$this->setBlacklistOption( $b );
 			}
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avhfdas_options&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
+		wp_redirect( admin_url( 'options-general.php?page=avh-fdas-general&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
 	}
 
 	/**
