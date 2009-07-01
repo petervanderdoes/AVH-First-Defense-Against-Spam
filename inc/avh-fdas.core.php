@@ -755,6 +755,7 @@ class AVH_FDAS_Core
 	{
 		$data = get_option( $this->db_options_data );
 		if ( false === $data ) { // New installation
+			$this->resetToDefaultData();
 		} else {
 			$this->setData( $data );
 		}
