@@ -540,8 +540,9 @@ class AVH_FDAS_Admin
 			return;
 		}
 		$ip = $_REQUEST['i'];
-		$blacklist = $this->core->data['lists']['blacklist'];
+
 		if ( $this->core->avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
+			$blacklist = $this->core->data['lists']['blacklist'];
 			if ( ! empty( $blacklist ) ) {
 				$b = explode( "\r\n", $blacklist );
 			} else {
