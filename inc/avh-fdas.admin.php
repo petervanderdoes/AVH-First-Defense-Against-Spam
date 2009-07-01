@@ -564,10 +564,11 @@ class AVH_FDAS_Admin
 	 */
 	function setBlacklistOption ( $b )
 	{
+		$data=$this->core->getData();
 		natsort( $b );
 		$x = implode( "\r\n", $b );
-		$this->core->data['lists']['blacklist'] = $x;
-		$this->core->saveData();
+		$data['lists']['blacklist'] = $x;
+		$this->core->saveData($data);
 	}
 
 	/**
@@ -577,10 +578,11 @@ class AVH_FDAS_Admin
 	 */
 	function setWhitelistOption ( $b )
 	{
+		$data=$this->core->getData();
 		natsort( $b );
 		$x = implode( "\r\n", $b );
-		$this->core->data['lists']['whitelist'] = $x;
-		$this->core->saveData();
+		$data['lists']['whitelist'] = $x;
+		$this->core->saveData($data);
 	}
 
 	/**
