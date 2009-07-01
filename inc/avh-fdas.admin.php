@@ -259,8 +259,37 @@ class AVH_FDAS_Admin
 			$this->core->saveData($data);
 			$this->message = __( 'Options saved', 'avhfdas' );
 			$this->status = 'updated fade';
-			$this->displayMessage();
 		}
+			// Show messages if needed.
+		if ( isset( $_REQUEST['m'] ) ) {
+			switch ( $_REQUEST['m'] ) {
+				case AVHFDAS_REPORTED_DELETED :
+					$this->status = 'updated fade';
+					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				case AVHFDAS_ADDED_BLACKLIST :
+					$this->status = 'updated fade';
+					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				case AVHFDAS_REPORTED :
+					$this->status = 'updated fade';
+					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				case AVHFDAS_ERROR_INVALID_REQUEST :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'Invalid request.', 'avhfdas' ) );
+					break;
+				case AVHFDAS_ERROR_NOT_REPORTED :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
+				default :
+					$this->status = 'error';
+					$this->message = 'Unknown message request';
+			}
+		}
+
+		$this->displayMessage();
 
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
@@ -370,41 +399,8 @@ class AVH_FDAS_Admin
 			$this->message = __( 'Options saved', 'avhfdas' );
 			$this->message .= $note;
 			$this->status = 'updated fade';
-		}
-
-		// Show messages if needed.
-		if ( isset( $_REQUEST['m'] ) ) {
-			switch ( $_REQUEST['m'] ) {
-				case AVHFDAS_REPORTED_DELETED :
-					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
-					break;
-				case AVHFDAS_ADDED_BLACKLIST :
-					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
-					break;
-				case AVHFDAS_REPORTED :
-					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
-					break;
-				case AVHFDAS_ERROR_INVALID_REQUEST :
-					$this->status = 'error';
-					$this->message = sprintf( __( 'Invalid request.', 'avhfdas' ) );
-					break;
-				case AVHFDAS_ERROR_NOT_REPORTED :
-					$this->status = 'error';
-					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
-					break;
-				default :
-					$this->status = 'error';
-					$this->message = 'Unknown message request';
-			}
-		}
-
-		// Actually display the message
-		$this->displayMessage();
 			$this->displayMessage();
-
+		}
 
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
@@ -434,7 +430,7 @@ class AVH_FDAS_Admin
 	function filterPluginActions ( $links )
 	{
 		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
-		$settings_link = '<a href="options-general.php?page='.$folder.'">' . __( 'Settings', 'avhfdas' ) . '</a>';
+		$settings_link = '<a href="admin.php?page='.$folder.'">' . __( 'Settings', 'avhfdas' ) . '</a>';
 		array_unshift( $links, $settings_link ); // before other links
 		return $links;
 	}
@@ -508,7 +504,7 @@ class AVH_FDAS_Admin
 			}
 			unset( $all );
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avh-fdas-general' . $extra ) );
+		wp_redirect( admin_url( 'admin.php?page=avh-fdas-general' . $extra ) );
 	}
 
 	/**
@@ -555,8 +551,9 @@ class AVH_FDAS_Admin
 				array_push( $b, $ip );
 				$this->setBlacklistOption( $b );
 			}
+			wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
 		}
-		wp_redirect( admin_url( 'options-general.php?page=avh-fdas-general&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
+		wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $ip ) );
 	}
 
 	/**
