@@ -750,7 +750,6 @@ class AVH_FDAS_Admin
 	{
 		// Generate output
 		$output = '';
-		$checkbox = '|';
 			$output .= "\n" . '<table class="form-table avhfdas-options">' . "\n";
 			foreach ( $option_data as $option ) {
 				$section = substr($option[0],strpos($option[0],'[')+1);
@@ -765,7 +764,6 @@ class AVH_FDAS_Admin
 				switch ( $option[2] ) {
 					case 'checkbox' :
 						$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( $option[3] ) . '" ' . $this->isChecked( '1', $option_actual[$section][$option_key] ) . ' />' . "\n";
-						$checkbox .= $option[0] . '|';
 						$explanation = $option[4];
 						break;
 					case 'dropdown' :
@@ -802,10 +800,6 @@ class AVH_FDAS_Admin
 				$output .= '<tr style="vertical-align: top;"><th align="left" scope="row"><label for="' . $option[0] . '">' . __( $option[1] ) . '</label></th><td>' . $input_type . '	' . $extra . '</td></tr>' . "\n";
 			}
 			$output .= '</table>' . "\n";
-			if ( '|' !== $checkbox )
-				$checkbox = ltrim( $checkbox, '|' );
-			$output .= '<input	type="hidden" name="avh_checkboxes" value="' . rtrim( $checkbox, '|' ) . '" />';
-			$output .= "\n";
 		return $output;
 	}
 
