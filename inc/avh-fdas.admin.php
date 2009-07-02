@@ -399,11 +399,27 @@ class AVH_FDAS_Admin
 				'If checked, the visitor\'s IP will be checked with Honey Pot Project'
 			),
 			array (
+				'avhfdas[php][whentoemailtype]',
+				'Email type threshold:',
+				'dropdown',
+				'0/1/2/3/4/5/6/7',
+				'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer',
+				'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
+			),
+			array (
 				'avhfdas[php][whentoemail]',
-				'Email threshold:',
+				'Email score threshold:',
 				'text',
 				3,
 				'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
+			),
+			array (
+				'avhfdas[php][whentdietype]',
+				'Email type threshold:',
+				'dropdown',
+				'0/1/2/3/4/5/6/7',
+				'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer',
+				'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
 			),
 			array (
 				'avhfdas[php][whentodie]',

@@ -185,7 +185,7 @@ class AVH_FDAS_Public
 
 				if ( $options['general']['use_php'] ) {
 					$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
-					if ( $spaminfo['php']['type'] > 4 ) { //@TODO Make selectable in Admin
+					if ( $spaminfo['php'] != null ) {
 						$spaminfo['detected'] = true;
 					}
 				}
@@ -388,7 +388,7 @@ class AVH_FDAS_Public
 			}
 
 			// Project Honey pot Mail Part
-			if ( $options['general']['use_php'] && $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail'] ) {
+			if ( $options['general']['use_php'] && $options['php']['whentoemail'] >= 0 &&  $info['php']['type'] >= $options['php']['whentoemailtype'] &&  $info['php']['score'] >= $options['php']['whentoemail']) {
 				if ( $info['php'] != null ) {
 					$message .= __('Checked at Project Honey Pot','avhfdas') ."\r\n";
 					$message .= '	'.__( 'Project Honey Pot has the following information', 'avhfdas' ) . "\r\n";
@@ -447,7 +447,7 @@ class AVH_FDAS_Public
 		// Check if we have to terminate the connection.
 		// This should be the very last option.
 		$sfs_die = $options['general']['use_sfs'] && $info['sfs']['frequency'] >= $options['sfs']['whentodie'];
-		$php_die = $options['general']['use_php'] && $info['php']['score'] >= $options['php']['whentodie'];
+		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'] ;
 		$blacklist_die = 'Blacklisted' == $time;
 
 		if ( $sfs_die || $php_die || $blacklist_die ) {
