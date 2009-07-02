@@ -357,7 +357,7 @@ class AVH_FDAS_Public
 
 		// Email
 		$sfs_email = $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
-		$php_email = $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail'];
+		$php_email = $options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && $info['php']['score'] >= $options['php']['whentoemail'];
 
 		if ( $sfs_email || $php_email ) {
 
@@ -370,7 +370,7 @@ class AVH_FDAS_Public
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
 
 			// Stop Forum Spam Mail Part
-			if ( $options['general']['use_sfs'] && $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'] ) {
+			if ( $options['general']['use_sfs'] && $sfs_email ) {
 				if ('yes' == $info['sfs']['appears']) {
 					$message .= __('Checked at Stop Forum Spam','avhfdas') ."\r\n";
 					$message .= '	'.__( 'Information:', 'avhfdas' ) . "\r\n";
@@ -388,7 +388,7 @@ class AVH_FDAS_Public
 			}
 
 			// Project Honey pot Mail Part
-			if ( $options['general']['use_php'] && (($options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && $info['php']['score'] >= $options['php']['whentoemail'])) || $options['sfs']['emailphp'] ) {
+			if ( $options['general']['use_php'] && ($php_email || $options['sfs']['emailphp']) ) {
 				if ( $info['php'] != null ) {
 					$message .= __('Checked at Project Honey Pot','avhfdas') ."\r\n";
 					$message .= '	'.__( 'Project Honey Pot has the following information', 'avhfdas' ) . "\r\n";
@@ -442,7 +442,7 @@ class AVH_FDAS_Public
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
 				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
-			$message .= '--'."\r\n";
+			$message .= "\r\n".'--'."\r\n";
 			$message .= sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'),$this->version)."\r\n";
 			$message .= 'http://blog.avirtualhome.com/wordpress-plugins'."\r\n";
 			wp_mail( $to, $subject, $message );
