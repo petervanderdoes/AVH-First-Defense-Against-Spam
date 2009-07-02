@@ -464,8 +464,10 @@ class AVH_FDAS_Admin
 
 		echo '<div id="printOptions">';
 		echo '<h3>'.__('Stop Forum Spam','avhfdas').'</h3>';
+		echo '<p>' .__('To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.');
 		echo $this->printOptions( $options_sfs, $actual_options );
 		echo '<h3>'.__('Project Honey Pot','avhfdas').'</h3>';
+		echo '<p>' .__('To check a visitor at Project Honey Pot you must enable it below, you must also have an API key. You can get an API key by signing up for free at the <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">Honey Pot Project</a>. Set the options to your own liking.');
 		echo $this->printOptions( $options_php, $actual_options );
 		echo '</div>';
 
