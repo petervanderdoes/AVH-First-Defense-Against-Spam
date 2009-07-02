@@ -28,12 +28,6 @@ class AVH_FDAS_Admin
 		// Admin menu
 		add_action( 'admin_menu', array (&$this, 'actionAdminMenu' ) );
 
-		// Helper JS & jQuery & Prototype
-		$avhfdas_pages = array ('avhfdas_options' );
-		if ( in_array( $_GET['page'], $avhfdas_pages ) ) {
-			wp_enqueue_script( 'jquery-ui-tabs' );
-		}
-
 		// Add the ajax action
 		//add_action('admin_init', array(&$this, 'ajaxCheck'));
 		add_action( 'wp_ajax_avh-fdas-reportcomment', array (&$this, 'actionAjaxReportComment' ) );
@@ -54,6 +48,7 @@ class AVH_FDAS_Admin
 		 *
 		 */
 		add_action( 'admin_print_styles-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectCSS' ) );
+		add_action( 'admin_print_styles-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectJS' ) );
 
 		return;
 	}
@@ -747,15 +742,37 @@ class AVH_FDAS_Admin
 	{
 		return 	('<div class="icon32" id="icon-'.$icon.'"><br/></div>');
 	}
+
 	/**
 	 * Print link to CSS
 	 *
-	 * @WordPress Action admin_print_styles-settings_page_avhfdas_options
 	 */
 	function actionInjectCSS ()
 	{
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
-		wp_admin_css( 'css/dashboard' );
+		global $hook_suffix;
+
+		switch ($hook_suffix) {
+			case 'toplevel_page_avh-first-defense-against-spam':
+				wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+				wp_admin_css( 'css/dashboard' );
+				break;
+		}
+
+	}
+	/**
+	 * Print link to JS
+	 *
+	 */
+	function actionInjectJS ()
+	{
+		global $hook_suffix;
+
+		switch ($hook_suffix) {
+			case 'toplevel_page_avh-first-defense-against-spam':
+				wp_enqueue_script( 'postbox' );
+				break;
+		}
+
 	}
 
 	/**
