@@ -369,7 +369,6 @@ class AVH_FDAS_Public
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 
 			// Stop Forum Spam Mail Part
-			$checknr = 1;
 			if ( $options['general']['use_sfs'] && $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'] ) {
 				if ('yes' == $info['sfs']['appears']) {
 					$message .= __('Checked at Stop Forum Spam','avhfdas') ."\r\n";
@@ -389,7 +388,7 @@ class AVH_FDAS_Public
 
 			// Project Honey pot Mail Part
 			if ( $options['general']['use_php'] && $options['php']['whentoemail'] >= 0 && ( int ) $info['php']['score'] >= $options['php']['whentoemail'] ) {
-				if ( array_key_exists( 'php', $info ) ) {
+				if ( $info['php'] != null ) {
 					$message .= __('Checked at Project Honey Pot','avhfdas') ."\r\n";
 					$message .= '	'.__( 'Project Honey Pot has the following statistics:', 'avhfdas' ) . "\r\n";
 					$message .= '	'.sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) . "\r\n";
