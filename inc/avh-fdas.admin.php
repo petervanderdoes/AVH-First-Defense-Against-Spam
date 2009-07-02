@@ -101,7 +101,7 @@ class AVH_FDAS_Admin
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( '3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 		// Add metaboxes
 		add_meta_box('dashboard_right_now', __('Statistics', 'avhfdas'), array(&$this,'doMenuOverview'), 'avhfdas_overview', 'left', 'core');
@@ -458,7 +458,7 @@ class AVH_FDAS_Admin
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
 		echo $this->displayIcon('options-general');
-		echo '<h2>'.__('Options', 'avhfdas').'</h2>';
+		echo '<h2>'.__('3rd Party Options', 'avhfdas').'</h2>';
 		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=avh-fdas-3rd-party" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_options' );
 
