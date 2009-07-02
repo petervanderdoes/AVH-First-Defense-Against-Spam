@@ -28,9 +28,6 @@ class AVH_FDAS_Admin
 		// Admin menu
 		add_action( 'admin_menu', array (&$this, 'actionAdminMenu' ) );
 
-		// CSS Helper
-		add_action( 'admin_print_styles-settings_page_avhfdas_options', array (&$this, 'actionInjectCSS' ) );
-
 		// Helper JS & jQuery & Prototype
 		$avhfdas_pages = array ('avhfdas_options' );
 		if ( in_array( $_GET['page'], $avhfdas_pages ) ) {
@@ -47,6 +44,16 @@ class AVH_FDAS_Admin
 
 		// Add Filter
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
+
+		/**
+		 * Inject CSS and Javascript on the right pages
+		 *
+		 * Main Action: admin_print_styles-, admin_print-scripts-
+		 * Top level page: toplevel_page_avh-first-defense-against-spam
+		 * Sub menus: avh-f-d-a-s_page_avh-fdas-general
+		 *
+		 */
+		add_action( 'admin_print_styles-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectCSS' ) );
 
 		return;
 	}
@@ -96,6 +103,8 @@ class AVH_FDAS_Admin
 		add_submenu_page( $folder, __( 'General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
+		// Add metaboxes
+		add_meta_box('dashboard_right_now', __('Statistics', 'avhfdas'), array(&$this,'doMenuOverview'), 'avhfdas_overview', 'left', 'core');
 	}
 
 	/**
@@ -104,6 +113,7 @@ class AVH_FDAS_Admin
 	 */
 	function handleMenu ()
 	{
+
 		switch ( $_GET['page'] ) {
 			case 'avh-fdas-general' :
 				$this->doMenuGeneralOptions();
@@ -113,22 +123,54 @@ class AVH_FDAS_Admin
 				break;
 			case 'avh-themed-by-browser' :
 			default :
-				$this->doMenuOverview();
+				$this->avhfdas_overview();
 
 		}
+		echo '<div class="clear">';
 		$this->printAdminFooter();
 	}
 
+	function avhfdas_overview() {
+		echo '<div class="wrap avhfdas-wrap">';
+		echo '<h2>'.__('AVH First Defense Against Spam Overview', 'avhfdas').'</h2>';
+		echo '<div id="dashboard-widgets-wrap" class="avhfdas-overview">';
+		echo '    <div id="dashboard-widgets" class="metabox-holder">';
+		echo '		<div id="post-body">';
+		echo '			<div id="dashboard-widgets-main-content">';
+		echo '				<div class="postbox-container" style="width:49%;">';
+		do_meta_boxes('avhfdas_overview', 'left', '');
+		echo '				</div>';
+//		echo '	    		<div class="postbox-container" sdtyle="width:49%;">';
+//		do_meta_boxes('ngg_overview', 'right', '');
+//		echo'				</div>';
+		echo '			</div>';
+		echo '		</div>';
+		echo '    </div>';
+		echo '</div>';
+		echo '</div>';
+		echo '<script type="text/javascript">';
+		echo '	//<![CDATA[';
+		echo '	jQuery(document).ready( function($) {';
+		echo '		// postboxes setup';
+		echo '		postboxes.add_postbox_toggles(\'avhfdas-overview\');';
+		echo '	});';
+		echo '	//]]>';
+		echo '</script>';
+	}
 	/**
 	 * Overview of settings
 	 *
 	 */
 	function doMenuOverview() {
-		echo '<div class="wrap">';
-		echo '<h2>' . __( 'Overview', 'avfdas' ) . '</h2>';
-		echo '<h3>'.__('Statistics','avhfdas').'</h3>';
-		echo '<p>';
 
+		echo '<p class="sub">';
+		_e('At a Glance', 'avhfdas');
+		echo '</p>';
+
+		echo '<div class="table">';
+		echo '<table>';
+		echo '<tbody>';
+		echo '<tr class="first">';
 
 		$data = $this->core->getData();
 		$spam_count=$data['counters'];
@@ -141,31 +183,35 @@ class AVH_FDAS_Admin
 			}
 			$have_spam_count_data=true;
 			$date=date_i18n('Y - F',mktime(0,0,0,substr($key,4,2),1,substr($key,0,4)));
-			$output .= '<td>'.$date.'</td>';
-			$output .= '<td>'.$value.'</td>';
+			$output .= '<td class="first b">'.$value.'</td>';
+			$output .= '<td class="t">'.sprintf(__('Spam stopped in %s','avhfdas'),$date).'</td>';
+			$output .= '<td class="b"></td>';
+			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
 		}
-		if ($have_spam_count_data) {
-			echo '<table>';
-			echo '<tr><th>'.__('Period','avhfdas').'</th><th>'.__('Spam Stopped','avhfdas').'</th></tr>';
-			echo $output;
-			echo '</table>';
-		} else {
-			_e('No statistics yet','avhfdas');
+		if (!$have_spam_count_data) {
+			$output .= '<td class="first b">'.__('No statistics yet','avhfdas').'</td>';
+			$output .= '<td class="t"></td>';
+			$output .= '<td class="b"></td>';
+			$output .= '<td class="last"></td>';
+			$output .= '</tr>';
 		}
 
-		echo '<h3>' . __('General Options','avhfdas') .'</h3>';
+		echo $output;
+		echo '</tbody></table></div>';
+		echo '<div class="versions">';
 		echo '<p>';
-		echo __('Use Stop Forum Spam','avhfdas').': ';
-		echo ($this->core->options['general']['use_sfs'] ? __('Yes','avhfdas') : __('No','avhfdas'));
-		echo '</p>';
+		if ($this->core->options['general']['use_sfs'] || $this->core->options['general']['use_php']) {
+			echo __('Checking with ','avhfdas');
+			echo ($this->core->options['general']['use_sfs'] ? '<span class="b">'.__('Stop Forum Spam','avhfdas').'</span>' : '');
 
-		echo '<p>';
-		echo __('Use Project Honey Pot','avhfdas').': ';
-		echo ($this->core->options['general']['use_php'] ? __('Yes','avhfdas') : __('No','avhfdas'));
-		echo '<h3>' . __('Stop Forum Spam Settings','avhfdas') .'</h3>';
+			if ($this->core->options['general']['use_php']) {
+				echo ($this->core->options['general']['use_sfs'] ? __(' and ','avhfdas') : ' ');
+				echo '<span class="b">'.__('Project Honey Pot','avhfdas').'</span>';
+			}
+		}
 		echo '</p>';
-
+		echo '</div>';
 	}
 
 	function doMenuGeneralOptions ()
@@ -786,6 +832,7 @@ class AVH_FDAS_Admin
 	function actionInjectCSS ()
 	{
 		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_admin_css( 'css/dashboard' );
 	}
 
 	/**
