@@ -370,6 +370,13 @@ class AVH_FDAS_Admin
 				'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
 			),
 			array (
+				'avhfdas[sfs][emailphp]',
+				'Email Project Honey Pot Info',
+				'checkbox',
+				1,
+				'Always email Project Honey Pot info when Stop Forum Spam email threshold is reached, disregarding the email threshold set for Project Honey Pot. This only works when you select to check with Project Honey Pot as well.'
+			),
+			array (
 				'avhfdas[sfs][whentodie]',
 				'Termination threshold',
 				'text',

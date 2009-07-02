@@ -388,7 +388,7 @@ class AVH_FDAS_Public
 			}
 
 			// Project Honey pot Mail Part
-			if ( $options['general']['use_php'] && $options['php']['whentoemail'] >= 0 &&  $info['php']['type'] >= $options['php']['whentoemailtype'] &&  $info['php']['score'] >= $options['php']['whentoemail']) {
+			if ( $options['general']['use_php'] && (($options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && $info['php']['score'] >= $options['php']['whentoemail'])) || $options['sfs']['emailphp'] ) {
 				if ( $info['php'] != null ) {
 					$message .= __('Checked at Project Honey Pot','avhfdas') ."\r\n";
 					$message .= '	'.__( 'Project Honey Pot has the following information', 'avhfdas' ) . "\r\n";
@@ -422,18 +422,19 @@ class AVH_FDAS_Public
 
 					$message .= '	'.sprintf( __( 'Type:				%s', 'avhfdas' ), $type ) . "\r\n";
 					if ( 0 == $info['php']['type'] ) {
-						$message .= '	'.sprintf( __( 'Search Engine:	%s', 'avhfdas' ), $this->core->searchengines[$info['score']] ) . "\r\n";
+						$message .= '	'.sprintf( __( 'Search Engine:	%s', 'avhfdas' ), $info['php']['engine'] ) . "\r\n";
 					} else {
 						$message .= '	'.sprintf( __( 'Score:				%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n";
 					}
 					$message .= '	'.sprintf( __( 'Call took:			%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n";
 
 					if ( $info['php']['score'] >= $options['php']['whentodie'] ) {
-						$message .= '	'.sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n\r\n";
+						$message .= '	'.sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n";
 					}
 				} else {
-					$message .= '	'.__( 'Project Honey Pot has no information', 'avhfdas' ) . "\r\n\r\n";
+					$message .= '	'.__( 'Project Honey Pot has no information', 'avhfdas' ) . "\r\n";
 				}
+				$message .= "\r\n";
 			}
 
 			// General End
