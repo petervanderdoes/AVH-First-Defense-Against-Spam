@@ -442,6 +442,9 @@ class AVH_FDAS_Public
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
 				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
+			$message .= '--'."\r\n";
+			$message .= sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'),$this->version)."\r\n";
+			$message .= 'http://blog.avirtualhome.com/wordpress-plugins'."\r\n";
 			wp_mail( $to, $subject, $message );
 		}
 
