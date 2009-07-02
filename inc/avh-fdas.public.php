@@ -432,7 +432,7 @@ class AVH_FDAS_Public
 						$message .= '	'.sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n\r\n";
 					}
 				} else {
-					$message .= '	'.__( 'Project Honey Pot has no information:', 'avhfdas' ) . "\r\n\r\n";
+					$message .= '	'.__( 'Project Honey Pot has no information', 'avhfdas' ) . "\r\n\r\n";
 				}
 			}
 
