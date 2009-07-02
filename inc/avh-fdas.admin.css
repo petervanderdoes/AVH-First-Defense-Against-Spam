@@ -4,17 +4,15 @@
 * @media print{.ui-tabs-nav {display:none;}}
 */
 
-#dashboard_server_settings ul.settings span {
-	padding-left : 10px;
-	color:#2583AD;
-	font-weight:bold;
-}
-
 .avhfdas-overview .postbox .handlediv {
 	float:right;
 	height:24px;
 	width:24px;
 }
+
+.avhfdas-options th {
+	width:22%;
+} 
 
 .avh_wrap fieldset.options legend {
 	display: none;

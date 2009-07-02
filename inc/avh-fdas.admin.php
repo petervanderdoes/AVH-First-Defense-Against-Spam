@@ -219,7 +219,7 @@ class AVH_FDAS_Admin
 		$option_data = array (
 			array (
 			'avhfdas[general][diewithmessage]',
-			'Show message:',
+			'Show message',
 			'checkbox',
 			1,
 			'Show a message when the connection has been terminated.' ),
@@ -231,7 +231,7 @@ class AVH_FDAS_Admin
 			'Receive an email when a comment is posted and the security check failed.' ),
 			array (
 			'avhfdas[general][useblacklist]',
-			'Use internal blacklist:',
+			'Use internal blacklist',
 			'checkbox',
 			1,
 			'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.' ),
@@ -244,14 +244,14 @@ class AVH_FDAS_Admin
 			 15 ),
 			array (
 			'avhfdas[general][usewhitelist]',
-			'Use internal whitelist:',
+			'Use internal whitelist',
 			'checkbox',
 			 1,
 			'Check the internal whitelist first. If the IP is found don\t do any further checking.',
 			),
 			array (
 			'avhfdas[lists][whitelist]',
-			'Whitelist IP\'s:',
+			'Whitelist IP\'s',
 			'textarea',
 			15,
 			'Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24',
@@ -359,28 +359,28 @@ class AVH_FDAS_Admin
 		$options_sfs = array (
 			array (
 				'avhfdas[general][use_sfs]',
-				'Check with Stop Forum Spam:',
+				'Check with Stop Forum Spam',
 				'checkbox',
 				1,
 				'If checked, the visitor\'s IP will be checked with Stop Forum Spam'
 			),
 			array (
 				'avhfdas[sfs][whentoemail]',
-				'Email threshold:',
+				'Email threshold',
 				'text',
 				3,
 				'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
 			),
 			array (
 				'avhfdas[sfs][whentodie]',
-				'Termination threshold:',
+				'Termination threshold',
 				'text',
 				3,
 				'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>'
 			),
 			array (
 				'avhfdas[sfs][sfsapikey]',
-				'API Key:',
+				'API Key',
 				'text',
 				15,
 				'You need a Stop Forum Spam API key to report spam.'
@@ -743,7 +743,7 @@ class AVH_FDAS_Admin
 		// Generate output
 		$output = '';
 		$checkbox = '|';
-			$output .= "\n" . '<fieldset class="options"><table class="form-table">' . "\n";
+			$output .= "\n" . '<fieldset class="options"><table class="form-table avhfdas-options">' . "\n";
 			foreach ( $option_data as $option ) {
 				$section = substr($option[0],strpos($option[0],'[')+1);
 				$section = substr($section,0,strpos($section,']['));
@@ -787,10 +787,11 @@ class AVH_FDAS_Admin
 				// Additional Information
 				$extra = '';
 				if ( $explanation ) {
-					$extra = '<div class="avhfdas_explain">' . __( $explanation ) . '</div>' . "\n";
+					//$extra = '<div class="avhfdas_explain">' . __( $explanation ) . '</div>' . "\n";
+					$extra = '<br /><span class="description">' . __( $explanation ) . '</span>' . "\n";
 				}
 				// Output
-				$output .= '<tr style="vertical-align: top;"><th scope="row"><label for="' . $option[0] . '">' . __( $option[1] ) . '</label></th><td>' . $input_type . '	' . $extra . '</td></tr>' . "\n";
+				$output .= '<tr style="vertical-align: top;"><th align="left" scope="row"><label for="' . $option[0] . '">' . __( $option[1] ) . '</label></th><td>' . $input_type . '	' . $extra . '</td></tr>' . "\n";
 			}
 			$output .= '</table>' . "\n";
 			if ( '|' !== $checkbox )
