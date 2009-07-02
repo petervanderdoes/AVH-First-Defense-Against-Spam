@@ -209,7 +209,7 @@ class AVH_FDAS_Public
 			$spaminfo = $this->core->handleRESTcall( $this->core->getRestIPLookup( $ip ) );
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
-			$spaminfo['time'] = $time;
+			$spaminfo['sfs']['time'] = $time;
 			if ( isset( $spaminfo['Error'] ) ) {
 				$error = $this->core->getHttpError( $spaminfo['Error'] );
 				$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
@@ -239,7 +239,7 @@ class AVH_FDAS_Public
 		if ( $lookup != gethostbyname( $lookup ) ) {
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
-			$spaminfo['time'] = $time;
+			$spaminfo['sfs']['time'] = $time;
 			$info = explode( '.', gethostbyname( $lookup ) );
 			$spaminfo['days'] = $info[1];
 			$spaminfo['type'] = $info[3];
