@@ -145,13 +145,13 @@ class AVH_FDAS_Admin
 		echo '    </div>';
 		echo '</div>';
 		echo '</div>';
-		echo '<script type="text/javascript">';
-		echo '	//<![CDATA[';
-		echo '	jQuery(document).ready( function($) {';
-		echo '		// postboxes setup';
-		echo '		postboxes.add_postbox_toggles(\'avhfdas-overview\');';
-		echo '	});';
-		echo '	//]]>';
+		echo '<script type="text/javascript">'."\n";
+		echo '	//<![CDATA['."\n";
+		echo '	jQuery(document).ready( function($) {'."\n";
+		echo '		// postboxes setup'."\n";
+		echo '		postboxes.add_postbox_toggles(\'avhfdas-overview\');'."\n";
+		echo '	});'."\n";
+		echo '	//]]>'."\n";
 		echo '</script>';
 	}
 	/**
