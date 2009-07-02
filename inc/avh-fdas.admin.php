@@ -294,7 +294,7 @@ class AVH_FDAS_Admin
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
 		echo '<h2>'.__('General Options', 'avhfdas').'</h2>';
-		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" accept-charset="utf-8" >';
+		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" action="admin.php?page=avh-fdas-general" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_generaloptions' );
 
 		echo '<div id="printOptions">';
@@ -405,7 +405,7 @@ class AVH_FDAS_Admin
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
 		echo '<h2>'.__('Options', 'avhfdas').'</h2>';
-		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" accept-charset="utf-8" >';
+		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=avh-fdas-3rd-party" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_options' );
 
 		echo '<div id="printOptions">';
@@ -415,7 +415,7 @@ class AVH_FDAS_Admin
 		echo $this->printOptions( $options_php, $actual_options );
 		echo '</div>';
 
-		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
+		echo '<p class="submit"><input class="button-primary" type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
 		echo '</form>';
 	}
 	/**
