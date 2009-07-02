@@ -443,9 +443,9 @@ class AVH_FDAS_Public
 			// Update the counter
 			$period = date( 'Ym' );
 			if ( array_key_exists( $period, $data['counters'] ) ) {
-				$data['counters'][$period] ++;
+				$data['counters'][$period] += 1;
 			} else {
-				$data['counter'][$period] = 1;
+				$data['counters'][$period] = 1;
 			}
 			$this->core->saveData( $data );
 			if ( 1 == $options['general']['diewithmessage'] ) {
