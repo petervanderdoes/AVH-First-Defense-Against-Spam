@@ -130,19 +130,21 @@ class AVH_FDAS_Admin
 		$this->printAdminFooter();
 	}
 
-	function avhfdas_overview() {
+	function avhfdas_overview ()
+	{
 		echo '<div class="wrap avhfdas-wrap">';
-		echo '<h2>'.__('AVH First Defense Against Spam Overview', 'avhfdas').'</h2>';
+		echo $this->displayIcon( 'index' );
+		echo '<h2>' . __( 'AVH First Defense Against Spam Overview', 'avhfdas' ) . '</h2>';
 		echo '<div id="dashboard-widgets-wrap" class="avhfdas-overview">';
 		echo '    <div id="dashboard-widgets" class="metabox-holder">';
 		echo '		<div id="post-body">';
 		echo '			<div id="dashboard-widgets-main-content">';
 		echo '				<div class="postbox-container" style="width:49%;">';
-		do_meta_boxes('avhfdas_overview', 'left', '');
+		do_meta_boxes( 'avhfdas_overview', 'left', '' );
 		echo '				</div>';
-//		echo '	    		<div class="postbox-container" sdtyle="width:49%;">';
-//		do_meta_boxes('ngg_overview', 'right', '');
-//		echo'				</div>';
+		//		echo '	    		<div class="postbox-container" sdtyle="width:49%;">';
+		//		do_meta_boxes('ngg_overview', 'right', '');
+		//		echo'				</div>';
 		echo '			</div>';
 		echo '		</div>';
 		echo '    </div>';
@@ -343,6 +345,7 @@ class AVH_FDAS_Admin
 
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
+		echo $this->displayIcon('options-general');
 		echo '<h2>'.__('General Options', 'avhfdas').'</h2>';
 		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" action="admin.php?page=avh-fdas-general" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_generaloptions' );
@@ -454,6 +457,7 @@ class AVH_FDAS_Admin
 
 		$actual_options=array_merge($this->core->getOptions(),$this->core->getData());
 		echo '<div class="wrap">';
+		echo $this->displayIcon('options-general');
 		echo '<h2>'.__('Options', 'avhfdas').'</h2>';
 		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=avh-fdas-3rd-party" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_options' );
@@ -721,6 +725,10 @@ class AVH_FDAS_Admin
 		}
 	}
 
+	function displayIcon($icon)
+	{
+		return 	('<div class="icon32" id="icon-'.$icon.'"><br/></div>');
+	}
 	/**
 	 * Print link to CSS
 	 *
