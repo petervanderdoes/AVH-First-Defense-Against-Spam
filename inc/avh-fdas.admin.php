@@ -751,7 +751,7 @@ class AVH_FDAS_Admin
 		// Generate output
 		$output = '';
 		$checkbox = '|';
-			$output .= "\n" . '<fieldset class="options"><table class="form-table avhfdas-options">' . "\n";
+			$output .= "\n" . '<table class="form-table avhfdas-options">' . "\n";
 			foreach ( $option_data as $option ) {
 				$section = substr($option[0],strpos($option[0],'[')+1);
 				$section = substr($section,0,strpos($section,']['));
@@ -805,7 +805,7 @@ class AVH_FDAS_Admin
 			if ( '|' !== $checkbox )
 				$checkbox = ltrim( $checkbox, '|' );
 			$output .= '<input	type="hidden" name="avh_checkboxes" value="' . rtrim( $checkbox, '|' ) . '" />';
-			$output .= '</fieldset>' . "\n";
+			$output .= "\n";
 		return $output;
 	}
 
