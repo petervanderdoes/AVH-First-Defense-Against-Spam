@@ -283,6 +283,10 @@ class AVH_FDAS_Admin
 					$this->status = 'error';
 					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
 					break;
+				case AVHFDAS_ERROR_EXISTS_IN_BLACKLIST :
+					$this->status = 'error';
+					$this->message = sprintf( __( 'IP [%s] already exists in the blacklist.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					break;
 				default :
 					$this->status = 'error';
 					$this->message = 'Unknown message request';
@@ -551,10 +555,12 @@ class AVH_FDAS_Admin
 			if ( ! (in_array( $ip, $b )) ) {
 				array_push( $b, $ip );
 				$this->setBlacklistOption( $b );
+				wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
+			} else {
+				wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ERROR_EXISTS_IN_BLACKLIST . '&i=' . $ip ) );
 			}
-			wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
 		} else {
-			wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $ip ) );
+			wp_redirect( admin_url( 'admin.php?page=avh-fdas-general&m=' . AVHFDAS_ERROR_INVALID_REQUEST ) );
 		}
 	}
 
