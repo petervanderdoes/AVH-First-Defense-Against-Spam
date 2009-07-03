@@ -443,7 +443,7 @@ class AVH_FDAS_Public
 				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
 			$message .= "\r\n".'--'."\r\n";
-			$message .= sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'),$this->version)."\r\n";
+			$message .= sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'),$this->core->version)."\r\n";
 			$message .= 'http://blog.avirtualhome.com/wordpress-plugins'."\r\n";
 			wp_mail( $to, $subject, $message );
 		}
