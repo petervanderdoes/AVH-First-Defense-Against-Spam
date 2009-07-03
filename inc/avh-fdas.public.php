@@ -373,7 +373,7 @@ class AVH_FDAS_Public
 			if ( $options['general']['use_sfs'] && $sfs_email ) {
 				if ('yes' == $info['sfs']['appears']) {
 					$message .= __('Checked at Stop Forum Spam','avhfdas') ."\r\n";
-					$message .= '	'.__( 'Information:', 'avhfdas' ) . "\r\n";
+					$message .= '	'.__( 'Information', 'avhfdas' ) . "\r\n";
 					$message .= '	'.sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] ) . "\r\n";
 					$message .= '	'.sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] ) . "\r\n";
 					$message .= '	'.sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['sfs']['time'] ) . "\r\n";
@@ -391,7 +391,7 @@ class AVH_FDAS_Public
 			if ( $options['general']['use_php'] && ($php_email || $options['sfs']['emailphp']) ) {
 				if ( $info['php'] != null ) {
 					$message .= __('Checked at Project Honey Pot','avhfdas') ."\r\n";
-					$message .= '	'.__( 'Project Honey Pot has the following information', 'avhfdas' ) . "\r\n";
+					$message .= '	'.__( 'Information', 'avhfdas' ) . "\r\n";
 					$message .= '	'.sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) . "\r\n";
 					switch ( $info['php']['type'] ) {
 						case "0" :
@@ -432,7 +432,7 @@ class AVH_FDAS_Public
 						$message .= '	'.sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n";
 					}
 				} else {
-					$message .= '	'.__( 'Project Honey Pot has no information', 'avhfdas' ) . "\r\n";
+					$message .= __( 'Project Honey Pot has no information', 'avhfdas' ) . "\r\n";
 				}
 				$message .= "\r\n";
 			}
