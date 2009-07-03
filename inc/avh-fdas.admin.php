@@ -406,7 +406,7 @@ class AVH_FDAS_Admin
 				'dropdown',
 				'0/1/2/3/4/5/6/7',
 				'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer',
-				'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
+				'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />Both the type threshold and the score threshold have to be reached in order to receive an email.'
 			),
 			array (
 				'avhfdas[php][whentoemail]',
@@ -417,15 +417,15 @@ class AVH_FDAS_Admin
 			),
 			array (
 				'avhfdas[php][whentdietype]',
-				'Email type threshold:',
+				'Termination type threshold:',
 				'dropdown',
-				'0/1/2/3/4/5/6/7',
-				'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer',
-				'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
+				'-1/0/1/2/3/4/5/6/7',
+				'Never/Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer',
+				'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<br />Both the type threshold and the score threshold have to be reached in order to termnate the connection. '
 			),
 			array (
 				'avhfdas[php][whentodie]',
-				'Termination threshold:',
+				'Termination score threshold:',
 				'text',
 				3,
 				'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>'
