@@ -99,7 +99,7 @@ class AVH_FDAS_Admin
 		add_submenu_page( $folder, __( '3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 		// Add metaboxes
-		add_meta_box('dashboard_right_now', __('Statistics', 'avhfdas'), array(&$this,'doMenuOverview'), 'avhfdas_overview', 'left', 'core');
+		add_meta_box('dashboard_right_now', __('Statistics', 'avhfdas'), array(&$this,'metaboxMenuOverview'), 'avhfdas-menu-overview', 'left', 'core');
 	}
 
 	/**
@@ -118,14 +118,14 @@ class AVH_FDAS_Admin
 				break;
 			case 'avh-themed-by-browser' :
 			default :
-				$this->avhfdas_overview();
-
+				$this->doMenuOverview();
+				break;
 		}
 		echo '<div class="clear">';
 		$this->printAdminFooter();
 	}
 
-	function avhfdas_overview ()
+	function doMenuOverview ()
 	{
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->displayIcon( 'index' );
@@ -135,7 +135,7 @@ class AVH_FDAS_Admin
 		echo '		<div id="post-body">';
 		echo '			<div id="dashboard-widgets-main-content">';
 		echo '				<div class="postbox-container" style="width:49%;">';
-		do_meta_boxes( 'avhfdas_overview', 'left', '' );
+		do_meta_boxes( 'avhfdas-menu-overview', 'left', '' );
 		echo '				</div>';
 		//		echo '	    		<div class="postbox-container" sdtyle="width:49%;">';
 		//		do_meta_boxes('ngg_overview', 'right', '');
@@ -158,7 +158,7 @@ class AVH_FDAS_Admin
 	 * Overview of settings
 	 *
 	 */
-	function doMenuOverview() {
+	function metaboxMenuOverview() {
 
 		echo '<p class="sub">';
 		_e('At a Glance', 'avhfdas');
