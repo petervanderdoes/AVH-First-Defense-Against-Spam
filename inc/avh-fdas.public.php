@@ -84,11 +84,10 @@ class AVH_FDAS_Public
 				$nonce = wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'] );
 				if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
 					if ( 1 == $this->core->options['general']['emailsecuritycheck'] ) {
-						$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 						$to = get_option( 'admin_email' );
 						$ip = $this->core->getUserIP();
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'avhfdas.noemail@gmail.com' : $commentdata['comment_author_email'];
-						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), $site_name );
+						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), get_option( 'blogname' ) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
 							$message = __( 'Reason:	The nonce check failed.', 'avhfdas' ) . "\r\n";
 						} else {
@@ -218,9 +217,8 @@ class AVH_FDAS_Public
 			$spaminfo['time'] = $time;
 			if ( isset( $spaminfo['Error'] ) ) {
 				$error = $this->core->getHttpError( $spaminfo['Error'] );
-				$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 				$to = get_option( 'admin_email' );
-				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), $site_name );
+				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), get_option( 'blogname' ) );
 				$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
 				$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
 				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
@@ -367,9 +365,8 @@ class AVH_FDAS_Public
 		if ( $sfs_email || $php_email ) {
 
 			// General part of the email
-			$site_name = str_replace( '"', "'", get_option( 'blogname' ) );
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), $site_name, $ip );
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), get_option( 'blogname' ), $ip );
 			$message = '';
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
