@@ -387,6 +387,10 @@ class AVH_FDAS_Public
 				$message .= '	'.sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 			}
 
+			if ('no' == $info['sfs']['appears']) {
+				$message .= __( 'Stop Forum Spam has no information', 'avhfdas' ) . "\r\n\r\n";
+			}
+
 			// Project Honey pot Mail Part
 			if ( $options['general']['use_php'] && ($php_email || $options['sfs']['emailphp']) ) {
 				if ( $info['php'] != null ) {
