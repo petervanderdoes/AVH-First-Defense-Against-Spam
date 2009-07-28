@@ -1,5 +1,4 @@
 <?php
-require_once (ABSPATH . 'wp-includes/class-snoopy.php');
 class AVH_FDAS_Admin
 {
 	/**
@@ -590,16 +589,10 @@ class AVH_FDAS_Admin
 	 */
 	function handleReportSpammer ( $username, $email, $ip_addr )
 	{
-		$snoopy_formvar['username'] = $username;
-		$snoopy_formvar['email'] = empty( $email ) ? 'no@email.address' : $email;
-		$snoopy_formvar['ip_addr'] = $ip_addr;
-		$snoopy_formvar['api_key'] = $this->core->options['sfs']['sfsapikey'];
-		$snoopy = new Snoopy( );
-		$snoopy->agent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko/2009032608 Firefox/3.0.8 GTB5";
-		$snoopy->submit( 'http://www.stopforumspam.com/add', $snoopy_formvar );
-		// @TODO See if we can revert the
-	//$result=$snoopy->results;
-	//<div class="msg info">Data submitted successfully</div>
+		$email=empty( $email ) ? 'no@email.address' : $email;
+		$querystring = $this->core->BuildQuery( array('username'=>$username,'ip_addr'=>$ip_addr,'email'=>$email,'api_key'=>$this->core->options['sfs']['sfsapikey']) );
+		$url =  'http://www.stopforumspam.com/post.php';
+		$response = wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->core->options['sfs']['sfsapikey'] ) ) );
 	}
 
 	/**
