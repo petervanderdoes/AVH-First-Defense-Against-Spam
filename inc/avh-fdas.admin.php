@@ -589,7 +589,7 @@ class AVH_FDAS_Admin
 	 */
 	function handleReportSpammer ( $username, $email, $ip_addr )
 	{
-		$email=empty( $email ) ? 'no@email.address' : $email;
+		$email=empty( $email ) ? 'avhfdas.noemail@gmail.com' : $email;
 		$querystring = $this->core->BuildQuery( array('username'=>$username,'ip_addr'=>$ip_addr,'email'=>$email,'api_key'=>$this->core->options['sfs']['sfsapikey']) );
 		$url =  'http://www.stopforumspam.com/post.php';
 		$response = wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->core->options['sfs']['sfsapikey'] ) ) );

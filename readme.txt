@@ -76,6 +76,7 @@ You will have to sign up on their site, http://www.stopforumspam.com/signup.
 = Version 2.0 =
 * Added option to check with honeypotproject.org
 * Bugfix: Check Trackbacks/Pingbacks for spammers as well.
+* Bugfix: Reporting a spammer without a email address failed.
 
 = Version 1.3 =
 * Updateded determination of users ip. Now also detects right IP if the server is running Apache with nginx proxy.
