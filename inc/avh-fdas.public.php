@@ -112,7 +112,12 @@ class AVH_FDAS_Public
 							$message .= sprintf( __( 'Report spammer: %s' ), $report_url ) . "\r\n";
 						}
 						$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
-						wp_mail( $to, $subject, $message );
+
+						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
+						$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
+
+						$message .= $this->mail( $to, $subject, $message );
+
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam
 					if ( ! empty( $this->core->options['sfs']['sfsapikey'] ) ) {
@@ -221,7 +226,7 @@ class AVH_FDAS_Public
 				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
 				$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
-				wp_mail( $to, $subject, $message );
+				$this->mail( $to, $subject, $message );
 			}
 		}
 		return ($spaminfo);
@@ -230,7 +235,7 @@ class AVH_FDAS_Public
 	function checkProjectHoneyPot ( $ip )
 	{
 		$rev = implode( '.', array_reverse( explode( '.', $ip ) ) );
-		$projecthoneypot_api_key = $this->core->getOptionElement('php','phpapikey');
+		$projecthoneypot_api_key = $this->core->getOptionElement( 'php', 'phpapikey' );
 		//
 		// Check the IP against projecthoneypot.org
 		//
@@ -371,32 +376,32 @@ class AVH_FDAS_Public
 
 			// Stop Forum Spam Mail Part
 			if ( $options['general']['use_sfs'] && $sfs_email ) {
-				if ('yes' == $info['sfs']['appears']) {
-					$message .= __('Checked at Stop Forum Spam','avhfdas') ."\r\n";
-					$message .= '	'.__( 'Information', 'avhfdas' ) . "\r\n";
-					$message .= '	'.sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] ) . "\r\n";
-					$message .= '	'.sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] ) . "\r\n";
-					$message .= '	'.sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['sfs']['time'] ) . "\r\n";
+				if ( 'yes' == $info['sfs']['appears'] ) {
+					$message .= __( 'Checked at Stop Forum Spam', 'avhfdas' ) . "\r\n";
+					$message .= '	' . __( 'Information', 'avhfdas' ) . "\r\n";
+					$message .= '	' . sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] ) . "\r\n";
+					$message .= '	' . sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] ) . "\r\n";
+					$message .= '	' . sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['sfs']['time'] ) . "\r\n";
 
 					if ( $info['sfs']['frequency'] >= $options['sfs']['whentodie'] ) {
-						$message .= '	'.sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] ) . "\r\n\r\n";
+						$message .= '	' . sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] ) . "\r\n\r\n";
 					}
 				} else {
 					$message .= __( 'Stop Forum Spam has no information', 'avhfdas' ) . "\r\n";
 				}
-				$message .= '	'.sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
+				$message .= '	' . sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 			}
 
-			if ('no' == $info['sfs']['appears']) {
+			if ( 'no' == $info['sfs']['appears'] ) {
 				$message .= __( 'Stop Forum Spam has no information', 'avhfdas' ) . "\r\n\r\n";
 			}
 
 			// Project Honey pot Mail Part
 			if ( $options['general']['use_php'] && ($php_email || $options['sfs']['emailphp']) ) {
 				if ( $info['php'] != null ) {
-					$message .= __('Checked at Project Honey Pot','avhfdas') ."\r\n";
-					$message .= '	'.__( 'Information', 'avhfdas' ) . "\r\n";
-					$message .= '	'.sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) . "\r\n";
+					$message .= __( 'Checked at Project Honey Pot', 'avhfdas' ) . "\r\n";
+					$message .= '	' . __( 'Information', 'avhfdas' ) . "\r\n";
+					$message .= '	' . sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) . "\r\n";
 					switch ( $info['php']['type'] ) {
 						case "0" :
 							$type = "Search Engine";
@@ -424,16 +429,16 @@ class AVH_FDAS_Public
 							break;
 					}
 
-					$message .= '	'.sprintf( __( 'Type:				%s', 'avhfdas' ), $type ) . "\r\n";
+					$message .= '	' . sprintf( __( 'Type:				%s', 'avhfdas' ), $type ) . "\r\n";
 					if ( 0 == $info['php']['type'] ) {
-						$message .= '	'.sprintf( __( 'Search Engine:	%s', 'avhfdas' ), $info['php']['engine'] ) . "\r\n";
+						$message .= '	' . sprintf( __( 'Search Engine:	%s', 'avhfdas' ), $info['php']['engine'] ) . "\r\n";
 					} else {
-						$message .= '	'.sprintf( __( 'Score:				%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n";
+						$message .= '	' . sprintf( __( 'Score:				%s', 'avhfdas' ), $info['php']['score'] ) . "\r\n";
 					}
-					$message .= '	'.sprintf( __( 'Call took:			%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n";
+					$message .= '	' . sprintf( __( 'Call took:			%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n";
 
 					if ( $info['php']['score'] >= $options['php']['whentodie'] ) {
-						$message .= '	'.sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n";
+						$message .= '	' . sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n";
 					}
 				} else {
 					$message .= __( 'Project Honey Pot has no information', 'avhfdas' ) . "\r\n";
@@ -446,16 +451,13 @@ class AVH_FDAS_Public
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
 				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
-			$message .= "\r\n".'--'."\r\n";
-			$message .= sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'),$this->core->version)."\r\n";
-			$message .= 'http://blog.avirtualhome.com/wordpress-plugins'."\r\n";
-			wp_mail( $to, $subject, $message );
+			$this->mail( $to, $subject, $message );
 		}
 
 		// Check if we have to terminate the connection.
 		// This should be the very last option.
 		$sfs_die = $options['general']['use_sfs'] && $info['sfs']['frequency'] >= $options['sfs']['whentodie'];
-		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'] ;
+		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'];
 		$blacklist_die = 'Blacklisted' == $time;
 
 		if ( $sfs_die || $php_die || $blacklist_die ) {
@@ -479,6 +481,20 @@ class AVH_FDAS_Public
 				die();
 			}
 		}
+	}
+
+	/**
+	 * Sends the email
+	 *
+	 */
+	function mail ( $to, $subject, $message )
+	{
+		$message .= "\r\n" . '--' . "\r\n";
+		$message .= sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->core->version ) . "\r\n";
+		$message .= 'http://blog.avirtualhome.com/wordpress-plugins' . "\r\n";
+
+		wp_mail( $to, $subject, $message );
+		return;
 	}
 }
 ?>
