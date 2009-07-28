@@ -117,7 +117,7 @@ class AVH_FDAS_Public
 					// Only keep track if we have the ability to report add Stop Forum Spam
 					if ( ! empty( $this->core->options['sfs']['sfsapikey'] ) ) {
 						// Prevent a spam attack to overflow the database.
-						if ( ! ($this->core->checkDB_Nonces( $q['_avhnonce'] )) ) {
+						if ( ! ($this->checkDB_Nonces( $q['_avhnonce'] )) ) {
 							$option = get_option( $this->core->db_options_nonces );
 							$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
 							update_option( $this->core->db_options_nonces, $option );
