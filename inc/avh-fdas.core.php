@@ -217,7 +217,7 @@ class AVH_FDAS_Core
 		$options = $this->getOptions();
 		$data = $this->getData();
 
-		if ( version_compare( $options['general']['version'], '2.0', '<' ) ) {
+		if ( version_compare( $options['general']['version'], '2.0-rc1', '<' ) ) {
 			list ( $options, $data ) = $this->doUpgrade20( $options, $data );
 		}
 		$options['general']['version'] = $this->version;
