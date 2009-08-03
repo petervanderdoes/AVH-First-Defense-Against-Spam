@@ -86,7 +86,7 @@ class AVH_FDAS_Public
 					if ( 1 == $this->core->options['general']['emailsecuritycheck'] ) {
 						$to = get_option( 'admin_email' );
 						$ip = $this->core->getUserIP();
-						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'avhfdas.noemail@gmail.com' : $commentdata['comment_author_email'];
+						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
 						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), get_option( 'blogname' ) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
 							$message = __( 'Reason:	The nonce check failed.', 'avhfdas' ) . "\r\n";
