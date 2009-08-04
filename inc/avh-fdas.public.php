@@ -267,9 +267,9 @@ class AVH_FDAS_Public
 	{
 		$found = $this->checkList( $ip, $this->core->data['lists']['blacklist'] );
 		if ( $found ) {
-			$spaminfo['appears'] = 'yes';
-			$time = 'Blacklisted';
-			$this->handleSpammer( $ip, $spaminfo, $time );
+			$spaminfo['blacklist']['appears'] = 'yes';
+			$spaminfo['blacklist']['time'] = 'Blacklisted';
+			$this->handleSpammer( $ip, $spaminfo );
 		}
 	}
 
@@ -354,7 +354,7 @@ class AVH_FDAS_Public
 	 * @param string $time -
 	 *
 	 */
-	function handleSpammer ( $ip, $info, $time )
+	function handleSpammer ( $ip, $info )
 	{
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
@@ -445,7 +445,7 @@ class AVH_FDAS_Public
 			}
 
 			// General End
-			if ( 'Blacklisted' != $time ) {
+			if ( 'Blacklisted' != $info['blacklist']['time'] ) {
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
 				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
@@ -456,7 +456,7 @@ class AVH_FDAS_Public
 		// This should be the very last option.
 		$sfs_die = $options['general']['use_sfs'] && $info['sfs']['frequency'] >= $options['sfs']['whentodie'];
 		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'];
-		$blacklist_die = 'Blacklisted' == $time;
+		$blacklist_die = 'Blacklisted' == $info['blacklist']['time'];
 
 		if ( $sfs_die || $php_die || $blacklist_die ) {
 			// Update the counter
