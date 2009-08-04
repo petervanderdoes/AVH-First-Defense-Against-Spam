@@ -434,8 +434,8 @@ class AVH_FDAS_Public
 					}
 					$message .= '	' . sprintf( __( 'Call took:			%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n";
 
-					if ( $info['php']['score'] >= $options['php']['whentodie'] ) {
-						$message .= '	' . sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'] ) . "\r\n";
+					if ( $info['php']['score'] >= $options['php']['whentodie'] && $info['php']['type'] >= $options['php']['whentodietype']) {
+						$message .= '	' . sprintf( __( 'Threshold score (%s) and type (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'], $type ) . "\r\n";
 					}
 				} else {
 					$message .= __( 'Project Honey Pot has no information', 'avhfdas' ) . "\r\n";

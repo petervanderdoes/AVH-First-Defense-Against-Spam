@@ -415,7 +415,7 @@ class AVH_FDAS_Admin
 				'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
 			),
 			array (
-				'avhfdas[php][whentdietype]',
+				'avhfdas[php][whentodietype]',
 				'Termination type threshold:',
 				'dropdown',
 				'-1/0/1/2/3/4/5/6/7',
