@@ -114,7 +114,8 @@ class AVH_FDAS_Core
 		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
 
 		// Determine installation path & url
-		//$info['home_path'] = get_home_path();
+		// $info['home_path'] = get_home_path();
+		$info['home_path'] = '';
 		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
 		$path = substr( $path, strpos( $path, 'plugins' ) + 8, strlen( $path ) );
 		$info['siteurl'] = get_option( 'siteurl' );
