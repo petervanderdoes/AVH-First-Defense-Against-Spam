@@ -590,7 +590,6 @@ class AVH_FDAS_Admin
 	function handleReportSpammer ( $username, $email, $ip_addr )
 	{
 		$email=empty( $email ) ? 'meseaffibia@gmail.com' : $email;
-		$querystring = $this->core->BuildQuery( array('username'=>$username,'ip_addr'=>$ip_addr,'email'=>$email,'api_key'=>$this->core->options['sfs']['sfsapikey']) );
 		$url =  'http://www.stopforumspam.com/post.php';
 		$response = wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->core->options['sfs']['sfsapikey'] ) ) );
 	}
@@ -828,7 +827,6 @@ class AVH_FDAS_Admin
 				// Additional Information
 				$extra = '';
 				if ( $explanation ) {
-					//$extra = '<div class="avhfdas_explain">' . __( $explanation ) . '</div>' . "\n";
 					$extra = '<br /><span class="description">' . __( $explanation ) . '</span>' . "\n";
 				}
 				// Output
@@ -836,31 +834,6 @@ class AVH_FDAS_Admin
 			}
 			$output .= '</table>' . "\n";
 		return $output;
-	}
-
-	/**
-	 * Get nice title for tabs title option
-	 *
-	 * @param string $id
-	 * @return string
-	 */
-	function getNiceTitleOptions ( $id = '' )
-	{
-		switch ( $id ) {
-			case 'spam' :
-				return __( 'General', 'avhfdas' );
-				break;
-			case 'faq' :
-				return __( 'FAQ', 'avhfdas' );
-				break;
-			case 'about' :
-				return __( 'About', 'avhfdas' );
-				break;
-			case 'tips' :
-				return __( 'Tips and Tricks', 'avhfdas' );
-				break;
-		}
-		return 'Unknown';
 	}
 
 	/**

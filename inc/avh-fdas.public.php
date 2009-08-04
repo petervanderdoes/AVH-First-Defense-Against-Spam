@@ -381,12 +381,12 @@ class AVH_FDAS_Public
 					$message .= '	' . sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['sfs']['time'] ) . "\r\n";
 
 					if ( $info['sfs']['frequency'] >= $options['sfs']['whentodie'] ) {
-						$message .= '	' . sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] ) . "\r\n\r\n";
+						$message .= '	' . sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] ) . "\r\n";
 					}
 				} else {
 					$message .= __( 'Stop Forum Spam has no information', 'avhfdas' ) . "\r\n";
 				}
-				$message .= '	' . sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
+				$message .= "\r\n	". sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 			}
 
 			if ( 'no' == $info['sfs']['appears'] ) {
