@@ -387,14 +387,21 @@ class AVH_FDAS_Admin
 				'API Key',
 				'text',
 				15,
-				'You need a Stop Forum Spam API key to report spam.'
-			)
+				'You need a Stop Forum Spam API key to report spam.',
+			array (
+				'avhfdas[sfs][error]',
+				'Email error',
+				'checkbox',
+				1,
+				'Receive an email when the call to Stop Forum Fails'
+			),
+				)
 		);
 
 		$options_php = array (
 		array (
 				'avhfdas[general][use_php]',
-				'Check with Honey Pot Project:',
+				'Check with Honey Pot Project',
 				'checkbox',
 				1,
 				'If checked, the visitor\'s IP will be checked with Honey Pot Project'
@@ -409,14 +416,14 @@ class AVH_FDAS_Admin
 			),
 			array (
 				'avhfdas[php][whentoemail]',
-				'Email score threshold:',
+				'Email score threshold',
 				'text',
 				3,
 				'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.'
 			),
 			array (
 				'avhfdas[php][whentodietype]',
-				'Termination type threshold:',
+				'Termination type threshold',
 				'dropdown',
 				'-1/0/1/2/3/4/5/6/7',
 				'Never/Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer',
@@ -424,7 +431,7 @@ class AVH_FDAS_Admin
 			),
 			array (
 				'avhfdas[php][whentodie]',
-				'Termination score threshold:',
+				'Termination score threshold',
 				'text',
 				3,
 				'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>'
