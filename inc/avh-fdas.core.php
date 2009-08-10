@@ -74,7 +74,7 @@ class AVH_FDAS_Core
 	 */
 	function __construct ()
 	{
-		$this->version = "2.0-rc2";
+		$this->version = "2.0";
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
@@ -637,6 +637,12 @@ class AVH_FDAS_Core
 		return ($return_array);
 	}
 
+	/**
+	 * Parameter for Rest Call IP Lookup
+	 *
+	 * @param string $ip
+	 * @return array
+	 */
 	function getRestIPLookup ( $ip )
 	{
 		$iplookup = array ('ip' => $ip );
@@ -666,7 +672,7 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * Save all current data and set the data
+	 * Save all current options and set the options
 	 *
 	 */
 	function saveOptions ( $options )
@@ -676,6 +682,12 @@ class AVH_FDAS_Core
 		$this->setOptions( $options );
 	}
 
+	/**
+	 * Retrieves the plugin options from the WordPress options table and assigns to class variable.
+	 * If the options do not exists, like a new installation, the options are set to the default value.
+	 *
+	 * @return none
+	 */
 	function loadOptions ()
 	{
 		$options = get_option( $this->db_options_core );

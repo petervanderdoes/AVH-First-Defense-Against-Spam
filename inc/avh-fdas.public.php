@@ -201,6 +201,12 @@ class AVH_FDAS_Public
 		}
 	}
 
+	/**
+	 * Check an IP with Stop Forum Spam
+	 *
+	 * @param $ip Visitor's IP
+	 * @return $spaminfo Query result
+	 */
 	function checkStopForumSpam ( $ip )
 	{
 		$options = $this->core->getOptions();
@@ -231,6 +237,12 @@ class AVH_FDAS_Public
 		return ($spaminfo);
 	}
 
+	/**
+	 * Check an IP with Project Honey Pot
+	 *
+	 * @param $ip Visitor's IP
+	 * @return $spaminfo Query result
+	 */
 	function checkProjectHoneyPot ( $ip )
 	{
 		$rev = implode( '.', array_reverse( explode( '.', $ip ) ) );
@@ -265,6 +277,7 @@ class AVH_FDAS_Public
 	 */
 	function checkBlacklist ( $ip )
 	{
+		$spaminfo=array();
 		$found = $this->checkList( $ip, $this->core->data['lists']['blacklist'] );
 		if ( $found ) {
 			$spaminfo['blacklist']['appears'] = 'yes';

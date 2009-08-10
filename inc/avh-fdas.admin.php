@@ -93,9 +93,9 @@ class AVH_FDAS_Admin
 	{
 		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( '3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'AVH First Defense Against Spam Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'AVH First Defense Against General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'AVH First Defense Against 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 		// Add metaboxes
 		add_meta_box('dashboard_right_now', __('Statistics', 'avhfdas'), array(&$this,'metaboxMenuOverview'), 'avhfdas-menu-overview', 'left', 'core');
@@ -124,6 +124,11 @@ class AVH_FDAS_Admin
 		$this->printAdminFooter();
 	}
 
+	/**
+	 * Menu Page Overview
+	 *
+	 * @return none
+	 */
 	function doMenuOverview ()
 	{
 		echo '<div class="wrap avhfdas-wrap">';
@@ -210,6 +215,11 @@ class AVH_FDAS_Admin
 		echo '</div>';
 	}
 
+	/**
+	 * Menu Page general options
+	 *
+	 * @return none
+	 */
 	function doMenuGeneralOptions ()
 	{
 		$option_data = array (
@@ -352,6 +362,11 @@ class AVH_FDAS_Admin
 		echo '</form>';
 	}
 
+	/**
+	 * Menu Page Third Party Options
+	 *
+	 * @return none
+	 */
 	function doMenu3rdPartyOptions(){
 		$options_sfs = array (
 			array (
@@ -750,7 +765,7 @@ class AVH_FDAS_Admin
 	}
 
 	/**
-	 * Print link to CSS
+	 * Insert link to CSS
 	 *
 	 */
 	function actionInjectCSS ()
@@ -766,7 +781,7 @@ class AVH_FDAS_Admin
 
 	}
 	/**
-	 * Print link to JS
+	 * Insert link to JS
 	 *
 	 */
 	function actionInjectJS ()
