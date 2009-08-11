@@ -93,9 +93,9 @@ class AVH_FDAS_Admin
 	{
 		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'AVH First Defense Against Spam Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'AVH First Defense Against General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
-		add_submenu_page( $folder, __( 'AVH First Defense Against 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
+		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 		// Add metaboxes
 		add_meta_box('dashboard_right_now', __('Statistics', 'avhfdas'), array(&$this,'metaboxMenuOverview'), 'avhfdas-menu-overview', 'left', 'core');
