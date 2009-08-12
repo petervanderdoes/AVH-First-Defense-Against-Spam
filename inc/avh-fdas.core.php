@@ -258,7 +258,7 @@ class AVH_FDAS_Core
 		unset( $new_options['spam'] );
 
 		// New counter system
-		unset ($new_data['spam']['counter']);
+		unset( $new_data['spam']['counter'] );
 
 		// Add none existing sections to the options
 		foreach ( $this->default_options as $section => $default_options ) {
@@ -330,45 +330,77 @@ class AVH_FDAS_Core
 	 *
 	 * @return string
 	 */
-	function getUserIP ()
+	function getUserIP ( $single = TRUE )
 	{
+		$ip = array ();
+
 		if ( isset( $_SERVER ) ) {
-			if ( isset( $_SERVER["HTTP_X_REAL_IP"] ) )
-				return $_SERVER["HTTP_X_REAL_IP"];
-			if ( isset( $_SERVER["HTTP_X_FORWARDED_FOR"] ) ) {
-				$long = ip2long( $_SERVER["HTTP_X_FORWARDED_FOR"] );
-				/**
-				 * Private Ip Ranges
-				 * 167772160 - 10.0.0.0
-				 * 184549375 - 10.255.255.255
-				 * -1408237568 - 172.16.0.0
-				 * -1407188993 - 172.31.255.255
-				 * -1062731776 - 192.168.0.0
-				 * -1062666241 - 192.168.255.255
-				 * -1442971648 - 169.254.0.0
-				 * -1442906113 - 169.254.255.255
-				 * 2130706432 - 127.0.0.0
-				 * 2147483647 - 127.255.255.255 (32 bit integer limit!!!)
-				 * */
-				if ( ! (($long >= 167772160 and $long <= 184549375) or ($long >= - 1408237568 and $long <= - 1407188993) or ($long >= - 1062731776 and $long <= - 1062666241) or ($long >= 2130706432 and $long <= 2147483647) or $long == - 1) ) {
-					return $_SERVER["HTTP_X_FORWARDED_FOR"];
+			$ip[] = $_SERVER['REMOTE_ADDR'];
+
+			if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+				$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_CLIENT_IP'] ) );
+			}
+
+			if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+				$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
+			}
+
+			if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) {
+				$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_X_REAL_IP'] ) );
+			}
+		} else {
+			$ip[] = getenv( 'REMOTE_ADDR' );
+			if ( getenv( 'HTTP_CLIENT_IP' ) ) {
+				$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_CLIENT_IP' ) ) );
+			}
+
+			if ( getenv( 'HTTP_X_FORWARDED_FOR' ) ) {
+				$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_X_FORWARDED_FOR' ) ) );
+			}
+
+			if ( getenv( 'HTTP_X_REAL_IP' ) ) {
+				$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_X_REAL_IP' ) ) );
+			}
+		}
+
+		$dec_octet = '(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|[0-9])';
+		$ip4_address = $dec_octet . '.' . $dec_octet . '.' . $dec_octet . '.' . $dec_octet;
+
+		// Remove any non-IP stuff
+		$x = count( $ip );
+		$match = array ();
+		for ( $i = 0; $i < $x; $i ++ ) {
+			if ( preg_match( '/^' . $ip4_address . '$/', $ip[$i], $match ) ) {
+				$ip[$i] = $match[0];
+			} else {
+				$ip[$i] = '';
+			}
+			if ( empty( $ip[$i] ) ) {
+				unset( $ip[$i] );
+			}
+		}
+
+		$ip = array_values( array_unique( $ip ) );
+		if ( ! $ip[0] ) {
+			$ip[0] = '0.0.0.0'; // for some strange reason we don't have a IP
+		}
+		$return = $ip[0];
+		if ( ! $single ) {
+			$return = join( ',', $ip );
+		} else {
+
+			// decide which IP to use, trying to avoid local addresses
+			$ip = array_reverse( $ip );
+			foreach ( $ip as $i ) {
+				if ( preg_match( '/^(127\.|10\.|192\.168\.|172\.((1[6-9])|(2[0-9])|(3[0-1]))\.)/', $i ) ) {
+					continue;
+				} else {
+					$return = $i;
+					break;
 				}
 			}
-			if ( isset( $_SERVER["HTTP_CLIENT_IP"] ) )
-				return $_SERVER["HTTP_CLIENT_IP"];
-			return $_SERVER["REMOTE_ADDR"];
 		}
-		if ( getenv( 'HTTP_X_REAL_IP' ) )
-			return getenv( 'HTTP_X_REAL_IP' );
-		if ( getenv( 'HTTP_X_FORWARDED_FOR' ) ) {
-			$long = ip2long( $_SERVER["HTTP_X_FORWARDED_FOR"] );
-			if ( ! (($long >= 167772160 and $long <= 184549375) or ($long >= - 1408237568 and $long <= - 1407188993) or ($long >= - 1062731776 and $long <= - 1062666241) or ($long >= 2130706432 and $long <= 2147483647) or $long == - 1) ) {
-				return getenv( 'HTTP_X_FORWARDED_FOR' );
-			}
-		}
-		if ( getenv( 'HTTP_CLIENT_IP' ) )
-			return getenv( 'HTTP_CLIENT_IP' );
-		return getenv( 'REMOTE_ADDR' );
+		return $return;
 	}
 
 	/**
@@ -506,7 +538,7 @@ class AVH_FDAS_Core
 				foreach ( $array as $key => $value ) {
 					if ( is_array( $value ) ) {
 						$new_convention = sprintf( $convention, $key ) . '[%s]';
-						$query .= BuildQuery( $value, $new_convention );
+						$query .= $this->BuildQuery( $value, $new_convention );
 					} else {
 						$key = urlencode( $key );
 						$value = urlencode( $value );

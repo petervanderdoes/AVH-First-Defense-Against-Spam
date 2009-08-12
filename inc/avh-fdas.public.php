@@ -222,7 +222,7 @@ class AVH_FDAS_Public
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
 			$spaminfo['time'] = $time;
-			if ( isset( $spaminfo['Error'] ) && $options['sfs']['error']) {
+			if ( isset( $spaminfo['Error'] ) && $options['sfs']['error'] ) {
 				$error = $this->core->getHttpError( $spaminfo['Error'] );
 				$to = get_option( 'admin_email' );
 				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), get_option( 'blogname' ) );
