@@ -422,7 +422,8 @@ class AVH_FDAS_Admin
 				'API Key',
 				'text',
 				15,
-				'You need a Stop Forum Spam API key to report spam.',
+				'You need a Stop Forum Spam API key to report spam.'
+			),
 			array (
 				'avhfdas[sfs][error]',
 				'Email error',
@@ -430,7 +431,6 @@ class AVH_FDAS_Admin
 				1,
 				'Receive an email when the call to Stop Forum Fails'
 			),
-				)
 		);
 
 		$options_php = array (
