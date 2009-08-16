@@ -22,9 +22,9 @@ Spammers are identified by checking if the visitors IP exists in a database serv
 * Separate thresholds can be set for the following features:
 	* Send an email to the board administrator with information supplied by the third party about the spammer.
 	* Block the spammer before content is served.
-* Bypass the checks for the IP at Stop Forum Spam and the local blacklist based on IP in the local whitelist.
+* Bypass the checks for the IP at the third parties and the local blacklist, based on IP in the local whitelist.
 * Ability to add single IP's and/or IP ranges to the blacklist and whitelist.
-* When an IP is blocked a message can be displayed to the visitor with the reason why access was blocked and a link to stopforumspam.com if they want to resolve the issue.
+* When an IP is blocked a message can be displayed to the visitor with the reason why access was blocked.
 * Report a spammer to Stop Forum Spam. A valid API key from Stop Forum Spam is necessary.
 * Add a spammer to the local blacklist by clicking a link in the received email.
 * Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.
@@ -77,7 +77,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 == Changelog ==
 = Version 2.0 =
 * RFC: Optionally check the visitor at Project Honey Pot.
-* RFC: Optionally receive error emails for failed calls to Stop Forum Spam.
+* RFC: Optionally receive error emails for failed calls to Stop Forum Spam. Error mails were always received.
 * The plugin has a separate menu page.
 * Added very simple statistics.
 * Bugfix: Check Trackbacks/Pingbacks for spammers as well.
