@@ -47,7 +47,7 @@ class AVH_FDAS_Admin
 		 *
 		 */
 		add_action( 'admin_print_styles-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectCSS' ) );
-		add_action( 'admin_print_styles-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectJS' ) );
+		add_action( 'admin_print_scripts-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectJS' ) );
 
 		return;
 	}
