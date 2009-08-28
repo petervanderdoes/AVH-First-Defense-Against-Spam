@@ -142,7 +142,6 @@ class AVH_FDAS_Admin
 		echo '				<div class="postbox-container" style="width:49%;">';
 		do_meta_boxes( 'avhfdas-menu-overview', 'left', '' );
 		echo '				</div>';
-		echo '			</div>';
 		echo '				<div class="postbox-container" style="width:49%;">';
 		do_meta_boxes( 'avhfdas-menu-donation', 'left', '' );
 		echo '				</div>';
