@@ -780,7 +780,7 @@ class AVH_FDAS_Admin
 	function comment_footer_die ( $msg )
 	{
 		echo "<div class='wrap'><p>$msg</p></div>";
-		include (ABSPATH . 'wp-admin/admin-footer.php');
+//		include (ABSPATH . 'wp-admin/admin-footer.php');
 		die();
 	}
 }

@@ -76,7 +76,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 
 == Changelog ==
 = Version 2.0.1 =
-* Bugfix: comment_footer_die undefined.
+* Bugfix: The function comment_footer_die was undefined.
 
 = Version 2.0 =
 * RFC: Optionally check the visitor at Project Honey Pot.
