@@ -579,10 +579,10 @@ class AVH_FDAS_Admin
 			$comment_id = absint( $_REQUEST['id'] );
 			check_ajax_referer( 'report-comment_' . $comment_id );
 			if ( ! $comment = get_comment( $comment_id ) ) {
-				comment_footer_die( __( 'Oops, no comment with this ID.' ) . sprintf( ' <a href="%s">' . __( 'Go back' ) . '</a>!', 'edit-comments.php' ) );
+				$this->comment_footer_die( __( 'Oops, no comment with this ID.' ) . sprintf( ' <a href="%s">' . __( 'Go back' ) . '</a>!', 'edit-comments.php' ) );
 			}
 			if ( ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
-				comment_footer_die( __( 'You are not allowed to edit comments on this post.' ) );
+				$this->comment_footer_die( __( 'You are not allowed to edit comments on this post.' ) );
 			}
 			$this->handleReportSpammer( $comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP );
 			// Delete the comment
@@ -892,5 +892,16 @@ class AVH_FDAS_Admin
 		}
 		return $return;
 	}
+
+	/**
+ * Display error message at bottom of comments.
+ *
+ * @param string $msg Error Message. Assumed to contain HTML and be sanitized.
+ */
+function comment_footer_die( $msg ) {
+	echo "<div class='wrap'><p>$msg</p></div>";
+	include('admin-footer.php');
+	die;
+}
 }
 ?>

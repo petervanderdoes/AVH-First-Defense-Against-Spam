@@ -75,6 +75,9 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 3. The option Report & Delete
 
 == Changelog ==
+= Version 2.0.1 =
+* Bugfix: comment_footer_die undefined.
+
 = Version 2.0 =
 * RFC: Optionally check the visitor at Project Honey Pot.
 * RFC: Optionally receive error emails for failed calls to Stop Forum Spam. Error mails were always received.
