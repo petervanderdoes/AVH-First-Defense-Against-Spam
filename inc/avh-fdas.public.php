@@ -15,8 +15,10 @@ class AVH_FDAS_Public
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
 		add_action( 'comment_form', array (&$this, 'actionAddNonceFieldToComment' ) );
 		add_filter( 'preprocess_comment', array (&$this, 'filterCheckNonceFieldToComment' ), 1 );
-		// Private action for Cron
+
+		// Private actions for Cron
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
+		add_action( 'avhfdas_clean_ipcache', array (&$this, 'actionHandleCronCleanIPCache' ) );
 	}
 
 	/**
@@ -65,6 +67,13 @@ class AVH_FDAS_Public
 			}
 			update_option( $this->core->db_options_nonces, $all );
 		}
+	}
+
+	function actionHandleCronCleanIPCache ()
+	{
+		global $wpdb;
+
+		$db_ipcache = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 	}
 
 	/**
@@ -277,7 +286,7 @@ class AVH_FDAS_Public
 	 */
 	function checkBlacklist ( $ip )
 	{
-		$spaminfo=array();
+		$spaminfo = array ();
 		$found = $this->checkList( $ip, $this->core->data['lists']['blacklist'] );
 		if ( $found ) {
 			$spaminfo['blacklist']['appears'] = 'yes';
@@ -400,7 +409,7 @@ class AVH_FDAS_Public
 				} else {
 					$message .= __( 'Stop Forum Spam has no information', 'avhfdas' ) . "\r\n";
 				}
-				$message .= "\r\n	". sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
+				$message .= "\r\n	" . sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 			}
 
 			if ( 'no' == $info['sfs']['appears'] ) {
@@ -448,7 +457,7 @@ class AVH_FDAS_Public
 					}
 					$message .= '	' . sprintf( __( 'Call took:			%s', 'avhafdas' ), $info['php']['time'] ) . "\r\n";
 
-					if ( $info['php']['score'] >= $options['php']['whentodie'] && $info['php']['type'] >= $options['php']['whentodietype']) {
+					if ( $info['php']['score'] >= $options['php']['whentodie'] && $info['php']['type'] >= $options['php']['whentodietype'] ) {
 						$message .= '	' . sprintf( __( 'Threshold score (%s) and type (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'], $type ) . "\r\n";
 					}
 				} else {

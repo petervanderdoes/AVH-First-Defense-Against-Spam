@@ -578,19 +578,56 @@ class AVH_FDAS_Admin
 	 */
 	function installPlugin ()
 	{
+		global $wpdb;
+
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
 		// Add Cron Job, the action is added in the Public class.
 		if ( ! wp_next_scheduled( 'avhfdas_clean_nonce' ) ) {
 			wp_schedule_event( time(), 'daily', 'avhfdas_clean_nonce' );
 		}
 
+		// Add Cron Job, the action is added in the Public class.
+		if ( ! wp_next_scheduled( 'avhfdas_clean_ipcache' ) ) {
+			wp_schedule_event( time(), 'daily', 'avhfdas_clean_ipcache' );
+		}
+		// Load up variables
 		$this->core->loadOptions(); // Options will be created if not in DB
 		$this->core->loadData(); // Data will be created if not in DB
 
 
+		// Setup nonces db in options
 		if ( ! (get_option( $this->core->db_options_nonces )) ) {
 			update_option( $this->core->db_options_nonces, $this->core->default_nonces );
 			wp_cache_flush(); // Delete cache
 		}
+
+		// Setup the DB Tables
+		$charset_collate = '';
+
+		if ( version_compare( mysql_get_server_info(), '4.1.0', '>=' ) ) {
+			if ( ! empty( $wpdb->charset ) )
+				$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+			if ( ! empty( $wpdb->collate ) )
+				$charset_collate .= " COLLATE $wpdb->collate";
+		}
+
+		$ipcache = $wpdb->prefix . 'avhfdas_ipcache';
+
+		if ( $wpdb->get_var( "show tables like '$ipcache'" ) != $ipcache ) {
+
+			$sql = "CREATE TABLE " . $ipcache . " (
+				ip INT UNSIGNED NOT NULL ,
+				date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				spam BOOLEAN NOT NULL,
+				PRIMARY KEY ip (ip),
+				KEY date (date)
+			) $charset_collate;";
+
+
+			dbDelta( $sql );
+		}
+
 	}
 
 	/**
@@ -780,7 +817,7 @@ class AVH_FDAS_Admin
 	function comment_footer_die ( $msg )
 	{
 		echo "<div class='wrap'><p>$msg</p></div>";
-//		include (ABSPATH . 'wp-admin/admin-footer.php');
+		//		include (ABSPATH . 'wp-admin/admin-footer.php');
 		die();
 	}
 }

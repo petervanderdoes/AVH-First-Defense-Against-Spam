@@ -27,6 +27,10 @@ class AVH_FDAS_Singleton
 					case 'AVH_FDAS_Public' :
 						require_once (dirname( __FILE__ ) . '/inc/avh-fdas.public.php');
 						break;
+					case 'AVH_FDAS_DB' :
+						require_once (dirname( __FILE__ ) . '/inc/avh-fdas.db.php');
+						break;
+
 				}
 			}
 			$instances[$class] = new $class( $arg1 );

@@ -103,6 +103,7 @@ class AVH_FDAS_Core
 		 */
 		$this->loadOptions();
 		$this->loadData();
+		$this->setTables();
 		//$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
 
 
@@ -172,6 +173,18 @@ class AVH_FDAS_Core
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Setup DB Tables
+	 * @return unknown_type
+	 */
+	function setTables ()
+	{
+		global $wpdb;
+
+		// add DB pointer
+		$wpdb->avhfdasipcache = $wpdb->prefix . 'avhfdas_ipcache';
 	}
 
 	/**
