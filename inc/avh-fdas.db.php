@@ -51,8 +51,9 @@ class AVH_FDAS_DB
 		global $wpdb;
 
 		// Query database
-		$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip ) );
-
+		timer_start();
+		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip ) );
+		$time=timer_stop();
 		if ( $result ) {
 			return $result;
 		} else {
@@ -64,6 +65,6 @@ class AVH_FDAS_DB
 	{
 		global $wpdb;
 		$date = current_time( 'mysql' );
-		$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->avhfdasipcache (ip, spam, date) VALUES (INET_ATON(%s), %s, %s)", $ip, $spam, $date ) );
+		$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->avhfdasipcache (ip, spam, date) VALUES (INET_ATON(%s), %d, %s)", $ip, $spam, $date ) );
 	}
 }
