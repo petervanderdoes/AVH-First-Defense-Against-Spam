@@ -637,6 +637,7 @@ class AVH_FDAS_Admin
 	{
 		// Deactivate the cron action as the the plugin is deactivated.
 		wp_clear_scheduled_hook( 'avhfdas_clean_nonce' );
+		wp_clear_scheduled_hook( 'avhfdas_clean_ipcache' );
 	}
 
 	/**
