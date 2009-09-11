@@ -51,9 +51,8 @@ class AVH_FDAS_DB
 		global $wpdb;
 
 		// Query database
-		timer_start();
 		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip ) );
-		$time=timer_stop();
+
 		if ( $result ) {
 			return $result;
 		} else {
