@@ -76,7 +76,7 @@ class AVH_FDAS_Public
 		$db_ipcache = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 		$date = current_time( 'mysql' );
 		$days = 7;
-		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(date))) > %d", $date,$days ) );
+		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(date))) > %d", $date, $days ) );
 	}
 
 	/**

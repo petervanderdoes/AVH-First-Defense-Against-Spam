@@ -580,7 +580,7 @@ class AVH_FDAS_Admin
 	{
 		global $wpdb;
 
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
 
 		// Add Cron Job, the action is added in the Public class.
 		if ( ! wp_next_scheduled( 'avhfdas_clean_nonce' ) ) {
@@ -623,7 +623,6 @@ class AVH_FDAS_Admin
 				PRIMARY KEY ip (ip),
 				KEY date (date)
 			) $charset_collate;";
-
 
 			dbDelta( $sql );
 		}
