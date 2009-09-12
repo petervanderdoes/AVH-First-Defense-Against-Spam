@@ -84,7 +84,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0 );
+		$this->default_general_options = array ('version' => $this->version, 'dbversion'=>2, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0 );
 		$this->default_spam = array ('whentoemail' => 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 1 );
 		$this->default_honey = array ('whentoemailtype' => 0, 'whentoemail' => 0, 'whentodietype' => 4, 'whentodie' => 10000, 'phpapikey' => '' );
 		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7);
@@ -236,6 +236,32 @@ class AVH_FDAS_Core
 		if ( version_compare( $options['general']['version'], '2.0-rc1', '<' ) ) {
 			list ( $options, $data ) = $this->doUpgrade20( $options, $data );
 		}
+
+		// Add none existing sections and/or elements to the options
+		foreach ( $this->default_options as $section => $default_options ) {
+			if ( ! array_key_exists( $section, $options ) ) {
+				$options[$section] = $default_options;
+				continue;
+			}
+			foreach ( $default_options as $element => $default_value ) {
+				if ( ! array_key_exists( $element, $options[$section] ) ) {
+					$options[$section][$element] = $default_value;
+				}
+			}
+		}
+
+		// Add none existing sections and/or elements to the data
+		foreach ( $this->default_data as $section => $default_data ) {
+			if ( ! array_key_exists( $section, $data ) ) {
+				$data[$section] = $default_data;
+				continue;
+			}
+			foreach ( $default_data as $element => $default_value ) {
+				if ( ! array_key_exists( $element, $data[$section] ) ) {
+					$data[$section][$element] = $default_value;
+				}
+			}
+		}
 		$options['general']['version'] = $this->version;
 		$this->saveOptions( $options );
 		$this->saveData( $data );
@@ -275,35 +301,14 @@ class AVH_FDAS_Core
 		// New counter system
 		unset( $new_data['spam']['counter'] );
 
-		// Add none existing sections to the options
-		foreach ( $this->default_options as $section => $default_options ) {
-			if ( ! array_key_exists( $section, $new_options ) ) {
-				$new_options[$section] = $default_options;
-				continue;
-			}
-			foreach ( $default_options as $element => $default_value ) {
-				if ( ! array_key_exists( $element, $new_options[$section] ) ) {
-					$new_options[$section][$element] = $default_value;
-				}
-			}
-		}
-
-		// Add none existing sections to the data
-		foreach ( $this->default_data as $section => $default_data ) {
-			if ( ! array_key_exists( $section, $new_data ) ) {
-				$new_data[$section] = $default_data;
-				continue;
-			}
-			foreach ( $default_data as $element => $default_value ) {
-				if ( ! array_key_exists( $element, $new_data[$section] ) ) {
-					$new_data[$section][$element] = $default_value;
-				}
-			}
-		}
 
 		return array ($new_options, $new_data );
 	}
 
+	function doUpgrade22($old_options,$old_data){
+
+
+	}
 	/**
 	 * Get the base directory of a directory structure
 	 *
