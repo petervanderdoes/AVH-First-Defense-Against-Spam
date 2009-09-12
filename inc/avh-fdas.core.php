@@ -84,7 +84,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 1 );
+		$this->default_general_options = array ('version' => $this->version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0 );
 		$this->default_spam = array ('whentoemail' => 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 1 );
 		$this->default_honey = array ('whentoemailtype' => 0, 'whentoemail' => 0, 'whentodietype' => 4, 'whentodie' => 10000, 'phpapikey' => '' );
 		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7);
