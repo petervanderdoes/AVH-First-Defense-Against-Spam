@@ -43,6 +43,7 @@ class AVH_FDAS_Core
 	var $default_options;
 	var $default_spam;
 	var $default_honey;
+	var $default_ipcache;
 	var $default_nonces;
 	var $data;
 	var $default_data;
@@ -83,9 +84,10 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1 );
+		$this->default_general_options = array ('version' => $this->version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 1 );
 		$this->default_spam = array ('whentoemail' => 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 1 );
 		$this->default_honey = array ('whentoemailtype' => 0, 'whentoemail' => 0, 'whentodietype' => 4, 'whentodie' => 10000, 'phpapikey' => '' );
+		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7);
 		$this->default_spam_data = array ('190001' => 0 );
 		$this->default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
 		$this->default_nonces_data = 'default';
@@ -93,7 +95,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default Options - All as stored in the DB
 		 */
-		$this->default_options = array ('general' => $this->default_general_options, 'sfs' => $this->default_spam, 'php' => $this->default_honey );
+		$this->default_options = array ('general' => $this->default_general_options, 'sfs' => $this->default_spam, 'php' => $this->default_honey , 'ipcache' => $this->default_ipcache);
 		$this->default_data = array ('counters' => $this->default_spam_data, 'lists' => $this->default_data_lists );
 		$this->default_nonces = array ('default' => $this->default_nonces_data );
 
