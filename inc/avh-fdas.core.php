@@ -110,7 +110,7 @@ class AVH_FDAS_Core
 
 
 		// Check if we have to do upgrades
-		if ( version_compare( $this->version, $this->options['general']['version'], '>' ) ) {
+		if ( (!isset($options['general']['db_version'])) || $version_compare( $this->version, $this->options['general']['version'], '>' ) ) {
 			$this->doUpgrade();
 		}
 

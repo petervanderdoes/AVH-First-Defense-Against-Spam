@@ -244,7 +244,7 @@ class AVH_FDAS_Admin
 	 */
 	function doMenuGeneralOptions ()
 	{
-		$option_data = array(
+		$options_general = array(
 		array ('avhfdas[general][diewithmessage]',
 			'Show message',
 			'checkbox',
@@ -304,7 +304,8 @@ class AVH_FDAS_Admin
 			$options = $this->core->getOptions();
 			$data = $this->core->getData();
 
-			foreach ( $option_data as $option ) {
+			$all_data = array_merge( $options_general, $options_ipcache );
+			foreach ( $all_data as $option ) {
 				$section = substr( $option[0], strpos( $option[0], '[' ) + 1 );
 				$section = substr( $section, 0, strpos( $section, '][' ) );
 				$option_key = rtrim( $option[0], ']' );
@@ -390,7 +391,7 @@ class AVH_FDAS_Admin
 		wp_nonce_field( 'avh_fdas_generaloptions' );
 
 		echo '<div id="printOptions">';
-		echo $this->printOptions( $option_data, $actual_options );
+		echo $this->printOptions( $options_general, $actual_options );
 		echo '<h3>' . __( 'IP caching', 'avhfdas' ) . '</h3>';
 		echo '<p>' . __( 'To use IP caching you must enable it below and set the options. IP\'s are stored in the database so if you have a high traffic website the database can grow quickly' );
 		echo $this->printOptions( $options_ipcache, $actual_options );
