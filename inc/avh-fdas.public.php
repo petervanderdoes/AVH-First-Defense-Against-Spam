@@ -192,9 +192,12 @@ class AVH_FDAS_Public
 				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
 
-			$ipCache = $ipcachedb->getIP( $ip );
+			$ip_in_cache= false;
+			if (1 == $option['general']['useipcache]']) {
+				$ip_in_cache = $ipcachedb->getIP( $ip );
+			}
 
-			if ( ! $ipCache ) {
+			if ( ! $ip_in_cache ) {
 				if ( $options['general']['use_sfs'] || $options['general']['use_php'] ) {
 					$spaminfo = null;
 					$spaminfo['detected'] = FALSE;
@@ -220,7 +223,7 @@ class AVH_FDAS_Public
 					}
 				}
 			} else {
-				if ( $ipCache->spam ) {
+				if ( $ip_in_cache->spam ) {
 					$this->handleSpammerCache( $ip );
 				}
 			}
