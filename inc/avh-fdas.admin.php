@@ -343,6 +343,18 @@ class AVH_FDAS_Admin
 					}
 				}
 			}
+			// Add or remove the Cron Job: avhfdas_clean_ipcache - defined in Public Class
+			if ($options['general']['useipcache']) {
+				// Add Cron Job if it's not scheduled
+				if ( ! wp_next_scheduled( 'avhfdas_clean_ipcache' ) ) {
+					wp_schedule_event( time(), 'daily', 'avhfdas_clean_ipcache' );
+				}
+			} else {
+				// Remove Cron Job if it's scheduled
+				if ( wp_next_scheduled( 'avhfdas_clean_ipcache' ) ) {
+					wp_clear_scheduled_hook('avhfdas_clean_ipcache' );
+				}
+			}
 			$this->core->saveOptions( $options );
 			$this->core->saveData( $data );
 			$this->message = __( 'Options saved', 'avhfdas' );
@@ -645,10 +657,6 @@ class AVH_FDAS_Admin
 			wp_schedule_event( time(), 'daily', 'avhfdas_clean_nonce' );
 		}
 
-		// Add Cron Job, the action is added in the Public class.
-		if ( ! wp_next_scheduled( 'avhfdas_clean_ipcache' ) ) {
-			wp_schedule_event( time(), 'daily', 'avhfdas_clean_ipcache' );
-		}
 		// Load up variables
 		$this->core->loadOptions(); // Options will be created if not in DB
 		$this->core->loadData(); // Data will be created if not in DB

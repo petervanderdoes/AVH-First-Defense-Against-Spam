@@ -69,6 +69,13 @@ class AVH_FDAS_Public
 		}
 	}
 
+	/**
+	 * Cleans the IP cache table
+	 *
+	 * @WordPress: Action avhfdas_clean_ipcache
+	 * @since 2.2
+	 *
+	 */
 	function actionHandleCronCleanIPCache ()
 	{
 		global $wpdb;
@@ -176,7 +183,7 @@ class AVH_FDAS_Public
 	 */
 	function actionHandleMainAction ()
 	{
-		$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+
 		$ip = $this->core->getUserIP();
 		$ip_in_whitelist = false;
 		$options = $this->core->getOptions();
@@ -191,8 +198,9 @@ class AVH_FDAS_Public
 				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
 
-			$ip_in_cache= false;
+			$ip_in_cache = false;
 			if (1 == $option['general']['useipcache]']) {
+				$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 				$ip_in_cache = $ipcachedb->getIP( $ip );
 			}
 
@@ -218,7 +226,9 @@ class AVH_FDAS_Public
 					if ( $spaminfo['detected'] ) {
 						$this->handleSpammer( $ip, $spaminfo );
 					} else {
-						$ipcachedb->setIP( $ip, 0 );
+						if (1 == $option['general']['useipcache]']) {
+							$ipcachedb->setIP( $ip, 0 );
+						}
 					}
 				}
 			} else {
@@ -499,9 +509,11 @@ class AVH_FDAS_Public
 		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'];
 		$blacklist_die = 'Blacklisted' == $info['blacklist']['time'];
 
-		$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
-		if ( $sfs_die || $php_die ) {
-			$ipcachedb->setIP( $ip, 1 );
+		if (1 == $option['general']['useipcache]']) {
+			$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+			if ( $sfs_die || $php_die ) {
+				$ipcachedb->setIP( $ip, 1 );
+			}
 		}
 
 		if ( $sfs_die || $php_die || $blacklist_die ) {
@@ -532,7 +544,7 @@ class AVH_FDAS_Public
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
 
-		$cache_email = 1;
+		$cache_email = $options['ipcache']['email'];
 		if ( $cache_email ) {
 
 			// General part of the email
