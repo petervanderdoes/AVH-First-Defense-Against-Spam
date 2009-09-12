@@ -244,7 +244,58 @@ class AVH_FDAS_Admin
 	 */
 	function doMenuGeneralOptions ()
 	{
-		$option_data = array (array ('avhfdas[general][diewithmessage]', 'Show message', 'checkbox', 1, 'Show a message when the connection has been terminated.' ), array ('avhfdas[general][emailsecuritycheck]', 'Email on failed security check:', 'checkbox', 1, 'Receive an email when a comment is posted and the security check failed.' ), array ('avhfdas[general][useblacklist]', 'Use internal blacklist', 'checkbox', 1, 'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.' ), array ('avhfdas[lists][blacklist]', 'Blacklist IP\'s:', 'textarea', 15, 'Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 15 ), array ('avhfdas[general][usewhitelist]', 'Use internal whitelist', 'checkbox', 1, 'Check the internal whitelist first. If the IP is found don\t do any further checking.' ), array ('avhfdas[lists][whitelist]', 'Whitelist IP\'s', 'textarea', 15, 'Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 15 ) );
+		$option_data = array(
+		array ('avhfdas[general][diewithmessage]',
+			'Show message',
+			'checkbox',
+			1,
+			'Show a message when the connection has been terminated.' ),
+		array ('avhfdas[general][emailsecuritycheck]',
+			'Email on failed security check:',
+			'checkbox',
+			1,
+			'Receive an email when a comment is posted and the security check failed.' ),
+		array ('avhfdas[general][useblacklist]',
+			'Use internal blacklist',
+			'checkbox',
+			1,
+			'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.' ),
+		array ('avhfdas[lists][blacklist]',
+			'Blacklist IP\'s:',
+			'textarea',
+			15,
+			'Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24',
+			15 ),
+		array ('avhfdas[general][usewhitelist]',
+			'Use internal whitelist',
+			'checkbox',
+			1,
+			'Check the internal whitelist first. If the IP is found don\t do any further checking.' ),
+		array ('avhfdas[lists][whitelist]',
+			'Whitelist IP\'s',
+			'textarea',
+			15,
+			'Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24',
+			15 )
+		);
+
+		$options_ipcache = array (
+		array ('avhfdas[general][useipcache]',
+			'Use IP Caching',
+			'checkbox',
+			1,
+		 	'Cache the IP\'s that meet the 3rd party termination threshold and the IP\'s that are not detected by the 3rd party. The connection will be terminated if an IP is found in the cache that was perviously determined to be a spammer' ),
+		array ('avhfdas[ipcache][email]',
+			'Email ',
+			'checkbox',
+			1,
+			'Send an email when a connection is terminate based on the IP found in the cache' ),
+		array('avhfdas[ipcache][daystokeep]',
+			'Days to keep IP in cache',
+			'text',
+			3,
+			'Keep the IP in cache for the selected days.')
+		);
 
 		if ( isset( $_POST['updateoptions'] ) ) {
 			check_admin_referer( 'avh_fdas_generaloptions' );
@@ -261,6 +312,7 @@ class AVH_FDAS_Admin
 
 				switch ( $section ) {
 					case 'general' :
+					case 'ipcache' :
 						$current_value = $options[$section][$option_key];
 						break;
 					case 'lists' :
@@ -281,6 +333,7 @@ class AVH_FDAS_Admin
 					}
 					switch ( $section ) {
 						case 'general' :
+						case 'ipcache' :
 							$options[$section][$option_key] = $newval;
 							break;
 						case 'lists' :
@@ -338,6 +391,10 @@ class AVH_FDAS_Admin
 
 		echo '<div id="printOptions">';
 		echo $this->printOptions( $option_data, $actual_options );
+		echo '<h3>' . __( 'IP caching', 'avhfdas' ) . '</h3>';
+		echo '<p>' . __( 'To use IP caching you must enable it below and set the options. IP\'s are stored in the database so if you have a high traffic website the database can grow quickly' );
+		echo $this->printOptions( $options_ipcache, $actual_options );
+
 		echo '</div>';
 
 		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
