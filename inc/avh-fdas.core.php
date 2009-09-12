@@ -305,10 +305,6 @@ class AVH_FDAS_Core
 		return array ($new_options, $new_data );
 	}
 
-	function doUpgrade22($old_options,$old_data){
-
-
-	}
 	/**
 	 * Get the base directory of a directory structure
 	 *
