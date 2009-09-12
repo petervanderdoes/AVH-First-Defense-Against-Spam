@@ -72,10 +72,9 @@ class AVH_FDAS_Public
 	function actionHandleCronCleanIPCache ()
 	{
 		global $wpdb;
-
-		$db_ipcache = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+		$options = $this->core->getOptions();
 		$date = current_time( 'mysql' );
-		$days = 1;
+		$days = $options['ipcache']['daystokeep'];
 		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(date))) > %d", $date, $days ) );
 	}
 
