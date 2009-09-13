@@ -249,9 +249,17 @@ class AVH_FDAS_Admin
 			echo 'enabled</span>';
 			echo '</p></div>';
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache"));
+			$count_clean = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache WHERE spam=0"));
+			$count_spam = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache WHERE spam=1"));
 			if (false === $count ){
 				$count=0;
+			}			if (false === $count_clean ){
+				$count_clean=0;
 			}
+						if (false === $count_spam ){
+				$count_spam=0;
+			}
+
 			$output = '';
 			echo '<div class="table">';
 			echo '<table>';
@@ -259,10 +267,25 @@ class AVH_FDAS_Admin
 			echo '<tr class="first">';
 			$output .= '<td class="first b">' . $count . '</td>';
 			$text = (1 == $count) ? 'IP' : 'IP\'s';
-			$output .= '<td class="t">' . $text . ' in the cache</td>';
+			$output .= '<td class="t">Total of ' . $text . ' in the cache</td>';
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
+
+			$output .= '<td class="first b">' . $count_clean . '</td>';
+			$text = (1 == $count_clean) ? 'IP' : 'IP\'s';
+			$output .= '<td class="t">Total of ' . $text . ' classified as clean</td>';
+			$output .= '<td class="b"></td>';
+			$output .= '<td class="last"></td>';
+			$output .= '</tr>';
+
+			$output .= '<td class="first b">' . $count_spam . '</td>';
+			$text = (1 == $count_spam) ? 'IP' : 'IP\'s';
+			$output .= '<td class="t">Total of ' . $text . ' classified as spam</td>';
+			$output .= '<td class="b"></td>';
+			$output .= '<td class="last"></td>';
+			$output .= '</tr>';
+
 			echo $output;
 		}
 		echo '</tbody></table></div>';
