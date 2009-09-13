@@ -111,7 +111,7 @@ class AVH_FDAS_Core
 
 
 		// Check if we have to do upgrades
-		if ( (!isset($this->options['general']['db_version'])) || $this->options['general']['db_version'] > $db_version ) {
+		if ( (!isset($this->options['general']['dbversion'])) || $this->options['general']['dbversion'] < $db_version ) {
 			$this->doUpgrade();
 		}
 
