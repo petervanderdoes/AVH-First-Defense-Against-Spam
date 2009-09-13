@@ -185,9 +185,10 @@ class AVH_FDAS_Admin
 	 */
 	function metaboxMenuOverview ()
 	{
+		global $wpdb;
 
 		echo '<p class="sub">';
-		_e( 'At a Glance', 'avhfdas' );
+		_e( 'Spam Statistics', 'avhfdas' );
 		echo '</p>';
 
 		echo '<div class="table">';
@@ -233,8 +234,37 @@ class AVH_FDAS_Admin
 				echo '<span class="b">' . __( 'Project Honey Pot', 'avhfdas' ) . '</span>';
 			}
 		}
+		echo '</p></div>';
+		echo '<p class="sub">';
+		_e( 'IP Cache Statistics', 'avhfdas' );
 		echo '</p>';
-		echo '</div>';
+		echo '<br/>';
+		echo '<div class="versions">';
+		echo '<p>';
+		echo 'IP caching is <span class="b">';
+		if (0 == $this->core->options['general']['useipcache']) {
+			echo 'disabled</span>';
+		} else {
+			echo 'enabled</span>';
+			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache"));
+			if (false === $count ){
+				$count=0;
+			}
+			$output = '';
+			echo '<div class="table">';
+			echo '<table>';
+			echo '<tbody>';
+			echo '<tr class="first">';
+			$output .= '<td class="first b">' . $count . '</td>';
+			$text = (1 == $count) ? 'IP' : 'IP\'s';
+			$output .= '<td class="t">' . $text . ' in the cache</td>';
+			$output .= '<td class="b"></td>';
+			$output .= '<td class="last"></td>';
+			$output .= '</tr>';
+			echo $output;
+		}
+		echo '</tbody></table></div>';
+		echo '</p></div>';
 	}
 
 	/**
