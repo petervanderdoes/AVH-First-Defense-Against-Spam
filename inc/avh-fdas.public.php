@@ -199,12 +199,12 @@ class AVH_FDAS_Public
 			}
 
 			$ip_in_cache = false;
-			if (1 == $option['general']['useipcache]']) {
+			if (1 == $options['general']['useipcache']) {
 				$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 				$ip_in_cache = $ipcachedb->getIP( $ip );
 			}
 
-			if ( ! $ip_in_cache ) {
+			if ( false === $ip_in_cache ) {
 				if ( $options['general']['use_sfs'] || $options['general']['use_php'] ) {
 					$spaminfo = null;
 					$spaminfo['detected'] = FALSE;
@@ -226,7 +226,7 @@ class AVH_FDAS_Public
 					if ( $spaminfo['detected'] ) {
 						$this->handleSpammer( $ip, $spaminfo );
 					} else {
-						if (1 == $option['general']['useipcache]']) {
+						if (1 == $options['general']['useipcache']) {
 							$ipcachedb->setIP( $ip, 0 );
 						}
 					}
