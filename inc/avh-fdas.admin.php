@@ -244,8 +244,10 @@ class AVH_FDAS_Admin
 		echo 'IP caching is <span class="b">';
 		if (0 == $this->core->options['general']['useipcache']) {
 			echo 'disabled</span>';
+			echo '</p></div>';
 		} else {
 			echo 'enabled</span>';
+			echo '</p></div>';
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache"));
 			if (false === $count ){
 				$count=0;
@@ -264,7 +266,7 @@ class AVH_FDAS_Admin
 			echo $output;
 		}
 		echo '</tbody></table></div>';
-		echo '</p></div>';
+
 	}
 
 	/**
