@@ -526,7 +526,7 @@ class AVH_FDAS_Public
 			}
 			$this->core->saveData( $data );
 			if ( 1 == $options['general']['diewithmessage'] ) {
-				if ( 'Blacklisted' == $time ) {
+				if ( 'Blacklisted' == $info['blacklist']['time'] ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $ip );
 				} else {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.<BR />If you feel this is incorrect please contact them</p>', 'avhfdas' ), $ip );
