@@ -509,7 +509,7 @@ class AVH_FDAS_Public
 		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'];
 		$blacklist_die = 'Blacklisted' == $info['blacklist']['time'];
 
-		if (1 == $option['general']['useipcache]']) {
+		if (1 == $options['general']['useipcache']) {
 			$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 			if ( $sfs_die || $php_die ) {
 				$ipcachedb->setIP( $ip, 1 );
