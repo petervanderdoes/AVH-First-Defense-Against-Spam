@@ -6,6 +6,7 @@
 if ( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) )
 	exit();
 global $file;
+global $wpdb;
 if ( 'avh-first-defense-against-spam' == dirname( $file ) ) {
 	delete_option( 'avhfdas' );
 	delete_option( 'avhfdas_data' );

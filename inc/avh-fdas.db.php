@@ -25,10 +25,7 @@ class AVH_FDAS_DB
 	 */
 	function __construct ()
 	{
-		global $wpdb;
-
 		register_shutdown_function( array (&$this, '__destruct' ) );
-
 	}
 
 	/**
