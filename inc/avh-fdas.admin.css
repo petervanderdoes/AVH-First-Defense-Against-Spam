@@ -1,141 +1,3 @@
-/**
-* TODO CHange this when migrating to WP 2.5
-* @media projection, screen{.ui-tabs-hide {display:none;}}
-* @media print{.ui-tabs-nav {display:none;}}
-*/
-
-.avhfdas-overview .postbox .handlediv {
-	float:right;
-	height:24px;
-	width:24px;
-}
-
-.avhfdas-options th {
-	width:22%;
-} 
-
-.avh_wrap fieldset.options legend {
-	display: none;
-}
-
-/* Options - Menu */
-.avh_wrap .avhfdas_submenu {
-	background: #464646;
-	border-bottom: none;
-	margin: 0 0 3px;
-	padding: 3px 1em 0 1em;
-}
-
-.avh_wrap .avhfdas_submenu li {
-	height: 25px;
-	display: inline;
-	line-height: 200%;
-	list-style: none;
-	text-align: center;
-	white-space: nowrap;
-}
-
-.avh_wrap .avhfdas_submenu li a {
-	border: none;
-	color: #fff;
-	font-size: 12px;
-	padding: .3em .4em .4em;
-	text-decoration: none;
-}
-
-.avh_wrap .avhfdas_submenu li a:hover {
-	background: #D54E21;
-	color: #fff;
-}
-
-.avh_wrap .avhfdas_submenu li.ui-tabs-selected {
-	font-weight: 700;
-	background: #E4F2FD;
-	color: #464646;
-	padding: .3em 0 .4em;
-}
-
-.avh_wrap .avhfdas_submenu li.ui-tabs-selected a {
-	color: #464646;
-}
-
-.avh_wrap .avhfdas_submenu li.ui-tabs-selected a:hover {
-	background: #D54E21;
-	color: #fff;
-}
-
-@media projection , screen {
-	.tabs-hide {
-		display: none;
-	}
-}
-
-@media print {
-	.tabs-nav {
-		display: none;
-	}
-}
-
-/* Options Table */
-.avh_wrap fieldset.options legend {
-	display: none;
-}
-
-.avh_wrap fieldset.options {
-	border: 0;
-}
-
-.avh_wrap .form-table th {
-	width: 150px;
-}
-
-.avh_wrap .avhfdas_explain {
-	font-size: 0.9em;
-	line-height: 0.9em;
-}
-
-.avh_wrap .avhfdas_explain ul {
-	list-style: square;
-	margin: 0 0 0 20px;
-	padding: 0;
-}
-
-.avh_wrap .avhfdas_explain ul li {
-	margin: 0;
-	padding: 0;
-}
-
-.avh_wrap .pagination,.avh_wrap .widefat th,.avh_wrap .widefat td {
-	text-align: center;
-}
-
-.avh_wrap .pagination {
-	margin: 5px 0;
-}
-
-.avh_wrap .pagination a {
-	margin: 1px 3px;
-}
-
-.avh_wrap .pagination a.current_page {
-	font-weight: 700;
-}
-
-.avh_wrap #post .submit input {
-	width: 300px;
-}
-
-.avh_wrap #post input,.avh_wrap .auto_list {
-	width: 98%;
-	margin: 3px 0;
-	padding: 3px 5px;
-}
-
-.avh_wrap .stpexplan ul li,.avh_wrap #suggesttagsdiv p {
-	margin: 0;
-	padding: 0;
-}
-
 .footer_avhfdas {
 	font-size: 0.8em;
 	text-align: center;
@@ -148,76 +10,18 @@ div.clearer {
 	height: 1px;
 }
 
-.box_color {
-	display: block;
-	width: 20px;
-	height: 20px;
-	border: 1px solid #ccc;
-}
-
-/* Metabox */
-#avhfdasmetabox01 div.ui-tabs-panel {
-	border-style: solid;
-	border-width: 4px;
-	height: 20em;
-	margin: 0pt 5px 0pt 120px;
-	overflow: auto;
-	padding: 0.5em 0.9em;
-}
-
-#avhfdasmetabox01 ul#avhfdas_tabs {
-	float: left;
-	width: 120px;
-	text-align: right;
-	/* Negative margin for the sake of those without JS: all tabs display */
-	margin: 0 -120px 0 0;
-	padding: 0;
-}
-
-ul#avhfdas_tabs li {
-	padding: 8px;
-}
-
-ul#avhfdas_tabs li.ui-tabs-selected {
-	-moz-border-radius-topleft: 3px;
-	-khtml-border-top-left-radius: 3px;
-	-webkit-border-top-left-radius: 3px;
-	border-top-left-radius: 3px;
-	-moz-border-radius-bottomleft: 3px;
-	-khtml-border-bottom-left-radius: 3px;
-	-webkit-border-bottom-left-radius: 3px;
-	border-bottom-left-radius: 3px;
-}
-
-ul#avhfdas_tabs li.ui-tabs-selected a {
-	color: #333;
-	font-weight: bold;
-	text-decoration: none;
-}
-
-#avhfdasmetabox01 ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-ul#avhfdas_tabs li.ui-tabs-selected,.button-secondary,#quicktags,#login form .submit input
-	{
-	background-color: #cee1ef !important;
-}
-
 /* Statistics */
 
-#avhfdasBoxMenuOverview_stats p.sub,
-#avhfdasBoxMenuOverview_stats .table, #avhfdasBoxMenuOverview_stats .versions {
+#avhfdasBoxStats p.sub,
+#avhfdasBoxStats .table, #avhfdasBoxStats .versions {
 	margin: -12px;
 }
 
-#avhfdasBoxMenuOverview_stats .inside {
+#avhfdasBoxStats .inside {
 	font-size: 12px;
 }
 
-#avhfdasBoxMenuOverview_stats p.sub {
+#avhfdasBoxStats p.sub {
 	font-style: italic;
 	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
 	padding: 5px 10px 15px;
@@ -225,7 +29,7 @@ ul#avhfdas_tabs li.ui-tabs-selected,.button-secondary,#quicktags,#login form .su
 	font-size: 13px;
 }
 
-#avhfdasBoxMenuOverview_stats .table {
+#avhfdasBoxStats .table {
 	background: #f9f9f9;
 	border-top: #ececec 1px solid;
 	border-bottom: #ececec 1px solid;
@@ -233,70 +37,69 @@ ul#avhfdas_tabs li.ui-tabs-selected,.button-secondary,#quicktags,#login form .su
 	padding: 0 10px;
 }
 
-#avhfdasBoxMenuOverview_stats table {
+#avhfdasBoxStats table {
 	width: 100%;
 }
 
-#avhfdasBoxMenuOverview_stats table  td {
+#avhfdasBoxStats table  td {
 	border-top: #ececec 1px solid;
 	padding: 3px 0;
 	white-space: nowrap;
 }
 
-#avhfdasBoxMenuOverview_stats table tr.first td {
+#avhfdasBoxStats table tr.first td {
 	border-top: none;
 }
 
-#avhfdasBoxMenuOverview_stats td.b {
+#avhfdasBoxStats td.b {
 	padding-right: 6px;
 	text-align: right;
 	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
 	font-size: 14px;
 }
 
-#avhfdasBoxMenuOverview_stats td.b a {
+#avhfdasBoxStats td.b a {
 	font-size: 18px;
 }
 
-#avhfdasBoxMenuOverview_stats td.b a:hover {
+#avhfdasBoxStats td.b a:hover {
 	color: #d54e21;
 }
 
-#avhfdasBoxMenuOverview_stats .t {
+#avhfdasBoxStats .t {
 	font-size: 12px;
 	padding-right: 12px;
 	padding-top: 6px;
 	color: #777;
 }
 
-#avhfdasBoxMenuOverview_stats td.first,
-#avhfdasBoxMenuOverview_stats td.last {
+#avhfdasBoxStats td.first,
+#avhfdasBoxStats td.last {
 	width: 1px;
 }
 
-#avhfdasBoxMenuOverview_stats .spam {
-	color: red;
-}
-
-#avhfdasBoxMenuOverview_stats .waiting {
-	color: #e66f00;
-}
-
-#avhfdasBoxMenuOverview_stats .approved {
-	color: green;
-}
-
-#avhfdasBoxMenuOverview_stats .versions {
+#avhfdasBoxStats .versions {
 	padding: 6px 10px 12px;
 }
 
-#avhfdasBoxMenuOverview_stats .versions .b {
+#avhfdasBoxStats .versions .b {
 	font-weight: bold;
 }
 
-#avhfdasBoxMenuOverview_stats a.button {
+#avhfdasBoxStats a.button {
 	float: right;
 	clear: right;
 	position: relative;
 	top: -5px;
+}
+
+
+#avhfdasBoxDonations .versions .b {
+	font-weight: bold;
+}
+#avhfdasBoxDonations .inside {
+	font-size: 12px;
+}
+#avhfdasBoxDonations .versions {
+	padding: 6px 10px 12px;
 }
