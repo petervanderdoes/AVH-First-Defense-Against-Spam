@@ -37,6 +37,7 @@ class AVH_FDAS_Admin
 
 		// Add Filter
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
+		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 
 		return;
 	}
@@ -80,20 +81,26 @@ class AVH_FDAS_Admin
 	 */
 	function actionAdminMenu ()
 	{
+		// Add menu system
 		$folder = plugin_basename( $this->core->info['plugin_dir'] );
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
-		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 
+
+		// Add actions for menu pages
 		add_action('load-toplevel_page_avh-first-defense-against-spam', array(&$this, actionLoadPageHook_TopLevel));
 
 
 	}
 
+	/**
+	 * Setup everything needed for the TopLevel page
+	 *
+	 */
 	function actionLoadPageHook_TopLevel(){
-		add_meta_box( 'avhfdasBoxMenuOverview_stats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'normal', 'core' );
 
 
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
@@ -106,8 +113,15 @@ class AVH_FDAS_Admin
 		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
 
-
 	}
+
+	/**
+	 * Set correlation between $screen and $hook
+	 *
+	 * @WordPress filter screen_meta_screen
+	 * @param $screen
+	 * @return strings
+	 */
 	function filterScreenMetaScreen ($screen){
 
 		switch ($screen) {
@@ -117,11 +131,20 @@ class AVH_FDAS_Admin
 		}
 		return $screen;
 	}
+
+		/**
+	 * Sets the amount of columns wanted for a particuler screen
+	 *
+	 * @WordPress filter screen_meta_screen
+	 * @param $screen
+	 * @return strings
+	 */
+
 	function filterScreenLayoutColumns($columns, $screen)
 	{
 		if ($screen == 'avhfdas-menu-overview') {
-		$columns['avhfdas-menu-overview'] = 2;
-	}
+			$columns['avhfdas-menu-overview'] = 2;
+		}
 	return $columns;
 
 	}
@@ -158,7 +181,7 @@ class AVH_FDAS_Admin
 		global $screen_layout_columns;
 
 		// This box can't be unselectd in the the Screen Options
-		add_meta_box( 'avhfdasBoxDonations_donations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxMenuOverviewDonations' ), 'avhfdas-menu-overview', 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxMenuOverviewDonations' ), 'avhfdas-menu-overview', 'normal', 'core' );
 		$hide2 = '';
 		switch ( $screen_layout_columns ) {
 			case 2:
@@ -178,7 +201,7 @@ class AVH_FDAS_Admin
 		do_meta_boxes( 'avhfdas-menu-overview', 'normal', '' );
 		echo "			</div>";
 		echo "			<div class='postbox-container' style='{$hide2}$width'>\n";
-		do_meta_boxes( 'dashboard', 'side', '' );
+		do_meta_boxes( 'avhfdas-menu-overview', 'side', '' );
 		echo '			</div>';
 		echo '		</div>';
 		echo '<form style="display: none" method="get" action="">';
@@ -859,41 +882,6 @@ class AVH_FDAS_Admin
 	function displayIcon ( $icon )
 	{
 		return ('<div class="icon32" id="icon-' . $icon . '"><br/></div>');
-	}
-
-	/**
-	 * Insert link to CSS
-	 *
-	 */
-	function actionInjectCSS ()
-	{
-		global $hook_suffix;
-
-		switch ( $hook_suffix ) {
-			case 'toplevel_page_avh-first-defense-against-spam' :
-				wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
-				wp_admin_css( 'css/dashboard' );
-				break;
-		}
-
-	}
-
-	/**
-	 * Insert link to JS
-	 *
-	 */
-	function actionInjectJS ()
-	{
-		global $hook_suffix;
-
-		switch ( $hook_suffix ) {
-			case 'toplevel_page_avh-first-defense-against-spam' :
-				wp_enqueue_script('common');
-				wp_enqueue_script('wp-lists');
-				wp_enqueue_script( 'postbox' );
-				break;
-		}
-
 	}
 
 	/**
