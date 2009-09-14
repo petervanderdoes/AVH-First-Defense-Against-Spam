@@ -91,17 +91,38 @@ class AVH_FDAS_Admin
 	 */
 	function actionAdminMenu ()
 	{
-		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
+		$folder = plugin_basename( $this->core->info['plugin_dir'] );
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 		// Add metaboxes
-		add_meta_box( 'dashboard_right_now', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'left', 'core' );
-		add_meta_box( 'dashboard_right_now', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxMenuOverviewDonations' ), 'avhfdas-menu-donation', 'left', 'core' );
+		add_meta_box( 'avhfdasBoxMenuOverview_stats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'normal', 'core' );
+
+
+		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
+		add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
+
 	}
 
+	function filterScreenMetaScreen ($screen){
+
+		switch ($screen) {
+			case 'toplevel_page_avh-first-defense-against-spam':
+				$screen = 'avhfdas-menu-overview';
+				break;
+		}
+		return $screen;
+	}
+	function filterScreenLayoutColumns($columns, $screen)
+	{
+		if ($screen == 'avhfdas-menu-overview') {
+		$columns['avhfdas-menu-overview'] = 2;
+	}
+	return $columns;
+
+	}
 	/**
 	 * Handle the menu options
 	 *
@@ -132,29 +153,48 @@ class AVH_FDAS_Admin
 	 */
 	function doMenuOverview ()
 	{
+		global $screen_layout_columns;
+
+		// This box can't be unselectd in the the Screen Options
+		add_meta_box( 'avhfdasBoxDonations_donations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxMenuOverviewDonations' ), 'avhfdas-menu-overview', 'normal', 'core' );
+		$hide2 = '';
+		switch ( $screen_layout_columns ) {
+			case 2:
+				$width = 'width:49%;';
+				break;
+			default:
+				$width = 'width:98%;';
+				$hide2 = 'display:none;';
+		}
+
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->displayIcon( 'index' );
 		echo '<h2>' . __( 'AVH First Defense Against Spam Overview', 'avhfdas' ) . '</h2>';
-		echo '<div id="dashboard-widgets-wrap" class="avhfdas-overview">';
-		echo '    <div id="dashboard-widgets" class="metabox-holder">';
-		echo '		<div id="post-body">';
-		echo '			<div id="dashboard-widgets-main-content">';
-		echo '				<div class="postbox-container" style="width:49%;">';
-		do_meta_boxes( 'avhfdas-menu-overview', 'left', '' );
-		echo '				</div>';
-		echo '				<div class="postbox-container" style="width:49%;">';
-		do_meta_boxes( 'avhfdas-menu-donation', 'left', '' );
-		echo '				</div>';
+		echo '	<div id="dashboard-widgets-wrap">';
+		echo '		<div id="dashboard-widgets" class="metabox-holder">';
+		echo "			<div class='postbox-container' style='$width'>\n";
+		do_meta_boxes( 'avhfdas-menu-overview', 'normal', '' );
+		echo "			</div>";
+		echo "			<div class='postbox-container' style='{$hide2}$width'>\n";
+		do_meta_boxes( 'dashboard', 'side', '' );
 		echo '			</div>';
 		echo '		</div>';
-		echo '    </div>';
-		echo '</div>';
-		echo '</div>';
+		echo '<form style="display: none" method="get" action="">';
+		echo '<p>';
+		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+		echo '</p>';
+		echo '</form>';
+		echo '<br class="clear"/>';
+		echo '	</div>'; //dashboard-widgets-wrap
+		echo '</div>'; // wrap
+
 		echo '<script type="text/javascript">' . "\n";
 		echo '	//<![CDATA[' . "\n";
 		echo '	jQuery(document).ready( function($) {' . "\n";
+		echo'		$(\'.if-js-closed\').removeClass(\'if-js-closed\').addClass(\'closed\');'."\n";
 		echo '		// postboxes setup' . "\n";
-		echo '		postboxes.add_postbox_toggles(\'avhfdas-overview\');' . "\n";
+		echo '		postboxes.add_postbox_toggles(\'avhfdas-menu-overview\');' . "\n";
 		echo '	});' . "\n";
 		echo '	//]]>' . "\n";
 		echo '</script>';

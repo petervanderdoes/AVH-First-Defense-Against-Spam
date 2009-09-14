@@ -205,3 +205,98 @@ ul#avhfdas_tabs li.ui-tabs-selected,.button-secondary,#quicktags,#login form .su
 	{
 	background-color: #cee1ef !important;
 }
+
+/* Statistics */
+
+#avhfdasBoxMenuOverview_stats p.sub,
+#avhfdasBoxMenuOverview_stats .table, #avhfdasBoxMenuOverview_stats .versions {
+	margin: -12px;
+}
+
+#avhfdasBoxMenuOverview_stats .inside {
+	font-size: 12px;
+}
+
+#avhfdasBoxMenuOverview_stats p.sub {
+	font-style: italic;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	padding: 5px 10px 15px;
+	color: #777;
+	font-size: 13px;
+}
+
+#avhfdasBoxMenuOverview_stats .table {
+	background: #f9f9f9;
+	border-top: #ececec 1px solid;
+	border-bottom: #ececec 1px solid;
+	margin: 0 -9px 10px;
+	padding: 0 10px;
+}
+
+#avhfdasBoxMenuOverview_stats table {
+	width: 100%;
+}
+
+#avhfdasBoxMenuOverview_stats table  td {
+	border-top: #ececec 1px solid;
+	padding: 3px 0;
+	white-space: nowrap;
+}
+
+#avhfdasBoxMenuOverview_stats table tr.first td {
+	border-top: none;
+}
+
+#avhfdasBoxMenuOverview_stats td.b {
+	padding-right: 6px;
+	text-align: right;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	font-size: 14px;
+}
+
+#avhfdasBoxMenuOverview_stats td.b a {
+	font-size: 18px;
+}
+
+#avhfdasBoxMenuOverview_stats td.b a:hover {
+	color: #d54e21;
+}
+
+#avhfdasBoxMenuOverview_stats .t {
+	font-size: 12px;
+	padding-right: 12px;
+	padding-top: 6px;
+	color: #777;
+}
+
+#avhfdasBoxMenuOverview_stats td.first,
+#avhfdasBoxMenuOverview_stats td.last {
+	width: 1px;
+}
+
+#avhfdasBoxMenuOverview_stats .spam {
+	color: red;
+}
+
+#avhfdasBoxMenuOverview_stats .waiting {
+	color: #e66f00;
+}
+
+#avhfdasBoxMenuOverview_stats .approved {
+	color: green;
+}
+
+#avhfdasBoxMenuOverview_stats .versions {
+	padding: 6px 10px 12px;
+}
+
+#avhfdasBoxMenuOverview_stats .versions .b {
+	font-weight: bold;
+}
+
+#avhfdasBoxMenuOverview_stats a.button {
+	float: right;
+	clear: right;
+	position: relative;
+	top: -5px;
+}
