@@ -8,6 +8,7 @@ class AVH_FDAS_Admin
 	var $message = '';
 	var $status = '';
 	var $core;
+	var $hooks=array();
 
 	function __construct ()
 	{
@@ -81,32 +82,32 @@ class AVH_FDAS_Admin
 	 */
 	function actionAdminMenu ()
 	{
-		$hooks=array();
+
 		// Add menu system
 		$folder = plugin_basename( $this->core->info['plugin_dir'] );
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		$hook['menu_overview']=add_submenu_page( $folder, __( 'AVH First Defense Against Spam: Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		$hook['menu_general']=add_submenu_page( $folder, __( 'AVH First Defense Against Spam: General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
-		$hook['menu_3rd_party']=add_submenu_page( $folder, __( 'AVH First Defense Against Spam: 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
+		$this->hooks['menu_overview']=add_submenu_page( $folder, __( 'AVH First Defense Against Spam: Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
+		$this->hooks['menu_general']=add_submenu_page( $folder, __( 'AVH First Defense Against Spam: General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
+		$this->hooks['menu_3rd_party']=add_submenu_page( $folder, __( 'AVH First Defense Against Spam: 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 
 
 		// Add actions for menu pages
-		add_action('load-'.$hook['menu_overview'], array(&$this, actionLoadPageHook_TopLevel));
+		add_action('load-'.$this->hooks['menu_overview'], array(&$this, actionLoadPageHook_Overview));
 
 
 	}
 
 	/**
-	 * Setup everything needed for the TopLevel page
+	 * Setup everything needed for the Overview page
 	 *
 	 */
-	function actionLoadPageHook_TopLevel(){
+	function actionLoadPageHook_Overview(){
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
-		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), $this->hooks['menu_overview'], 'normal', 'core' );
 
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
-		add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
+		//add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
 
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -145,8 +146,8 @@ class AVH_FDAS_Admin
 
 	function filterScreenLayoutColumns($columns, $screen)
 	{
-		if ($screen == 'avhfdas-menu-overview') {
-			$columns['avhfdas-menu-overview'] = 2;
+		if ($screen == $this->hooks['menu_overview']) {
+			$columns[$this->hooks['menu_overview']] = 2;
 		}
 	return $columns;
 
@@ -184,7 +185,7 @@ class AVH_FDAS_Admin
 		global $screen_layout_columns;
 
 		// This box can't be unselectd in the the Screen Options
-		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxMenuOverviewDonations' ), 'avhfdas-menu-overview', 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxMenuOverviewDonations' ), $this->hooks['menu_overview'], 'normal', 'core' );
 		$hide2 = '';
 		switch ( $screen_layout_columns ) {
 			case 2:
@@ -201,10 +202,10 @@ class AVH_FDAS_Admin
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo "			<div class='postbox-container' style='$width'>\n";
-		do_meta_boxes( 'avhfdas-menu-overview', 'normal', '' );
+		do_meta_boxes( $this->hooks['menu_overview'], 'normal', '' );
 		echo "			</div>";
 		echo "			<div class='postbox-container' style='{$hide2}$width'>\n";
-		do_meta_boxes( 'avhfdas-menu-overview', 'side', '' );
+		do_meta_boxes( $this->hooks['menu_overview'], 'side', '' );
 		echo '			</div>';
 		echo '		</div>';
 		echo '<form style="display: none" method="get" action="">';
