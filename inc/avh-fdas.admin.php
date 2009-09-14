@@ -38,17 +38,6 @@ class AVH_FDAS_Admin
 		// Add Filter
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
 
-		/**
-		 * Inject CSS and Javascript on the right pages
-		 *
-		 * Main Action: admin_print_styles-, admin_print-scripts-
-		 * Top level page: toplevel_page_avh-first-defense-against-spam
-		 * Sub menus: avh-f-d-a-s_page_avh-fdas-general
-		 *
-		 */
-		add_action( 'admin_print_styles-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectCSS' ) );
-		add_action( 'admin_print_scripts-toplevel_page_avh-first-defense-against-spam', array (&$this, 'actionInjectJS' ) );
-
 		return;
 	}
 
@@ -97,15 +86,28 @@ class AVH_FDAS_Admin
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
 		add_submenu_page( $folder, __( 'AVH First Defense Against Spam: 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
-		// Add metaboxes
+
+		add_action('load-toplevel_page_avh-first-defense-against-spam', array(&$this, actionLoadPageHook_TopLevel));
+
+
+	}
+
+	function actionLoadPageHook_TopLevel(){
 		add_meta_box( 'avhfdasBoxMenuOverview_stats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'normal', 'core' );
 
 
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
 		add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
 
-	}
+		wp_enqueue_script('common');
+		wp_enqueue_script('wp-lists');
+		wp_enqueue_script( 'postbox' );
 
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_admin_css( 'css/dashboard' );
+
+
+	}
 	function filterScreenMetaScreen ($screen){
 
 		switch ($screen) {
