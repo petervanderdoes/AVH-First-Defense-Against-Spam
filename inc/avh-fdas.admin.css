@@ -94,12 +94,9 @@ div.clearer {
 }
 
 
-#avhfdasBoxDonations .versions .b {
+#avhfdasBoxDonations .b {
 	font-weight: bold;
 }
 #avhfdasBoxDonations .inside {
 	font-size: 12px;
-}
-#avhfdasBoxDonations .versions {
-	padding: 6px 10px 12px;
 }
