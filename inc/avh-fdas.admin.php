@@ -232,7 +232,6 @@ class AVH_FDAS_Admin
 	function metaboxMenuOverviewDonations ()
 	{
 		echo '<p>If you enjoy this plug-in please consider a donation. There are several ways you can show your appreciation</p>';
-		echo '<div class="versions">';
 		echo '<p>';
 		echo '<span class="b">Amazon Wish List</span><br />';
 		echo 'You can send me something from my <a href="http://www.amazon.com/gp/registry/wishlist/1U3DTWZ72PI7W?tag=avh-donation-20">Amazon Wish List</a>';
@@ -241,7 +240,7 @@ class AVH_FDAS_Admin
 		echo '<span class="b">Through Paypal.</span><br />';
 		echo 'Click on the Donate button and you will be directed to Paypal where you can make your donation and you don\'t need to have a Paypal account to make a donation.';
 		echo '<form action="https://www.paypal.com/cgi-bin/webscr" method="post"> <input name="cmd" type="hidden" value="_donations" /> <input name="business" type="hidden" value="paypal@avirtualhome.com" /> <input name="item_name" type="hidden" value="AVH Plugins" /> <input name="no_shipping" type="hidden" value="1" /> <input name="no_note" type="hidden" value="1" /> <input name="currency_code" type="hidden" value="USD" /> <input name="tax" type="hidden" value="0" /> <input name="lc" type="hidden" value="US" /> <input name="bn" type="hidden" value="PP-DonationsBF" /> <input alt="PayPal - The safer, easier way to pay online!" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" type="image" /> </form>';
-		echo '</p></div>';
+		echo '</p>';
 	}
 
 	/**
