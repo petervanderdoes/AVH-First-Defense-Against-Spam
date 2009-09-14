@@ -846,6 +846,8 @@ class AVH_FDAS_Admin
 
 		switch ( $hook_suffix ) {
 			case 'toplevel_page_avh-first-defense-against-spam' :
+				wp_enqueue_script('common');
+				wp_enqueue_script('wp-lists');
 				wp_enqueue_script( 'postbox' );
 				break;
 		}
