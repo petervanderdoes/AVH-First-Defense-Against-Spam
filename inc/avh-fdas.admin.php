@@ -100,8 +100,9 @@ class AVH_FDAS_Admin
 	 *
 	 */
 	function actionLoadPageHook_TopLevel(){
-		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'normal', 'core' );
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
+		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), 'avhfdas-menu-overview', 'normal', 'core' );
 
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
 		add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
@@ -109,6 +110,7 @@ class AVH_FDAS_Admin
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script( 'postbox' );
+		wp_enqueue_script( 'avhfdasadmin',$this->core->info['plugin_url'] . '/inc/js/avh-fdas.admin'.$suffix.'.js',array ('jquery' ), $this->core->version, true );
 
 		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
@@ -214,15 +216,7 @@ class AVH_FDAS_Admin
 		echo '	</div>'; //dashboard-widgets-wrap
 		echo '</div>'; // wrap
 
-		echo '<script type="text/javascript">' . "\n";
-		echo '	//<![CDATA[' . "\n";
-		echo '	jQuery(document).ready( function($) {' . "\n";
-		echo'		$(\'.if-js-closed\').removeClass(\'if-js-closed\').addClass(\'closed\');'."\n";
-		echo '		// postboxes setup' . "\n";
-		echo '		postboxes.add_postbox_toggles(\'avhfdas-menu-overview\');' . "\n";
-		echo '	});' . "\n";
-		echo '	//]]>' . "\n";
-		echo '</script>';
+
 	}
 
 	/**
