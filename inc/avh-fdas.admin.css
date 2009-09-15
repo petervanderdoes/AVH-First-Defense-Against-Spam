@@ -10,6 +10,13 @@ div.clearer {
 	height: 1px;
 }
 
+table.avhfdas-options {
+	font-size: 11px;
+}
+
+#avhfdas-options span.description {
+	font-size: 11px;
+}
 /* Statistics */
 
 #avhfdasBoxStats p.sub,

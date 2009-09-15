@@ -93,8 +93,32 @@ class AVH_FDAS_Admin
 
 		// Add actions for menu pages
 		add_action('load-'.$this->hooks['menu_overview'], array(&$this, actionLoadPageHook_Overview));
+		add_action('load-'.$this->hooks['menu_3rd_party'], array(&$this, actionLoadPageHook_3rd_party));
+
+	}
 
 
+	/**
+	 * Handle the menu options
+	 *
+	 */
+	function handleMenu ()
+	{
+
+		switch ( $_GET['page'] ) {
+			case 'avh-fdas-general' :
+				$this->doMenuGeneralOptions();
+				break;
+			case 'avh-fdas-3rd-party' :
+				$this->doMenu3rdPartyOptions();
+				break;
+			case 'avh-themed-by-browser' :
+			default :
+				$this->doMenuOverview();
+				break;
+		}
+		echo '<div class="clear">';
+		$this->printAdminFooter();
 	}
 
 	/**
@@ -119,61 +143,6 @@ class AVH_FDAS_Admin
 
 	}
 
-	/**
-	 * Set correlation between $screen and $hook
-	 *
-	 * @WordPress filter screen_meta_screen
-	 * @param $screen
-	 * @return strings
-	 */
-	function filterScreenMetaScreen ($screen){
-
-		switch ($screen) {
-			case 'toplevel_page_avh-first-defense-against-spam':
-				$screen = 'avhfdas-menu-overview';
-				break;
-		}
-		return $screen;
-	}
-
-		/**
-	 * Sets the amount of columns wanted for a particuler screen
-	 *
-	 * @WordPress filter screen_meta_screen
-	 * @param $screen
-	 * @return strings
-	 */
-
-	function filterScreenLayoutColumns($columns, $screen)
-	{
-		if ($screen == $this->hooks['menu_overview']) {
-			$columns[$this->hooks['menu_overview']] = 2;
-		}
-	return $columns;
-
-	}
-	/**
-	 * Handle the menu options
-	 *
-	 */
-	function handleMenu ()
-	{
-
-		switch ( $_GET['page'] ) {
-			case 'avh-fdas-general' :
-				$this->doMenuGeneralOptions();
-				break;
-			case 'avh-fdas-3rd-party' :
-				$this->doMenu3rdPartyOptions();
-				break;
-			case 'avh-themed-by-browser' :
-			default :
-				$this->doMenuOverview();
-				break;
-		}
-		echo '<div class="clear">';
-		$this->printAdminFooter();
-	}
 
 	/**
 	 * Menu Page Overview
@@ -529,6 +498,29 @@ class AVH_FDAS_Admin
 		echo '</form>';
 	}
 
+		/**
+	 * Setup everything needed for the Overview page
+	 *
+	 */
+	function actionLoadPageHook_3rd_party(){
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
+
+		add_meta_box( 'avhfdasBoxSFS', 'Stop Forum Spam', array (&$this, 'metaboxMenu3rdParty_SFS' ), $this->hooks['menu_3rd_party'], 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxPHP', 'Project Honey Pot', array (&$this, 'metaboxMenu3rdParty_PHP' ), $this->hooks['menu_3rd_party'], 'side', 'core' );
+
+		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
+		//add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
+
+		wp_enqueue_script('common');
+		wp_enqueue_script('wp-lists');
+		wp_enqueue_script( 'postbox' );
+		wp_enqueue_script( 'avhfdasadmin',$this->core->info['plugin_url'] . '/inc/js/avh-fdas.admin'.$suffix.'.js',array ('jquery' ), $this->core->version, true );
+
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_admin_css( 'css/dashboard' );
+
+	}
+
 	/**
 	 * Menu Page Third Party Options
 	 *
@@ -536,6 +528,8 @@ class AVH_FDAS_Admin
 	 */
 	function doMenu3rdPartyOptions ()
 	{
+		global $screen_layout_columns;
+
 		$options_sfs = array (array ('avhfdas[general][use_sfs]', 'Check with Stop Forum Spam', 'checkbox', 1, 'If checked, the visitor\'s IP will be checked with Stop Forum Spam' ), array ('avhfdas[sfs][whentoemail]', 'Email threshold', 'text', 3, 'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.' ), array ('avhfdas[sfs][emailphp]', 'Email Project Honey Pot Info', 'checkbox', 1, 'Always email Project Honey Pot info when Stop Forum Spam email threshold is reached, disregarding the email threshold set for Project Honey Pot. This only works when you select to check with Project Honey Pot as well.' ), array ('avhfdas[sfs][whentodie]', 'Termination threshold', 'text', 3, 'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>' ), array ('avhfdas[sfs][sfsapikey]', 'API Key', 'text', 15, 'You need a Stop Forum Spam API key to report spam.' ), array ('avhfdas[sfs][error]', 'Email error', 'checkbox', 1, 'Receive an email when the call to Stop Forum Fails' ) );
 
 		$options_php = array (array ('avhfdas[general][use_php]', 'Check with Honey Pot Project', 'checkbox', 1, 'If checked, the visitor\'s IP will be checked with Honey Pot Project' ), array ('avhfdas[php][whentoemailtype]', 'Email type threshold:', 'dropdown', '0/1/2/3/4/5/6/7', 'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', 'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />Both the type threshold and the score threshold have to be reached in order to receive an email.' ), array ('avhfdas[php][whentoemail]', 'Email score threshold', 'text', 3, 'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.' ), array ('avhfdas[php][whentodietype]', 'Termination type threshold', 'dropdown', '-1/0/1/2/3/4/5/6/7', 'Never/Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', 'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<br />Both the type threshold and the score threshold have to be reached in order to termnate the connection. ' ), array ('avhfdas[php][whentodie]', 'Termination score threshold', 'text', 3, 'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>' ), array ('avhfdas[php][phpapikey]', 'API Key:', 'text', 15, 'You need a Project Honey Pot API key to check the Honey Pot Project database.' ) );
@@ -575,25 +569,89 @@ class AVH_FDAS_Admin
 		}
 
 		$actual_options = array_merge( $this->core->getOptions(), $this->core->getData() );
+
+
+		$hide2 = '';
+		switch ( $screen_layout_columns ) {
+			case 2:
+				$width = 'width:49%;';
+				break;
+			default:
+				$width = 'width:98%;';
+				$hide2 = 'display:none;';
+		}
+		$data['options_sfs']=$options_sfs;
+		$data['options_php']=$options_php;
+		$data['actual_options'] = $actual_options;
+
+		echo '<div class="wrap avhfdas-wrap">';
 		echo '<div class="wrap">';
 		echo $this->displayIcon( 'options-general' );
 		echo '<h2>' . __( '3rd Party Options', 'avhfdas' ) . '</h2>';
 		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=avh-fdas-3rd-party" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_options' );
+		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 
-		echo '<div id="printOptions">';
-		echo '<h3>' . __( 'Stop Forum Spam', 'avhfdas' ) . '</h3>';
-		echo '<p>' . __( 'To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.' );
-		echo $this->printOptions( $options_sfs, $actual_options );
-		echo '<h3>' . __( 'Project Honey Pot', 'avhfdas' ) . '</h3>';
-		echo '<p>' . __( 'To check a visitor at Project Honey Pot you must enable it below, you must also have an API key. You can get an API key by signing up for free at the <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">Honey Pot Project</a>. Set the options to your own liking.' );
-		echo $this->printOptions( $options_php, $actual_options );
-		echo '</div>';
+		echo '	<div id="dashboard-widgets-wrap">';
+		echo '		<div id="dashboard-widgets" class="metabox-holder">';
+		echo "			<div class='postbox-container' style='$width'>\n";
+		do_meta_boxes( $this->hooks['menu_3rd_party'], 'normal', $data );
+		echo "			</div>";
+		echo "			<div class='postbox-container' style='{$hide2}$width'>\n";
+		do_meta_boxes( $this->hooks['menu_3rd_party'], 'side', $data );
+		echo '			</div>';
+		echo '		</div>';
+
+		echo '<br class="clear"/>';
+		echo '	</div>'; //dashboard-widgets-wrap
+		echo '</div>'; // wrap
 
 		echo '<p class="submit"><input class="button-primary" type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
 		echo '</form>';
 	}
 
+	function metaboxMenu3rdParty_SFS($data){
+		$options_sfs=$data['options_sfs'];
+		$actual_options=$data['actual_options'];
+		echo '<p>' . __( 'To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.' );
+		echo $this->printOptions( $options_sfs, $actual_options );
+
+	}
+
+	function metaboxMenu3rdParty_PHP($data) {
+		$options_php=$data['options_php'];
+		$actual_options=$data['actual_options'];
+
+		echo '<p>' . __( 'To check a visitor at Project Honey Pot you must enable it below, you must also have an API key. You can get an API key by signing up for free at the <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">Honey Pot Project</a>. Set the options to your own liking.' );
+		echo $this->printOptions( $options_php, $actual_options );
+
+	}
+	/**
+	 * Sets the amount of columns wanted for a particuler screen
+	 *
+	 * @WordPress filter screen_meta_screen
+	 * @param $screen
+	 * @return strings
+	 */
+
+	function filterScreenLayoutColumns($columns, $screen)
+	{
+		switch ($screen) {
+			case $this->hooks['menu_overview']:
+				$columns[$this->hooks['menu_overview']] = 2;
+				break;
+			case $this->hooks['menu_general']:
+				$columns[$this->hooks['menu_general']] = 1;
+				break;
+			case $this->hooks['menu_3rd_party']:
+				$columns[$this->hooks['menu_3rd_party']] = 2;
+				break;
+
+		}
+	return $columns;
+
+	}
 	/**
 	 * Adds Settings next to the plugin actions
 	 *
