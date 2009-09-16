@@ -14,8 +14,12 @@ table.avhfdas-options {
 	font-size: 11px;
 }
 
-#avhfdas-options span.description {
+.avhfdas-wrap span.description {
 	font-size: 11px;
+}
+
+.avhfdas-wrap .b {
+	font-weight: bold;
 }
 /* Statistics */
 
@@ -89,10 +93,6 @@ table.avhfdas-options {
 	padding: 6px 10px 12px;
 }
 
-#avhfdasBoxStats .versions .b {
-	font-weight: bold;
-}
-
 #avhfdasBoxStats a.button {
 	float: right;
 	clear: right;
@@ -100,10 +100,6 @@ table.avhfdas-options {
 	top: -5px;
 }
 
-
-#avhfdasBoxDonations .b {
-	font-weight: bold;
-}
 #avhfdasBoxDonations .inside {
 	font-size: 12px;
 }

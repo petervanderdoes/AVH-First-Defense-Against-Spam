@@ -85,10 +85,10 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version, 'dbversion'=> $db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0 );
+		$this->default_general_options = array ('version' => $this->version, 'dbversion' => $db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0 );
 		$this->default_spam = array ('whentoemail' => 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 1 );
 		$this->default_honey = array ('whentoemailtype' => 0, 'whentoemail' => 0, 'whentodietype' => 4, 'whentodie' => 10000, 'phpapikey' => '' );
-		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7);
+		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
 		$this->default_spam_data = array ('190001' => 0 );
 		$this->default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
 		$this->default_nonces_data = 'default';
@@ -96,7 +96,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default Options - All as stored in the DB
 		 */
-		$this->default_options = array ('general' => $this->default_general_options, 'sfs' => $this->default_spam, 'php' => $this->default_honey , 'ipcache' => $this->default_ipcache);
+		$this->default_options = array ('general' => $this->default_general_options, 'sfs' => $this->default_spam, 'php' => $this->default_honey, 'ipcache' => $this->default_ipcache );
 		$this->default_data = array ('counters' => $this->default_spam_data, 'lists' => $this->default_data_lists );
 		$this->default_nonces = array ('default' => $this->default_nonces_data );
 
@@ -111,7 +111,7 @@ class AVH_FDAS_Core
 
 
 		// Check if we have to do upgrades
-		if ( (!isset($this->options['general']['dbversion'])) || $this->options['general']['dbversion'] < $db_version ) {
+		if ( (! isset( $this->options['general']['dbversion'] )) || $this->options['general']['dbversion'] < $db_version ) {
 			$this->doUpgrade();
 		}
 
@@ -303,7 +303,6 @@ class AVH_FDAS_Core
 
 		// New counter system
 		unset( $new_data['spam']['counter'] );
-
 
 		return array ($new_options, $new_data );
 	}
