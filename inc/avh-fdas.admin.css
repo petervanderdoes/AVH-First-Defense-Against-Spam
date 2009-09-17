@@ -21,6 +21,13 @@ table.avhfdas-options {
 .avhfdas-wrap .b {
 	font-weight: bold;
 }
+
+#avhfdas-options input {
+	font-size: 11px;
+}
+#avhfdas-generaloptions input {
+	font-size: 11px;
+}
 /* Statistics */
 
 #avhfdasBoxStats p.sub,
