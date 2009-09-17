@@ -10,6 +10,7 @@ div.clearer {
 	height: 1px;
 }
 
+/* Metabox in General */
 table.avhfdas-options {
 	font-size: 11px;
 }
@@ -28,6 +29,7 @@ table.avhfdas-options {
 #avhfdas-generaloptions input {
 	font-size: 11px;
 }
+
 /* Statistics */
 
 #avhfdasBoxStats p.sub,
@@ -107,10 +109,12 @@ table.avhfdas-options {
 	top: -5px;
 }
 
+/* Donations */
 #avhfdasBoxDonations .inside {
 	font-size: 12px;
 }
 
+/* FAQ */
 #avhfdasBoxFAQ ul {
 	list-style-image:none;
 	list-style-position:inside;
