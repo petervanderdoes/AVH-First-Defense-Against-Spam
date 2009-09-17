@@ -86,14 +86,16 @@ class AVH_FDAS_Admin
 		// Add menu system
 		$folder = plugin_basename( $this->core->info['plugin_dir'] );
 		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		$this->hooks['menu_overview'] = add_submenu_page( $folder, __( 'AVH First Defense Against Spam: Overview' ), __( 'Overview' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		$this->hooks['menu_general'] = add_submenu_page( $folder, __( 'AVH First Defense Against Spam: General Options' ), __( 'General Options' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
-		$this->hooks['menu_3rd_party'] = add_submenu_page( $folder, __( 'AVH First Defense Against Spam: 3rd Party Options' ), __( '3rd Party Options' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: '.__( 'Overview,avh-fdas' ), __( 'Overview','avh-fdas' ), 10, $folder, array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' .__( 'General Options','avh-fdas' ), __( 'General Options','avh-fdas' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' .__( '3rd Party Options','avh-fdas' ), __( '3rd Party Options','avh-fdas' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' .__( 'F.A.Q','avh-fdas' ), __( 'F.A.Q','avh-fdas' ), 10, 'avh-fdas-faq', array (&$this, 'handleMenu' ) );
 
 		// Add actions for menu pages
-		add_action( 'load-' . $this->hooks['menu_overview'], array (&$this, actionLoadPageHook_Overview ) );
-		add_action( 'load-' . $this->hooks['menu_general'], array (&$this, actionLoadPageHook_General ) );
-		add_action( 'load-' . $this->hooks['menu_3rd_party'], array (&$this, actionLoadPageHook_3rd_party ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_overview'], array (&$this, actionLoadPageHook_Overview ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_general'], array (&$this, actionLoadPageHook_General ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_3rd_party'], array (&$this, actionLoadPageHook_3rd_party ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_faq'], array (&$this, actionLoadPageHook_faq ) );
 
 	}
 
@@ -111,6 +113,10 @@ class AVH_FDAS_Admin
 			case 'avh-fdas-3rd-party' :
 				$this->doMenu3rdPartyOptions();
 				break;
+			case 'avh-fdas-faq' :
+				$this->doMenuFAQ();
+				break;
+
 			case 'avh-first-defense-against-spam' :
 			default :
 				$this->doMenuOverview();
@@ -128,11 +134,9 @@ class AVH_FDAS_Admin
 	{
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
-		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), $this->hooks['menu_overview'], 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), $this->hooks['avhfdas_menu_overview'], 'normal', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
-		//add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
-
 
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
@@ -154,7 +158,7 @@ class AVH_FDAS_Admin
 		global $screen_layout_columns;
 
 		// This box can't be unselectd in the the Screen Options
-		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxMenuOverviewDonations' ), $this->hooks['menu_overview'], 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxDonations' ), $this->hooks['avhfdas_menu_overview'], 'normal', 'core' );
 		$hide2 = '';
 		switch ( $screen_layout_columns ) {
 			case 2 :
@@ -171,10 +175,10 @@ class AVH_FDAS_Admin
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
-		do_meta_boxes( $this->hooks['menu_overview'], 'normal', '' );
+		do_meta_boxes( $this->hooks['avhfdas_menu_overview'], 'normal', '' );
 		echo '			</div>';
 		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
-		do_meta_boxes( $this->hooks['menu_overview'], 'side', '' );
+		do_meta_boxes( $this->hooks['avhfdas_menu_overview'], 'side', '' );
 		echo '			</div>';
 		echo '		</div>';
 		echo '<form style="display: none" method="get" action="">';
@@ -330,10 +334,10 @@ class AVH_FDAS_Admin
 	{
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
-		add_meta_box( 'avhfdasBoxGeneral', 'General', array (&$this, 'metaboxGeneral' ), $this->hooks['menu_general'], 'normal', 'core' );
-		add_meta_box( 'avhfdasBoxIPCache', 'IP Caching', array (&$this, 'metaboxIPCache' ), $this->hooks['menu_general'], 'normal', 'core' );
-		add_meta_box( 'avhfdasBoxBlackList', 'Blacklist', array (&$this, 'metaboxBlackList' ), $this->hooks['menu_general'], 'side', 'core' );
-		add_meta_box( 'avhfdasBoxWhiteList', 'Whitelist', array (&$this, 'metaboxWhiteList' ), $this->hooks['menu_general'], 'side', 'core' );
+		add_meta_box( 'avhfdasBoxGeneral', 'General', array (&$this, 'metaboxGeneral' ), $this->hooks['avhfdas_menu_general'], 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxIPCache', 'IP Caching', array (&$this, 'metaboxIPCache' ), $this->hooks['avhfdas_menu_general'], 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxBlackList', 'Blacklist', array (&$this, 'metaboxBlackList' ), $this->hooks['avhfdas_menu_general'], 'side', 'core' );
+		add_meta_box( 'avhfdasBoxWhiteList', 'Whitelist', array (&$this, 'metaboxWhiteList' ), $this->hooks['avhfdas_menu_general'], 'side', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
 
@@ -496,10 +500,10 @@ class AVH_FDAS_Admin
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
-		do_meta_boxes( $this->hooks['menu_general'], 'normal', $data );
+		do_meta_boxes( $this->hooks['avhfdas_menu_general'], 'normal', $data );
 		echo '			</div>';
 		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
-		do_meta_boxes( $this->hooks['menu_general'], 'side', $data );
+		do_meta_boxes( $this->hooks['avhfdas_menu_general'], 'side', $data );
 		echo '			</div>';
 		echo '		</div>';
 
@@ -541,8 +545,8 @@ class AVH_FDAS_Admin
 	{
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
-		add_meta_box( 'avhfdasBoxSFS', 'Stop Forum Spam', array (&$this, 'metaboxMenu3rdParty_SFS' ), $this->hooks['menu_3rd_party'], 'normal', 'core' );
-		add_meta_box( 'avhfdasBoxPHP', 'Project Honey Pot', array (&$this, 'metaboxMenu3rdParty_PHP' ), $this->hooks['menu_3rd_party'], 'side', 'core' );
+		add_meta_box( 'avhfdasBoxSFS', 'Stop Forum Spam', array (&$this, 'metaboxMenu3rdParty_SFS' ), $this->hooks['avhfdas_menu_3rd_party'], 'normal', 'core' );
+		add_meta_box( 'avhfdasBoxPHP', 'Project Honey Pot', array (&$this, 'metaboxMenu3rdParty_PHP' ), $this->hooks['avhfdas_menu_3rd_party'], 'side', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
 		//add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
@@ -642,10 +646,10 @@ class AVH_FDAS_Admin
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
-		do_meta_boxes( $this->hooks['menu_3rd_party'], 'normal', $data );
+		do_meta_boxes( $this->hooks['avhfdas_menu_3rd_party'], 'normal', $data );
 		echo '			</div>';
 		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
-		do_meta_boxes( $this->hooks['menu_3rd_party'], 'side', $data );
+		do_meta_boxes( $this->hooks['avhfdas_menu_3rd_party'], 'side', $data );
 		echo '			</div>';
 		echo '		</div>';
 
@@ -672,6 +676,159 @@ class AVH_FDAS_Admin
 
 	}
 
+		/**
+	 * Setup everything needed for the Overview page
+	 *
+	 */
+	function actionLoadPageHook_faq ()
+	{
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
+
+		add_meta_box( 'avhfdasBoxFAQ', __( 'F.A.Q.', 'avhfdas' ), array (&$this, 'metaboxFAQ' ), $this->hooks['avhfdas_menu_faq'], 'normal', 'core' );
+
+		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
+
+		wp_enqueue_script( 'common' );
+		wp_enqueue_script( 'wp-lists' );
+		wp_enqueue_script( 'postbox' );
+		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
+
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_admin_css( 'css/dashboard' );
+
+	}
+
+	/**
+	 * Menu Page Overview
+	 *
+	 * @return none
+	 */
+	function doMenuFAQ ()
+	{
+		global $screen_layout_columns;
+
+		// This box can't be unselectd in the the Screen Options
+		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxDonations' ), $this->hooks['avhfdas_menu_faq'], 'normal', 'core' );
+		$hide2 = '';
+		switch ( $screen_layout_columns ) {
+			case 2 :
+				$width = 'width:49%;';
+				break;
+			default :
+				$width = 'width:98%;';
+				$hide2 = 'display:none;';
+		}
+
+		echo '<div class="wrap avhfdas-wrap">';
+		echo $this->displayIcon( 'index' );
+		echo '<h2>' . __( 'AVH First Defense Against Spam Overview', 'avhfdas' ) . '</h2>';
+		echo '	<div id="dashboard-widgets-wrap">';
+		echo '		<div id="dashboard-widgets" class="metabox-holder">';
+		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
+		do_meta_boxes( $this->hooks['avhfdas_menu_faq'], 'normal', '' );
+		echo '			</div>';
+		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
+		do_meta_boxes( $this->hooks['avhfdas_menu_faq'], 'side', '' );
+		echo '			</div>';
+		echo '		</div>';
+		echo '<form style="display: none" method="get" action="">';
+		echo '<p>';
+		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+		echo '</p>';
+		echo '</form>';
+		echo '<br class="clear"/>';
+		echo '	</div>'; //dashboard-widgets-wrap
+		echo '</div>'; // wrap
+
+
+	}
+
+	function metaboxFAQ() {
+		echo '<p>';
+		echo '<span class="b">Why is there an IP caching system?</span><br />';
+		echo 'Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it iset at 5000 calls a day.<br />';
+		echo 'This means that if you don\'t use the Blacklist and/or Whitelist you are limited to 5000 visits/day on your site. To overcome this possible problem I wrote an IP caching system.<br />';
+		echo '</p>';
+
+		echo '<p>';
+		echo 'The following IP\'s are cached locally:<br />';
+		echo '<ul>';
+		echo '<li>Every IP identified as spam and triggering the terminate-the-connection threshold.</li>';
+		echo '<li>Every clean IP.</li>';
+		echo '</ul>';
+		echo '</p>';
+
+		echo '<p>';
+		echo 'Every day , once a day, a routine runs to remove the IP\'s that are older than a given day. You can set this day in the admintration section of the plugin.<br />';
+		echo 'You can check the statistics to see how many IP\'s are in the database. If you have a busy site, with a lot of unique visitors, you might have to play with the "Days to keep in cache" setting to keep the size under control.<br />';
+		echo '</p>';
+
+		echo '<p>';
+		echo '<span class="b">In what order is an IP checked and what action is taken?</span><br />';
+		echo 'The plugin checks the visiting IP in the following order, only if that feature is enabled of course.<br />';
+		echo '<ul>';
+		echo '<li>Whitelist - If found skip the rest of the checks.</li>';
+		echo '<li>Blacklist - If found terminate the connection.</li>';
+		echo '<li>IP Caching - If found and spam terminate connection, if found and clean skip the rest of the checks.</li>';
+		echo '<li>3rd Parties - If found determine action based on result.</li>';
+		echo '</ul>';
+		echo '</p>';
+
+		echo '<p>';
+		echo '<span class="b">Is this plugin enough to block all spam?</span><br />';
+		echo 'Unfortunately not.<br />';
+		echo 'I don\'t believe there is one solution to block all spam. Personally I have great success with the plugin in combination with Akismet.<br />';
+		echo '</p>';
+
+		echo '<p>';
+		echo '<span class="b">Does it conflicts with other spam solutions?</span><br />';
+		echo 'I\'m currently not aware of any conflicts with other anti-spam solutions.<br />';
+		echo '</p>';
+
+		echo '<p>';
+		echo '<span class="b">How do I define a range in the blacklist or white list?</span><br />';
+		echo 'You can define two sorts of ranges:';
+		echo '<ul>';
+		echo '<li>From IP to IP. i.e. 192.168.1.100-192.168.1.105</li>';
+		echo '<li>A network in CIDR format. i.e. 192.168.1.0/24</li>';
+		echo '</ul>';
+		echo '</p>';
+
+		echo '<p>';
+		echo '<span class="b">How do I report a spammer to Stop Forum Spam?</span><br />';
+		echo 'You need to have an API key from Stop Forum Spam. If you do on the Edit Comments pages there is an extra option called, Report & Delete, in the messages identified as spam.<br />';
+		echo '</p>';
+
+		echo '<p>';
+		echo '<span class="b">How do I get a Stop Forum Spam API key?</span><br />';
+		echo 'You will have to sign up on their site, <a href="http://www.stopforumspam.com/signup" target="_blank">http://www.stopforumspam.com/signup</a>.<br />';
+		echo '</p>';
+
+		echo '<p>';
+		echo '<span class="b">How do I get a Project Honey Pot API key?</span><br />';
+		echo 'You will have to sign up on their site, <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">http://www.projecthoneypot.org/create_account.php</a>.<br />';
+		echo '</p>';
+
+	}
+	/**
+	 * Donation Metabox
+	 * @return unknown_type
+	 */
+	function metaboxDonations ()
+	{
+		echo '<p>If you enjoy this plug-in please consider a donation. There are several ways you can show your appreciation</p>';
+		echo '<p>';
+		echo '<span class="b">Amazon Wish List</span><br />';
+		echo 'You can send me something from my <a href="http://www.amazon.com/gp/registry/wishlist/1U3DTWZ72PI7W?tag=avh-donation-20">Amazon Wish List</a>';
+		echo '</p>';
+		echo '<p>';
+		echo '<span class="b">Through Paypal.</span><br />';
+		echo 'Click on the Donate button and you will be directed to Paypal where you can make your donation and you don\'t need to have a Paypal account to make a donation.';
+		echo '<form action="https://www.paypal.com/cgi-bin/webscr" method="post"> <input name="cmd" type="hidden" value="_donations" /> <input name="business" type="hidden" value="paypal@avirtualhome.com" /> <input name="item_name" type="hidden" value="AVH Plugins" /> <input name="no_shipping" type="hidden" value="1" /> <input name="no_note" type="hidden" value="1" /> <input name="currency_code" type="hidden" value="USD" /> <input name="tax" type="hidden" value="0" /> <input name="lc" type="hidden" value="US" /> <input name="bn" type="hidden" value="PP-DonationsBF" /> <input alt="PayPal - The safer, easier way to pay online!" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" type="image" /> </form>';
+		echo '</p>';
+	}
+
 	/**
 	 * Sets the amount of columns wanted for a particuler screen
 	 *
@@ -683,15 +840,19 @@ class AVH_FDAS_Admin
 	function filterScreenLayoutColumns ( $columns, $screen )
 	{
 		switch ( $screen ) {
-			case $this->hooks['menu_overview'] :
-				$columns[$this->hooks['menu_overview']] = 2;
+			case $this->hooks['avhfdas_menu_overview'] :
+				$columns[$this->hooks['avhfdas_menu_overview']] = 2;
 				break;
-			case $this->hooks['menu_general'] :
-				$columns[$this->hooks['menu_general']] = 2;
+			case $this->hooks['avhfdas_menu_general'] :
+				$columns[$this->hooks['avhfdas_menu_general']] = 2;
 				break;
-			case $this->hooks['menu_3rd_party'] :
-				$columns[$this->hooks['menu_3rd_party']] = 2;
+			case $this->hooks['avhfdas_menu_3rd_party'] :
+				$columns[$this->hooks['avhfdas_menu_3rd_party']] = 2;
 				break;
+			case $this->hooks['avhfdas_menu_faq'] :
+				$columns[$this->hooks['avhfdas_menu_3rd_party']] = 1;
+				break;
+
 
 		}
 		return $columns;

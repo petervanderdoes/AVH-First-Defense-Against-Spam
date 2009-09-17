@@ -110,3 +110,13 @@ table.avhfdas-options {
 #avhfdasBoxDonations .inside {
 	font-size: 12px;
 }
+
+#avhfdasBoxFAQ ul {
+	list-style-image:none;
+	list-style-position:inside;
+	list-style-type:disc;
+}
+
+#avhfdasBoxFAQ li {
+	margin-bottom: 0px;
+}
