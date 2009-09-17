@@ -111,7 +111,7 @@ class AVH_FDAS_Admin
 			case 'avh-fdas-3rd-party' :
 				$this->doMenu3rdPartyOptions();
 				break;
-			case 'avh-themed-by-browser' :
+			case 'avh-first-defense-against-spam' :
 			default :
 				$this->doMenuOverview();
 				break;
