@@ -28,12 +28,32 @@ Spammers are identified by checking if the visitors IP exists in a database serv
 * Report a spammer to Stop Forum Spam. A valid API key from Stop Forum Spam is necessary.
 * Add a spammer to the local blacklist by clicking a link in the received email.
 * Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.
+* IP Caching system.
  
 Blocking a potential spammer before content is served has the following advantages:
 
 1. It saves bandwidth.
 1. It saves CPU cycles. The spammer is actually checked and blocked before WordPress starts building the page.
 1. If you keep track of how many visitors your site has, either by using Google's Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives. 
+
+
+= The IP Caching system. =
+Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it iset at 5000 calls a day.
+This means that if you don't use the Blacklist and/or Whitelist you are limited to 5000 visits/day on your site. To overcome this possible problem I wrote an IP caching system.
+
+The following IP's are cached locally:
+1. Every IP identified as spam and triggering the terminate-the-connection threshold.
+1. Every clean IP.
+
+Every day , once a day, a routine runs to remove the IP's that are older than a given day. You can set this day in the admintration section of the plugin.
+You can check the statistics to see how many IP's are in the database. If you have a busy site, with a lot of unique visitors, you might have to play with the "Days to keep in cache" setting to keep the size under control.
+
+= Checking Order and Actions =
+The plugin checks the visiting IP in the following order, only if that feature is enabled of course.
+1. Whitelist - If found skip the rest of the checks.
+1. Blacklist - If found terminate the connection.
+1. IP Caching - If found and spam terminate connection, if found and clean skip the rest of the checks.
+1. 3rd Parties - If found determine action based on result.
 
 To my knowledge this plugin is fully compatible with other anti-spam plugins, I have tested it with WP-Spamfree and Akismet.
 
@@ -76,6 +96,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 
 == Changelog ==
 = Version 2.1-dev2 =
+* Added an IP caching system.
 
 = Version 2.0.1 =
 * Bugfix: The function comment_footer_die was undefined.

@@ -201,7 +201,11 @@ class AVH_FDAS_Public
 			$ip_in_cache = false;
 			if (1 == $options['general']['useipcache']) {
 				$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+				$time_start = microtime( true );
 				$ip_in_cache = $ipcachedb->getIP( $ip );
+				$time_end = microtime( true );
+				$time = $time_end - $time_start;
+				$spaminfo['time'] = $time;
 			}
 
 			if ( false === $ip_in_cache ) {
@@ -233,7 +237,8 @@ class AVH_FDAS_Public
 				}
 			} else {
 				if ( $ip_in_cache->spam ) {
-					$this->handleSpammerCache( $ip );
+					$spaminfo['ip'] = $ip;
+					$this->handleSpammerCache( $spaminfo );
 				}
 			}
 		}
@@ -539,7 +544,7 @@ class AVH_FDAS_Public
 		}
 	}
 
-	function handleSpammerCache ( $ip )
+	function handleSpammerCache ( $info )
 	{
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
@@ -549,16 +554,17 @@ class AVH_FDAS_Public
 
 			// General part of the email
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), get_option( 'blogname' ), $ip );
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), get_option( 'blogname' ), $info['ip'] );
 			$message = '';
-			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
+			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $info['ip'] ) . "\r\n";
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
 
 			$message .= __( 'IP exists in the cache', 'avhfdas' ) . "\r\n";
+			$message .= '	' . sprintf( __( 'Check took:			%s', 'avhafdas' ), $info['time'] ) . "\r\n";
 			$message .= "\r\n";
 
 			// General End
-			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
+			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $info['ip'] . '&_avhnonce=' . $this->core->avh_create_nonce( $info['ip'] );
 			$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			$this->mail( $to, $subject, $message );
 		}
@@ -572,7 +578,7 @@ class AVH_FDAS_Public
 		}
 		$this->core->saveData( $data );
 		if ( 1 == $options['general']['diewithmessage'] ) {
-			$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] has been blocked</p>', 'avhfdas' ), $ip );
+			$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas' ), $info['ip'] );
 			$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
 			wp_die( $m );
 		} else {

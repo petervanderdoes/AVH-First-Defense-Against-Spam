@@ -367,7 +367,7 @@ class AVH_FDAS_Admin
 
 		$options_ipcache[] = array ('avhfdas[general][useipcache]', 'Use IP Caching', 'checkbox', 1, 'Cache the IP\'s that meet the 3rd party termination threshold and the IP\'s that are not detected by the 3rd party. The connection will be terminated if an IP is found in the cache that was perviously determined to be a spammer' );
 		$options_ipcache[] = array ('avhfdas[ipcache][email]', 'Email ', 'checkbox', 1, 'Send an email when a connection is terminate based on the IP found in the cache' );
-		$options_ipcache[] = array ('avhfdas[ipcache][daystokeep]', 'Days to keep IP in cache', 'text', 3, 'Keep the IP in cache for the selected days.' );
+		$options_ipcache[] = array ('avhfdas[ipcache][daystokeep]', 'Days to keep in cache', 'text', 3, 'Keep the IP in cache for the selected days.' );
 
 		if ( isset( $_POST['updateoptions'] ) ) {
 			check_admin_referer( 'avh_fdas_generaloptions' );
