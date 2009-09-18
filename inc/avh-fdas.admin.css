@@ -124,3 +124,36 @@ table.avhfdas-options {
 #avhfdasBoxFAQ li {
 	margin-bottom: 0px;
 }
+
+#avhfdasBoxFAQ table {
+	padding-left: 2em;
+}
+
+#avhfdasBoxFAQ table th {
+	font-size: 11px;
+	font-weight:normal;
+	padding-right:0.5em;
+	vertical-align: bottom;
+}
+
+#avhfdasBoxFAQ table td {
+	font-size: 11px;
+	border-top: #ececec 1px solid;
+	padding: 3px 0;
+	white-space: nowrap;
+}
+
+#avhfdasBoxFAQ table tr.first td {
+	border-top: none;
+}
+
+#avhfdasBoxFAQ .t {
+	font-size: 11px;
+	padding-right: 11px;
+	padding-top: 6px;
+}
+
+#avhfdasBoxFAQ td.first,
+#avhfdasBoxFAQ td.last {
+	width: 1px;
+}

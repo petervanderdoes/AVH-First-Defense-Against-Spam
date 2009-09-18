@@ -788,6 +788,27 @@ class AVH_FDAS_Admin
 		echo 'You will have to sign up on their site, <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">http://www.projecthoneypot.org/create_account.php</a>.<br />';
 		echo '</p>';
 
+		echo '<p>';
+		echo '<span class="b">What are some score examples for Project Honey Pot?</span><br />';
+		echo 'The Threat Rating is a logarithmic score -- much like the Richter\'s scale for measuring earthquakes.';
+		echo 'A Threat Rating of 25 can be interpreted as the equivalent of sending 100 spam messages to a honey pot trap.<br />';
+		echo '<div class="table">';
+		echo '<table>';
+		echo '<tbody>';
+		echo '<tr class="first">';
+		echo '<th>Threat Rating</th><th>IP that is as threatening as one that has sent</th>';
+		echo '</tr>';
+		echo '<tr>';
+		echo '<td class="first">25</td><td class="t">100 spam messages</td>';
+		echo '</tr>';
+		echo '<tr>';
+		echo '<td class="first">50</td><td class="t">10,000 spam messages</td>';
+		echo '</tr>';
+		echo '<tr>';
+		echo '<td class="first">75</td><td class="t">1,000,000 spam messages</td>';
+		echo '</tr>';
+		echo '</tbody></table></div>';
+		echo '</p>';
 	}
 
 	/**
