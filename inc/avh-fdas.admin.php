@@ -63,10 +63,10 @@ class AVH_FDAS_Admin
 
 			$role = get_role( 'administrator' );
 			if ( $role != null && ! $role->has_cap( 'role_avh_fdas' ) ) {
-				$role->add_cap( 'avh_fdas' );
+				$role->add_cap( 'role_avh_fdas' );
 			}
 			if ( $role != null && ! $role->has_cap( 'role_admin_avh_fdas' ) ) {
-				$role->add_cap( 'admin_avh_fdas' );
+				$role->add_cap( 'role_admin_avh_fdas' );
 			}
 			// Clean var
 			unset( $role );
@@ -1053,7 +1053,14 @@ class AVH_FDAS_Admin
 	 */
 	function deactivatePlugin ()
 	{
-		// Remove the roles
+		// Remove the administrative capilities
+		$role = get_role( 'administrator' );
+		if ( $role != null && $role->has_cap( 'role_avh_fdas' ) ) {
+			$role->remove_cap('role_avh_fdas');
+		}
+		if ( $role != null && $role->has_cap( 'role_admin_avh_fdas' ) ) {
+			$role->remove_cap('role_admin_avh_fdas');
+		}
 
 		// Deactivate the cron action as the the plugin is deactivated.
 		wp_clear_scheduled_hook( 'avhfdas_clean_nonce' );

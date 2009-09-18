@@ -76,7 +76,7 @@ class AVH_FDAS_Core
 	function __construct ()
 	{
 		$this->version = "2.1-dev2";
-		$db_version = 2;
+		$db_version = 3;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
@@ -240,6 +240,11 @@ class AVH_FDAS_Core
 			list ( $options, $data ) = $this->doUpgrade20( $options, $data );
 		}
 
+		// Introduced dbversion starting with v2.1
+		if (!isset($options['general']['dbversion']) || $options['general']['dbversion'] < 3) {
+			$this->doUpgrade21($options, $data);
+	}
+
 		// Add none existing sections and/or elements to the options
 		foreach ( $this->default_options as $section => $default_options ) {
 			if ( ! array_key_exists( $section, $options ) ) {
@@ -307,6 +312,32 @@ class AVH_FDAS_Core
 		return array ($new_options, $new_data );
 	}
 
+	/**
+	 * Upgrade to version 2.1
+	 *
+	 * @param array $old_options
+	 * @param array $old_data
+	 * @return array
+	 *
+	 */
+	function doUpgrade21 ( $old_options, $old_data )
+	{
+		$new_options = $old_options;
+		$new_data = $old_data;
+
+		// Changed Administrative capabilties names
+		$role = get_role( 'administrator' );
+		if ( $role != null && $role->has_cap( 'avh_fdas' ) ) {
+			$role->remove_cap('avh_fdas');
+			$role->add_cap( 'role_avh_fdas' );
+		}
+		if ( $role != null && $role->has_cap( 'admin_avh_fdas' ) ) {
+			$role->remove_cap('admin_avh_fdas');
+			$role->add_cap( 'role_admin_avh_fdas' );
+		}
+
+		return array ($new_options, $new_data );
+	}
 	/**
 	 * Get the base directory of a directory structure
 	 *
