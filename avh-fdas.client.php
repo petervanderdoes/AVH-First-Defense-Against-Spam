@@ -19,16 +19,16 @@ class AVH_FDAS_Singleton
 			if ( ! class_exists( $class ) ) {
 				switch ( $class ) {
 					case 'AVH_FDAS_Core' :
-						require_once (dirname( __FILE__ ) . '/inc/avh-fdas.core.php');
+						require_once (dirname( __FILE__ ) . '/class/avh-fdas.core.php');
 						break;
 					case 'AVH_FDAS_Admin' :
-						require_once (dirname( __FILE__ ) . '/inc/avh-fdas.admin.php');
+						require_once (dirname( __FILE__ ) . '/class/avh-fdas.admin.php');
 						break;
 					case 'AVH_FDAS_Public' :
-						require_once (dirname( __FILE__ ) . '/inc/avh-fdas.public.php');
+						require_once (dirname( __FILE__ ) . '/class/avh-fdas.public.php');
 						break;
 					case 'AVH_FDAS_DB' :
-						require_once (dirname( __FILE__ ) . '/inc/avh-fdas.db.php');
+						require_once (dirname( __FILE__ ) . '/class/avh-fdas.db.php');
 						break;
 
 				}

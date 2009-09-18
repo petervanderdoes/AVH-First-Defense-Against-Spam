@@ -138,9 +138,9 @@ class AVH_FDAS_Admin
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
+		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
 
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
 
 	}
@@ -321,9 +321,9 @@ class AVH_FDAS_Admin
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
+		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
 
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
 
 	}
@@ -532,9 +532,9 @@ class AVH_FDAS_Admin
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
+		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
 
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin' . $suffix . '.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
 
 	}
@@ -668,9 +668,9 @@ class AVH_FDAS_Admin
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
+		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
 
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/inc/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
 
 	}

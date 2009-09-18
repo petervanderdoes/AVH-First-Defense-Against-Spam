@@ -117,29 +117,24 @@ class AVH_FDAS_Core
 
 		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
 
-		// Determine installation path & url
-		// $info['home_path'] = get_home_path();
-		$info['home_path'] = '';
-		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
-		$path = substr( $path, strpos( $path, 'plugins' ) + 8, strlen( $path ) );
-		$path = substr( $path, 0, strlen( $path ) - 4 );
-
 		$info['siteurl'] = get_option( 'siteurl' );
 		if ( $this->isMuPlugin() ) {
 			$info['plugin_url'] = WPMU_PLUGIN_URL;
 			$info['plugin_dir'] = WPMU_PLUGIN_DIR;
-			if ( $path != 'mu-plugins' ) {
-				$info['plugin_url'] .= '/' . $path;
-				$info['plugin_dir'] .= '/' . $path;
-			}
 		} else {
 			$info['plugin_url'] = WP_PLUGIN_URL;
 			$info['plugin_dir'] = WP_PLUGIN_DIR;
-			if ( $path != 'plugins' ) {
-				$info['plugin_url'] .= '/' . $path;
-				$info['plugin_dir'] .= '/' . $path;
-			}
 		}
+
+		// Determine installation path & url
+		// $info['home_path'] = get_home_path();
+		$info['home_path'] = '';
+		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
+		$path = str_replace($info['plugin_dir'],'',$path);
+		$path = $this->getBaseDirectory ( $path );
+
+		$info['plugin_url'] = $info['plugin_url'].'/'.$path;
+		$info['plugin_dir'] = $info['plugin_dir'].'/'.$path;
 
 		// Set class property for info
 		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'plugin_url' => $info['plugin_url'], 'plugin_dir' => $info['plugin_dir'], 'graphics_url' => $info['plugin_url'] . '/images', 'home_path' => $info['home_path'], 'wordpress_version' => $this->getWordpressVersion() );
@@ -450,24 +445,6 @@ class AVH_FDAS_Core
 			}
 		}
 		return $return;
-	}
-
-	/**
-	 * Insert the CSS file
-	 *
-	 * @param string $handle CSS Handle
-	 * @param string $cssfile
-	 *
-	 * @since 1.0
-	 */
-	function handleCssFile ( $handle, $cssfile )
-	{
-		wp_register_style( $handle, $this->info['plugin_url'] . $cssfile, array (), $this->version, 'all' );
-		if ( did_action( 'wp_print_styles' ) ) { // we already printed the style queue.  Print this one immediately
-			wp_print_styles( $handle );
-		} else {
-			wp_enqueue_style( $handle );
-		}
 	}
 
 	/**
