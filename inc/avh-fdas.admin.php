@@ -29,14 +29,13 @@ class AVH_FDAS_Admin
 		add_action( 'admin_menu', array (&$this, 'actionAdminMenu' ) );
 
 		// Add the ajax action
-		//add_action('admin_init', array(&$this, 'ajaxCheck'));
 		add_action( 'wp_ajax_avh-fdas-reportcomment', array (&$this, 'actionAjaxReportComment' ) );
 
 		// Add admin actions
 		add_action( 'admin_action_blacklist', array (&$this, 'actionHandleBlacklistUrl' ) );
 		add_action( 'admin_action_emailreportspammer', array (&$this, 'actionHandleEmailReportingUrl' ) );
 
-		// Add Filter
+		// Add Filters
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 
@@ -61,17 +60,16 @@ class AVH_FDAS_Admin
 	 */
 	function actionInitRoles ()
 	{
-		if ( function_exists( 'get_role' ) ) {
+
 			$role = get_role( 'administrator' );
-			if ( $role != null && ! $role->has_cap( 'avh_fdas' ) ) {
+			if ( $role != null && ! $role->has_cap( 'role_avh_fdas' ) ) {
 				$role->add_cap( 'avh_fdas' );
 			}
-			if ( $role != null && ! $role->has_cap( 'admin_avh_fdas' ) ) {
+			if ( $role != null && ! $role->has_cap( 'role_admin_avh_fdas' ) ) {
 				$role->add_cap( 'admin_avh_fdas' );
 			}
 			// Clean var
 			unset( $role );
-		}
 	}
 
 	/**
@@ -85,11 +83,11 @@ class AVH_FDAS_Admin
 
 		// Add menu system
 		$folder = plugin_basename( $this->core->info['plugin_dir'] );
-		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: '.__( 'Overview,avh-fdas' ), __( 'Overview','avh-fdas' ), 10, $folder, array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' .__( 'General Options','avh-fdas' ), __( 'General Options','avh-fdas' ), 10, 'avh-fdas-general', array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' .__( '3rd Party Options','avh-fdas' ), __( '3rd Party Options','avh-fdas' ), 10, 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' .__( 'F.A.Q','avh-fdas' ), __( 'F.A.Q','avh-fdas' ), 10, 'avh-fdas-faq', array (&$this, 'handleMenu' ) );
+		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 'role_avh_fdas', $folder, array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview,avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-general', array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
+		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-faq', array (&$this, 'handleMenu' ) );
 
 		// Add actions for menu pages
 		add_action( 'load-' . $this->hooks['avhfdas_menu_overview'], array (&$this, actionLoadPageHook_Overview ) );
@@ -116,7 +114,6 @@ class AVH_FDAS_Admin
 			case 'avh-fdas-faq' :
 				$this->doMenuFAQ();
 				break;
-
 			case 'avh-first-defense-against-spam' :
 			default :
 				$this->doMenuOverview();
@@ -190,26 +187,6 @@ class AVH_FDAS_Admin
 		echo '<br class="clear"/>';
 		echo '	</div>'; //dashboard-widgets-wrap
 		echo '</div>'; // wrap
-
-
-	}
-
-	/**
-	 * Donation Metabox
-	 * @return unknown_type
-	 */
-	function metaboxMenuOverviewDonations ()
-	{
-		echo '<p>If you enjoy this plug-in please consider a donation. There are several ways you can show your appreciation</p>';
-		echo '<p>';
-		echo '<span class="b">Amazon Wish List</span><br />';
-		echo 'You can send me something from my <a href="http://www.amazon.com/gp/registry/wishlist/1U3DTWZ72PI7W?tag=avh-donation-20">Amazon Wish List</a>';
-		echo '</p>';
-		echo '<p>';
-		echo '<span class="b">Through Paypal.</span><br />';
-		echo 'Click on the Donate button and you will be directed to Paypal where you can make your donation and you don\'t need to have a Paypal account to make a donation.';
-		echo '<form action="https://www.paypal.com/cgi-bin/webscr" method="post"> <input name="cmd" type="hidden" value="_donations" /> <input name="business" type="hidden" value="paypal@avirtualhome.com" /> <input name="item_name" type="hidden" value="AVH Plugins" /> <input name="no_shipping" type="hidden" value="1" /> <input name="no_note" type="hidden" value="1" /> <input name="currency_code" type="hidden" value="USD" /> <input name="tax" type="hidden" value="0" /> <input name="lc" type="hidden" value="US" /> <input name="bn" type="hidden" value="PP-DonationsBF" /> <input alt="PayPal - The safer, easier way to pay online!" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" type="image" /> </form>';
-		echo '</p>';
 	}
 
 	/**
@@ -274,12 +251,12 @@ class AVH_FDAS_Admin
 		echo '<br/>';
 		echo '<div class="versions">';
 		echo '<p>';
-		echo 'IP caching is <span class="b">';
+		echo 'IP caching is ';
 		if ( 0 == $this->core->options['general']['useipcache'] ) {
-			echo 'disabled</span>';
+			echo '<span class="b">disabled</span>';
 			echo '</p></div>';
 		} else {
-			echo 'enabled</span>';
+			echo '<span class="b">enabled</span>';
 			echo '</p></div>';
 			$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ip) from $wpdb->avhfdasipcache" ) );
 			$count_clean = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ip) from $wpdb->avhfdasipcache WHERE spam=0" ) );
@@ -676,7 +653,7 @@ class AVH_FDAS_Admin
 
 	}
 
-		/**
+	/**
 	 * Setup everything needed for the Overview page
 	 *
 	 */
@@ -744,7 +721,8 @@ class AVH_FDAS_Admin
 
 	}
 
-	function metaboxFAQ() {
+	function metaboxFAQ ()
+	{
 		echo '<p>';
 		echo '<span class="b">Why is there an IP caching system?</span><br />';
 		echo 'Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it iset at 5000 calls a day.<br />';
@@ -811,6 +789,7 @@ class AVH_FDAS_Admin
 		echo '</p>';
 
 	}
+
 	/**
 	 * Donation Metabox
 	 * @return unknown_type
@@ -852,7 +831,6 @@ class AVH_FDAS_Admin
 			case $this->hooks['avhfdas_menu_faq'] :
 				$columns[$this->hooks['avhfdas_menu_3rd_party']] = 1;
 				break;
-
 
 		}
 		return $columns;
@@ -1075,6 +1053,8 @@ class AVH_FDAS_Admin
 	 */
 	function deactivatePlugin ()
 	{
+		// Remove the roles
+
 		// Deactivate the cron action as the the plugin is deactivated.
 		wp_clear_scheduled_hook( 'avhfdas_clean_nonce' );
 		wp_clear_scheduled_hook( 'avhfdas_clean_ipcache' );
