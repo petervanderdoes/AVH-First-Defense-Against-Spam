@@ -88,11 +88,11 @@ class AVH_FDAS_Admin
 
 		// Add menu system
 		$folder = plugin_basename( $this->core->info['plugin_dir'] );
-		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 'role_avh_fdas', $folder, array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview,avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-general', array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-3rd-party', array (&$this, 'handleMenu' ) );
-		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-faq', array (&$this, 'handleMenu' ) );
+		add_menu_page( __( 'AVH F.D.A.S' ), __( 'AVH F.D.A.S' ), 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
+		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview,avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
+		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-general', array (&$this, 'doMenuGeneralOptions' ) );
+		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-3rd-party', array (&$this, 'doMenu3rdPartyOptions' ) );
+		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-faq', array (&$this, 'doMenuFAQ()' ) );
 
 		// Add actions for menu pages
 		add_action( 'load-' . $this->hooks['avhfdas_menu_overview'], array (&$this, actionLoadPageHook_Overview ) );
@@ -100,32 +100,6 @@ class AVH_FDAS_Admin
 		add_action( 'load-' . $this->hooks['avhfdas_menu_3rd_party'], array (&$this, actionLoadPageHook_3rd_party ) );
 		add_action( 'load-' . $this->hooks['avhfdas_menu_faq'], array (&$this, actionLoadPageHook_faq ) );
 
-	}
-
-	/**
-	 * Handle the menu options
-	 *
-	 */
-	function handleMenu ()
-	{
-
-		switch ( $_GET['page'] ) {
-			case 'avh-fdas-general' :
-				$this->doMenuGeneralOptions();
-				break;
-			case 'avh-fdas-3rd-party' :
-				$this->doMenu3rdPartyOptions();
-				break;
-			case 'avh-fdas-faq' :
-				$this->doMenuFAQ();
-				break;
-			case 'avh-first-defense-against-spam' :
-			default :
-				$this->doMenuOverview();
-				break;
-		}
-		echo '<div class="clear">';
-		$this->printAdminFooter();
 	}
 
 	/**
@@ -192,6 +166,9 @@ class AVH_FDAS_Admin
 		echo '<br class="clear"/>';
 		echo '	</div>'; //dashboard-widgets-wrap
 		echo '</div>'; // wrap
+
+
+		$this->printAdminFooter();
 	}
 
 	/**
@@ -321,7 +298,6 @@ class AVH_FDAS_Admin
 		add_meta_box( 'avhfdasBoxWhiteList', 'Whitelist', array (&$this, 'metaboxWhiteList' ), $this->hooks['avhfdas_menu_general'], 'side', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
-
 
 		// WordPress core Styles and Scripts
 		wp_enqueue_script( 'common' );
@@ -498,6 +474,8 @@ class AVH_FDAS_Admin
 
 		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
 		echo '</form>';
+
+		$this->printAdminFooter();
 	}
 
 	function metaboxGeneral ( $data )
@@ -643,6 +621,8 @@ class AVH_FDAS_Admin
 
 		echo '<p class="submit"><input class="button-primary" type="submit" name="updateoptions" value="' . __( 'Save Changes', 'avhfdas' ) . '" /></p>';
 		echo '</form>';
+
+		$this->printAdminFooter();
 	}
 
 	function metaboxMenu3rdParty_SFS ( $data )
@@ -669,7 +649,6 @@ class AVH_FDAS_Admin
 		add_meta_box( 'avhfdasBoxFAQ', __( 'F.A.Q.', 'avhfdas' ), array (&$this, 'metaboxFAQ' ), $this->hooks['avhfdas_menu_faq'], 'normal', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
-
 
 		// WordPress core Styles and Scripts
 		wp_enqueue_script( 'common' );
@@ -726,6 +705,8 @@ class AVH_FDAS_Admin
 		echo '	</div>'; //dashboard-widgets-wrap
 		echo '</div>'; // wrap
 
+
+		$this->printAdminFooter();
 
 	}
 
@@ -1126,6 +1107,7 @@ class AVH_FDAS_Admin
 	 */
 	function printAdminFooter ()
 	{
+		echo '<div class="clear">';
 		echo '<p class="footer_avhfdas">';
 		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->core->version );
 		echo '</p>';
