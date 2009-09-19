@@ -39,6 +39,11 @@ class AVH_FDAS_Admin
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 
+		// Register Styles and SCripts
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
+		wp_register_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
+		wp_register_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+
 		return;
 	}
 
@@ -61,15 +66,15 @@ class AVH_FDAS_Admin
 	function actionInitRoles ()
 	{
 
-			$role = get_role( 'administrator' );
-			if ( $role != null && ! $role->has_cap( 'role_avh_fdas' ) ) {
-				$role->add_cap( 'role_avh_fdas' );
-			}
-			if ( $role != null && ! $role->has_cap( 'role_admin_avh_fdas' ) ) {
-				$role->add_cap( 'role_admin_avh_fdas' );
-			}
-			// Clean var
-			unset( $role );
+		$role = get_role( 'administrator' );
+		if ( $role != null && ! $role->has_cap( 'role_avh_fdas' ) ) {
+			$role->add_cap( 'role_avh_fdas' );
+		}
+		if ( $role != null && ! $role->has_cap( 'role_admin_avh_fdas' ) ) {
+			$role->add_cap( 'role_admin_avh_fdas' );
+		}
+		// Clean var
+		unset( $role );
 	}
 
 	/**
@@ -129,19 +134,19 @@ class AVH_FDAS_Admin
 	 */
 	function actionLoadPageHook_Overview ()
 	{
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-
 		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), $this->hooks['avhfdas_menu_overview'], 'normal', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
 
+		// WordPress core Styles and Scripts
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
-
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
+
+		// Plugin Style and Scripts
+		wp_enqueue_script( 'avhfdasadmin' );
+		wp_enqueue_style( 'avhfdasadmin' );
 
 	}
 
@@ -309,7 +314,6 @@ class AVH_FDAS_Admin
 	 */
 	function actionLoadPageHook_General ()
 	{
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
 		add_meta_box( 'avhfdasBoxGeneral', 'General', array (&$this, 'metaboxGeneral' ), $this->hooks['avhfdas_menu_general'], 'normal', 'core' );
 		add_meta_box( 'avhfdasBoxIPCache', 'IP Caching', array (&$this, 'metaboxIPCache' ), $this->hooks['avhfdas_menu_general'], 'normal', 'core' );
@@ -318,13 +322,16 @@ class AVH_FDAS_Admin
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
 
+
+		// WordPress core Styles and Scripts
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
-
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
+
+		// Plugin Style and Scripts
+		wp_enqueue_script( 'avhfdasadmin' );
+		wp_enqueue_style( 'avhfdasadmin' );
 
 	}
 
@@ -520,22 +527,21 @@ class AVH_FDAS_Admin
 	 */
 	function actionLoadPageHook_3rd_party ()
 	{
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
 		add_meta_box( 'avhfdasBoxSFS', 'Stop Forum Spam', array (&$this, 'metaboxMenu3rdParty_SFS' ), $this->hooks['avhfdas_menu_3rd_party'], 'normal', 'core' );
 		add_meta_box( 'avhfdasBoxPHP', 'Project Honey Pot', array (&$this, 'metaboxMenu3rdParty_PHP' ), $this->hooks['avhfdas_menu_3rd_party'], 'side', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
-		//add_filter('screen_meta_screen', array(&$this,'filterScreenMetaScreen'),10);
 
-
+		// WordPress core Styles and Scripts
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
-
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin' . $suffix . '.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
+
+		// Plugin Style and Scripts
+		wp_enqueue_script( 'avhfdasadmin' );
+		wp_enqueue_style( 'avhfdasadmin' );
 
 	}
 
@@ -659,19 +665,21 @@ class AVH_FDAS_Admin
 	 */
 	function actionLoadPageHook_faq ()
 	{
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
 		add_meta_box( 'avhfdasBoxFAQ', __( 'F.A.Q.', 'avhfdas' ), array (&$this, 'metaboxFAQ' ), $this->hooks['avhfdas_menu_faq'], 'normal', 'core' );
 
 		add_filter( 'screen_layout_columns', array (&$this, 'filterScreenLayoutColumns' ), 10, 2 );
 
+
+		// WordPress core Styles and Scripts
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
 		wp_enqueue_script( 'postbox' );
-		wp_enqueue_script( 'avhfdasadmin', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
-
-		wp_enqueue_style( 'avhfdasadmin', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 		wp_admin_css( 'css/dashboard' );
+
+		// Plugin Style and Scripts
+		wp_enqueue_script( 'avhfdasadmin' );
+		wp_enqueue_style( 'avhfdasadmin' );
 
 	}
 
@@ -1077,10 +1085,10 @@ class AVH_FDAS_Admin
 		// Remove the administrative capilities
 		$role = get_role( 'administrator' );
 		if ( $role != null && $role->has_cap( 'role_avh_fdas' ) ) {
-			$role->remove_cap('role_avh_fdas');
+			$role->remove_cap( 'role_avh_fdas' );
 		}
 		if ( $role != null && $role->has_cap( 'role_admin_avh_fdas' ) ) {
-			$role->remove_cap('role_admin_avh_fdas');
+			$role->remove_cap( 'role_admin_avh_fdas' );
 		}
 
 		// Deactivate the cron action as the the plugin is deactivated.
@@ -1234,5 +1242,6 @@ class AVH_FDAS_Admin
 		echo "<div class='wrap'><p>$msg</p></div>";
 		die();
 	}
+
 }
 ?>
