@@ -83,6 +83,14 @@ class AVH_FDAS_Public
 		$date = current_time( 'mysql' );
 		$days = $options['ipcache']['daystokeep'];
 		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(date))) > %d", $date, $days ) );
+
+		$sendemail=true;
+		if ($sendemail) {
+			$to = get_option( 'admin_email' );
+			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - '.__('Clean IP cache', 'avhfdas' ), get_option( 'blogname' ) );
+			$message = sprintf (__('Deleted %d IP\'s from the cache','avhfdas'),$result);
+			$this->mail( $to, $subject, $message );
+		}
 	}
 
 	/**
@@ -133,7 +141,7 @@ class AVH_FDAS_Public
 						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
 						$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 
-						$message .= $this->mail( $to, $subject, $message );
+						$this->mail( $to, $subject, $message );
 
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam
