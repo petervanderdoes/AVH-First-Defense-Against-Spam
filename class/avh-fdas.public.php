@@ -58,14 +58,24 @@ class AVH_FDAS_Public
 	 */
 	function actionHandleCronCleanNonce ()
 	{
+		$removed = 0;
+		$options = $this->core->getOptions();
 		$all = get_option( $this->core->db_options_nonces );
 		if ( is_array( $all ) ) {
 			foreach ( $all as $key => $value ) {
 				if ( ! $this->core->avh_verify_nonce( $key, $value ) ) {
 					unset( $all[$key] );
+					$removed ++;
 				}
 			}
 			update_option( $this->core->db_options_nonces, $all );
+		}
+
+		if ( $options['general']['cron_nonces_email'] ) {
+			$to = get_option( 'admin_email' );
+			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean nonces', 'avhfdas' ), get_option( 'blogname' ) );
+			$message = sprintf( __( 'Deleted %d nonce\'s from the database', 'avhfdas' ), $removed );
+			$this->mail( $to, $subject, $message );
 		}
 	}
 
@@ -84,11 +94,10 @@ class AVH_FDAS_Public
 		$days = $options['ipcache']['daystokeep'];
 		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(date))) > %d", $date, $days ) );
 
-		$sendemail=true;
-		if ($sendemail) {
+		if ( $options['general']['cron_ipcache_email'] ) {
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - '.__('Clean IP cache', 'avhfdas' ), get_option( 'blogname' ) );
-			$message = sprintf (__('Deleted %d IP\'s from the cache','avhfdas'),$result);
+			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean IP cache', 'avhfdas' ), get_option( 'blogname' ) );
+			$message = sprintf( __( 'Deleted %d IP\'s from the cache', 'avhfdas' ), $result );
 			$this->mail( $to, $subject, $message );
 		}
 	}
@@ -207,7 +216,7 @@ class AVH_FDAS_Public
 			}
 
 			$ip_in_cache = false;
-			if (1 == $options['general']['useipcache']) {
+			if ( 1 == $options['general']['useipcache'] ) {
 				$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 				$time_start = microtime( true );
 				$ip_in_cache = $ipcachedb->getIP( $ip );
@@ -238,7 +247,7 @@ class AVH_FDAS_Public
 					if ( $spaminfo['detected'] ) {
 						$this->handleSpammer( $ip, $spaminfo );
 					} else {
-						if (1 == $options['general']['useipcache']) {
+						if ( 1 == $options['general']['useipcache'] ) {
 							$ipcachedb->setIP( $ip, 0 );
 						}
 					}
@@ -522,7 +531,7 @@ class AVH_FDAS_Public
 		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'];
 		$blacklist_die = 'Blacklisted' == $info['blacklist']['time'];
 
-		if (1 == $options['general']['useipcache']) {
+		if ( 1 == $options['general']['useipcache'] ) {
 			$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 			if ( $sfs_die || $php_die ) {
 				$ipcachedb->setIP( $ip, 1 );

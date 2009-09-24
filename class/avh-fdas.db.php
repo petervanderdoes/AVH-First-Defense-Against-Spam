@@ -57,10 +57,22 @@ class AVH_FDAS_DB
 		}
 	}
 
+	/**
+	 * Insert the IP into the DB
+	 * @param $ip string
+	 * @param $spam number
+	 * @return Object (false if not found)
+	 */
 	function setIP ( $ip, $spam )
 	{
 		global $wpdb;
 		$date = current_time( 'mysql' );
 		$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->avhfdasipcache (ip, spam, date) VALUES (INET_ATON(%s), %d, %s)", $ip, $spam, $date ) );
+
+		if ( $result ) {
+			return $result;
+		} else {
+			return false;
+		}
 	}
 }

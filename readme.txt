@@ -98,6 +98,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 = Version 2.1-dev2 =
 * Added an IP caching system.
 * Administrative layout changes.
+* Optional email can be send with information about the cron jobs of the plugin.
 * Bugfix: The default setting to terminate the connection for Project Honey Pot was unrealistic.
 
 = Version 2.0.1 =
