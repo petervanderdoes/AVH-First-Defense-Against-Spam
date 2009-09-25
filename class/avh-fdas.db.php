@@ -4,7 +4,6 @@
  *
  * @author Peter van der Does
  * @copyright 2009
- * @since 2.1
  */
 class AVH_FDAS_DB
 {
@@ -76,3 +75,4 @@ class AVH_FDAS_DB
 		}
 	}
 }
+?>

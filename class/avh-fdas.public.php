@@ -35,7 +35,6 @@ class AVH_FDAS_Public
 	 * Add a nonce field to the comments.
 	 *
 	 * @WordPress Action - comment_form
-	 * @since 1.2
 	 *
 	 */
 	function actionAddNonceFieldToComment ()
@@ -53,7 +52,6 @@ class AVH_FDAS_Public
 	 * Clean up the nonce DB by using Cron
 	 *
 	 * @WordPress: Action avhfdas_clean_nonce
-	 * @since 1.2
 	 *
 	 */
 	function actionHandleCronCleanNonce ()
@@ -83,7 +81,6 @@ class AVH_FDAS_Public
 	 * Cleans the IP cache table
 	 *
 	 * @WordPress: Action avhfdas_clean_ipcache
-	 * @since 2.2
 	 *
 	 */
 	function actionHandleCronCleanIPCache ()
@@ -177,7 +174,6 @@ class AVH_FDAS_Public
 	 *
 	 * @param string $nonce
 	 * @return boolean
-	 * @since 1.2
 	 */
 	function checkDB_Nonces ( $nonce )
 	{
@@ -196,7 +192,6 @@ class AVH_FDAS_Public
 	 * Get the visitors IP and call the stopforumspam API to check if it's a known spammer
 	 *
 	 * @WordPress Action get_header
-	 * @since 1.0
 	 */
 	function actionHandleMainAction ()
 	{
@@ -367,7 +362,6 @@ class AVH_FDAS_Public
 	 * @param string $list
 	 * @return boolean
 	 *
-	 * @since 1.2.3
 	 */
 	function checkList ( $ip, $list )
 	{
@@ -420,7 +414,7 @@ class AVH_FDAS_Public
 	}
 
 	/**
-	 * Handle a known spam IP
+	 * Handle a known spam IP found by the 3rd party
 	 *
 	 * @param string $ip - The spammers IP
 	 * @param array $info - Information
@@ -561,6 +555,11 @@ class AVH_FDAS_Public
 		}
 	}
 
+	/**
+	 * Handle a spammer found in the IP cache
+	 * @param $info
+	 * @return unknown_type
+	 */
 	function handleSpammerCache ( $info )
 	{
 		$data = $this->core->getData();

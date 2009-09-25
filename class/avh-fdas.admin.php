@@ -66,7 +66,6 @@ class AVH_FDAS_Admin
 	 * Setup Roles
 	 *
 	 * @WordPress Action init
-	 * @since 1.0
 	 */
 	function actionInitRoles ()
 	{
@@ -329,8 +328,8 @@ class AVH_FDAS_Admin
 		$options_general[] = array ('avhfdas[general][diewithmessage]', 'Show message', 'checkbox', 1, 'Show a message when the connection has been terminated.' );
 		$options_general[] = array ('avhfdas[general][emailsecuritycheck]', 'Email on failed security check:', 'checkbox', 1, 'Receive an email when a comment is posted and the security check failed.' );
 
-		$options_cron[]=array('avhfdas[general][cron_nonces_email]','Email result of nonces clean up','checkbox',1,'Receive an email with the total number of nonces that are deleted. The nonces are used to secure the links found in the emails.');
-		$options_cron[]=array('avhfdas[general][cron_ipcache_email]','Email result of IP cache clean up','checkbox',1,'Receive an email with the total number of IP\'s that are deleted from the IP caching system.');
+		$options_cron[] = array ('avhfdas[general][cron_nonces_email]', 'Email result of nonces clean up', 'checkbox', 1, 'Receive an email with the total number of nonces that are deleted. The nonces are used to secure the links found in the emails.' );
+		$options_cron[] = array ('avhfdas[general][cron_ipcache_email]', 'Email result of IP cache clean up', 'checkbox', 1, 'Receive an email with the total number of IP\'s that are deleted from the IP caching system.' );
 
 		$options_blacklist[] = array ('avhfdas[general][useblacklist]', 'Use internal blacklist', 'checkbox', 1, 'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.' );
 		$options_blacklist[] = array ('avhfdas[lists][blacklist]', 'Blacklist IP\'s:', 'textarea', 15, 'Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 15 );
@@ -349,7 +348,7 @@ class AVH_FDAS_Admin
 			$options = $this->core->getOptions();
 			$data = $this->core->getData();
 
-			$all_data = array_merge( $options_general, $options_blacklist, $options_whitelist, $options_ipcache,$options_cron );
+			$all_data = array_merge( $options_general, $options_blacklist, $options_whitelist, $options_ipcache, $options_cron );
 			foreach ( $all_data as $option ) {
 				$section = substr( $option[0], strpos( $option[0], '[' ) + 1 );
 				$section = substr( $section, 0, strpos( $section, '][' ) );
@@ -528,6 +527,7 @@ class AVH_FDAS_Admin
 		echo '<p>' . __( 'To use IP caching you must enable it below and set the options. IP\'s are stored in the database so if you have a high traffic website the database can grow quickly' );
 		echo $this->printOptions( $data['options_ipcache'], $data['actual_options'] );
 	}
+
 	/**
 	 * Metabox Display the cron Options
 	 * @param $data array The data is filled menu setup
@@ -538,6 +538,7 @@ class AVH_FDAS_Admin
 		echo '<p>' . __( 'Once a day cron jobs of this plugin run. You can select to receive an email with additional information about the jobs that ran.' );
 		echo $this->printOptions( $data['options_cron'], $data['actual_options'] );
 	}
+
 	/**
 	 * Setup everything needed for the 3rd party menu
 	 *

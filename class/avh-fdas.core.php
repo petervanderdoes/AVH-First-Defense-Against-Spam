@@ -193,7 +193,6 @@ class AVH_FDAS_Core
 	 * @param atring $optionsdb
 	 * @return array
 	 *
-	 * @since 1.2.3
 	 */
 	function handleOptionsDB ( $default_data, $optionsdb )
 	{
@@ -221,8 +220,6 @@ class AVH_FDAS_Core
 
 	/**
 	 * Checks if running version is newer and do upgrades if necessary
-	 *
-	 * @since 1.2.3
 	 *
 	 */
 	function doUpgrade ()
@@ -338,8 +335,6 @@ class AVH_FDAS_Core
 	 * @param string $directory
 	 * @return string
 	 *
-	 * @since 1.0
-	 *
 	 */
 	function getBaseDirectory ( $directory )
 	{
@@ -357,8 +352,6 @@ class AVH_FDAS_Core
 	 * Note: 2.7.x will return 2.7
 	 *
 	 * @return float
-	 *
-	 * @since 1.0
 	 */
 	function getWordpressVersion ()
 	{
@@ -453,7 +446,6 @@ class AVH_FDAS_Core
 	 * @param string|int $action Scalar value to add context to the nonce.
 	 * @return string The one use form token
 	 *
-	 * @since 1.1
 	 */
 	function avh_create_nonce ( $action = -1 )
 	{
@@ -467,8 +459,6 @@ class AVH_FDAS_Core
 	 *
 	 * The user is given an amount of time to use the token, so therefore, since the
 	 * $action remain the same, the independent variable is the time.
-	 *
-	 * @since 1.1
 	 *
 	 * @param string $nonce Nonce that was used in the form to verify
 	 * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
@@ -492,7 +482,6 @@ class AVH_FDAS_Core
 	 *
 	 * @param array $query_array
 	 * @return array
-	 * @since 1.0
 	 */
 	function handleRESTcall ( $query_array )
 	{
@@ -526,8 +515,6 @@ class AVH_FDAS_Core
 	 *
 	 * @param array $error
 	 * @return string
-	 * @since 1.0
-	 *
 	 */
 	function getHttpError ( $error )
 	{
@@ -549,7 +536,6 @@ class AVH_FDAS_Core
 	 * @param array $array
 	 * @param string $convention
 	 * @return string
-	 * @since 1.0
 	 */
 	function BuildQuery ( $array = NULL, $convention = '%s' )
 	{
@@ -582,7 +568,6 @@ class AVH_FDAS_Core
 	 * @param integer $get_attributes
 	 * @param string $priority
 	 * @return array
-	 * @since 1.0
 	 * @see http://www.bin-co.com/php/scripts/xml2array/
 	 */
 	function ConvertXML2Array ( $contents = '', $get_attributes = 1, $priority = 'tag' )
