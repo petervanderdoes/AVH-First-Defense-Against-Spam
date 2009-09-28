@@ -46,7 +46,7 @@ The following IP's are cached locally:
 1. Every IP identified as spam and triggering the terminate-the-connection threshold.
 1. Every clean IP.
 
-Every day , once a day, a routine runs to remove the IP's that are older than a given day. You can set this day in the admintration section of the plugin.
+Every day , once a day, a routine runs to remove the IP's that are older than a given day. You can set this day in the adminstration section of the plugin.
 You can check the statistics to see how many IP's are in the database. If you have a busy site, with a lot of unique visitors, you might have to play with the "Days to keep in cache" setting to keep the size under control.
 
 = Checking Order and Actions =
