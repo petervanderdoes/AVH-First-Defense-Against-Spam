@@ -96,6 +96,9 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 3. The option Report & Delete
 
 == Changelog ==
+= Version 2.1.1 =
+* Bugfix: Menu Option FAQ threw an error.
+
 = Version 2.1 =
 * Added an IP caching system.
 * Administrative layout changes.
