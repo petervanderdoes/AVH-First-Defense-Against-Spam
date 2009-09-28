@@ -40,6 +40,7 @@ Blocking a potential spammer before content is served has the following advantag
 = The IP Caching system. =
 Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it iset at 5000 calls a day.
 This means that if you don't use the Blacklist and/or Whitelist you are limited to 5000 visits/day on your site. To overcome this possible problem I wrote an IP caching system.
+If you use the caching system you still have a limit with Stop Forum Spam , but the limit is set to 5000 unique visits/day.
 
 The following IP's are cached locally:
 1. Every IP identified as spam and triggering the terminate-the-connection threshold.
