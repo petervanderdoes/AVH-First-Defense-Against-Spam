@@ -897,7 +897,7 @@ class AVH_FDAS_Admin
 				$columns[$this->hooks['avhfdas_menu_3rd_party']] = 2;
 				break;
 			case $this->hooks['avhfdas_menu_faq'] :
-				$columns[$this->hooks['avhfdas_menu_faq']] = 1;
+				$columns[$this->hooks['avhfdas_menu_faq']] = 2;
 				break;
 
 		}
