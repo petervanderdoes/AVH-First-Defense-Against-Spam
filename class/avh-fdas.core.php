@@ -85,7 +85,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version, 'dbversion' => $db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0,'cron_nonces_email' =>0,'cron_ipcache_email'=>0 );
+		$this->default_general_options = array ('version' => $this->version, 'dbversion' => $db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
 		$this->default_spam = array ('whentoemail' => 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 1 );
 		$this->default_honey = array ('whentoemailtype' => 0, 'whentoemail' => 0, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '' );
 		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
@@ -129,11 +129,11 @@ class AVH_FDAS_Core
 		// $info['home_path'] = get_home_path();
 		$info['home_path'] = '';
 		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
-		$path = str_replace($info['plugin_dir'],'',$path);
-		$path = $this->getBaseDirectory ( $path );
+		$path = str_replace( $info['plugin_dir'], '', $path );
+		$path = $this->getBaseDirectory( $path );
 
-		$info['plugin_url'] = $info['plugin_url'].'/'.$path;
-		$info['plugin_dir'] = $info['plugin_dir'].'/'.$path;
+		$info['plugin_url'] = $info['plugin_url'] . '/' . $path;
+		$info['plugin_dir'] = $info['plugin_dir'] . '/' . $path;
 
 		// Set class property for info
 		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'plugin_url' => $info['plugin_url'], 'plugin_dir' => $info['plugin_dir'], 'graphics_url' => $info['plugin_url'] . '/images', 'home_path' => $info['home_path'], 'wordpress_version' => $this->getWordpressVersion() );
@@ -232,9 +232,9 @@ class AVH_FDAS_Core
 		}
 
 		// Introduced dbversion starting with v2.1
-		if (!isset($options['general']['dbversion']) || $options['general']['dbversion'] < 4) {
-			$this->doUpgrade21($options, $data);
-	}
+		if ( ! isset( $options['general']['dbversion'] ) || $options['general']['dbversion'] < 4 ) {
+			$this->doUpgrade21( $options, $data );
+		}
 
 		// Add none existing sections and/or elements to the options
 		foreach ( $this->default_options as $section => $default_options ) {
@@ -319,16 +319,17 @@ class AVH_FDAS_Core
 		// Changed Administrative capabilties names
 		$role = get_role( 'administrator' );
 		if ( $role != null && $role->has_cap( 'avh_fdas' ) ) {
-			$role->remove_cap('avh_fdas');
+			$role->remove_cap( 'avh_fdas' );
 			$role->add_cap( 'role_avh_fdas' );
 		}
 		if ( $role != null && $role->has_cap( 'admin_avh_fdas' ) ) {
-			$role->remove_cap('admin_avh_fdas');
+			$role->remove_cap( 'admin_avh_fdas' );
 			$role->add_cap( 'role_admin_avh_fdas' );
 		}
 
 		return array ($new_options, $new_data );
 	}
+
 	/**
 	 * Get the base directory of a directory structure
 	 *
