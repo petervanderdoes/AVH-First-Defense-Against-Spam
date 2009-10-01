@@ -84,7 +84,7 @@ You need to have an API key from Stop Forum Spam. If you do on the Edit Comments
 = How do I get a Stop Forum Spam API key? =
 You will have to sign up on their site, http://www.stopforumspam.com/signup .
 
-= How do I get a Project Honey Pot API key?=
+= How do I get a Project Honey Pot API key? =
 You will have to sign up on their site, http://www.projecthoneypot.org/create_account.php .
 
 == Screenshots ==
