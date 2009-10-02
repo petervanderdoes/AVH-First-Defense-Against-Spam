@@ -43,6 +43,7 @@ This means that if you don't use the Blacklist and/or Whitelist you are limited 
 If you use the caching system you still have a limit with Stop Forum Spam , but the limit is set to 5000 unique visits/day.
 
 The following IP's are cached locally:
+
 1. Every IP identified as spam and triggering the terminate-the-connection threshold.
 1. Every clean IP.
 
