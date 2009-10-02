@@ -75,7 +75,7 @@ class AVH_FDAS_Core
 	 */
 	function __construct ()
 	{
-		$this->version = "2.1.1";
+		$this->version = "2.1.2";
 		$db_version = 4;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
