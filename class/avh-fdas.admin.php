@@ -916,7 +916,7 @@ class AVH_FDAS_Admin
 	 */
 	function filterPluginActions ( $links )
 	{
-		$folder = $this->core->getBaseDirectory( plugin_basename( $this->core->info['plugin_dir'] ) );
+		$folder = plugin_basename( $this->core->info['plugin_dir'] );
 		$settings_link = '<a href="admin.php?page=' . $folder . '">' . __( 'Settings', 'avhfdas' ) . '</a>';
 		array_unshift( $links, $settings_link ); // before other links
 		return $links;

@@ -98,6 +98,9 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 == Changelog ==
 = Version 2.2 =
 
+= Version 2.1.2 =
+* Bugfix: Settings link on plugin page was incorrect.
+
 = Version 2.1.1 =
 * Bugfix: Menu Option FAQ threw an error.
 
