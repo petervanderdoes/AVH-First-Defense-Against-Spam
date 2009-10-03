@@ -76,7 +76,7 @@ class AVH_FDAS_Core
 	function __construct ()
 	{
 		$this->version = "2.2-dev1";
-		$db_version = 4;
+		$db_version = 5;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
@@ -85,9 +85,9 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version, 'dbversion' => $db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 1, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
-		$this->default_spam = array ('whentoemail' => 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 1 );
-		$this->default_honey = array ('whentoemailtype' => 0, 'whentoemail' => 0, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '' );
+		$this->default_general_options = array ('version' => $this->version, 'dbversion' => $db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
+		$this->default_spam = array ('whentoemail' => -1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
+		$this->default_honey = array ('whentoemailtype' => -1, 'whentoemail' => -1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
 		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
 		$this->default_spam_data = array ('190001' => 0 );
 		$this->default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
