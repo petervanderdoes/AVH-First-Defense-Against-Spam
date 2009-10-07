@@ -551,10 +551,9 @@ class AVH_FDAS_Public
 				} else {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.<BR />If you feel this is incorrect please contact them</p>', 'avhfdas' ), $ip );
 				}
-				$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
-				$php_honeypot = true;
-				if ( $php_honeypot ) {
-					$m .= __( '<p><a href="http://blog.avirtualhome.com/cavernous.php" style="display: none;">openhearth-glove</a></p>', 'avhfdas' );
+				$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
+				if ( $options['php']['usehoneypot'] ) {
+					$m .= '<p>' . $options['php']['honeypoturl'] . '</p>';
 				}
 				wp_die( $m );
 			} else {
@@ -603,10 +602,9 @@ class AVH_FDAS_Public
 		$this->core->saveData( $data );
 		if ( 1 == $options['general']['diewithmessage'] ) {
 			$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas' ), $info['ip'] );
-			$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
-			$php_honeypot = true;
-			if ( $php_honeypot ) {
-				$m .= __( '<p><a href="http://blog.avirtualhome.com/cavernous.php" style="display: none;">openhearth-glove</a></p>', 'avhfdas' );
+			$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
+			if ( $options['php']['usehoneypot'] ) {
+				$m .= '<p>' . $options['php']['honeypoturl'] . '</p>';
 			}
 			wp_die( $m );
 		} else {

@@ -606,6 +606,9 @@ class AVH_FDAS_Admin
 
 
 				$newval = (isset( $formoptions[$section][$option_key] ) ? attribute_escape( $formoptions[$section][$option_key] ) : 0);
+				if ( 'php' == $section && 'honeypoturl' == $option_key ) {
+					$newval = $formoptions[$section][$option_key];
+				}
 				if ( $newval != $current_value ) { // Only process changed fields
 					$options[$section][$option_key] = $newval;
 				}
