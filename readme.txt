@@ -100,6 +100,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 = Version 2.2 =
 * Changed initial settings for email to no email.
 * Option for using a honey pot page by Project Honey Pot.
+* Bugfix: When HTP connection failed, IP was added as no-spam in cache when cache is active.
 
 = Version 2.1.2 =
 * Bugfix: Settings link on plugin page was incorrect.

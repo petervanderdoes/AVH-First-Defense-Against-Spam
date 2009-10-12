@@ -246,7 +246,7 @@ class AVH_FDAS_Public
 					if ( $spaminfo['detected'] ) {
 						$this->handleSpammer( $ip, $spaminfo );
 					} else {
-						if ( 1 == $options['general']['useipcache'] ) {
+						if ( 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
 							$ipcachedb->setIP( $ip, 0 );
 						}
 					}
@@ -431,8 +431,8 @@ class AVH_FDAS_Public
 		$options = $this->core->getOptions();
 
 		// Email
-		$sfs_email = $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
-		$php_email = $options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && $info['php']['score'] >= $options['php']['whentoemail'];
+		$sfs_email = $options['general']['use_sfs'] && $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
+		$php_email = $options['general']['use_php'] && $options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && $info['php']['score'] >= $options['php']['whentoemail'];
 
 		if ( $sfs_email || $php_email ) {
 
@@ -471,7 +471,8 @@ class AVH_FDAS_Public
 					$message .= __( 'Checked at Project Honey Pot', 'avhfdas' ) . "\r\n";
 					$message .= '	' . __( 'Information', 'avhfdas' ) . "\r\n";
 					$message .= '	' . sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) . "\r\n";
-					switch ( $info['php']['type'] ) {
+					switch ( $info['php']['type'] )
+					{
 						case "0" :
 							$type = "Search Engine";
 							break;
