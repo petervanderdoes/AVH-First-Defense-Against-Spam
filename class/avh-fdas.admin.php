@@ -140,7 +140,8 @@ class AVH_FDAS_Admin
 		// This box can't be unselectd in the the Screen Options
 		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxDonations' ), $this->hooks['avhfdas_menu_overview'], 'normal', 'core' );
 		$hide2 = '';
-		switch ( $screen_layout_columns ) {
+		switch ( $screen_layout_columns )
+		{
 			case 2 :
 				$width = 'width:49%;';
 				break;
@@ -355,7 +356,8 @@ class AVH_FDAS_Admin
 				$option_key = rtrim( $option[0], ']' );
 				$option_key = substr( $option_key, strpos( $option_key, '][' ) + 2 );
 
-				switch ( $section ) {
+				switch ( $section )
+				{
 					case 'general' :
 					case 'ipcache' :
 						$current_value = $options[$section][$option_key];
@@ -376,7 +378,8 @@ class AVH_FDAS_Admin
 						$newval = implode( "\r\n", $b );
 						unset( $b );
 					}
-					switch ( $section ) {
+					switch ( $section )
+					{
 						case 'general' :
 						case 'ipcache' :
 							$options[$section][$option_key] = $newval;
@@ -406,7 +409,8 @@ class AVH_FDAS_Admin
 		}
 		// Show messages if needed.
 		if ( isset( $_REQUEST['m'] ) ) {
-			switch ( $_REQUEST['m'] ) {
+			switch ( $_REQUEST['m'] )
+			{
 				case AVHFDAS_REPORTED_DELETED :
 					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
@@ -442,7 +446,8 @@ class AVH_FDAS_Admin
 		$actual_options = array_merge( $this->core->getOptions(), $this->core->getData() );
 
 		$hide2 = '';
-		switch ( $screen_layout_columns ) {
+		switch ( $screen_layout_columns )
+		{
 			case 2 :
 				$width = 'width:49%;';
 				break;
@@ -605,10 +610,7 @@ class AVH_FDAS_Admin
 				// Every field in a form is set except unchecked checkboxes. Set an unchecked checkbox to 0.
 
 
-				$newval = (isset( $formoptions[$section][$option_key] ) ? attribute_escape( $formoptions[$section][$option_key] ) : 0);
-				if ( 'php' == $section && 'honeypoturl' == $option_key ) {
-					$newval = $formoptions[$section][$option_key];
-				}
+				$newval = (isset( $formoptions[$section][$option_key] ) ? $formoptions[$section][$option_key] : 0);
 				if ( $newval != $current_value ) { // Only process changed fields
 					$options[$section][$option_key] = $newval;
 				}
@@ -628,7 +630,8 @@ class AVH_FDAS_Admin
 		$actual_options = array_merge( $this->core->getOptions(), $this->core->getData() );
 
 		$hide2 = '';
-		switch ( $screen_layout_columns ) {
+		switch ( $screen_layout_columns )
+		{
 			case 2 :
 				$width = 'width:49%;';
 				break;
@@ -730,7 +733,8 @@ class AVH_FDAS_Admin
 		// This box can't be unselectd in the the Screen Options
 		add_meta_box( 'avhfdasBoxDonations', __( 'Donations', 'avhfdas' ), array (&$this, 'metaboxDonations' ), $this->hooks['avhfdas_menu_faq'], 'side', 'core' );
 		$hide2 = '';
-		switch ( $screen_layout_columns ) {
+		switch ( $screen_layout_columns )
+		{
 			case 2 :
 				$width = 'width:49%;';
 				break;
@@ -891,7 +895,8 @@ class AVH_FDAS_Admin
 
 	function filterScreenLayoutColumns ( $columns, $screen )
 	{
-		switch ( $screen ) {
+		switch ( $screen )
+		{
 			case $this->hooks['avhfdas_menu_overview'] :
 				$columns[$this->hooks['avhfdas_menu_overview']] = 2;
 				break;
@@ -1225,7 +1230,8 @@ class AVH_FDAS_Admin
 				$output .= '<tr style="vertical-align: top;"><td class="helper" colspan="2">' . $option[4] . '</td></tr>' . "\n";
 				continue;
 			}
-			switch ( $option[2] ) {
+			switch ( $option[2] )
+			{
 				case 'checkbox' :
 					$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( $option[3] ) . '" ' . $this->isChecked( '1', $option_actual[$section][$option_key] ) . ' />' . "\n";
 					$explanation = $option[4];
@@ -1241,16 +1247,16 @@ class AVH_FDAS_Admin
 					$explanation = $option[5];
 					break;
 				case 'text-color' :
-					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( $option_actual[$section][$option_key] ) . '" size="' . $option[3] . '" /><div class="box_color ' . $option[0] . '"></div>' . "\n";
+					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( stripcslashes( $option_actual[$section][$option_key] ) ) . '" size="' . $option[3] . '" /><div class="box_color ' . $option[0] . '"></div>' . "\n";
 					$explanation = $option[4];
 					break;
 				case 'textarea' :
-					$input_type = '<textarea rows="' . $option[5] . '" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" size="' . $option[3] . '" />' . attribute_escape( $option_actual[$section][$option_key] ) . '</textarea>';
+					$input_type = '<textarea rows="' . $option[5] . '" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" size="' . $option[3] . '" />' . attribute_escape( stripcslashes( $option_actual[$section][$option_key] ) ) . '</textarea>';
 					$explanation = $option[4];
 					break;
 				case 'text' :
 				default :
-					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( $option_actual[$section][$option_key] ) . '" size="' . $option[3] . '" />' . "\n";
+					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( stripcslashes( $option_actual[$section][$option_key] ) ) . '" size="' . $option[3] . '" />' . "\n";
 					$explanation = $option[4];
 					break;
 			}
