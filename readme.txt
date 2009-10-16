@@ -101,6 +101,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 * Changed initial settings for email to no email.
 * Option for using a honey pot page by Project Honey Pot.
 * Improved IP caching system.
+* Bugfix: Database version was never saved.
 * Bugfix: When HTP connection failed, IP was added as no-spam in cache when cache is active.
 * Bugfix: Uninstall didn't work.
 

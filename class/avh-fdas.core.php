@@ -12,6 +12,7 @@ class AVH_FDAS_Core
 	 * @var string
 	 */
 	var $version;
+	var $db_version;
 
 	/**
 	 * Comments used in HTML do identify the plugin
@@ -76,7 +77,7 @@ class AVH_FDAS_Core
 	function __construct ()
 	{
 		$this->version = "2.2-dev1";
-		$db_version = 6;
+		$this->$db_version = 6;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
@@ -236,7 +237,7 @@ class AVH_FDAS_Core
 			$this->doUpgrade21( $options, $data );
 		}
 
-		if ( ! isset( $options['general']['dbversion'] ) || $options['general']['dbversion'] < 4 ) {
+		if ( $options['general']['dbversion'] < 5 ) {
 			$this->doUpgrade22( $options, $data );
 		}
 
@@ -266,6 +267,7 @@ class AVH_FDAS_Core
 			}
 		}
 		$options['general']['version'] = $this->version;
+		$options['general']['dbversion'] = $this->db_version;
 		$this->saveOptions( $options );
 		$this->saveData( $data );
 	}
