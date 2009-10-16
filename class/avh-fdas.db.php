@@ -62,11 +62,11 @@ class AVH_FDAS_DB
 	 * @param $spam number
 	 * @return Object (false if not found)
 	 */
-	function setIP ( $ip, $spam )
+	function insertIP ( $ip, $spam )
 	{
 		global $wpdb;
 		$date = current_time( 'mysql' );
-		$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->avhfdasipcache (ip, spam, date) VALUES (INET_ATON(%s), %d, %s)", $ip, $spam, $date ) );
+		$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (INET_ATON(%s), %d, %s, %s)", $ip, $spam, $date, $date ) );
 
 		if ( $result ) {
 			return $result;
@@ -74,5 +74,24 @@ class AVH_FDAS_DB
 			return false;
 		}
 	}
+
+	/**
+	 * Insert the IP into the DB
+	 * @param $ip string
+	 * @return Object (false if not found)
+	 */
+	function updateIP ( $ip )
+	{
+		global $wpdb;
+		$date = current_time( 'mysql' );
+		$result = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->avhfdasipcache SET lastseen=%s WHERE ip=INET_ATON(%s)", $date, $ip ) );
+
+		if ( $result ) {
+			return $result;
+		} else {
+			return false;
+		}
+	}
+
 }
 ?>

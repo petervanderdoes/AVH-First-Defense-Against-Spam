@@ -89,7 +89,7 @@ class AVH_FDAS_Public
 		$options = $this->core->getOptions();
 		$date = current_time( 'mysql' );
 		$days = $options['ipcache']['daystokeep'];
-		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(date))) > %d", $date, $days ) );
+		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(lastseen))) > %d", $date, $days ) );
 
 		if ( $options['general']['cron_ipcache_email'] ) {
 			$to = get_option( 'admin_email' );
@@ -247,12 +247,13 @@ class AVH_FDAS_Public
 						$this->handleSpammer( $ip, $spaminfo );
 					} else {
 						if ( 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
-							$ipcachedb->setIP( $ip, 0 );
+							$ipcachedb->insertIP( $ip, 0 );
 						}
 					}
 				}
 			} else {
 				if ( $ip_in_cache->spam ) {
+					$ipcachedb->updateIP( $ip );
 					$spaminfo['ip'] = $ip;
 					$this->handleSpammerCache( $spaminfo );
 				}
@@ -533,7 +534,7 @@ class AVH_FDAS_Public
 		if ( 1 == $options['general']['useipcache'] ) {
 			$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
 			if ( $sfs_die || $php_die ) {
-				$ipcachedb->setIP( $ip, 1 );
+				$ipcachedb->insertIP( $ip, 1 );
 			}
 		}
 
