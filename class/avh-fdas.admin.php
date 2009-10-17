@@ -1118,7 +1118,15 @@ class AVH_FDAS_Admin
 
 		if ( $wpdb->get_var( 'show tables like \'' . $ipcache . '\'' ) != $ipcache ) {
 
-			$sql = 'CREATE TABLE ' . $ipcache . ' (ip INT UNSIGNED NOT NULL , added DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',lastseen DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\', spam BOOLEAN NOT NULL, PRIMARY KEY ip (ip), INDEX added (added), INDEX lastseen (lastseen) ' . $charset_collate . ';';
+			$sql = 'CREATE TABLE `' . $wpdb->avhfdasipcache . '` (
+  					`ip` int(10) unsigned NOT NULL,
+  					`added` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\',
+  					`lastseen` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\',
+  					`spam` tinyint(1) NOT NULL,
+  					PRIMARY KEY (`ip`),
+  					KEY `added` (`added`),
+  					KEY `lastseen` (`lastseen`)
+					) ' . $charset_collate . ';';
 
 			dbDelta( $sql );
 		}
