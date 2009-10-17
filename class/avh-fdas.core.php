@@ -352,8 +352,10 @@ class AVH_FDAS_Core
 				DROP INDEX `date`,
 				ADD INDEX `added`(`added`),
 				ADD INDEX `lastseen`(`lastseen`);';
-		$result = $wpdb->query($sql);
+		$result = $wpdb->query( $sql );
 
+		$sql = 'UPDATE ' . $wpdb->avhfdasipcache . ' SET `lastseen` = `added`;';
+		$result = $wpdb->query( $sql );
 	}
 
 	/**
