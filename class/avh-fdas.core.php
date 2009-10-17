@@ -77,7 +77,7 @@ class AVH_FDAS_Core
 	function __construct ()
 	{
 		$this->version = "2.2-dev1";
-		$this->$db_version = 6;
+		$this->db_version = 6;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
@@ -111,7 +111,7 @@ class AVH_FDAS_Core
 
 
 		// Check if we have to do upgrades
-		if ( (! isset( $this->options['general']['dbversion'] )) || $this->options['general']['dbversion'] < $db_version ) {
+		if ( (! isset( $this->options['general']['dbversion'] )) || $this->options['general']['dbversion'] < $this->db_version ) {
 			$this->doUpgrade();
 		}
 
@@ -345,11 +345,8 @@ class AVH_FDAS_Core
 	function doUpgrade22( $options, $data ) {
 		global $wpdb;
 
-		$result = $wpdb->query( "ALTER TABLE $wpdb->avhfdasipcache DROP INDEX date"  );
-		$result = $wpdb->query( "ALTER TABLE $wpdb->avhfdasipcache CHANGE COLUMN date added DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\' after ip"  );
-		$result = $wpdb->query( "ALTER TABLE $wpdb->avhfdasipcache ADD COLUMN lastseen DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\' after added"  );
-		$result = $wpdb->query( "ALTER TABLE $wpdb->avhfdasipcache ADD INDEX added added"  );
-		$result = $wpdb->query( "ALTER TABLE $wpdb->avhfdasipcache lastseen INDEX lastseen"  );
+		$result = $wpdb->query( "ALTER TABLE $wpdb->avhfdasipcache DROP INDEX date;"  );
+		$result = $wpdb->query( "ALTER TABLE `$wpdb->avhfdasipcache` CHANGE COLUMN `date` `added` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00', ADD COLUMN `lastseen` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `added`, ADD INDEX `added`(`added`), ADD INDEX `lastseen`(`lastseen`);"  );
 
 	}
 	/**
