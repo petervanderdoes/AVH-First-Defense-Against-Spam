@@ -97,10 +97,13 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 3. The option Report & Delete
 
 == Changelog ==
+= Future Releases =
+* Tools to manage the IP Caching database.
+
 = Version 2.2 =
-* Changed initial settings for email to no email.
+* Changed initial settings for email to Do No Send E-Mail. This is better for busy sites.
 * Option for using a honey pot page by Project Honey Pot.
-* Improved IP caching system.
+* Change in IP caching system. Added the field lastseen. This field will be updated if a return IP was identified as spam earlier. The daily cleaning of the IP cache database will use this field to determine if the record will be deleted. 
 * Bugfix: Database version was never saved.
 * Bugfix: When HTP connection failed, IP was added as no-spam in cache when cache is active.
 * Bugfix: Uninstall didn't work.
