@@ -87,8 +87,8 @@ class AVH_FDAS_Core
 		 * Default options - General Purpose
 		 */
 		$this->default_general_options = array ('version' => $this->version, 'dbversion' => $db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
-		$this->default_spam = array ('whentoemail' => -1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
-		$this->default_honey = array ('whentoemailtype' => -1, 'whentoemail' => -1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
+		$this->default_spam = array ('whentoemail' => - 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
+		$this->default_honey = array ('whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
 		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
 		$this->default_spam_data = array ('190001' => 0 );
 		$this->default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
@@ -342,13 +342,20 @@ class AVH_FDAS_Core
 	 * @param $options
 	 * @param $data
 	 */
-	function doUpgrade22( $options, $data ) {
+	function doUpgrade22 ( $options, $data )
+	{
 		global $wpdb;
 
-		$result = $wpdb->query( "ALTER TABLE $wpdb->avhfdasipcache DROP INDEX date;"  );
-		$result = $wpdb->query( "ALTER TABLE `$wpdb->avhfdasipcache` CHANGE COLUMN `date` `added` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00', ADD COLUMN `lastseen` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `added`, ADD INDEX `added`(`added`), ADD INDEX `lastseen`(`lastseen`);"  );
+		$sql = 'ALTER TABLE `' . $wpdb->avhfdasipcache . '`
+				CHANGE COLUMN `date` `added` DATETIME  NOT NULL DEFAULT \'0000-00-00 00:00:00\',
+				ADD COLUMN `lastseen` DATETIME  NOT NULL DEFAULT \'0000-00-00 00:00:00\' AFTER `added`,
+				DROP INDEX `date`,
+				ADD INDEX `added`(`added`),
+				ADD INDEX `lastseen`(`lastseen`);';
+		$result = $wpdb->query($sql);
 
 	}
+
 	/**
 	 * Get the base directory of a directory structure
 	 *
