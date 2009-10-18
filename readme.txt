@@ -97,7 +97,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 3. The option Report & Delete
 
 == Changelog ==
-= Future Releases =
+= Future Release =
 * Tools to manage the IP Caching database.
 
 = Version 2.2 =
