@@ -17,7 +17,8 @@ class AVH_FDAS_Singleton
 			$instance = & $instances[$class];
 		} else {
 			if ( ! class_exists( $class ) ) {
-				switch ( $class ) {
+				switch ( $class )
+				{
 					case 'AVH_FDAS_Core' :
 						require_once (dirname( __FILE__ ) . '/class/avh-fdas.core.php');
 						break;
@@ -52,10 +53,10 @@ function avh_FDAS_init ()
 		$avhfdas_admin = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Admin' );
 
 		// Activation Hook
-		register_activation_hook( __FILE__, array (& $avhfdas_admin, 'installPlugin' ) );
+		register_activation_hook( __FILE__, array (&$avhfdas_admin, 'installPlugin' ) );
 
 		// Deactivation Hook
-		register_deactivation_hook( __FILE__, array (& $avhfdas_admin, 'deactivatePlugin' ) );
+		register_deactivation_hook( __FILE__, array (&$avhfdas_admin, 'deactivatePlugin' ) );
 	}
 
 	$avhfdas_public = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Public' );

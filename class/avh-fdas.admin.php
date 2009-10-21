@@ -876,7 +876,7 @@ class AVH_FDAS_Admin
 		echo '<p>';
 		echo '<span class="b">Amazon</span><br />';
 		echo 'If you decide to buy something from Amazon click the button.<br />';
-		echo '<a href="https://www.amazon.com/?&tag=avh-donation-20" target="_blank" title="Amazon Homepage"><img alt="Amazon Button" src="'.$this->core->info['graphics_url'].'/us_banner_logow_120x60.gif" /></a></p>';
+		echo '<a href="https://www.amazon.com/?&tag=avh-donation-20" target="_blank" title="Amazon Homepage"><img alt="Amazon Button" src="' . $this->core->info['graphics_url'] . '/us_banner_logow_120x60.gif" /></a></p>';
 		echo '<p>';
 		echo 'You can send me something from my <a href="http://www.amazon.com/gp/registry/wishlist/1U3DTWZ72PI7W?tag=avh-donation-20">Amazon Wish List</a>';
 		echo '</p>';
