@@ -99,10 +99,10 @@ class AVH_FDAS_Admin
 		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-faq', array (&$this, 'doMenuFAQ' ) );
 
 		// Add actions for menu pages
-		add_action( 'load-' . $this->hooks['avhfdas_menu_overview'], array (&$this, actionLoadPageHook_Overview ) );
-		add_action( 'load-' . $this->hooks['avhfdas_menu_general'], array (&$this, actionLoadPageHook_General ) );
-		add_action( 'load-' . $this->hooks['avhfdas_menu_3rd_party'], array (&$this, actionLoadPageHook_3rd_party ) );
-		add_action( 'load-' . $this->hooks['avhfdas_menu_faq'], array (&$this, actionLoadPageHook_faq ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_overview'], array (&$this, 'actionLoadPageHook_Overview' ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_general'], array (&$this, 'actionLoadPageHook_General' ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_3rd_party'], array (&$this, 'actionLoadPageHook_3rd_party' ) );
+		add_action( 'load-' . $this->hooks['avhfdas_menu_faq'], array (&$this, 'actionLoadPageHook_faq' ) );
 
 	}
 
