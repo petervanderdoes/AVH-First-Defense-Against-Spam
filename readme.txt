@@ -52,6 +52,7 @@ You can check the statistics to see how many IP's are in the database. If you ha
 
 = Checking Order and Actions =
 The plugin checks the visiting IP in the following order, only if that feature is enabled of course.
+
 1. Whitelist - If found skip the rest of the checks.
 1. Blacklist - If found terminate the connection.
 1. IP Caching - If found and spam terminate connection, if found and clean skip the rest of the checks.
@@ -97,13 +98,11 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 3. The option Report & Delete
 
 == Changelog ==
-= Future Release =
-* Tools to manage the IP Caching database.
 
 = Version 2.2 =
 * Changed initial settings for email to Do No Send E-Mail. This is better for busy sites.
 * Option for using a honey pot page by Project Honey Pot.
-* Change in IP caching system. Added the field lastseen. This field will be updated if a return IP was identified as spam earlier. The daily cleaning of the IP cache database will use this field to determine if the record will be deleted. 
+* Change in IP caching system. Added the field lastseen. This field will be updated if an IP returns which was previously identified as spam. The daily cleaning of the IP cache database will use this field to determine if the record will be deleted. 
 * Bugfix: Database version was never saved.
 * Bugfix: When HTP connection failed, IP was added as no-spam in cache when cache is active.
 * Bugfix: Uninstall didn't work.
