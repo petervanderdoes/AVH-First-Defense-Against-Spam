@@ -611,9 +611,18 @@ class AVH_FDAS_Admin
 
 
 				$newval = (isset( $formoptions[$section][$option_key] ) ? $formoptions[$section][$option_key] : 0);
+				if ( 'sfs' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key)) {
+					$newval = ( int ) $newval;
+				}
+
+				if ( 'php' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key) ) {
+					$newval = ( int ) $newval;
+				}
+
 				if ( $newval != $current_value ) { // Only process changed fields
 					$options[$section][$option_key] = $newval;
 				}
+
 			}
 			$note = '';
 			if ( empty( $options['php']['phpapikey'] ) ) {
