@@ -106,6 +106,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 * Bugfix: Database version was never saved.
 * Bugfix: When HTP connection failed, IP was added as no-spam in cache when cache is active.
 * Bugfix: Uninstall didn't work.
+* Bugfix: Validate admin fields.
 
 = Version 2.1.2 =
 * Bugfix: Settings link on plugin page was incorrect.
