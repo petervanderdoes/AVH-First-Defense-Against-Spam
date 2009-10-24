@@ -432,8 +432,8 @@ class AVH_FDAS_Public
 		$options = $this->core->getOptions();
 
 		// Email
-		$sfs_email = $options['general']['use_sfs'] && $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
-		$php_email = $options['general']['use_php'] && $options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && $info['php']['score'] >= $options['php']['whentoemail'];
+		$sfs_email = $options['general']['use_sfs'] && ( int ) $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
+		$php_email = $options['general']['use_php'] && ( int ) $options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && ( int ) $info['php']['score'] >= $options['php']['whentoemail'];
 
 		if ( $sfs_email || $php_email ) {
 
