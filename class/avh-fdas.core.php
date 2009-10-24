@@ -234,11 +234,11 @@ class AVH_FDAS_Core
 
 		// Introduced dbversion starting with v2.1
 		if ( ! isset( $options['general']['dbversion'] ) || $options['general']['dbversion'] < 4 ) {
-			$this->doUpgrade21( $options, $data );
+			list ( $options, $data ) = $this->doUpgrade21( $options, $data );
 		}
 
 		if ( $options['general']['dbversion'] < 5 ) {
-			$this->doUpgrade22( $options, $data );
+			list ( $options, $data ) = $this->doUpgrade22( $options, $data );
 		}
 
 		// Add none existing sections and/or elements to the options
@@ -342,9 +342,12 @@ class AVH_FDAS_Core
 	 * @param $options
 	 * @param $data
 	 */
-	function doUpgrade22 ( $options, $data )
+	function doUpgrade22 ( $old_options, $old_data )
 	{
 		global $wpdb;
+
+		$new_options = $old_options;
+		$new_data = $old_data;
 
 		$sql = 'ALTER TABLE `' . $wpdb->avhfdasipcache . '`
 				CHANGE COLUMN `date` `added` DATETIME  NOT NULL DEFAULT \'0000-00-00 00:00:00\',
@@ -356,6 +359,8 @@ class AVH_FDAS_Core
 
 		$sql = 'UPDATE ' . $wpdb->avhfdasipcache . ' SET `lastseen` = `added`;';
 		$result = $wpdb->query( $sql );
+
+		return array ($new_options, $new_data );
 	}
 
 	/**
