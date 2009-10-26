@@ -76,7 +76,7 @@ class AVH_FDAS_Core
 	 */
 	function __construct ()
 	{
-		$this->version = "2.2";
+		$this->version = "2.3-dev1";
 		$this->db_version = 6;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
@@ -532,10 +532,14 @@ class AVH_FDAS_Core
 					if ( 'true' == $xml_array['response_attr']['success'] ) {
 						$return_array = $xml_array['response'];
 					} else {
-						$return_array = array ('Error' => 'Invalid call to stopforumspam' );
+						if ( isset( $xml_array['response']['error'] ) ) {
+							$return_array = array ('Error' => $xml_array['response']['error'] );
+						} else {
+							$return_array = array ('Error' => 'Unsuccesfull response from SFS', 'Debug' => var_export( $response, true ) . "/n" . var_export( $xml_array, true ) );
+						}
 					}
 				} else {
-					$return_array = array ('Error' => 'Unknown response from stopforumspam' );
+					$return_array = array ('Error' => 'Unknown response from stopforumspam', 'Debug' => var_export( $response, true ) . "/n" . var_export( $xml_array, true ) );
 				}
 			} else {
 				$return_array = array ('Error' => $response->errors );
@@ -556,10 +560,10 @@ class AVH_FDAS_Core
 			foreach ( $error as $key => $value ) {
 				$error_short = $key;
 				$error_long = $value[0];
-				$return = 'Error:' . $error_short . ' - ' . $error_long;
+				$return = $error_short . ' - ' . $error_long;
 			}
 		} else {
-			$return = 'Error:' . $error;
+			$return = $error;
 		}
 		return $return;
 	}

@@ -582,7 +582,7 @@ class AVH_FDAS_Admin
 		$options_sfs[] = array ('avhfdas[sfs][emailphp]', 'Email Project Honey Pot Info', 'checkbox', 1, 'Always email Project Honey Pot info when Stop Forum Spam email threshold is reached, disregarding the email threshold set for Project Honey Pot. This only works when you select to check with Project Honey Pot as well.' );
 		$options_sfs[] = array ('avhfdas[sfs][whentodie]', 'Termination threshold', 'text', 3, 'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>' );
 		$options_sfs[] = array ('avhfdas[sfs][sfsapikey]', 'API Key', 'text', 15, 'You need a Stop Forum Spam API key to report spam.' );
-		$options_sfs[] = array ('avhfdas[sfs][error]', 'Email error', 'checkbox', 1, 'Receive an email when the call to Stop Forum Fails' );
+		$options_sfs[] = array ('avhfdas[sfs][error]', 'Email error', 'checkbox', 1, 'Receive an email when the call to Stop Forum Spam Fails' );
 
 		$options_php[] = array ('avhfdas[general][use_php]', 'Check with Honey Pot Project', 'checkbox', 1, 'If checked, the visitor\'s IP will be checked with Honey Pot Project' );
 		$options_php[] = array ('avhfdas[php][phpapikey]', 'API Key:', 'text', 15, 'You need a Project Honey Pot API key to check the Honey Pot Project database.' );
