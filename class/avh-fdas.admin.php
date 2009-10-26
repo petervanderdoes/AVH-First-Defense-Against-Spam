@@ -611,7 +611,7 @@ class AVH_FDAS_Admin
 
 
 				$newval = (isset( $formoptions[$section][$option_key] ) ? $formoptions[$section][$option_key] : 0);
-				if ( 'sfs' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key)) {
+				if ( 'sfs' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key) ) {
 					$newval = ( int ) $newval;
 				}
 
@@ -1126,9 +1126,7 @@ class AVH_FDAS_Admin
 				$charset_collate .= ' COLLATE ' . $wpdb->collate;
 		}
 
-		$ipcache = $wpdb->prefix . 'avhfdas_ipcache';
-
-		if ( $wpdb->get_var( 'show tables like \'' . $ipcache . '\'' ) != $ipcache ) {
+		if ( $wpdb->get_var( 'show tables like \'' . $wpdb->avhfdasipcache . '\'' ) != $wpdb->avhfdasipcache ) {
 
 			$sql = 'CREATE TABLE `' . $wpdb->avhfdasipcache . '` (
   					`ip` int(10) unsigned NOT NULL,
@@ -1140,7 +1138,7 @@ class AVH_FDAS_Admin
   					KEY `lastseen` (`lastseen`)
 					) ' . $charset_collate . ';';
 
-			dbDelta( $sql );
+			$result = $wpdb->query( $sql );
 		}
 
 	}
