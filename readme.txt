@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.7
 Tested up to: 2.8
-Stable tag: 2.2-rc1
+Stable tag: 2.2
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -29,7 +29,8 @@ Spammers are identified by checking if the visitors IP exists in a database serv
 * Add a spammer to the local blacklist by clicking a link in the received email.
 * Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.
 * IP Caching system.
- 
+* Use a honey pot from Project Honey Pot
+
 Blocking a potential spammer before content is served has the following advantages:
 
 1. It saves bandwidth.
@@ -47,7 +48,8 @@ The following IP's are cached locally:
 1. Every IP identified as spam and triggering the terminate-the-connection threshold.
 1. Every clean IP.
 
-Every day , once a day, a routine runs to remove the IP's that are older than a given day. You can set this day in the adminstration section of the plugin.
+Only returning IP's that were previously identified as spammer and who's connection was terminated will update their last seen date in the caching system. 
+Every day, once a day, a routine runs to remove the IP's who's last seen date is X amount of days older than the date the routine runs. You can set the days in the adminstration section of the plugin.
 You can check the statistics to see how many IP's are in the database. If you have a busy site, with a lot of unique visitors, you might have to play with the "Days to keep in cache" setting to keep the size under control.
 
 = Checking Order and Actions =
@@ -100,7 +102,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 == Changelog ==
 
 = Version 2.2 =
-* Changed initial settings for email to Do No Send E-Mail. This is better for busy sites.
+* Changed initial settings for email to not send E-Mail. This is better for busy sites.
 * Option for using a honey pot page by Project Honey Pot.
 * Change in IP caching system. Added the field lastseen. This field will be updated if an IP returns which was previously identified as spam. The daily cleaning of the IP cache database will use this field to determine if the record will be deleted. 
 * Bugfix: Database version was never saved.

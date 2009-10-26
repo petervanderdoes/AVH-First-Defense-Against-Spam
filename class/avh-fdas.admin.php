@@ -802,7 +802,8 @@ class AVH_FDAS_Admin
 		echo '</p>';
 
 		echo '<p>';
-		echo 'Every day , once a day, a routine runs to remove the IP\'s that are older than a given day. You can set this day in the admintration section of the plugin.<br />';
+		echo 'Only returning IP\'s that were previously identified as spammer and who\'s connection was terminated will update their last seen date in the caching system.<br />';
+		echo 'Every day, once a day, a routine runs to remove the IP\'s who\'s last seen date is X amount of days older than the date the routine runs. You can set the days in the adminstration section of the plugin.<br />';
 		echo 'You can check the statistics to see how many IP\'s are in the database. If you have a busy site, with a lot of unique visitors, you might have to play with the "Days to keep in cache" setting to keep the size under control.<br />';
 		echo '</p>';
 
