@@ -11,6 +11,7 @@ class AVH_FDAS_Public
 	{
 		// Initialize the plugin
 		$this->core = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Core' );
+
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
 		add_action( 'comment_form', array (&$this, 'actionAddNonceFieldToComment' ) );
@@ -19,6 +20,8 @@ class AVH_FDAS_Public
 		// Private actions for Cron
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
 		add_action( 'avhfdas_clean_ipcache', array (&$this, 'actionHandleCronCleanIPCache' ) );
+
+		add_filter ('http_headers_useragent', array (&$this, 'filterHttpUserAgent'));
 	}
 
 	/**
@@ -173,6 +176,10 @@ class AVH_FDAS_Public
 		return $commentdata;
 	}
 
+	function filterHttpUserAgent($agent){
+		$agent = 'WordPress/AVH; ' . get_bloginfo( 'url' );
+		return $agent;
+	}
 	/**
 	 * Checks if the spammer is in our database.
 	 *
@@ -199,6 +206,9 @@ class AVH_FDAS_Public
 	 */
 	function actionHandleMainAction ()
 	{
+
+		// REMEBER TO UNDO THIS WHEN WE CHANGE TO A DIFFERENT CHECK
+		$options['general']['use_sfs'] = 0;
 
 		$ip = $this->core->getUserIP();
 		$ip_in_whitelist = false;
