@@ -100,6 +100,9 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 3. The option Report & Delete
 
 == Changelog ==
+= Version 2.3.2 =
+* Bugfix: Commenting didn't work anymore.
+
 = Version 2.3.1 =
 * Stop Forum Spam is only checked when a comment is posted. All other checks are still done before content is served. The reason for this change is the amount of traffic this plugin caused at the server of Stop Forum Spam.
 
