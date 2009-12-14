@@ -264,7 +264,7 @@ class AVH_FDAS_Public
 	 *
 	 * @WordPress Action preprocess_comment
 	 */
-	function actionHandleSFSAction ( $commentid )
+	function actionHandleSFSAction ( $commentdata )
 	{
 
 		$ip = $this->core->getUserIP();
@@ -307,6 +307,7 @@ class AVH_FDAS_Public
 				}
 			}
 		}
+		return ($commentdata);
 	}
 
 
