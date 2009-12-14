@@ -264,12 +264,22 @@ class AVH_FDAS_Public
 	 *
 	 * @WordPress Action preprocess_comment
 	 */
-	function actionHandleSFSAction($commentid) {
+	function actionHandleSFSAction ( $commentid )
+	{
 
 		$ip = $this->core->getUserIP();
 
 		$options = $this->core->getOptions();
 		$data = $this->core->getData();
+
+		if ( 1 == $options['general']['useipcache'] ) {
+			$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+			$time_start = microtime( true );
+			$ip_in_cache = $ipcachedb->getIP( $ip );
+			$time_end = microtime( true );
+			$time = $time_end - $time_start;
+			$spaminfo['time'] = $time;
+		}
 
 		if ( $options['general']['use_sfs'] || $options['general']['use_php'] ) {
 			$spaminfo = null;
@@ -290,7 +300,7 @@ class AVH_FDAS_Public
 			}
 
 			if ( $spaminfo['detected'] ) {
-				$this->handleSpammer( $ip, $spaminfo );
+				$this->handleSpammer( $ip, $spaminfo, 'comment' );
 			} else {
 				if ( 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
 					$ipcachedb->insertIP( $ip, 0 );
@@ -468,7 +478,7 @@ class AVH_FDAS_Public
 	 * @param string $time -
 	 *
 	 */
-	function handleSpammer ( $ip, $info )
+	function handleSpammer ( $ip, $info, $whichaction='main' )
 	{
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
@@ -487,7 +497,7 @@ class AVH_FDAS_Public
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
 
 			// Stop Forum Spam Mail Part
-			if ( $options['general']['use_sfs'] && $sfs_email ) {
+			if ( $options['general']['use_sfs'] && $sfs_email && $whichaction == 'comment') {
 				if ( 'yes' == $info['sfs']['appears'] ) {
 					$message .= __( 'Checked at Stop Forum Spam', 'avhfdas' ) . "\r\n";
 					$message .= '	' . __( 'Information', 'avhfdas' ) . "\r\n";
