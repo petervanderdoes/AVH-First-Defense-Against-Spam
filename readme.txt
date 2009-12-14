@@ -101,7 +101,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 
 == Changelog ==
 = Version 2.3.1 =
-* Stop Forum Spam is only checked when a comment is posted. All other checks are still before content is served. The reason for this change is the amount of traffic this plugin caused at the server of Stop Forum Spam.
+* Stop Forum Spam is only checked when a comment is posted. All other checks are still done before content is served. The reason for this change is the amount of traffic this plugin caused at the server of Stop Forum Spam.
 
 = Version 2.3 =
 * Better error messages when a problem occurs with a call to Stop Forum Spam.
