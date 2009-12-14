@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.7
 Tested up to: 2.8
-Stable tag: 2.3-dev1
+Stable tag: 2.3.1-dev1
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -100,9 +100,12 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 3. The option Report & Delete
 
 == Changelog ==
+= Version 2.3.1 =
+* Stop Forum Spam is only checked when a comment is posted. All other checks are still before content is served. The reason for this change is the amount of traffic this plugin caused at the server of Stop Forum Spam.
 
 = Version 2.3 =
 * Better error messages when a problem occurs with a call to Stop Forum Spam.
+* Disabled Stop Forum Spam until a better solution is created.
 
 = Version 2.2 =
 * Changed initial settings for email to not send E-Mail. This is better for busy sites.

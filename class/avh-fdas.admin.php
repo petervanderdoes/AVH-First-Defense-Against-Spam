@@ -690,10 +690,10 @@ class AVH_FDAS_Admin
 
 	function metaboxMenu3rdParty_SFS ( $data )
 	{
-		//echo '<p>' . __( 'To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.' );
-		//echo $this->printOptions( $data['options_sfs'], $data['actual_options'] );
-		echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
-		echo  __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
+		echo '<p>' . __( 'To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.' );
+		echo $this->printOptions( $data['options_sfs'], $data['actual_options'] );
+		//echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
+		//echo  __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
 
 	}
 

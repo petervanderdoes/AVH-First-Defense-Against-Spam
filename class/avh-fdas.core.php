@@ -76,7 +76,7 @@ class AVH_FDAS_Core
 	 */
 	function __construct ()
 	{
-		$this->version = "2.3-dev1";
+		$this->version = "2.3.1-dev1";
 		$this->db_version = 7;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
 		$this->db_options_core = 'avhfdas';
@@ -546,7 +546,7 @@ class AVH_FDAS_Core
 		$url = $this->stopforumspam_endpoint . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if ( function_exists( 'wp_remote_request' ) ) {
-			$response = wp_remote_request( $url );
+			$response = wp_remote_request( $url, array('user-agent' => 'WordPress/AVH '.$this->version.'; ' . get_bloginfo( 'url' )) );
 			if ( ! is_wp_error( $response ) ) {
 				$xml_array = $this->ConvertXML2Array( $response['body'] );
 				if ( ! empty( $xml_array ) ) {
