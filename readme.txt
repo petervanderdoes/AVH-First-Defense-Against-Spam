@@ -10,8 +10,8 @@ The AVH First Defense Against Spam plugin gives you the ability to block spammer
 
 == Description ==
 
-The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
-Spammers are identified by checking if the visitors IP exists in a database served by stopforumspam.com, the Project Honey Pot or a local blacklist.
+The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served by identifying them at the Project Honey Pot, a local blacklist or the local IP cache.
+Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum Spam is not used to check before content is served due to the amount of requests, which overloads their infrastructure.
 
 
 = Features =
@@ -45,7 +45,7 @@ If you use the caching system you still have a limit with Stop Forum Spam , but 
 
 The following IP's are cached locally:
 
-1. Every IP identified as spam and triggering the terminate-the-connection threshold.
+1. Every IP identified as spam and triggering the terminate-the-connection threshold. Either identified by Stop Forum Spam or Project Honey Pot.
 1. Every clean IP.
 
 Only returning IP's that were previously identified as spammer and who's connection was terminated will update their last seen date in the caching system. 
