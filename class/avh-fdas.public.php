@@ -1,6 +1,10 @@
 <?php
 class AVH_FDAS_Public
 {
+	/**
+	 *
+	 * @var AVH_FDAS_Core
+	 */
 	var $core;
 
 	/**

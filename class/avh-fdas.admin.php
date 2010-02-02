@@ -7,6 +7,11 @@ class AVH_FDAS_Admin
 	 */
 	var $message = '';
 	var $status = '';
+
+	/**
+	 *
+	 * @var AVH_FDAS_Core
+	 */
 	var $core;
 	var $hooks = array ();
 
