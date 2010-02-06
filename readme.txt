@@ -102,6 +102,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 == Changelog ==
 = Version future =
 * Bugfix: Typo in window title for menu option overview
+* Bugfix: Blogname would show up as html safe text
 
 = Version 2.3.2 =
 * Bugfix: Commenting didn't work anymore.

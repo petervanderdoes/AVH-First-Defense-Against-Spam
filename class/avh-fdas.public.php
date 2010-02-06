@@ -78,7 +78,7 @@ class AVH_FDAS_Public
 
 		if ( $options['general']['cron_nonces_email'] ) {
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean nonces', 'avhfdas' ), get_option( 'blogname' ) );
+			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean nonces', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
 			$message = sprintf( __( 'Deleted %d nonce\'s from the database', 'avhfdas' ), $removed );
 			$this->mail( $to, $subject, $message );
 		}
@@ -100,7 +100,7 @@ class AVH_FDAS_Public
 
 		if ( $options['general']['cron_ipcache_email'] ) {
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean IP cache', 'avhfdas' ), get_option( 'blogname' ) );
+			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean IP cache', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
 			$message = sprintf( __( 'Deleted %d IP\'s from the cache', 'avhfdas' ), $result );
 			$this->mail( $to, $subject, $message );
 		}
@@ -126,7 +126,7 @@ class AVH_FDAS_Public
 						$to = get_option( 'admin_email' );
 						$ip = $this->core->getUserIP();
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
-						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), get_option( 'blogname' ) );
+						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
 							$message = __( 'Reason:	The nonce check failed.', 'avhfdas' ) . "\r\n";
 						} else {
@@ -339,7 +339,7 @@ class AVH_FDAS_Public
 			if ( isset( $spaminfo['Error'] ) && $options['sfs']['error'] ) {
 				$error = $this->core->getHttpError( $spaminfo['Error'] );
 				$to = get_option( 'admin_email' );
-				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), get_option( 'blogname' ) );
+				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
 				$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
 				$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
 				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
@@ -496,7 +496,7 @@ class AVH_FDAS_Public
 
 			// General part of the email
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), get_option( 'blogname' ), $ip );
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $ip );
 			$message = '';
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
@@ -636,7 +636,7 @@ class AVH_FDAS_Public
 
 			// General part of the email
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), get_option( 'blogname' ), $info['ip'] );
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $info['ip'] );
 			$message = '';
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $info['ip'] ) . "\r\n";
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
