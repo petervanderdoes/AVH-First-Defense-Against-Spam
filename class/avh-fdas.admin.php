@@ -49,11 +49,6 @@ class AVH_FDAS_Admin
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
 
-		// Register Styles and SCripts
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		wp_register_script( 'avhfdas-admin-js', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
-		wp_register_style( 'avhfdas-admin-css', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
-
 		return;
 	}
 
@@ -108,6 +103,11 @@ class AVH_FDAS_Admin
 		add_action( 'load-' . $this->hooks['avhfdas_menu_general'], array (&$this, 'actionLoadPageHook_General' ) );
 		add_action( 'load-' . $this->hooks['avhfdas_menu_3rd_party'], array (&$this, 'actionLoadPageHook_3rd_party' ) );
 		add_action( 'load-' . $this->hooks['avhfdas_menu_faq'], array (&$this, 'actionLoadPageHook_faq' ) );
+
+		// Register Styles and Scripts
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
+		wp_register_script( 'avhfdas-admin-js', $this->core->info['plugin_url'] . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
+		wp_register_style( 'avhfdas-admin-css', $this->core->info['plugin_url'] . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
 
 	}
 
