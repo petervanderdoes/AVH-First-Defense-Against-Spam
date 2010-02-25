@@ -177,7 +177,6 @@ class AVH_FDAS_Admin
 		echo '	</div>'; //dashboard-widgets-wrap
 		echo '</div>'; // wrap
 
-
 		$this->printAdminFooter();
 	}
 
