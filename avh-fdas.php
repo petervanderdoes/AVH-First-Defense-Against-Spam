@@ -43,7 +43,7 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
-require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh_general.php';
+require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh-common.php';
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
 	require (dirname( __FILE__ ) . '/avh-fdas.client.php');
