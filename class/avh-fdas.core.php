@@ -115,26 +115,18 @@ class AVH_FDAS_Core
 		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
 
 		$info['siteurl'] = get_option( 'siteurl' );
-		if ( $this->isMuPlugin() ) {
-			$info['plugin_url'] = WPMU_PLUGIN_URL;
-			$info['plugin_dir'] = WPMU_PLUGIN_DIR;
-		} else {
-			$info['plugin_url'] = WP_PLUGIN_URL;
-			$info['plugin_dir'] = WP_PLUGIN_DIR;
-		}
+		$info['plugin_dir'] = AVHFDAS_PLUGIN_DIR;
+		$info['lang_dir'] = AVHFDAS_WORKING_DIR . '/lang';
+		$info['graphics_url'] = AVHFDAS_PLUGIN_URL . '/images';
 
-		// Determine installation path & url
-		// $info['home_path'] = get_home_path();
-		$info['home_path'] = '';
-		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
-		$path = str_replace( $info['plugin_dir'], '', $path );
-		$path = avh_getBaseDirectory( $path );
-
-		$info['plugin_url'] = $info['plugin_url'] . '/' . $path;
-		$info['plugin_dir'] = $info['plugin_dir'] . '/' . $path;
 
 		// Set class property for info
-		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'plugin_url' => $info['plugin_url'], 'plugin_dir' => $info['plugin_dir'], 'graphics_url' => $info['plugin_url'] . '/images', 'home_path' => $info['home_path'], 'wordpress_version' => avh_getWordpressVersion() );
+		$this->info = array ('home' => get_option( 'home' ),
+		'siteurl' => $info['siteurl'],
+		'plugin_url' => $info['plugin_url'],
+		'plugin_dir' => $info['plugin_dir'],
+		'graphics_url' => $info['graphics_url'] );
+
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
 
 		/**

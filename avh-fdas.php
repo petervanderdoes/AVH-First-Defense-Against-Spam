@@ -23,18 +23,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-define ('AVH_FRAMEWORK', TRUE);
+if ( ! defined( 'AVH_FRAMEWORK' ) ) {
+	define( 'AVH_FRAMEWORK', TRUE );
+}
 
-global $plugin;
-$_dir = current( explode( '/', $plugin ) );
-$_pluginname = plugin_basename( trim( $plugin ) );
-
-define( 'AVHFDAS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . $_dir );
-define( 'AVHFDAS_PLUGIN_NAME', $_pluginname );
-define( 'AVHFDAS_PLUGIN_URL', WP_PLUGIN_URL . '/' . $_dir );
-define( 'AVHFDAS_WORKING_DIR', AVHEC_PLUGIN_DIR  );
-unset ($_pluginname);
-unset ($_dir);
+$_dir=pathinfo(__FILE__, PATHINFO_DIRNAME);
+$t=WP_PLUGIN_DIR;
 
 // Define Message Numbers
 define( 'AVHFDAS_REPORTED_DELETED', '100' );
@@ -44,12 +38,12 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
-require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh-common.php';
-require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh-security.php';
-require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh-visitor.php';
+require_once $_dir . '/helpers/avh-common.php';
+require_once $_dir . '/helpers/avh-security.php';
+require_once $_dir . '/helpers/avh-visitor.php';
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
-	require (dirname( __FILE__ ) . '/avh-fdas.client.php');
+	require ($_dir . '/avh-fdas.client.php');
 } else {
 	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_fdas_remove_plugin' );
 
