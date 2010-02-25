@@ -31,14 +31,39 @@ if ( ! function_exists( 'avh_getWordpressVersion' ) ) {
 	 */
 	function avh_getWordpressVersion ()
 	{
-		// Include WordPress version
-		require (ABSPATH . WPINC . '/version.php');
-		$version = ( float ) $wp_version;
-		return $version;
+		static $_version=NULL;
+
+		if ( ! isset( $_version ) ) {
+
+			// Include WordPress version
+			require (ABSPATH . WPINC . '/version.php');
+			$_version = ( float ) $wp_version;
+		}
+		return $_version;
 	}
 
 }
 
+if ( ! function_exists( 'avh_is_php' ) ) {
+
+	/**
+	 * Determines if the current version of PHP is greater then the supplied value
+	 *
+	 * @param	string
+	 * @return	bool
+	 */
+	function avh_is_php ( $version = '5.0.0' )
+	{
+		static $_is_php=NULL;
+		$version = ( string ) $version;
+
+		if ( ! isset( $_is_php[$version] ) ) {
+			$_is_php[$version] = (version_compare( PHP_VERSION, $version ) < 0) ? FALSE : TRUE;
+		}
+
+		return $_is_php[$version];
+	}
+}
 if ( ! function_exists( 'avh_getUserIP' ) ) {
 
 	/**
@@ -151,6 +176,7 @@ if ( ! function_exists( 'avh_verify_nonce' ) ) {
 	 */
 	function avh_verify_nonce ( $nonce, $action = -1 )
 	{
+
 		$r = false;
 		$i = wp_nonce_tick();
 		// Nonce generated 0-12 hours ago

@@ -24,6 +24,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+global $plugin;
+$_dir = current( explode( '/', $plugin ) );
+$_pluginname = plugin_basename( trim( $plugin ) );
+
+define( 'AVHFDAS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . $_dir );
+define( 'AVHFDAS_PLUGIN_NAME', $_pluginname );
+define( 'AVHFDAS_PLUGIN_URL', WP_PLUGIN_URL . '/' . $_dir );
+define( 'AVHFDAS_WORKING_DIR', AVHEC_PLUGIN_DIR  );
+unset ($_pluginname);
+unset ($_dir);
+
 // Define Message Numbers
 define( 'AVHFDAS_REPORTED_DELETED', '100' );
 define( 'AVHFDAS_ADDED_BLACKLIST', '101' );
@@ -32,13 +43,9 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
-require_once WP_PLUGIN_DIR.'/helpers/avh_general.php';
+require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh_general.php';
 
-// Check version.
-// Include WordPress version
-require (ABSPATH . WPINC . '/version.php');
-
-if ( ( float ) $wp_version >= 2.7 ) {
+if ( avh_getWordpressVersion() >= 2.7 ) {
 	require (dirname( __FILE__ ) . '/avh-fdas.client.php');
 } else {
 	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_fdas_remove_plugin' );

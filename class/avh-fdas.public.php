@@ -345,7 +345,7 @@ class AVH_FDAS_Public
 				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
 				$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n";
 				$message .= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time ) . "\r\n";
-				if ( is_set( $spaminfo['Debug'] ) ) {
+				if ( isset( $spaminfo['Debug'] ) ) {
 					$message .= sprintf( __( 'Debug:	%s', 'avhafdas' ), $spaminfo['Debug'] ) . "\r\n";
 				}
 				$this->mail( $to, $subject, $message );
