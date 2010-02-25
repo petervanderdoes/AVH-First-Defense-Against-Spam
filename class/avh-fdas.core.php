@@ -1,8 +1,5 @@
 <?php
-// Stop direct call
-if ( preg_match( '#' . basename( __FILE__ ) . '#', $_SERVER['PHP_SELF'] ) ) {
-	die( 'You are not allowed to call this page directly.' );
-}
+if ( ! defined('AVH_FRAMEWORK')) die( 'You are not allowed to call this page directly.' );
 
 class AVH_FDAS_Core
 {

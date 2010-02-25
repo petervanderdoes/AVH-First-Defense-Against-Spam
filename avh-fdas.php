@@ -23,6 +23,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+define ('AVH_FRAMEWORK', TRUE);
 
 global $plugin;
 $_dir = current( explode( '/', $plugin ) );
@@ -44,6 +45,8 @@ define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
 require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh-common.php';
+require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh-security.php';
+require_once AVHFDAS_PLUGIN_DIR.'/helpers/avh-visitor.php';
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
 	require (dirname( __FILE__ ) . '/avh-fdas.client.php');
