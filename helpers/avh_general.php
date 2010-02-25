@@ -1,6 +1,6 @@
 <?php
 
-if ( ! function_exists( avh_getBaseDirectory ) ) {
+if ( ! function_exists( 'avh_getBaseDirectory' ) ) {
 
 	/**
 	 * Get the base directory of a directory structure
@@ -21,7 +21,7 @@ if ( ! function_exists( avh_getBaseDirectory ) ) {
 	}
 }
 
-if ( ! function_exists( avh_getWordpressVersion ) ) {
+if ( ! function_exists( 'avh_getWordpressVersion' ) ) {
 
 	/**
 	 * Returns the wordpress version
@@ -39,7 +39,7 @@ if ( ! function_exists( avh_getWordpressVersion ) ) {
 
 }
 
-if ( ! function_exists( avh_getUserIP ) ) {
+if ( ! function_exists( 'avh_getUserIP' ) ) {
 
 	/**
 	 * Get the user's IP
@@ -119,7 +119,7 @@ if ( ! function_exists( avh_getUserIP ) ) {
 		return $return;
 	}
 }
-if ( ! function_exists( avh_create_nonce ) ) {
+if ( ! function_exists( 'avh_create_nonce' ) ) {
 
 	/**
 	 * Local nonce creation. WordPress uses the UID and sometimes I don't want that
@@ -136,7 +136,7 @@ if ( ! function_exists( avh_create_nonce ) ) {
 	}
 }
 
-if ( ! function_exists( avh_verify_nonce ) ) {
+if ( ! function_exists( 'avh_verify_nonce' ) ) {
 
 	/**
 	 * Local nonce verification. WordPress uses the UID and sometimes I don't want that

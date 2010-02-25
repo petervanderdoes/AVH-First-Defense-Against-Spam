@@ -1009,7 +1009,7 @@ class AVH_FDAS_Admin
 		$e = wp_specialchars( $_REQUEST['e'] );
 		$i = wp_specialchars( $_REQUEST['i'] );
 		$extra = '&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $i;
-		if ( $this->core->avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
+		if ( avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
 			$all = get_option( $this->core->db_options_nonces );
 			$extra = '&m=' . AVHFDAS_ERROR_NOT_REPORTED . '&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
@@ -1050,7 +1050,7 @@ class AVH_FDAS_Admin
 		}
 		$ip = $_REQUEST['i'];
 
-		if ( $this->core->avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
+		if ( avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
 			$blacklist = $this->core->data['lists']['blacklist'];
 			if ( ! empty( $blacklist ) ) {
 				$b = explode( "\r\n", $blacklist );

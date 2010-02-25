@@ -68,7 +68,7 @@ class AVH_FDAS_Public
 		$all = get_option( $this->core->db_options_nonces );
 		if ( is_array( $all ) ) {
 			foreach ( $all as $key => $value ) {
-				if ( ! $this->core->avh_verify_nonce( $key, $value ) ) {
+				if ( ! avh_verify_nonce( $key, $value ) ) {
 					unset( $all[$key] );
 					$removed ++;
 				}
@@ -124,7 +124,7 @@ class AVH_FDAS_Public
 				if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
 					if ( 1 == $this->core->options['general']['emailsecuritycheck'] ) {
 						$to = get_option( 'admin_email' );
-						$ip = $this->core->getUserIP();
+						$ip = avh_getUserIP();
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
 						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
@@ -144,14 +144,14 @@ class AVH_FDAS_Public
 							$q['a'] = $commentdata['comment_author'];
 							$q['e'] = $commentdata['comment_author_email'];
 							$q['i'] = $ip;
-							$q['_avhnonce'] = $this->core->avh_create_nonce( $q['a'] . $q['e'] . $q['i'] );
+							$q['_avhnonce'] = avh_create_nonce( $q['a'] . $q['e'] . $q['i'] );
 							$query = $this->core->BuildQuery( $q );
 							$report_url = admin_url( 'admin.php?' . $query );
 							$message .= sprintf( __( 'Report spammer: %s' ), $report_url ) . "\r\n";
 						}
 						$message .= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) . "\r\n\r\n";
 
-						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
+						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . avh_create_nonce( $ip );
 						$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 
 						$this->mail( $to, $subject, $message );
@@ -207,7 +207,7 @@ class AVH_FDAS_Public
 	function actionHandleMainAction ()
 	{
 
-		$ip = $this->core->getUserIP();
+		$ip = avh_getUserIP();
 		$ip_in_whitelist = false;
 		$options = $this->core->getOptions();
 		$data = $this->core->getData();
@@ -271,7 +271,7 @@ class AVH_FDAS_Public
 	function actionHandleSFSAction ( $commentdata )
 	{
 
-		$ip = $this->core->getUserIP();
+		$ip = avh_getUserIP();
 
 		$options = $this->core->getOptions();
 		$data = $this->core->getData();
@@ -576,7 +576,7 @@ class AVH_FDAS_Public
 
 			// General End
 			if ( 'Blacklisted' != $info['blacklist']['time'] ) {
-				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . $this->core->avh_create_nonce( $ip );
+				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . avh_create_nonce( $ip );
 				$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			}
 			$this->mail( $to, $subject, $message );
@@ -646,7 +646,7 @@ class AVH_FDAS_Public
 			$message .= "\r\n";
 
 			// General End
-			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $info['ip'] . '&_avhnonce=' . $this->core->avh_create_nonce( $info['ip'] );
+			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $info['ip'] . '&_avhnonce=' . avh_create_nonce( $info['ip'] );
 			$message .= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) . "\r\n";
 			$this->mail( $to, $subject, $message );
 		}

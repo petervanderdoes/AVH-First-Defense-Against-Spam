@@ -32,6 +32,8 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
+require_once WP_PLUGIN_DIR.'/helpers/avh_general.php';
+
 // Check version.
 // Include WordPress version
 require (ABSPATH . WPINC . '/version.php');
