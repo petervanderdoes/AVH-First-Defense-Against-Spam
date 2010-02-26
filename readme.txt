@@ -4,7 +4,11 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.7
 Tested up to: 2.8
+<<<<<<< HEAD
 Stable tag: 3.0-dev1
+=======
+Stable tag: 2.3.3
+>>>>>>> v2.3.3
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -103,6 +107,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 = 3.0-dev1 =
 * Bugfix: Typo in window title for menu option overview
 * Bugfix: Blogname would show up as html safe text
+* Bugfix: Checking for spammers when a comment is posted did not utilize the IP cache.
 * Plugin is refactored
 
 = Version 2.3.2 =

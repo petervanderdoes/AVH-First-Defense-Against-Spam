@@ -20,7 +20,7 @@ class AVH_FDAS_Public
 
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
-		add_action('preprocess_comment', array(&$this,'actionHandleSFSAction'),1);
+		add_action( 'preprocess_comment', array (&$this, 'actionHandleSFSAction' ), 1 );
 		add_action( 'comment_form', array (&$this, 'actionAddNonceFieldToComment' ) );
 		add_filter( 'preprocess_comment', array (&$this, 'filterCheckNonceFieldToComment' ), 1 );
 
@@ -80,7 +80,7 @@ class AVH_FDAS_Public
 
 		if ( $options['general']['cron_nonces_email'] ) {
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean nonces', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
+			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean nonces', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 			$message = sprintf( __( 'Deleted %d nonce\'s from the database', 'avhfdas' ), $removed );
 			$this->mail( $to, $subject, $message );
 		}
@@ -102,7 +102,7 @@ class AVH_FDAS_Public
 
 		if ( $options['general']['cron_ipcache_email'] ) {
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean IP cache', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
+			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean IP cache', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 			$message = sprintf( __( 'Deleted %d IP\'s from the cache', 'avhfdas' ), $result );
 			$this->mail( $to, $subject, $message );
 		}
@@ -128,7 +128,7 @@ class AVH_FDAS_Public
 						$to = get_option( 'admin_email' );
 						$ip = avh_getUserIP();
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
-						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
+						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
 							$message = __( 'Reason:	The nonce check failed.', 'avhfdas' ) . "\r\n";
 						} else {
@@ -202,8 +202,11 @@ class AVH_FDAS_Public
 
 	/**
 	 * Handle the main action.
-	 * Get the visitors IP and call the stopforumspam API to check if it's a known spammer
 	 *
+	 * Checks before content is served
+	 * Don't use SFS as it overloads their site.
+	 *
+	 * @uses PHP
 	 * @WordPress Action get_header
 	 */
 	function actionHandleMainAction ()
@@ -264,58 +267,76 @@ class AVH_FDAS_Public
 	}
 
 	/**
-	 * Handle the SFS action.
-	 * Only check with SFS when a comment is really posted
+	 * Handle when posting a comment.
+	 *
 	 * Get the visitors IP and call the stopforumspam API to check if it's a known spammer
 	 *
+	 * @uses SFS, PHP
 	 * @WordPress Action preprocess_comment
 	 */
 	function actionHandleSFSAction ( $commentdata )
 	{
-
 		$ip = avh_getUserIP();
-
+		$ip_in_whitelist = false;
 		$options = $this->core->getOptions();
 		$data = $this->core->getData();
 
-		if ( 1 == $options['general']['useipcache'] ) {
-			$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
-			$time_start = microtime( true );
-			$ip_in_cache = $ipcachedb->getIP( $ip );
-			$time_end = microtime( true );
-			$time = $time_end - $time_start;
-			$spaminfo['time'] = $time;
+		if ( 1 == $options['general']['usewhitelist'] && $data['lists']['whitelist'] ) {
+			$ip_in_whitelist = $this->checkWhitelist( $ip );
 		}
 
-		if ( $options['general']['use_sfs'] || $options['general']['use_php'] ) {
-			$spaminfo = null;
-			$spaminfo['detected'] = FALSE;
-
-			if ( $options['general']['use_sfs'] ) {
-				$spaminfo['sfs'] = $this->checkStopForumSpam( $ip );
-				if ( 'yes' == $spaminfo['sfs']['appears'] ) {
-					$spaminfo['detected'] = true;
-				}
+		if ( ! $ip_in_whitelist ) {
+			if ( 1 == $options['general']['useblacklist'] && $data['lists']['blacklist'] ) {
+				$this->checkBlacklist( $ip ); // The program will terminate if in blacklist.
 			}
 
-			if ( $options['general']['use_php'] ) {
-				$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
-				if ( $spaminfo['php'] != null ) {
-					$spaminfo['detected'] = true;
-				}
+			$ip_in_cache = false;
+			if ( 1 == $options['general']['useipcache'] ) {
+				$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+				$time_start = microtime( true );
+				$ip_in_cache = $ipcachedb->getIP( $ip );
+				$time_end = microtime( true );
+				$time = $time_end - $time_start;
+				$spaminfo['time'] = $time;
 			}
 
-			if ( $spaminfo['detected'] ) {
-				$this->handleSpammer( $ip, $spaminfo, 'comment' );
+			if ( false === $ip_in_cache ) {
+				if ( $options['general']['use_sfs'] || $options['general']['use_php'] ) {
+					$spaminfo = null;
+					$spaminfo['detected'] = FALSE;
+
+					if ( $options['general']['use_sfs'] ) {
+						$spaminfo['sfs'] = $this->checkStopForumSpam( $ip );
+						if ( 'yes' == $spaminfo['sfs']['appears'] ) {
+							$spaminfo['detected'] = true;
+						}
+					}
+
+					if ( $options['general']['use_php'] ) {
+						$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
+						if ( $spaminfo['php'] != null ) {
+							$spaminfo['detected'] = true;
+						}
+					}
+
+					if ( $spaminfo['detected'] ) {
+						$this->handleSpammer( $ip, $spaminfo );
+					} else {
+						if ( 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
+							$ipcachedb->insertIP( $ip, 0 );
+						}
+					}
+				}
 			} else {
-				if ( 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
-					$ipcachedb->insertIP( $ip, 0 );
+				if ( $ip_in_cache->spam ) {
+					$ipcachedb->updateIP( $ip );
+					$spaminfo['ip'] = $ip;
+					$this->handleSpammerCache( $spaminfo );
 				}
 			}
 		}
 		return ($commentdata);
 	}
-
 
 	/**
 	 * Check an IP with Stop Forum Spam
@@ -341,7 +362,7 @@ class AVH_FDAS_Public
 			if ( isset( $spaminfo['Error'] ) && $options['sfs']['error'] ) {
 				$error = $this->core->getHttpError( $spaminfo['Error'] );
 				$to = get_option( 'admin_email' );
-				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES) );
+				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 				$message = __( 'An error has been detected', 'avhfdas' ) . "\r\n";
 				$message .= sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) . "\r\n\r\n";
 				$message .= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) . "\r\n";
@@ -485,7 +506,7 @@ class AVH_FDAS_Public
 	 * @param string $time -
 	 *
 	 */
-	function handleSpammer ( $ip, $info, $whichaction='main' )
+	function handleSpammer ( $ip, $info, $whichaction = 'main' )
 	{
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
@@ -498,13 +519,13 @@ class AVH_FDAS_Public
 
 			// General part of the email
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $ip );
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), $ip );
 			$message = '';
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) . "\r\n";
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
 
 			// Stop Forum Spam Mail Part
-			if ( $options['general']['use_sfs'] && $sfs_email && $whichaction == 'comment') {
+			if ( $options['general']['use_sfs'] && $sfs_email && $whichaction == 'comment' ) {
 				if ( 'yes' == $info['sfs']['appears'] ) {
 					$message .= __( 'Checked at Stop Forum Spam', 'avhfdas' ) . "\r\n";
 					$message .= '	' . __( 'Information', 'avhfdas' ) . "\r\n";
@@ -638,7 +659,7 @@ class AVH_FDAS_Public
 
 			// General part of the email
 			$to = get_option( 'admin_email' );
-			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $info['ip'] );
+			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), $info['ip'] );
 			$message = '';
 			$message .= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $info['ip'] ) . "\r\n";
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
