@@ -92,8 +92,8 @@ class AVH_FDAS_Admin
 
 		// Add menu system
 		$folder = plugin_basename( $this->core->info['plugin_dir'] );
-		add_menu_page(  'AVH F.D.A.S', 'AVH F.D.A.S' , 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
-		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview','avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
+		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
+		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
 		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-general', array (&$this, 'doMenuGeneralOptions' ) );
 		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-3rd-party', array (&$this, 'doMenu3rdPartyOptions' ) );
 		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-faq', array (&$this, 'doMenuFAQ' ) );
@@ -176,6 +176,7 @@ class AVH_FDAS_Admin
 		echo '<br class="clear"/>';
 		echo '	</div>'; //dashboard-widgets-wrap
 		echo '</div>'; // wrap
+
 
 		$this->printAdminFooter();
 	}
@@ -697,7 +698,8 @@ class AVH_FDAS_Admin
 		echo '<p>' . __( 'To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.' );
 		echo $this->printOptions( $data['options_sfs'], $data['actual_options'] );
 		//echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
-		//echo  __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
+	//echo  __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
+
 
 	}
 

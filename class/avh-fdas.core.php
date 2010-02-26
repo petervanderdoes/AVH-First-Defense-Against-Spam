@@ -1,5 +1,6 @@
 <?php
-if ( ! defined('AVH_FRAMEWORK')) die( 'You are not allowed to call this page directly.' );
+if ( ! defined( 'AVH_FRAMEWORK' ) )
+	die( 'You are not allowed to call this page directly.' );
 
 class AVH_FDAS_Core
 {
@@ -119,13 +120,8 @@ class AVH_FDAS_Core
 		$info['lang_dir'] = AVHFDAS_WORKING_DIR . '/lang';
 		$info['graphics_url'] = AVHFDAS_PLUGIN_URL . '/images';
 
-
 		// Set class property for info
-		$this->info = array ('home' => get_option( 'home' ),
-		'siteurl' => $info['siteurl'],
-		'plugin_url' => $info['plugin_url'],
-		'plugin_dir' => $info['plugin_dir'],
-		'graphics_url' => $info['graphics_url'] );
+		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'plugin_url' => $info['plugin_url'], 'plugin_dir' => $info['plugin_dir'], 'graphics_url' => $info['graphics_url'] );
 
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
 
@@ -352,7 +348,6 @@ class AVH_FDAS_Core
 		return array ($new_options, $new_data );
 	}
 
-
 	/**
 	 * Actual Rest Call
 	 *
@@ -366,7 +361,7 @@ class AVH_FDAS_Core
 		$url = $this->stopforumspam_endpoint . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if ( function_exists( 'wp_remote_request' ) ) {
-			$response = wp_remote_request( $url, array('user-agent' => 'WordPress/AVH '.$this->version.'; ' . get_bloginfo( 'url' )) );
+			$response = wp_remote_request( $url, array ('user-agent' => 'WordPress/AVH ' . $this->version . '; ' . get_bloginfo( 'url' ) ) );
 			if ( ! is_wp_error( $response ) ) {
 				$xml_array = $this->ConvertXML2Array( $response['body'] );
 				if ( ! empty( $xml_array ) ) {
@@ -572,9 +567,9 @@ class AVH_FDAS_Core
 	}
 
 	/*********************************
-	 *                               *
+	 * *
 	 * Methods for variable: options *
-	 *                               *
+	 * *
 	 ********************************/
 
 	/**
@@ -648,9 +643,9 @@ class AVH_FDAS_Core
 	}
 
 	/******************************
-	 *                            *
+	 * *
 	 * Methods for variable: data *
-	 *                            *
+	 * *
 	 *****************************/
 
 	/**
@@ -726,9 +721,9 @@ class AVH_FDAS_Core
 	}
 
 	/*********************************
-	 *                               *
+	 * *
 	 * Methods for variable: comment *
-	 *                               *
+	 * *
 	 *********************************/
 
 	/**
