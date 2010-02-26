@@ -45,6 +45,10 @@ class AVH_FDAS_Singleton
  */
 function avh_FDAS_init ()
 {
+	$Registry = AVH_FDAS_Registry::singleton();
+	$Registry->storeSetting('working_dir',pathinfo( __FILE__, PATHINFO_DIRNAME ));
+	unset ($Registry);
+
 	// Admin
 	if ( is_admin() ) {
 		require_once (dirname( __FILE__ ) . '/class/avh-fdas.admin.php');

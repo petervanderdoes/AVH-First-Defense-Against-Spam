@@ -13,6 +13,12 @@ final class AVH_FDAS_Admin
 	 * @var AVH_FDAS_Core
 	 */
 	private $core;
+
+	/**
+	 * @var AVH_FDAS_Registry
+	 */
+	private $Registry;
+
 	private $hooks = array ();
 
 	/**
@@ -24,9 +30,10 @@ final class AVH_FDAS_Admin
 	{
 		// Initialize the plugin
 		$this->core = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Core' );
+		$this->Registry = AVH_FDAS_Registry::singleton();
 
 		// Admin URL and Pagination
-		$this->core->admin_base_url = $this->core->info['siteurl'] . '/wp-admin/admin.php?page=';
+		$this->core->admin_base_url = $this->Registry->getSetting('siteurl') . '/wp-admin/admin.php?page=';
 		if ( isset( $_GET['pagination'] ) ) {
 			$this->core->actual_page = ( int ) $_GET['pagination'];
 		}

@@ -28,7 +28,7 @@ if ( ! defined( 'AVH_FRAMEWORK' ) ) {
 }
 
 $_dir = pathinfo( __FILE__, PATHINFO_DIRNAME );
-
+require_once $_dir . '/libs/class-registry.php';
 require_once $_dir . '/helpers/avh-common.php';
 require_once $_dir . '/helpers/avh-security.php';
 require_once $_dir . '/helpers/avh-visitor.php';
@@ -41,17 +41,56 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
+/**
+ * Create seperate registry for the plugin.
+ * @author pdoes
+ *
+ */
+final class AVH_FDAS_Registry extends AVH_Registry
+{
+
+	//prevent directly access.
+	public function __construct ()
+	{
+	}
+
+	//prevent clone.
+	public function __clone ()
+	{
+	}
+
+	/**
+	 * The instance of the registry
+	 * @access private
+	 */
+	private static $_instance;
+
+	/**
+	 * Singleton method to access the Registry
+	 * @access public
+	 */
+	public static function singleton ()
+	{
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
+
+}
+
 if ( avh_getWordpressVersion() >= 2.7 ) {
 	require_once $_dir . '/helpers/avh-security.php';
 	require_once $_dir . '/helpers/avh-visitor.php';
 
 	/**
 	 *
-	 * @var avh_Registry
+	 * @var AVH_FDAS_Registry
 	 */
-	$Registry = avh_Registry::singleton();
-	$Registry->setDir( $_dir );
-	$Registry->storeSetting('plugin_dir',$_dir);
+	$registry = AVH_FDAS_Registry::singleton();
+	$registry->setDir( $_dir );
+	$registry->storeSetting( 'plugin_dir', $_dir );
+	unset( $registry );
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {
