@@ -105,8 +105,8 @@ final class AVH_FDAS_Admin
 
 		// Register Styles and Scripts
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		wp_register_script( 'avhfdas-admin-js', $this->Registry->getSetting('plugin_url') . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->core->version, true );
-		wp_register_style( 'avhfdas-admin-css', $this->Registry->getSetting('plugin_url') . '/css/avh-fdas.admin.css', array (), $this->core->version, 'screen' );
+		wp_register_script( 'avhfdas-admin-js', $this->Registry->getSetting('plugin_url') . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Registry->getSetting('version'), true );
+		wp_register_style( 'avhfdas-admin-css', $this->Registry->getSetting('plugin_url') . '/css/avh-fdas.admin.css', array (), $this->Registry->getSetting('version'), 'screen' );
 
 	}
 
@@ -1198,7 +1198,7 @@ final class AVH_FDAS_Admin
 	{
 		echo '<div class="clear">';
 		echo '<p class="footer_avhfdas">';
-		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->core->version );
+		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->Registry->getSetting('version') );
 		echo '</p>';
 	}
 
