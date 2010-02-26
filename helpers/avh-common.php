@@ -10,7 +10,19 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 	final class avh_Registry
 	{
 
+		/**
+		 * Our array of objects
+		 * @access private
+		 * @var array
+		 */
 		private static $_objects = array ();
+
+		/**
+    	 * Our array of settings
+     	* @access private
+     	*/
+    	private static $settings = array();
+
 		private static $_dir;
 		private static $_class_prefix = array ();
 		private static $_class_name_prefix = array ();
@@ -50,7 +62,7 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 		 * @param unknown_type $class
 		 * @param unknown_type $type
 		 */
-		public static function &load_class ( $class, $type = 'system' )
+		public function &load_class ( $class, $type = 'system' )
 		{
 			if ( isset( self::$_objects[$class] ) ) {
 				return (self::$_objects[$class]);
@@ -70,6 +82,14 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 			require_once self::$_dir . $in . '/' . $file;
 			$name = ('system' == $type) ? 'AVH_' . $class : self::$_class_prefix[$class] . $class;
 			self::$_objects[$class] = & self::instantiate_class( new $name() );
+		}
+
+		public function storeSetting($key, $data) {
+			self::$settings[$key]=$data;
+		}
+
+		public function getSetting($key) {
+			return self::$settings[$key];
 		}
 
 		/**
