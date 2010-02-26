@@ -30,8 +30,6 @@ if ( ! defined( 'AVH_FRAMEWORK' ) ) {
 $_dir = pathinfo( __FILE__, PATHINFO_DIRNAME );
 
 require_once $_dir . '/helpers/avh-common.php';
-avh_Registry::setDir( $_dir );
-
 require_once $_dir . '/helpers/avh-security.php';
 require_once $_dir . '/helpers/avh-visitor.php';
 
@@ -44,6 +42,17 @@ define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
+	require_once $_dir . '/helpers/avh-security.php';
+	require_once $_dir . '/helpers/avh-visitor.php';
+
+	/**
+	 *
+	 * @var avh_Registry
+	 */
+	$Registry = avh_Registry::singleton();
+	$Registry->setDir( $_dir );
+	$Registry->storeSetting('plugin_dir',$_dir);
+
 	require ($_dir . '/avh-fdas.client.php');
 } else {
 	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_fdas_remove_plugin' );

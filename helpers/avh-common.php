@@ -112,7 +112,7 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 		/**
 		 * @param $dir the $dir to set
 		 */
-		public static function setDir ( $dir )
+		public function setDir ( $dir )
 		{
 			self::$_dir = $dir;
 		}
@@ -121,7 +121,7 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 		 * @param $class Unique Identifier
 		 * @param $class_prefix the $class_prefix to set
 		 */
-		public static function setClass_prefix ( $class, $class_prefix )
+		public function setClass_prefix ( $class, $class_prefix )
 		{
 			self::$_class_prefix[$class] = $class_prefix;
 		}
@@ -130,7 +130,7 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 		 * @param $class Unique Identifier
 		 * @param $class_name_prefix the $class_name_prefix to set
 		 */
-		public static function setClass_name_prefix ( $class, $class_name_prefix )
+		public function setClass_name_prefix ( $class, $class_name_prefix )
 		{
 			self::$_class_name_prefix[$class] = $class_name_prefix;
 		}

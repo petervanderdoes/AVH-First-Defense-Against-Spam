@@ -69,11 +69,19 @@ class AVH_FDAS_Core
 	var $searchengines;
 
 	/**
+	 *
+	 * @var avh_Registry
+	 */
+	var $Registry;
+
+	/**
 	 * PHP5 constructor
 	 *
 	 */
 	function __construct ()
 	{
+		$this->Registry = avh_Registry::singleton();
+
 		$this->version = "3.0-dev1";
 		$this->db_version = 8;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
@@ -116,7 +124,7 @@ class AVH_FDAS_Core
 		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
 
 		$info['siteurl'] = get_option( 'siteurl' );
-		$info['plugin_dir'] = AVHFDAS_PLUGIN_DIR;
+		$info['plugin_dir'] = $this->Registry->getSetting('plugin_dir');
 		$info['lang_dir'] = AVHFDAS_WORKING_DIR . '/lang';
 		$info['graphics_url'] = AVHFDAS_PLUGIN_URL . '/images';
 
