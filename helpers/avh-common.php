@@ -18,10 +18,10 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 		private static $_objects = array ();
 
 		/**
-    	 * Our array of settings
-     	* @access private
-     	*/
-    	private static $settings = array();
+		 * Our array of settings
+		 * @access private
+		 */
+		private static $settings = array ();
 
 		private static $_dir;
 		private static $_class_prefix = array ();
@@ -51,9 +51,8 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 		{
 			if ( ! isset( self::$_instance ) ) {
 				self::$_instance = new self();
-			} else {
-				return self::$_instance;
 			}
+			return self::$_instance;
 		}
 
 		/**
@@ -84,11 +83,13 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 			self::$_objects[$class] = & self::instantiate_class( new $name() );
 		}
 
-		public function storeSetting($key, $data) {
-			self::$settings[$key]=$data;
+		public function storeSetting ( $key, $data )
+		{
+			self::$settings[$key] = $data;
 		}
 
-		public function getSetting($key) {
+		public function getSetting ( $key )
+		{
 			return self::$settings[$key];
 		}
 
