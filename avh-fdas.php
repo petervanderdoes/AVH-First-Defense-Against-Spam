@@ -30,7 +30,8 @@ if ( ! defined( 'AVH_FRAMEWORK' ) ) {
 $_dir=pathinfo(__FILE__, PATHINFO_DIRNAME);
 
 require_once $_dir . '/helpers/avh-common.php';
-avh_Registry::set_dir($_dir);
+avh_Registry::setDir($_dir);
+
 require_once $_dir . '/helpers/avh-security.php';
 require_once $_dir . '/helpers/avh-visitor.php';
 
