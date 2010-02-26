@@ -49,10 +49,10 @@ if ( ! class_exists( 'avh_Registry' ) ) {
 		 */
 		public static function singleton ()
 		{
-			if ( ! isset( self::$instance ) ) {
-				self::$instance = new self();
+			if ( ! isset( self::$_instance ) ) {
+				self::$_instance = new self();
 			} else {
-				return self::$instance;
+				return self::$_instance;
 			}
 		}
 
