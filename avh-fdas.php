@@ -89,6 +89,8 @@ if ( avh_getWordpressVersion() >= 2.7 ) {
 	 */
 	$registry = AVH_FDAS_Registry::singleton();
 	$registry->setDir( $_dir );
+	$registry->setClassFilePrefix('avh-fdas.');
+	$registry->setClassNamePrefix('AVH_FDAS_');
 	$registry->storeSetting( 'plugin_dir', $_dir );
 	unset( $registry );
 

@@ -24,8 +24,8 @@ if ( ! class_exists( 'AVH_Registry' ) ) {
 		private $settings = array ();
 
 		private $_dir;
-		private $_class_prefix = array ();
-		private $_class_name_prefix = array ();
+		private $_class_file_prefix;
+		private $_class_name_prefix;
 
 		/**
 		 * Loads a class
@@ -43,15 +43,15 @@ if ( ! class_exists( 'AVH_Registry' ) ) {
 			{
 				case 'plugin' :
 					$in = '/class';
-					$file = $this->_class_prefix[$class] . $class . '.php';
+					$file = $this->_class_file_prefix . $class . '.php';
 					break;
 				case 'system' :
 				default :
 					$in = '/libs';
-					$file = 'avh_' . $class . '.php';
+					$file = 'class-' . $class . '.php';
 			}
-			require_once $this->_dir . $in . '/' . $file;
-			$name = ('system' == $type) ? 'AVH_' . $class : $this->_class_prefix[$class] . $class;
+			require_once $this->_dir . $in . '/' . strtolower($file);
+			$name = ('system' == $type) ? 'AVH_' . $class : $this->_class_name_prefix . $class;
 			$this->_objects[$class] = & $this->instantiate_class( new $name() );
 		}
 
@@ -115,18 +115,18 @@ if ( ! class_exists( 'AVH_Registry' ) ) {
 		 * @param $class Unique Identifier
 		 * @param $class_prefix the $class_prefix to set
 		 */
-		public function setClass_prefix ( $class, $class_prefix )
+		public function setClassFilePrefix ( $class_prefix )
 		{
-			$this->_class_prefix[$class] = $class_prefix;
+			$this->_class_file_prefix = $class_prefix;
 		}
 
 		/**
 		 * @param $class Unique Identifier
 		 * @param $class_name_prefix the $class_name_prefix to set
 		 */
-		public function setClass_name_prefix ( $class, $class_name_prefix )
+		public function setClassNamePrefix ( $class_name_prefix )
 		{
-			$this->_class_name_prefix[$class] = $class_name_prefix;
+			$this->_class_name_prefix = $class_name_prefix;
 		}
 
 	}

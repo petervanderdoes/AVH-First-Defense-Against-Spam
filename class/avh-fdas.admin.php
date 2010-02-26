@@ -28,9 +28,12 @@ final class AVH_FDAS_Admin
 	 */
 	public function __construct ()
 	{
-		// Initialize the plugin
-		$this->core = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Core' );
+		// Get The Registry
 		$this->Registry = AVH_FDAS_Registry::singleton();
+
+		// Initialize the plugin
+		$this->core = $this->Registry->load_class( 'Core','plugin' );
+
 
 		// Admin URL and Pagination
 		$this->core->admin_base_url = $this->Registry->getSetting('siteurl') . '/wp-admin/admin.php?page=';

@@ -11,13 +11,20 @@ class AVH_FDAS_Public
 	var $core;
 
 	/**
+	 * @var AVH_FDAS_REGISTRY
+	 */
+	var $Registry;
+	/**
 	 * PHP5 Constructor
 	 *
 	 */
 	function __construct ()
 	{
+		// Get The Registry
+		$this->Registry = AVH_FDAS_Registry::singleton();
+
 		// Initialize the plugin
-		$this->core = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Core' );
+		$this->core = $this->Registry->load_class( 'Core','plugin' );
 
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
