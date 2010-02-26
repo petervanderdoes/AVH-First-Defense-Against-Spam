@@ -28,7 +28,11 @@ if ( ! defined( 'AVH_FRAMEWORK' ) ) {
 }
 
 $_dir=pathinfo(__FILE__, PATHINFO_DIRNAME);
-$t=WP_PLUGIN_DIR;
+
+require_once $_dir . '/helpers/avh-common.php';
+avh_Registry::set_dir($_dir);
+require_once $_dir . '/helpers/avh-security.php';
+require_once $_dir . '/helpers/avh-visitor.php';
 
 // Define Message Numbers
 define( 'AVHFDAS_REPORTED_DELETED', '100' );
@@ -37,10 +41,6 @@ define( 'AVHFDAS_REPORTED', '102' );
 define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
-
-require_once $_dir . '/helpers/avh-common.php';
-require_once $_dir . '/helpers/avh-security.php';
-require_once $_dir . '/helpers/avh-visitor.php';
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
 	require ($_dir . '/avh-fdas.client.php');
