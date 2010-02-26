@@ -1114,11 +1114,6 @@ final class AVH_FDAS_Admin
 			wp_schedule_event( time(), 'daily', 'avhfdas_clean_nonce' );
 		}
 
-		// Load up variables
-		$this->core->loadOptions(); // Options will be created if not in DB
-		$this->core->loadData(); // Data will be created if not in DB
-
-
 		// Setup nonces db in options
 		if ( ! (get_option( $this->core->db_options_nonces )) ) {
 			update_option( $this->core->db_options_nonces, $this->core->default_nonces );
