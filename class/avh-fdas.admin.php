@@ -67,7 +67,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @WordPress Action init
 	 */
-	private function actionInitRoles ()
+	public function actionInitRoles ()
 	{
 
 		$role = get_role( 'administrator' );
@@ -87,7 +87,7 @@ final class AVH_FDAS_Admin
 	 * @WordPress Action admin_menu
 	 *
 	 */
-	private function actionAdminMenu ()
+	public function actionAdminMenu ()
 	{
 
 		// Add menu system
@@ -115,7 +115,7 @@ final class AVH_FDAS_Admin
 	 * Setup everything needed for the Overview page
 	 *
 	 */
-	private function actionLoadPageHook_Overview ()
+	public function actionLoadPageHook_Overview ()
 	{
 		add_meta_box( 'avhfdasBoxStats', __( 'Statistics', 'avhfdas' ), array (&$this, 'metaboxMenuOverview' ), $this->hooks['avhfdas_menu_overview'], 'normal', 'core' );
 
@@ -138,7 +138,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	private function doMenuOverview ()
+	public function doMenuOverview ()
 	{
 		global $screen_layout_columns;
 
@@ -185,7 +185,7 @@ final class AVH_FDAS_Admin
 	 * Metabox Overview of settings
 	 *
 	 */
-	private function metaboxMenuOverview ()
+	public function metaboxMenuOverview ()
 	{
 		global $wpdb;
 
@@ -299,7 +299,7 @@ final class AVH_FDAS_Admin
 	 * Setup the General page
 	 *
 	 */
-	private function actionLoadPageHook_General ()
+	public function actionLoadPageHook_General ()
 	{
 
 		add_meta_box( 'avhfdasBoxGeneral', 'General', array (&$this, 'metaboxGeneral' ), $this->hooks['avhfdas_menu_general'], 'normal', 'core' );
@@ -327,7 +327,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	private function doMenuGeneralOptions ()
+	public function doMenuGeneralOptions ()
 	{
 		global $screen_layout_columns;
 
@@ -502,7 +502,7 @@ final class AVH_FDAS_Admin
 	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
-	private function metaboxGeneral ( $data )
+	public function metaboxGeneral ( $data )
 	{
 		echo $this->printOptions( $data['options_general'], $data['actual_options'] );
 	}
@@ -512,7 +512,7 @@ final class AVH_FDAS_Admin
 	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
-	private function metaboxBlackList ( $data )
+	public function metaboxBlackList ( $data )
 	{
 		echo $this->printOptions( $data['options_blacklist'], $data['actual_options'] );
 	}
@@ -522,7 +522,7 @@ final class AVH_FDAS_Admin
 	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
-	private function metaboxWhiteList ( $data )
+	public function metaboxWhiteList ( $data )
 	{
 		echo $this->printOptions( $data['options_whitelist'], $data['actual_options'] );
 	}
@@ -532,7 +532,7 @@ final class AVH_FDAS_Admin
 	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
-	private function metaboxIPCache ( $data )
+	public function metaboxIPCache ( $data )
 	{
 		echo '<p>' . __( 'To use IP caching you must enable it below and set the options. IP\'s are stored in the database so if you have a high traffic website the database can grow quickly' );
 		echo $this->printOptions( $data['options_ipcache'], $data['actual_options'] );
@@ -543,7 +543,7 @@ final class AVH_FDAS_Admin
 	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
-	private function metaboxCron ( $data )
+	public function metaboxCron ( $data )
 	{
 		echo '<p>' . __( 'Once a day cron jobs of this plugin run. You can select to receive an email with additional information about the jobs that ran.' );
 		echo $this->printOptions( $data['options_cron'], $data['actual_options'] );
@@ -553,7 +553,7 @@ final class AVH_FDAS_Admin
 	 * Setup everything needed for the 3rd party menu
 	 *
 	 */
-	private function actionLoadPageHook_3rd_party ()
+	public function actionLoadPageHook_3rd_party ()
 	{
 
 		add_meta_box( 'avhfdasBoxSFS', 'Stop Forum Spam', array (&$this, 'metaboxMenu3rdParty_SFS' ), $this->hooks['avhfdas_menu_3rd_party'], 'normal', 'core' );
@@ -578,7 +578,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	private function doMenu3rdPartyOptions ()
+	public function doMenu3rdPartyOptions ()
 	{
 		global $screen_layout_columns;
 
@@ -693,7 +693,7 @@ final class AVH_FDAS_Admin
 	 * @return none
 	 */
 
-	private function metaboxMenu3rdParty_SFS ( $data )
+	public function metaboxMenu3rdParty_SFS ( $data )
 	{
 		echo '<p>' . __( 'To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.' );
 		echo $this->printOptions( $data['options_sfs'], $data['actual_options'] );
@@ -708,7 +708,7 @@ final class AVH_FDAS_Admin
 	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
-	private function metaboxMenu3rdParty_PHP ( $data )
+	public function metaboxMenu3rdParty_PHP ( $data )
 	{
 		echo '<p>' . __( 'To check a visitor at Project Honey Pot you must enable it below, you must also have an API key. You can get an API key by signing up for free at the <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">Honey Pot Project</a>. Set the options to your own liking.' );
 		echo $this->printOptions( $data['options_php'], $data['actual_options'] );
@@ -719,7 +719,7 @@ final class AVH_FDAS_Admin
 	 * Setup everything needed for the FAQ page
 	 *
 	 */
-	private function actionLoadPageHook_faq ()
+	public function actionLoadPageHook_faq ()
 	{
 
 		add_meta_box( 'avhfdasBoxFAQ', __( 'F.A.Q.', 'avhfdas' ), array (&$this, 'metaboxFAQ' ), $this->hooks['avhfdas_menu_faq'], 'normal', 'core' );
@@ -743,7 +743,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	private function doMenuFAQ ()
+	public function doMenuFAQ ()
 	{
 		global $screen_layout_columns;
 
@@ -793,7 +793,7 @@ final class AVH_FDAS_Admin
 	 * @return none
 	 */
 
-	private function metaboxFAQ ()
+	public function metaboxFAQ ()
 	{
 		echo '<p>';
 		echo '<span class="b">Why is there an IP caching system?</span><br />';
@@ -888,7 +888,7 @@ final class AVH_FDAS_Admin
 	 * Donation Metabox
 	 * @return unknown_type
 	 */
-	private function metaboxDonations ()
+	public function metaboxDonations ()
 	{
 		echo '<p>If you enjoy this plug-in please consider a donation. There are several ways you can show your appreciation</p>';
 		echo '<p>';
@@ -914,7 +914,7 @@ final class AVH_FDAS_Admin
 	 * @return strings
 	 */
 
-	private function filterScreenLayoutColumns ( $columns, $screen )
+	public function filterScreenLayoutColumns ( $columns, $screen )
 	{
 		switch ( $screen )
 		{
@@ -945,7 +945,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @since 1.0
 	 */
-	private function filterPluginActions ( $links )
+	public function filterPluginActions ( $links )
 	{
 		$folder = plugin_basename( $this->core->info['plugin_dir'] );
 		$settings_link = '<a href="admin.php?page=' . $folder . '">' . __( 'Settings', 'avhfdas' ) . '</a>';
@@ -962,7 +962,7 @@ final class AVH_FDAS_Admin
 	 * @return array
 	 * @since 1.0
 	 */
-	private function filterCommentRowActions ( $actions, $comment )
+	public function filterCommentRowActions ( $actions, $comment )
 	{
 		if ( (! empty( $this->core->options['sfs']['sfsapikey'] )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
 			$report_url = clean_url( wp_nonce_url( "admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID" ) );
@@ -977,7 +977,7 @@ final class AVH_FDAS_Admin
 	 * @WordPress Action wp_ajax_avh-fdas-reportcomment
 	 *
 	 */
-	private function actionAjaxReportComment ()
+	public function actionAjaxReportComment ()
 	{
 		if ( 'avh-fdas-reportcomment' == $_POST['action'] ) {
 			$comment_id = absint( $_REQUEST['id'] );
@@ -1002,7 +1002,7 @@ final class AVH_FDAS_Admin
 	 * @since 1.2
 	 *
 	 */
-	private function actionHandleEmailReportingUrl ()
+	public function actionHandleEmailReportingUrl ()
 	{
 		if ( ! (isset( $_REQUEST['action'] ) && 'emailreportspammer' == $_REQUEST['action']) ) {
 			return;
@@ -1045,7 +1045,7 @@ final class AVH_FDAS_Admin
 	 * @WordPress Action admin_action_blacklist
 	 *
 	 */
-	private function actionHandleBlacklistUrl ()
+	public function actionHandleBlacklistUrl ()
 	{
 		if ( ! (isset( $_REQUEST['action'] ) && 'blacklist' == $_REQUEST['action']) ) {
 			return;
@@ -1103,7 +1103,7 @@ final class AVH_FDAS_Admin
 	 * Called on activation of the plugin.
 	 *
 	 */
-	private function installPlugin ()
+	public function installPlugin ()
 	{
 		global $wpdb;
 
@@ -1151,7 +1151,7 @@ final class AVH_FDAS_Admin
 	 * Called on deactivation of the plugin.
 	 *
 	 */
-	private function deactivatePlugin ()
+	public function deactivatePlugin ()
 	{
 		// Remove the administrative capilities
 		$role = get_role( 'administrator' );
