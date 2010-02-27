@@ -2,12 +2,56 @@
 if ( ! defined( 'AVH_FRAMEWORK' ) )
 	die( 'You are not allowed to call this page directly.' );
 
-if ( ! class_exists( 'AVH_Registry' ) ) {
+if ( ! class_exists( 'AVH_Settings_Registry' ) ) {
+
+	abstract class AVH_Settings_Registry
+	{
+
+		/**
+		 * Our array of settings
+		 * @access protected
+		 */
+		private $_settings = array ();
+
+		/**
+		 * Stores settings in the registry
+		 * @param string $data
+		 * @param string $key The key for the array
+		 * @return void
+		 */
+		public function storeSetting ( $key, $data )
+		{
+			$this->_settings[$key] = $data;
+			$this->$key = $data;
+		}
+
+		/**
+		 * Gets a setting from the registry
+		 * @param string $key The key in the array
+		 * @return mixed
+		 */
+		public function getSetting ( $key )
+		{
+			return $this->_settings[$key];
+		}
+
+		/**
+		 * Removes a setting from the registry
+		 * @param string $key The key for the array
+		 */
+		public function removeSetting ( $key )
+		{
+			unset( $this->_settings[$key] );
+		}
+	}
+}
+
+if ( ! class_exists( 'AVH_Class_Registry' ) ) {
 	/**
 	 * Class registry
 	 *
 	 */
-	abstract class AVH_Registry
+	abstract class AVH_Class_Registry
 	{
 
 		/**
@@ -16,12 +60,6 @@ if ( ! class_exists( 'AVH_Registry' ) ) {
 		 * @var array
 		 */
 		private $_objects = array ();
-
-		/**
-		 * Our array of settings
-		 * @access protected
-		 */
-		private $settings = array ();
 
 		private $_dir;
 		private $_class_file_prefix;
@@ -50,40 +88,9 @@ if ( ! class_exists( 'AVH_Registry' ) ) {
 					$in = '/libs';
 					$file = 'class-' . $class . '.php';
 			}
-			require_once $this->_dir . $in . '/' . strtolower($file);
+			require_once $this->_dir . $in . '/' . strtolower( $file );
 			$name = ('system' == $type) ? 'AVH_' . $class : $this->_class_name_prefix . $class;
 			$this->_objects[$class] = & $this->instantiate_class( new $name() );
-		}
-
-		/**
-		 * Stores settings in the registry
-		 * @param string $data
-		 * @param string $key The key for the array
-		 * @return void
-		 */
-		public function storeSetting ( $key, $data )
-		{
-			$this->settings[$key] = $data;
-			$this->$key = $data;
-		}
-
-		/**
-		 * Gets a setting from the registry
-		 * @param string $key The key in the array
-		 * @return mixed
-		 */
-		public function getSetting ( $key )
-		{
-			return $this->settings[$key];
-		}
-
-		/**
-		 * Removes a setting from the registry
-		 * @param string $key The key for the array
-		 */
-		public function removeSetting ( $key )
-		{
-			unset( $this->settings[$key] );
 		}
 
 		/**

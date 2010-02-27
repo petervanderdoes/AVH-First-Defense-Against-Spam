@@ -19,6 +19,11 @@ final class AVH_FDAS_Admin
 	 */
 	private $Settings;
 
+	/**
+	 * @var AVH_FDAS_Classes
+	 */
+	private $Classes;
+
 	private $hooks = array ();
 
 	/**
@@ -28,11 +33,15 @@ final class AVH_FDAS_Admin
 	 */
 	public function __construct ()
 	{
-		// Get The Settings
+		// The Settings Registery
 		$this->Settings = AVH_FDAS_Settings::singleton();
 
+		// The Classes Registery
+		$this->Classes = AVH_FDAS_Classes::singleton();
+
+
 		// Initialize the plugin
-		$this->core = $this->Settings->load_class( 'Core','plugin' );
+		$this->core = $this->Classes->load_class( 'Core','plugin' );
 
 
 		// Admin URL and Pagination

@@ -41,55 +41,19 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
-/**
- * Create seperate registry for the plugin.
- * @author pdoes
- *
- */
-final class AVH_FDAS_Settings extends AVH_Registry
-{
-
-	//prevent directly access.
-	public function __construct ()
-	{
-	}
-
-	//prevent clone.
-	public function __clone ()
-	{
-	}
-
-	/**
-	 * The instance of the registry
-	 * @access private
-	 */
-	private static $_instance;
-
-	/**
-	 * Singleton method to access the Registry
-	 * @access public
-	 */
-	public static function singleton ()
-	{
-		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
-
-}
+require_once 'avh-fdas.registry.php';
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
 	require_once $_dir . '/helpers/avh-security.php';
 	require_once $_dir . '/helpers/avh-visitor.php';
 
 
-	$Settings = AVH_FDAS_Settings::singleton();
-	$Settings->setDir( $_dir );
-	$Settings->setClassFilePrefix('avh-fdas.');
-	$Settings->setClassNamePrefix('AVH_FDAS_');
-	$Settings->storeSetting( 'plugin_dir', $_dir );
-	unset( $Settings );
+	$Classes = AVH_FDAS_Classes::singleton();
+	$Classes->setDir( $_dir );
+	$Classes->setClassFilePrefix('avh-fdas.');
+	$Classes->setClassNamePrefix('AVH_FDAS_');
+	$Classes->storeSetting( 'plugin_dir', $_dir );
+	unset( $Classes );
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {
