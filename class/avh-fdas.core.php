@@ -70,9 +70,9 @@ class AVH_FDAS_Core
 
 	/**
 	 *
-	 * @var avh_Registry
+	 * @var AVH_FDAS_Settings
 	 */
-	var $Registry;
+	var $Settings;
 
 	/**
 	 * PHP5 constructor
@@ -80,11 +80,11 @@ class AVH_FDAS_Core
 	 */
 	function __construct ()
 	{
-		$this->Registry = AVH_FDAS_Registry::singleton();
+		$this->Settings = AVH_FDAS_Settings::singleton();
 
-		$this->Registry->storeSetting( 'version', '3.0-dev1' );
+		$this->Settings->storeSetting( 'version', '3.0-dev1' );
 		$this->db_version = 8;
-		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->Registry->getSetting('version');
+		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->Settings->getSetting('version');
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
 		$this->db_options_nonces = 'avhfdas_nonces';
@@ -92,7 +92,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->Registry->getSetting('version'), 'dbversion' => $this->db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
+		$this->default_general_options = array ('version' => $this->Settings->getSetting('version'), 'dbversion' => $this->db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
 		$this->default_spam = array ('whentoemail' => - 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
 		$this->default_honey = array ('whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
 		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
@@ -123,9 +123,9 @@ class AVH_FDAS_Core
 
 		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
 
-		$this->Registry->storeSetting( 'siteurl', get_option( 'siteurl' ) );
-		$this->Registry->storeSetting( 'lang_dir', $this->Registry->getSetting( 'working_dir' ) . '/lang' );
-		$this->Registry->storeSetting( 'graphics_url', WP_PLUGIN_URL . '/images' );
+		$this->Settings->storeSetting( 'siteurl', get_option( 'siteurl' ) );
+		$this->Settings->storeSetting( 'lang_dir', $this->Settings->getSetting( 'working_dir' ) . '/lang' );
+		$this->Settings->storeSetting( 'graphics_url', WP_PLUGIN_URL . '/images' );
 
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
 
@@ -255,7 +255,7 @@ class AVH_FDAS_Core
 				}
 			}
 		}
-		$options['general']['version'] = $this->Registry->getSetting('version');
+		$options['general']['version'] = $this->Settings->getSetting('version');
 		$options['general']['dbversion'] = $this->db_version;
 		$this->saveOptions( $options );
 		$this->saveData( $data );
@@ -365,7 +365,7 @@ class AVH_FDAS_Core
 		$url = $this->stopforumspam_endpoint . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if ( function_exists( 'wp_remote_request' ) ) {
-			$response = wp_remote_request( $url, array ('user-agent' => 'WordPress/AVH ' . $this->Registry->getSetting( 'version' ) . '; ' . get_bloginfo( 'url' ) ) );
+			$response = wp_remote_request( $url, array ('user-agent' => 'WordPress/AVH ' . $this->Settings->getSetting( 'version' ) . '; ' . get_bloginfo( 'url' ) ) );
 			if ( ! is_wp_error( $response ) ) {
 				$xml_array = $this->ConvertXML2Array( $response['body'] );
 				if ( ! empty( $xml_array ) ) {

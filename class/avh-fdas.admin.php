@@ -15,9 +15,9 @@ final class AVH_FDAS_Admin
 	private $core;
 
 	/**
-	 * @var AVH_FDAS_Registry
+	 * @var AVH_FDAS_Settings
 	 */
-	private $Registry;
+	private $Settings;
 
 	private $hooks = array ();
 
@@ -28,15 +28,15 @@ final class AVH_FDAS_Admin
 	 */
 	public function __construct ()
 	{
-		// Get The Registry
-		$this->Registry = AVH_FDAS_Registry::singleton();
+		// Get The Settings
+		$this->Settings = AVH_FDAS_Settings::singleton();
 
 		// Initialize the plugin
-		$this->core = $this->Registry->load_class( 'Core','plugin' );
+		$this->core = $this->Settings->load_class( 'Core','plugin' );
 
 
 		// Admin URL and Pagination
-		$this->core->admin_base_url = $this->Registry->getSetting('siteurl') . '/wp-admin/admin.php?page=';
+		$this->core->admin_base_url = $this->Settings->getSetting('siteurl') . '/wp-admin/admin.php?page=';
 		if ( isset( $_GET['pagination'] ) ) {
 			$this->core->actual_page = ( int ) $_GET['pagination'];
 		}
@@ -90,7 +90,7 @@ final class AVH_FDAS_Admin
 	public function actionAdminMenu ()
 	{
 		// Add menu system
-		$folder = plugin_basename( $this->Registry->getSetting('plugin_dir') );
+		$folder = plugin_basename( $this->Settings->getSetting('plugin_dir') );
 		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
 		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
 		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-general', array (&$this, 'doMenuGeneralOptions' ) );
@@ -105,8 +105,8 @@ final class AVH_FDAS_Admin
 
 		// Register Styles and Scripts
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		wp_register_script( 'avhfdas-admin-js', $this->Registry->getSetting('plugin_url') . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Registry->getSetting('version'), true );
-		wp_register_style( 'avhfdas-admin-css', $this->Registry->getSetting('plugin_url') . '/css/avh-fdas.admin.css', array (), $this->Registry->getSetting('version'), 'screen' );
+		wp_register_script( 'avhfdas-admin-js', $this->Settings->getSetting('plugin_url') . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Settings->getSetting('version'), true );
+		wp_register_style( 'avhfdas-admin-css', $this->Settings->getSetting('plugin_url') . '/css/avh-fdas.admin.css', array (), $this->Settings->getSetting('version'), 'screen' );
 
 	}
 
@@ -893,9 +893,9 @@ final class AVH_FDAS_Admin
 		echo '<p>';
 		echo '<span class="b">Amazon</span><br />';
 		echo 'If you decide to buy something from Amazon click the button.<br />';
-		echo '<a href="https://www.amazon.com/?&tag=avh-donation-20" target="_blank" title="Amazon Homepage"><img alt="Amazon Button" src="' . $this->Registry->getSetting('graphics_url') . '/us_banner_logow_120x60.gif" /></a></p>';
+		echo '<a href="https://www.amazon.com/?&tag=avh-donation-20" target="_blank" title="Amazon Homepage"><img alt="Amazon Button" src="' . $this->Settings->getSetting('graphics_url') . '/us_banner_logow_120x60.gif" /></a></p>';
 		echo '<p>';
-		echo 'You can send me something from my <a href="http://www.amazon.com/gp/registry/wishlist/1U3DTWZ72PI7W?tag=avh-donation-20">Amazon Wish List</a>';
+		echo 'You can send me something from my <a href="http://www.amazon.com/gp/Settings/wishlist/1U3DTWZ72PI7W?tag=avh-donation-20">Amazon Wish List</a>';
 		echo '</p>';
 		echo '<p>';
 		echo '<span class="b">Through Paypal.</span><br />';
@@ -946,7 +946,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterPluginActions ( $links )
 	{
-		$folder = plugin_basename( $this->Registry->getSetting('plugin_dir') );
+		$folder = plugin_basename( $this->Settings->getSetting('plugin_dir') );
 		$settings_link = '<a href="admin.php?page=' . $folder . '">' . __( 'Settings', 'avhfdas' ) . '</a>';
 		array_unshift( $links, $settings_link ); // before other links
 		return $links;
@@ -1198,7 +1198,7 @@ final class AVH_FDAS_Admin
 	{
 		echo '<div class="clear">';
 		echo '<p class="footer_avhfdas">';
-		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->Registry->getSetting('version') );
+		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->Settings->getSetting('version') );
 		echo '</p>';
 	}
 

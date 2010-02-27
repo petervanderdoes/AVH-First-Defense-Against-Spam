@@ -46,7 +46,7 @@ define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
  * @author pdoes
  *
  */
-final class AVH_FDAS_Registry extends AVH_Registry
+final class AVH_FDAS_Settings extends AVH_Registry
 {
 
 	//prevent directly access.
@@ -83,16 +83,13 @@ if ( avh_getWordpressVersion() >= 2.7 ) {
 	require_once $_dir . '/helpers/avh-security.php';
 	require_once $_dir . '/helpers/avh-visitor.php';
 
-	/**
-	 *
-	 * @var AVH_FDAS_Registry
-	 */
-	$registry = AVH_FDAS_Registry::singleton();
-	$registry->setDir( $_dir );
-	$registry->setClassFilePrefix('avh-fdas.');
-	$registry->setClassNamePrefix('AVH_FDAS_');
-	$registry->storeSetting( 'plugin_dir', $_dir );
-	unset( $registry );
+
+	$Settings = AVH_FDAS_Settings::singleton();
+	$Settings->setDir( $_dir );
+	$Settings->setClassFilePrefix('avh-fdas.');
+	$Settings->setClassNamePrefix('AVH_FDAS_');
+	$Settings->storeSetting( 'plugin_dir', $_dir );
+	unset( $Settings );
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {

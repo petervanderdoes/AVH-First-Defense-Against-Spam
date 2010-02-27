@@ -45,9 +45,9 @@ class AVH_FDAS_Singleton
  */
 function avh_FDAS_init ()
 {
-	$Registry = AVH_FDAS_Registry::singleton();
-	$Registry->storeSetting('working_dir',pathinfo( __FILE__, PATHINFO_DIRNAME ));
-	unset ($Registry);
+	$Settings = AVH_FDAS_Settings::singleton();
+	$Settings->storeSetting('working_dir',pathinfo( __FILE__, PATHINFO_DIRNAME ));
+	unset ($Settings);
 
 	// Admin
 	if ( is_admin() ) {
