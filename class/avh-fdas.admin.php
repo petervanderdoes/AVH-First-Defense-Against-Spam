@@ -41,7 +41,7 @@ final class AVH_FDAS_Admin
 
 
 		// Initialize the plugin
-		$this->core = $this->Classes->load_class( 'Core','plugin' );
+		$this->core = $this->Classes->load_class( 'Core','plugin', TRUE );
 
 
 		// Admin URL and Pagination
