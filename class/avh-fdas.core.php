@@ -126,6 +126,8 @@ class AVH_FDAS_Core
 		$this->Settings->storeSetting( 'siteurl', get_option( 'siteurl' ) );
 		$this->Settings->storeSetting( 'lang_dir', $this->Settings->getSetting( 'working_dir' ) . '/lang' );
 		$this->Settings->storeSetting( 'graphics_url', WP_PLUGIN_URL . '/images' );
+		$this->Settings->storeSetting( 'js_url', WP_PLUGIN_URL . '/js' );
+		$this->Settings->storeSetting( 'css_url', WP_PLUGIN_URL . '/css' );
 
 		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
 
