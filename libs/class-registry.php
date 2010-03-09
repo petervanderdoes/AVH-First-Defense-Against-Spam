@@ -71,7 +71,7 @@ if ( ! class_exists( 'AVH_Class_Registry' ) ) {
 		 * @param unknown_type $class
 		 * @param unknown_type $type
 		 */
-		public function &load_class ( $class, $type = 'system' )
+		public function load_class ( $class, $type = 'system' )
 		{
 			if ( isset( $this->_objects[$class] ) ) {
 				return ($this->_objects[$class]);
@@ -106,7 +106,7 @@ if ( ! class_exists( 'AVH_Class_Registry' ) ) {
 		 * @param	object
 		 * @return	object
 		 */
-		protected function &instantiate_class ( &$class_object )
+		protected function instantiate_class ( &$class_object )
 		{
 			return $class_object;
 		}
