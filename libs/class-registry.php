@@ -88,7 +88,7 @@ if ( ! class_exists( 'AVH_Class_Registry' ) ) {
 					$in = '/libs';
 					$file = 'class-' . $class . '.php';
 			}
-			require_once $this->_dir . $in . '/' . strtolower( $file );
+			require_once ($this->_dir . $in . '/' . strtolower( $file ));
 			$name = ('system' == $type) ? 'AVH_' . $class : $this->_class_name_prefix . $class;
 			$this->_objects[$class] = & $this->instantiate_class( new $name() );
 		}

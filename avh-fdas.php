@@ -28,10 +28,10 @@ if ( ! defined( 'AVH_FRAMEWORK' ) ) {
 }
 
 $_dir = pathinfo( __FILE__, PATHINFO_DIRNAME );
-require_once $_dir . '/libs/class-registry.php';
-require_once $_dir . '/helpers/avh-common.php';
-require_once $_dir . '/helpers/avh-security.php';
-require_once $_dir . '/helpers/avh-visitor.php';
+require_once ($_dir . '/libs/class-registry.php');
+require_once ($_dir . '/helpers/avh-common.php');
+require_once ($_dir . '/helpers/avh-security.php');
+require_once ($_dir . '/helpers/avh-visitor.php');
 
 // Define Message Numbers
 define( 'AVHFDAS_REPORTED_DELETED', '100' );
@@ -41,17 +41,16 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
-require_once 'avh-fdas.registry.php';
+require_once ($_dir . '/avh-fdas.registry.php');
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
-	require_once $_dir . '/helpers/avh-security.php';
-	require_once $_dir . '/helpers/avh-visitor.php';
-
+	require_once ($_dir . '/helpers/avh-security.php');
+	require_once ($_dir . '/helpers/avh-visitor.php');
 
 	$Classes = AVH_FDAS_Classes::singleton();
 	$Classes->setDir( $_dir );
-	$Classes->setClassFilePrefix('avh-fdas.');
-	$Classes->setClassNamePrefix('AVH_FDAS_');
+	$Classes->setClassFilePrefix( 'avh-fdas.' );
+	$Classes->setClassNamePrefix( 'AVH_FDAS_' );
 	$Classes->storeSetting( 'plugin_dir', $_dir );
 	unset( $Classes );
 
