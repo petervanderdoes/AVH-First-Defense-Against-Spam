@@ -34,10 +34,10 @@ final class AVH_FDAS_Admin
 	public function __construct ()
 	{
 		// The Settings Registery
-		$this->Settings = AVH_FDAS_Settings::singleton();
+		$this->Settings = AVH_FDAS_Settings::getInstance();
 
 		// The Classes Registery
-		$this->Classes = AVH_FDAS_Classes::singleton();
+		$this->Classes = AVH_FDAS_Classes::getInstance();
 
 
 		// Initialize the plugin

@@ -80,7 +80,7 @@ class AVH_FDAS_Core
 	 */
 	function __construct ()
 	{
-		$this->Settings = AVH_FDAS_Settings::singleton();
+		$this->Settings = AVH_FDAS_Settings::getInstance();
 
 		$this->Settings->storeSetting( 'version', '3.0-dev1' );
 		$this->db_version = 8;

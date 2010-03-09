@@ -27,8 +27,8 @@ class AVH_FDAS_Public
 	function __construct ()
 	{
 		// Get The Registry
-		$this->Settings = AVH_FDAS_Settings::singleton();
-		$this->Classes = AVH_FDAS_Classes::singleton();
+		$this->Settings = AVH_FDAS_Settings::getInstance();
+		$this->Classes = AVH_FDAS_Classes::getInstance();
 
 		// Initialize the plugin
 		$this->core = $this->Classes->load_class( 'Core', 'plugin' );

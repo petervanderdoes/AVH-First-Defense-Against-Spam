@@ -45,7 +45,7 @@ class AVH_FDAS_Singleton
  */
 function avh_FDAS_init ()
 {
-	$Settings = AVH_FDAS_Settings::singleton();
+	$Settings = AVH_FDAS_Settings::getInstance();
 	$Settings->storeSetting('working_dir',pathinfo( __FILE__, PATHINFO_DIRNAME ));
 	unset ($Settings);
 

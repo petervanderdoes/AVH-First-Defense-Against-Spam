@@ -41,18 +41,19 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 
-require_once ($_dir . '/avh-fdas.registry.php');
+require_once ($_dir . '/class/avh-fdas.registry.php');
 
 if ( avh_getWordpressVersion() >= 2.7 ) {
 	require_once ($_dir . '/helpers/avh-security.php');
 	require_once ($_dir . '/helpers/avh-visitor.php');
 
-	$Classes = AVH_FDAS_Classes::singleton();
+	$Classes = AVH_FDAS_Classes::getInstance();
 	$Classes->setDir( $_dir );
 	$Classes->setClassFilePrefix( 'avh-fdas.' );
 	$Classes->setClassNamePrefix( 'AVH_FDAS_' );
 	unset( $Classes );
-	$Settings=AVH_FDAS_Settings::singleton();
+
+	$Settings=AVH_FDAS_Settings::getInstance();
 	$Settings->storeSetting( 'plugin_dir', $_dir );
 
 
