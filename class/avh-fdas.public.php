@@ -11,9 +11,14 @@ class AVH_FDAS_Public
 	var $core;
 
 	/**
-	 * @var AVH_FDAS_REGISTRY
+	 * @var AVH_Settings_Registry
 	 */
-	var $Registry;
+	var $Settings;
+
+	/**
+	 * @var AVH_Class_registry
+	 */
+	var $Classes;
 
 	/**
 	 * PHP5 Constructor
@@ -22,10 +27,11 @@ class AVH_FDAS_Public
 	function __construct ()
 	{
 		// Get The Registry
-		$this->Registry = AVH_FDAS_Settings::singleton();
+		$this->Settings = AVH_FDAS_Settings::singleton();
+		$this->Classes = AVH_FDAS_Classes::singleton();
 
 		// Initialize the plugin
-		$this->core = $this->Registry->load_class( 'Core', 'plugin' );
+		$this->core = $this->Classes->load_class( 'Core', 'plugin' );
 
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
@@ -37,16 +43,6 @@ class AVH_FDAS_Public
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
 		add_action( 'avhfdas_clean_ipcache', array (&$this, 'actionHandleCronCleanIPCache' ) );
 
-	}
-
-	/**
-	 * PHP4 Constructor
-	 *
-	 * @return AVH_FDAS_Public
-	 */
-	function AVH_FDAS_Public ()
-	{
-		$this->__construct();
 	}
 
 	/**
@@ -710,7 +706,7 @@ class AVH_FDAS_Public
 	function mail ( $to, $subject, $message )
 	{
 		$message .= "\r\n" . '--' . "\r\n";
-		$message .= sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->Registry->getSetting( 'version' ) ) . "\r\n";
+		$message .= sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->Settings->getSetting( 'version' ) ) . "\r\n";
 		$message .= 'http://blog.avirtualhome.com/wordpress-plugins' . "\r\n";
 
 		wp_mail( $to, $subject, $message );
