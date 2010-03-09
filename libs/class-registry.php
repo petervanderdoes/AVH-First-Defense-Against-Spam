@@ -68,10 +68,12 @@ if ( ! class_exists( 'AVH_Class_Registry' ) ) {
 		/**
 		 * Loads a class
 		 *
-		 * @param unknown_type $class
-		 * @param unknown_type $type
+		 * @param string $class Name of the class you want to load
+		 * @param string $type What kind of class, System, Plugin
+		 * @param boolean $store Store the class in the registry
+		 * @return object
 		 */
-		public function load_class ( $class, $type = 'system' )
+		public function load_class ( $class, $type = 'system', $store = FALSE )
 		{
 			if ( isset( $this->_objects[$class] ) ) {
 				return ($this->_objects[$class]);
@@ -90,8 +92,11 @@ if ( ! class_exists( 'AVH_Class_Registry' ) ) {
 			}
 			require_once ($this->_dir . $in . '/' . strtolower( $file ));
 			$name = ('system' == $type) ? 'AVH_' . $class : $this->_class_name_prefix . $class;
-			$this->_objects[$class] = $this->instantiate_class( new $name() );
-			return ($this->_objects[$class]);
+			$object = $this->instantiate_class( new $name() );
+			if ( $store ) {
+				$this->_objects[$class] = $object;
+			}
+			return $object;
 		}
 
 		/**
