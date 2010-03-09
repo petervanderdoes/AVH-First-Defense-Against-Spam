@@ -51,8 +51,10 @@ if ( avh_getWordpressVersion() >= 2.7 ) {
 	$Classes->setDir( $_dir );
 	$Classes->setClassFilePrefix( 'avh-fdas.' );
 	$Classes->setClassNamePrefix( 'AVH_FDAS_' );
-	$Classes->storeSetting( 'plugin_dir', $_dir );
 	unset( $Classes );
+	$Settings=AVH_FDAS_Settings::singleton();
+	$Settings->storeSetting( 'plugin_dir', $_dir );
+
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {
