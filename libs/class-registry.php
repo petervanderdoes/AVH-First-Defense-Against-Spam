@@ -142,5 +142,11 @@ if ( ! class_exists( 'AVH_Class_Registry' ) ) {
 			$this->_class_name_prefix = $class_name_prefix;
 		}
 
+		public function setClassProperties ( $properties )
+		{
+			$default_properties = array ('type' => 'system', 'store' => false );
+
+		}
+
 	}
 }
