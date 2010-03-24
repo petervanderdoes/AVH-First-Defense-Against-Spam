@@ -407,7 +407,8 @@ class AVH_FDAS_Public
 			$spaminfo['type'] = $info[3];
 			if ( '0' == $info[3] ) {
 				$spaminfo['score'] = '0';
-				$spaminfo['engine'] = $this->core->searchengines[$info[2]];
+				$searchengines = $this->Settings->getSetting(searchengines);
+				$spaminfo['engine'] = $searchengines[$info[2]];
 			} else {
 				$spaminfo['score'] = $info[2];
 			}

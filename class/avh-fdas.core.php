@@ -60,15 +60,6 @@ class AVH_FDAS_Core
 	var $db_options_nonces;
 
 	/**
-	 * Endpoint of the stopforumspam.com API
-	 *
-	 * @var string
-	 */
-	var $stopforumspam_endpoint;
-
-	var $searchengines;
-
-	/**
 	 *
 	 * @var AVH_FDAS_Settings
 	 */
@@ -121,15 +112,13 @@ class AVH_FDAS_Core
 			$this->doUpgrade();
 		}
 
-		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
-
 		$this->Settings->storeSetting( 'siteurl', get_option( 'siteurl' ) );
 		$this->Settings->storeSetting( 'lang_dir', $this->Settings->getSetting( 'working_dir' ) . '/lang' );
 		$this->Settings->storeSetting( 'graphics_url', WP_PLUGIN_URL . '/images' );
 		$this->Settings->storeSetting( 'js_url', WP_PLUGIN_URL . '/js' );
 		$this->Settings->storeSetting( 'css_url', WP_PLUGIN_URL . '/css' );
-
-		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
+		$this->Settings->storeSetting('searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ));
+		$this->Settings->storeSetting('stopforumspam_endpoint', 'http://www.stopforumspam.com/api');
 
 		/**
 		 * TODO Localization
@@ -364,7 +353,7 @@ class AVH_FDAS_Core
 	{
 		$xml_array = array ();
 		$querystring = $this->BuildQuery( $query_array );
-		$url = $this->stopforumspam_endpoint . '?' . $querystring;
+		$url = $this->Settings->getSetting('stopforumspam_endpoint') . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if ( function_exists( 'wp_remote_request' ) ) {
 			$response = wp_remote_request( $url, array ('user-agent' => 'WordPress/AVH ' . $this->Settings->getSetting( 'version' ) . '; ' . get_bloginfo( 'url' ) ) );
