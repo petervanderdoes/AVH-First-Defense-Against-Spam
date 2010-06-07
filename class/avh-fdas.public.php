@@ -53,9 +53,9 @@ class AVH_FDAS_Public
 	 */
 	function actionAddNonceFieldToComment ()
 	{
-		global $post;
+		$post=get_post();
 		$post_id = 0;
-		if ( ! empty( $post ) ) {
+		if ( is_object( $post ) ) {
 			$post_id = $post->ID;
 		}
 		echo $this->core->getComment();
