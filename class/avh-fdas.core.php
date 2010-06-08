@@ -1,6 +1,5 @@
 <?php
-if ( ! defined( 'AVH_FRAMEWORK' ) )
-	die( 'You are not allowed to call this page directly.' );
+if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
 class AVH_FDAS_Core
 {
@@ -75,7 +74,7 @@ class AVH_FDAS_Core
 
 		$this->Settings->storeSetting( 'version', '3.0-dev1' );
 		$this->db_version = 8;
-		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->Settings->getSetting('version');
+		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->Settings->getSetting( 'version' );
 		$this->db_options_core = 'avhfdas';
 		$this->db_options_data = 'avhfdas_data';
 		$this->db_options_nonces = 'avhfdas_nonces';
@@ -83,7 +82,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->Settings->getSetting('version'), 'dbversion' => $this->db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
+		$this->default_general_options = array ('version' => $this->Settings->getSetting( 'version' ), 'dbversion' => $this->db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
 		$this->default_spam = array ('whentoemail' => - 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
 		$this->default_honey = array ('whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
 		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
@@ -104,8 +103,6 @@ class AVH_FDAS_Core
 		$this->loadOptions();
 		$this->loadData();
 		$this->setTables();
-		//$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
-
 
 		// Check if we have to do upgrades
 		if ( (! isset( $this->options['general']['dbversion'] )) || $this->options['general']['dbversion'] < $this->db_version ) {
@@ -117,18 +114,9 @@ class AVH_FDAS_Core
 		$this->Settings->storeSetting( 'graphics_url', WP_PLUGIN_URL . '/images' );
 		$this->Settings->storeSetting( 'js_url', WP_PLUGIN_URL . '/js' );
 		$this->Settings->storeSetting( 'css_url', WP_PLUGIN_URL . '/css' );
-		$this->Settings->storeSetting('searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ));
-		$this->Settings->storeSetting('stopforumspam_endpoint', 'http://www.stopforumspam.com/api');
+		$this->Settings->storeSetting( 'searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ) );
+		$this->Settings->storeSetting( 'stopforumspam_endpoint', 'http://www.stopforumspam.com/api' );
 
-		/**
-		 * TODO Localization
-		 */
-		// Localization.
-		//$locale = get_locale();
-		//if ( !empty( $locale ) ) {
-		//	$mofile = $this->info['plugin_dir'].'/languages/avhamazon-'.$locale.'.mo';
-		//	load_textdomain('avhfdas', $mofile);
-		//}
 		return;
 	}
 
@@ -246,7 +234,7 @@ class AVH_FDAS_Core
 				}
 			}
 		}
-		$options['general']['version'] = $this->Settings->getSetting('version');
+		$options['general']['version'] = $this->Settings->getSetting( 'version' );
 		$options['general']['dbversion'] = $this->db_version;
 		$this->saveOptions( $options );
 		$this->saveData( $data );
@@ -353,7 +341,7 @@ class AVH_FDAS_Core
 	{
 		$xml_array = array ();
 		$querystring = $this->BuildQuery( $query_array );
-		$url = $this->Settings->getSetting('stopforumspam_endpoint') . '?' . $querystring;
+		$url = $this->Settings->getSetting( 'stopforumspam_endpoint' ) . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if ( function_exists( 'wp_remote_request' ) ) {
 			$response = wp_remote_request( $url, array ('user-agent' => 'WordPress/AVH ' . $this->Settings->getSetting( 'version' ) . '; ' . get_bloginfo( 'url' ) ) );
@@ -479,8 +467,7 @@ class AVH_FDAS_Core
 				// Set the attributes too
 				if ( isset( $attributes ) and $get_attributes ) {
 					foreach ( $attributes as $attr => $val ) {
-						if ( $priority == 'tag' )
-							$attributes_data[$attr] = $val;
+						if ( $priority == 'tag' ) $attributes_data[$attr] = $val;
 						else
 							$result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
 					}
@@ -490,8 +477,7 @@ class AVH_FDAS_Core
 					$parent[$level - 1] = &$current;
 					if ( ! is_array( $current ) or (! in_array( $tag, array_keys( $current ) )) ) { //Insert New tag
 						$current[$tag] = $result;
-						if ( $attributes_data )
-							$current[$tag . '_attr'] = $attributes_data;
+						if ( $attributes_data ) $current[$tag . '_attr'] = $attributes_data;
 						$repeated_tag_index[$tag . '_' . $level] = 1;
 						$current = &$current[$tag];
 					} else { // There was another element with the same tag name
@@ -515,8 +501,7 @@ class AVH_FDAS_Core
 					if ( ! isset( $current[$tag] ) ) { // New key
 						$current[$tag] = $result;
 						$repeated_tag_index[$tag . '_' . $level] = 1;
-						if ( $priority == 'tag' and $attributes_data )
-							$current[$tag . '_attr'] = $attributes_data;
+						if ( $priority == 'tag' and $attributes_data ) $current[$tag . '_attr'] = $attributes_data;
 					} else { //If taken, put all things inside a list(array)
 						if ( isset( $current[$tag][0] ) and is_array( $current[$tag] ) ) {
 							//This will combine the existing item and the new item together to make an array

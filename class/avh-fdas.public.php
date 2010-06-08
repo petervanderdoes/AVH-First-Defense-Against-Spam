@@ -31,7 +31,7 @@ class AVH_FDAS_Public
 		$this->Classes = AVH_FDAS_Classes::getInstance();
 
 		// Initialize the plugin
-		$this->core = $this->Classes->load_class( 'Core', 'plugin' );
+		$this->core = $this->Classes->load_class( 'Core', 'plugin', TRUE );
 
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );

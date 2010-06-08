@@ -1,6 +1,5 @@
 <?php
-if ( ! defined( 'AVH_FRAMEWORK' ) )
-	die( 'You are not allowed to call this page directly.' );
+if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
 if ( ! class_exists( 'AVH_Settings_Registry' ) ) {
 
