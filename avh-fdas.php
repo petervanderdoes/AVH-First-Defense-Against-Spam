@@ -3,7 +3,7 @@
 Plugin Name: AVH First Defense Against Spam
 Plugin URI: http://blog.avirtualhome.com/wordpress-plugins
 Description: This plugin gives you the ability to block spammers before content is served.
-Version: 1.0
+Version: 2.3.3
 Author: Peter van der Does
 Author URI: http://blog.avirtualhome.com/
 
@@ -24,14 +24,32 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// Define Message Numbers
+define( 'AVHFDAS_REPORTED_DELETED', '100' );
+define( 'AVHFDAS_ADDED_BLACKLIST', '101' );
+define( 'AVHFDAS_REPORTED', '102' );
+define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
+define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
+define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
+
 // Check version.
-global $wp_version;
+// Include WordPress version
+require (ABSPATH . WPINC . '/version.php');
 
 if ( ( float ) $wp_version >= 2.7 ) {
-	require (dirname ( __FILE__ ) . '/avh-fdas.client.php');
+	require (dirname( __FILE__ ) . '/avh-fdas.client.php');
 } else {
-	$message = '<div class="updated fade"><p><strong>' . __ ( 'AVH First Defense Against Spam can\'t work with this WordPress version !', 'avhfdas' ) . '</strong></p></div>';
-	add_action ( 'admin_notices', create_function ( '', "echo '$message';" ) );
+	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_fdas_remove_plugin' );
 
+}
+
+function avh_fdas_remove_plugin ()
+{
+	$current = get_option( 'active_plugins' );
+	$num = array_search( 'avh-first-defense-against-spam/avh-fdas.php', $current );
+	array_splice( $current, $num, 1 ); // Array-fu!
+	update_option( 'active_plugins', $current );
+	ob_end_clean();
+	wp_die( __( 'AVH First Defense Against Spam can\'t work with this WordPress version!', 'avhfdas' ) );
 }
 ?>
