@@ -119,8 +119,8 @@ final class AVH_FDAS_Admin
 
 		// Register Styles and Scripts
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		wp_register_script( 'avhfdas-admin-js', $this->Settings->getSetting('js_url') . '/js/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Settings->getSetting('version'), true );
-		wp_register_style( 'avhfdas-admin-css', $this->Settings->getSetting('css_url') . '/css/avh-fdas.admin.css', array (), $this->Settings->getSetting('version'), 'screen' );
+		wp_register_script( 'avhfdas-admin-js', $this->Settings->getSetting('js_url') . '/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Settings->getSetting('version'), true );
+		wp_register_style( 'avhfdas-admin-css', $this->Settings->getSetting('css_url') . '/avh-fdas.admin.css', array (), $this->Settings->getSetting('version'), 'screen' );
 
 	}
 
