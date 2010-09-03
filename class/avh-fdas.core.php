@@ -121,16 +121,6 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * PHP4 constructor - Initialize the Core
-	 *
-	 * @return
-	 */
-	function AVH_FDAS_Core ()
-	{
-		$this->__construct();
-	}
-
-	/**
 	 * Test if local installation is mu-plugin or a classic plugin
 	 *
 	 * @return boolean

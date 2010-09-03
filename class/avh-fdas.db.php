@@ -9,15 +9,6 @@ class AVH_FDAS_DB
 {
 
 	/**
-	 * PHP4 constructor.
-	 *
-	 */
-	function AVH_FDAS_DB ()
-	{
-		return $this->__construct();
-	}
-
-	/**
 	 * PHP5 Constructor
 	 * Init the Database Abstraction layer
 	 *
