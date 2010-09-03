@@ -71,7 +71,7 @@ class AVH_FDAS_SpamCheck
 
 			$ip_in_cache = false;
 			if ( 1 == $options['general']['useipcache'] ) {
-				$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+				$ipcachedb = $this->Classes->load_class( 'DB','plugin', TRUE );
 				$time_start = microtime( true );
 				$ip_in_cache = $ipcachedb->getIP( $ip );
 				$time_end = microtime( true );
