@@ -387,7 +387,7 @@ final class AVH_FDAS_Admin
 				// Every field in a form is set except unchecked checkboxes. Set an unchecked checkbox to 0.
 
 
-				$newval = (isset( $formoptions[$section][$option_key] ) ? attribute_escape( $formoptions[$section][$option_key] ) : 0);
+				$newval = (isset( $formoptions[$section][$option_key] ) ? esc_attr( $formoptions[$section][$option_key] ) : 0);
 				if ( $newval != $current_value ) { // Only process changed fields.
 					// Sort the lists
 					if ( 'blacklist' == $option_key || 'whitelist' == $option_key ) {
@@ -431,15 +431,15 @@ final class AVH_FDAS_Admin
 			{
 				case AVHFDAS_REPORTED_DELETED :
 					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
 				case AVHFDAS_ADDED_BLACKLIST :
 					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
 				case AVHFDAS_REPORTED :
 					$this->status = 'updated fade';
-					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
 				case AVHFDAS_ERROR_INVALID_REQUEST :
 					$this->status = 'error';
@@ -447,11 +447,11 @@ final class AVH_FDAS_Admin
 					break;
 				case AVHFDAS_ERROR_NOT_REPORTED :
 					$this->status = 'error';
-					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
 				case AVHFDAS_ERROR_EXISTS_IN_BLACKLIST :
 					$this->status = 'error';
-					$this->message = sprintf( __( 'IP [%s] already exists in the blacklist.', 'avhfdas' ), attribute_escape( $_REQUEST['i'] ) );
+					$this->message = sprintf( __( 'IP [%s] already exists in the blacklist.', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
 				default :
 					$this->status = 'error';
@@ -1278,7 +1278,7 @@ final class AVH_FDAS_Admin
 			switch ( $option[2] )
 			{
 				case 'checkbox' :
-					$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( $option[3] ) . '" ' . $this->isChecked( '1', $option_actual[$section][$option_key] ) . ' />' . "\n";
+					$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . esc_attr( $option[3] ) . '" ' . $this->isChecked( '1', $option_actual[$section][$option_key] ) . ' />' . "\n";
 					$explanation = $option[4];
 					break;
 				case 'dropdown' :
@@ -1292,16 +1292,16 @@ final class AVH_FDAS_Admin
 					$explanation = $option[5];
 					break;
 				case 'text-color' :
-					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( stripcslashes( $option_actual[$section][$option_key] ) ) . '" size="' . $option[3] . '" /><div class="box_color ' . $option[0] . '"></div>' . "\n";
+					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . esc_attr( stripcslashes( $option_actual[$section][$option_key] ) ) . '" size="' . $option[3] . '" /><div class="box_color ' . $option[0] . '"></div>' . "\n";
 					$explanation = $option[4];
 					break;
 				case 'textarea' :
-					$input_type = '<textarea rows="' . $option[5] . '" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" size="' . $option[3] . '" />' . attribute_escape( stripcslashes( $option_actual[$section][$option_key] ) ) . '</textarea>';
+					$input_type = '<textarea rows="' . $option[5] . '" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" size="' . $option[3] . '" />' . esc_attr( stripcslashes( $option_actual[$section][$option_key] ) ) . '</textarea>';
 					$explanation = $option[4];
 					break;
 				case 'text' :
 				default :
-					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . attribute_escape( stripcslashes( $option_actual[$section][$option_key] ) ) . '" size="' . $option[3] . '" />' . "\n";
+					$input_type = '<input type="text" ' . (($option[3] > 50) ? ' style="width: 95%" ' : '') . 'id="' . $option[0] . '" name="' . $option[0] . '" value="' . esc_attr( stripcslashes( $option_actual[$section][$option_key] ) ) . '" size="' . $option[3] . '" />' . "\n";
 					$explanation = $option[4];
 					break;
 			}
