@@ -1230,14 +1230,13 @@ final class AVH_FDAS_Admin
 	 * Display WP alert
 	 *
 	 */
-	private function displayMessage ()
-	{
-		if ( $this->message != '' ) {
+	private function displayMessage() {
+		if ($this->message != '') {
 			$message = $this->message;
 			$status = $this->status;
 			$this->message = $this->status = ''; // Reset
 		}
-		if ( $message ) {
+		if (isset ( $message )) {
 			$status = ($status != '') ? $status : 'updated fade';
 			echo '<div id="message"	class="' . $status . '">';
 			echo '<p><strong>' . $message . '</strong></p></div>';
