@@ -59,7 +59,8 @@ function avh_FDAS_init ()
 		register_deactivation_hook( __FILE__, array (&$avhfdas_admin, 'deactivatePlugin' ) );
 	}
 
-	$avhfdas_public = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_Public' );
+	require_once (dirname( __FILE__ ) . '/class/avh-fdas.public.php');
+	$avhfdas_public = new  AVH_FDAS_Public();
 
 } // End avh_FDAS__init()
 
