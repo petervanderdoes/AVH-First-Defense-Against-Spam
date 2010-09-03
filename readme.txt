@@ -101,6 +101,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 
 == Changelog ==
 = 3.0-dev1 =
+* RFC: Spam check is performed when a user registers.
 * Bugfix: On pages the nonce check would fail.
 * Bugfix: Typo in window title for menu option overview
 * Bugfix: Blogname would show up as html safe text
