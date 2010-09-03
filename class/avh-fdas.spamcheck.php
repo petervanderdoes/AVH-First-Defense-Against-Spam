@@ -390,7 +390,7 @@ class AVH_FDAS_SpamCheck
 		$blacklist_die = 'Blacklisted' == $info['blacklist']['time'];
 
 		if ( 1 == $options['general']['useipcache'] ) {
-			$ipcachedb = & AVH_FDAS_Singleton::getInstance( 'AVH_FDAS_DB' );
+			$ipcachedb = $this->Classes->load_class( 'DB','plugin', TRUE );
 			if ( $sfs_die || $php_die ) {
 				$ipcachedb->insertIP( $ip, 1 );
 			}

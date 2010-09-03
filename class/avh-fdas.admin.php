@@ -24,6 +24,11 @@ final class AVH_FDAS_Admin
 	 */
 	private $Classes;
 
+	/**
+	 * @var AVH_FDAS_DB
+	 */
+	private $db;
+
 	private $hooks = array ();
 
 	/**
@@ -42,7 +47,7 @@ final class AVH_FDAS_Admin
 
 		// Initialize the plugin
 		$this->core = $this->Classes->load_class( 'Core','plugin', TRUE );
-
+		$this->db = $this->Classes->load_class( 'DB','plugin', TRUE );
 
 		// Admin URL and Pagination
 		$this->core->admin_base_url = $this->Settings->getSetting('siteurl') . '/wp-admin/admin.php?page=';
@@ -987,6 +992,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionAjaxReportComment ()
 	{
+		global $wpdb;
 		if ( 'avh-fdas-reportcomment' == $_POST['action'] ) {
 			$comment_id = absint( $_REQUEST['id'] );
 			check_ajax_referer( 'report-comment_' . $comment_id );
@@ -996,7 +1002,16 @@ final class AVH_FDAS_Admin
 			if ( ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
 				$this->comment_footer_die( __( 'You are not allowed to edit comments on this post.' ) );
 			}
+			$options = $this->core->getOptions();
+			// If we use IP Cache and the Reported IP isn't spam, delete it from the IP cache.
+			if (1 == $options['general']['useipcache']) {
+				$ip_info = $this->db->getIP($comment->comment_author_IP);
+				if ( is_object($ip_info) && 0 == $ip_info->spam ) {
+					$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE WHERE ip=INET_ATON(%s)", $comment->comment_author_IP ) );
+				}
+			}
 			$this->handleReportSpammer( $comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP );
+
 			// Delete the comment
 			$r = wp_delete_comment( $comment->comment_ID );
 			die( $r ? '1' : '0' );

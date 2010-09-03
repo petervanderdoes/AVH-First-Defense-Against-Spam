@@ -84,5 +84,16 @@ class AVH_FDAS_DB
 		}
 	}
 
+	/**
+	 * Mark an known IP as spam
+	 * @param $ip
+	 */
+	function doMarkIPSpam ( $ip ) {
+		global $wpdb;
+		$ip_info = $this->getIP($ip);
+		if ( is_object ($ip_info)) {
+			$result = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=INET_ATON(%s)", $ip ) );
+		}
+	}
 }
 ?>
