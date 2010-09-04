@@ -1,6 +1,6 @@
 <?php
 // Stop direct call
-if ( ! defined('AVH_FRAMEWORK')) die( 'You are not allowed to call this page directly.' );
+if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
 /**
  * Singleton Class
@@ -44,8 +44,8 @@ class AVH_FDAS_Singleton
 function avh_FDAS_init ()
 {
 	$Settings = AVH_FDAS_Settings::getInstance();
-	$Settings->storeSetting('working_dir',pathinfo( __FILE__, PATHINFO_DIRNAME ));
-	unset ($Settings);
+	$Settings->storeSetting( 'working_dir', pathinfo( __FILE__, PATHINFO_DIRNAME ) );
+	unset( $Settings );
 
 	// Admin
 	if ( is_admin() ) {
@@ -60,7 +60,7 @@ function avh_FDAS_init ()
 	}
 
 	require_once (dirname( __FILE__ ) . '/class/avh-fdas.public.php');
-	$avhfdas_public = new  AVH_FDAS_Public();
+	$avhfdas_public = new AVH_FDAS_Public();
 
 } // End avh_FDAS__init()
 

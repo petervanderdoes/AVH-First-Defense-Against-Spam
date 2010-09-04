@@ -1,6 +1,5 @@
 <?php
-if ( ! defined( 'AVH_FRAMEWORK' ) )
-	die( 'You are not allowed to call this page directly.' );
+if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
 class AVH_FDAS_Public
 {
@@ -44,7 +43,7 @@ class AVH_FDAS_Public
 		add_action( 'preprocess_comment', array (&$this, 'actionHandlePostingComment' ), 1 );
 		add_action( 'comment_form', array (&$this, 'actionAddNonceFieldToComment' ) );
 		add_filter( 'preprocess_comment', array (&$this, 'filterCheckNonceFieldToComment' ), 1 );
-		add_action ('register_post', array(&$this, 'actionHandleRegistration'), 10, 3);
+		add_action( 'register_post', array (&$this, 'actionHandleRegistration' ), 10, 3 );
 
 		// Private actions for Cron
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
@@ -60,8 +59,8 @@ class AVH_FDAS_Public
 	 */
 	function actionAddNonceFieldToComment ()
 	{
-		$post_id=null;
-		$post=get_post($post_id);
+		$post_id = null;
+		$post = get_post( $post_id );
 		$post_id = 0;
 		if ( is_object( $post ) ) {
 			$post_id = $post->ID;
@@ -226,8 +225,7 @@ class AVH_FDAS_Public
 	{
 
 		// For the main action we don't check with Stop Forum Spam
-		$this->spamcheck->use_sfs = FALSE;
-		$this->spamcheck->doIPCheck();
+		$this->spamcheck->doIPCheck( 'main' );
 	}
 
 	/**
@@ -238,17 +236,15 @@ class AVH_FDAS_Public
 	 * @uses SFS, PHP
 	 * @WordPress Action preprocess_comment
 	 */
-	function actionHandlePostingComment( $commentdata )
+	function actionHandlePostingComment ( $commentdata )
 	{
-		$this->spamcheck->use_sfs = TRUE;
-		$this->spamcheck->doIPCheck();
+		$this->spamcheck->doIPCheck( 'comment' );
 		return ($commentdata);
 	}
 
-	function actionHandleRegistration($sanitized_user_login, $user_email, $errors){
-
-		$this->spamcheck->use_sfs = TRUE;
-		$this->spamcheck->doIPCheck();
+	function actionHandleRegistration ( $sanitized_user_login, $user_email, $errors )
+	{
+		$this->spamcheck->doIPCheck( 'registration' );
 
 	}
 }

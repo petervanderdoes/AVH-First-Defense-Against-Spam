@@ -109,13 +109,13 @@ class AVH_FDAS_Core
 			$this->doUpgrade();
 		}
 
-		$this->Settings->storeSetting ( 'siteurl', get_option ( 'siteurl' ) );
-		$this->Settings->storeSetting ( 'lang_dir', $this->Settings->getSetting ( 'working_dir' ) . '/lang' );
-		$this->Settings->storeSetting ( 'graphics_url', WP_PLUGIN_URL . '/' . plugin_basename ( $this->Settings->getSetting ( 'plugin_dir' ) ) . '/images' );
-		$this->Settings->storeSetting ( 'js_url', WP_PLUGIN_URL . '/' . plugin_basename ( $this->Settings->getSetting ( 'plugin_dir' ) ) . '/js' );
-		$this->Settings->storeSetting ( 'css_url', WP_PLUGIN_URL . '/' . plugin_basename ( $this->Settings->getSetting ( 'plugin_dir' ) ) . '/css' );
-		$this->Settings->storeSetting ( 'searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ) );
-		$this->Settings->storeSetting ( 'stopforumspam_endpoint', 'http://www.stopforumspam.com/api' );
+		$this->Settings->storeSetting( 'siteurl', get_option( 'siteurl' ) );
+		$this->Settings->storeSetting( 'lang_dir', $this->Settings->getSetting( 'working_dir' ) . '/lang' );
+		$this->Settings->storeSetting( 'graphics_url', WP_PLUGIN_URL . '/' . plugin_basename( $this->Settings->getSetting( 'plugin_dir' ) ) . '/images' );
+		$this->Settings->storeSetting( 'js_url', WP_PLUGIN_URL . '/' . plugin_basename( $this->Settings->getSetting( 'plugin_dir' ) ) . '/js' );
+		$this->Settings->storeSetting( 'css_url', WP_PLUGIN_URL . '/' . plugin_basename( $this->Settings->getSetting( 'plugin_dir' ) ) . '/css' );
+		$this->Settings->storeSetting( 'searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ) );
+		$this->Settings->storeSetting( 'stopforumspam_endpoint', 'http://www.stopforumspam.com/api' );
 
 		return;
 	}
@@ -335,7 +335,7 @@ class AVH_FDAS_Core
 		if ( function_exists( 'wp_remote_request' ) ) {
 			$response = wp_remote_request( $url, array ('user-agent' => 'WordPress/AVH ' . $this->Settings->getSetting( 'version' ) . '; ' . get_bloginfo( 'url' ) ) );
 			if ( ! is_wp_error( $response ) ) {
-				$return_array = unserialize($response['body']);
+				$return_array = unserialize( $response['body'] );
 			} else {
 				$return_array = array ('Error' => $response->errors );
 			}
@@ -402,7 +402,7 @@ class AVH_FDAS_Core
 	 */
 	function getRestIPLookup ( $ip )
 	{
-		$iplookup = array ('ip' => $ip,'f'=>'serial' );
+		$iplookup = array ('ip' => $ip, 'f' => 'serial' );
 		return $iplookup;
 	}
 

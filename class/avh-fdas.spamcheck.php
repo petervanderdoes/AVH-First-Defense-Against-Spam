@@ -1,6 +1,5 @@
 <?php
-if ( ! defined( 'AVH_FRAMEWORK' ) )
-	die( 'You are not allowed to call this page directly.' );
+if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
 class AVH_FDAS_SpamCheck
 {
@@ -8,30 +7,35 @@ class AVH_FDAS_SpamCheck
 	 *
 	 * @var AVH_FDAS_Core
 	 */
-	var $core;
+	private $core;
 
 	/**
 	 * @var AVH_Settings_Registry
 	 */
-	var $Settings;
+	private $Settings;
 
 	/**
 	 * @var AVH_Class_registry
 	 */
-	var $Classes;
+	private $Classes;
 
 	/**
-	 * @var use Stop Forum Spam for checking
+	 * The $use_xx variables are used to determine if that specific 3rd party can used for that check.
+	 * For example: We can't use Stop Forum Spam to check every IP, only at comments and register.
 	 */
-	var $use_sfs;
+	private $use_sfs;
+	private $use_php;
+	private $use_cache;
 
-	var $mail_message;
+	private $mail_message;
+
+	public $checkSection;
 
 	/**
 	 * PHP5 Constructor
 	 *
 	 */
-	function __construct ()
+	public function __construct ()
 	{
 		// Get The Registry
 		$this->Settings = AVH_FDAS_Settings::getInstance();
@@ -53,8 +57,11 @@ class AVH_FDAS_SpamCheck
 	 * @uses SFS, PHP
 	 * @WordPress Action preprocess_comment
 	 */
-	function doIPCheck ( )
+	public function doIPCheck ( $check )
 	{
+		$this->checkSection = $check;
+		$this->setWhichSpam();
+
 		$ip = avh_getUserIP();
 		$ip_in_whitelist = false;
 		$options = $this->core->getOptions();
@@ -70,8 +77,8 @@ class AVH_FDAS_SpamCheck
 			}
 
 			$ip_in_cache = false;
-			if ( 1 == $options['general']['useipcache'] ) {
-				$ipcachedb = $this->Classes->load_class( 'DB','plugin', TRUE );
+			if ( $this->use_cache && 1 == $options['general']['useipcache'] ) {
+				$ipcachedb = $this->Classes->load_class( 'DB', 'plugin', TRUE );
 				$time_start = microtime( true );
 				$ip_in_cache = $ipcachedb->getIP( $ip );
 				$time_end = microtime( true );
@@ -91,7 +98,7 @@ class AVH_FDAS_SpamCheck
 						}
 					}
 
-					if ( $options['general']['use_php'] ) {
+					if ( $this->use_php && $options['general']['use_php'] ) {
 						$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
 						if ( $spaminfo['php'] != null ) {
 							$spaminfo['detected'] = true;
@@ -101,7 +108,7 @@ class AVH_FDAS_SpamCheck
 					if ( $spaminfo['detected'] ) {
 						$this->handleSpammer( $ip, $spaminfo );
 					} else {
-						if ( 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
+						if ( $this->use_cache && 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
 							$ipcachedb->insertIP( $ip, 0 );
 						}
 					}
@@ -116,13 +123,41 @@ class AVH_FDAS_SpamCheck
 		}
 	}
 
+	private function setWhichSpam ()
+	{
+		switch ( strtolower( $this->checkSection ) )
+		{
+			case 'comment' :
+				$this->use_sfs = TRUE;
+				$this->use_php = TRUE;
+				$this->use_cache = TRUE;
+				break;
+			case 'main' :
+				$this->use_sfs = FALSE;
+				$this->use_php = TRUE;
+				$this->use_cache = TRUE;
+				break;
+			case 'registration' :
+				$this->use_sfs = TRUE;
+				$this->use_php = TRUE;
+				$this->use_cache = TRUE;
+				break;
+			default :
+				$this->use_sfs = FALSE;
+				$this->use_php = TRUE;
+				$this->use_cache = TRUE;
+				break;
+		}
+
+	}
+
 	/**
 	 * Check an IP with Stop Forum Spam
 	 *
 	 * @param $ip Visitor's IP
 	 * @return $spaminfo Query result
 	 */
-	function checkStopForumSpam ( $ip )
+	private function checkStopForumSpam ( $ip )
 	{
 		$options = $this->core->getOptions();
 		$time_start = microtime( true );
@@ -161,7 +196,7 @@ class AVH_FDAS_SpamCheck
 	 * @param $ip Visitor's IP
 	 * @return $spaminfo Query result
 	 */
-	function checkProjectHoneyPot ( $ip )
+	private function checkProjectHoneyPot ( $ip )
 	{
 		$rev = implode( '.', array_reverse( explode( '.', $ip ) ) );
 		$projecthoneypot_api_key = $this->core->getOptionElement( 'php', 'phpapikey' );
@@ -180,7 +215,7 @@ class AVH_FDAS_SpamCheck
 			$spaminfo['type'] = $info[3];
 			if ( '0' == $info[3] ) {
 				$spaminfo['score'] = '0';
-				$searchengines = $this->Settings->getSetting(searchengines);
+				$searchengines = $this->Settings->getSetting( searchengines );
 				$spaminfo['engine'] = $searchengines[$info[2]];
 			} else {
 				$spaminfo['score'] = $info[2];
@@ -194,7 +229,7 @@ class AVH_FDAS_SpamCheck
 	 *
 	 * @param string $ip
 	 */
-	function checkBlacklist ( $ip )
+	private function checkBlacklist ( $ip )
 	{
 		$spaminfo = array ();
 		$found = $this->checkList( $ip, $this->core->data['lists']['blacklist'] );
@@ -213,7 +248,7 @@ class AVH_FDAS_SpamCheck
 	 *
 	 * @since 1.1
 	 */
-	function checkWhitelist ( $ip )
+	private function checkWhitelist ( $ip )
 	{
 		$found = $this->checkList( $ip, $this->core->data['lists']['whitelist'] );
 		return $found;
@@ -227,7 +262,7 @@ class AVH_FDAS_SpamCheck
 	 * @return boolean
 	 *
 	 */
-	function checkList ( $ip, $list )
+	private function checkList ( $ip, $list )
 	{
 		$list = explode( "\r\n", $list );
 		// Check for single IP's, this is much quicker as going through the list
@@ -253,7 +288,7 @@ class AVH_FDAS_SpamCheck
 	 * @param string $ip
 	 * @return boolean
 	 */
-	function checkNetworkMatch ( $network, $ip )
+	private function checkNetworkMatch ( $network, $ip )
 	{
 		$return = false;
 		$network = trim( $network );
@@ -284,7 +319,7 @@ class AVH_FDAS_SpamCheck
 	 * @param array $info - Information
 	 *
 	 */
-	function handleSpammer ( $ip, $info )
+	private function handleSpammer ( $ip, $info )
 	{
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
@@ -390,7 +425,7 @@ class AVH_FDAS_SpamCheck
 		$blacklist_die = 'Blacklisted' == $info['blacklist']['time'];
 
 		if ( 1 == $options['general']['useipcache'] ) {
-			$ipcachedb = $this->Classes->load_class( 'DB','plugin', TRUE );
+			$ipcachedb = $this->Classes->load_class( 'DB', 'plugin', TRUE );
 			if ( $sfs_die || $php_die ) {
 				$ipcachedb->insertIP( $ip, 1 );
 			}
@@ -427,7 +462,7 @@ class AVH_FDAS_SpamCheck
 	 * @param $info
 	 * @return unknown_type
 	 */
-	function handleSpammerCache ( $info )
+	private function handleSpammerCache ( $info )
 	{
 		$data = $this->core->getData();
 		$options = $this->core->getOptions();
@@ -476,7 +511,7 @@ class AVH_FDAS_SpamCheck
 	 * Sends the email
 	 *
 	 */
-	function mail ( $to, $subject, $message )
+	private function mail ( $to, $subject, $message )
 	{
 		$message .= "\r\n" . '--' . "\r\n";
 		$message .= sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->Settings->getSetting( 'version' ) ) . "\r\n";

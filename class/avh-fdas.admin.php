@@ -44,13 +44,12 @@ final class AVH_FDAS_Admin
 		// The Classes Registery
 		$this->Classes = AVH_FDAS_Classes::getInstance();
 
-
 		// Initialize the plugin
-		$this->core = $this->Classes->load_class( 'Core','plugin', TRUE );
-		$this->db = $this->Classes->load_class( 'DB','plugin', TRUE );
+		$this->core = $this->Classes->load_class( 'Core', 'plugin', TRUE );
+		$this->db = $this->Classes->load_class( 'DB', 'plugin', TRUE );
 
 		// Admin URL and Pagination
-		$this->core->admin_base_url = $this->Settings->getSetting('siteurl') . '/wp-admin/admin.php?page=';
+		$this->core->admin_base_url = $this->Settings->getSetting( 'siteurl' ) . '/wp-admin/admin.php?page=';
 		if ( isset( $_GET['pagination'] ) ) {
 			$this->core->actual_page = ( int ) $_GET['pagination'];
 		}
@@ -104,7 +103,7 @@ final class AVH_FDAS_Admin
 	public function actionAdminMenu ()
 	{
 		// Add menu system
-		$folder = plugin_basename( $this->Settings->getSetting('plugin_dir') );
+		$folder = plugin_basename( $this->Settings->getSetting( 'plugin_dir' ) );
 		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
 		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
 		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-general', array (&$this, 'doMenuGeneralOptions' ) );
@@ -119,8 +118,8 @@ final class AVH_FDAS_Admin
 
 		// Register Styles and Scripts
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		wp_register_script( 'avhfdas-admin-js', $this->Settings->getSetting('js_url') . '/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Settings->getSetting('version'), true );
-		wp_register_style( 'avhfdas-admin-css', $this->Settings->getSetting('css_url') . '/avh-fdas.admin.css', array (), $this->Settings->getSetting('version'), 'screen' );
+		wp_register_script( 'avhfdas-admin-js', $this->Settings->getSetting( 'js_url' ) . '/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Settings->getSetting( 'version' ), true );
+		wp_register_style( 'avhfdas-admin-css', $this->Settings->getSetting( 'css_url' ) . '/avh-fdas.admin.css', array (), $this->Settings->getSetting( 'version' ), 'screen' );
 
 	}
 
@@ -907,7 +906,7 @@ final class AVH_FDAS_Admin
 		echo '<p>';
 		echo '<span class="b">Amazon</span><br />';
 		echo 'If you decide to buy something from Amazon click the button.<br />';
-		echo '<a href="https://www.amazon.com/?&tag=avh-donation-20" target="_blank" title="Amazon Homepage"><img alt="Amazon Button" src="' . $this->Settings->getSetting('graphics_url') . '/us_banner_logow_120x60.gif" /></a></p>';
+		echo '<a href="https://www.amazon.com/?&tag=avh-donation-20" target="_blank" title="Amazon Homepage"><img alt="Amazon Button" src="' . $this->Settings->getSetting( 'graphics_url' ) . '/us_banner_logow_120x60.gif" /></a></p>';
 		echo '<p>';
 		echo 'You can send me something from my <a href="http://www.amazon.com/gp/Settings/wishlist/1U3DTWZ72PI7W?tag=avh-donation-20">Amazon Wish List</a>';
 		echo '</p>';
@@ -960,7 +959,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterPluginActions ( $links )
 	{
-		$folder = plugin_basename( $this->Settings->getSetting('plugin_dir') );
+		$folder = plugin_basename( $this->Settings->getSetting( 'plugin_dir' ) );
 		$settings_link = '<a href="admin.php?page=' . $folder . '">' . __( 'Settings', 'avhfdas' ) . '</a>';
 		array_unshift( $links, $settings_link ); // before other links
 		return $links;
@@ -1004,9 +1003,9 @@ final class AVH_FDAS_Admin
 			}
 			$options = $this->core->getOptions();
 			// If we use IP Cache and the Reported IP isn't spam, delete it from the IP cache.
-			if (1 == $options['general']['useipcache']) {
-				$ip_info = $this->db->getIP($comment->comment_author_IP);
-				if ( is_object($ip_info) && 0 == $ip_info->spam ) {
+			if ( 1 == $options['general']['useipcache'] ) {
+				$ip_info = $this->db->getIP( $comment->comment_author_IP );
+				if ( is_object( $ip_info ) && 0 == $ip_info->spam ) {
 					$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE WHERE ip=INET_ATON(%s)", $comment->comment_author_IP ) );
 				}
 			}
@@ -1147,10 +1146,8 @@ final class AVH_FDAS_Admin
 		$charset_collate = '';
 
 		if ( version_compare( mysql_get_server_info(), '4.1.0', '>=' ) ) {
-			if ( ! empty( $wpdb->charset ) )
-				$charset_collate = 'DEFAULT CHARACTER SET ' . $wpdb->charset;
-			if ( ! empty( $wpdb->collate ) )
-				$charset_collate .= ' COLLATE ' . $wpdb->collate;
+			if ( ! empty( $wpdb->charset ) ) $charset_collate = 'DEFAULT CHARACTER SET ' . $wpdb->charset;
+			if ( ! empty( $wpdb->collate ) ) $charset_collate .= ' COLLATE ' . $wpdb->collate;
 		}
 
 		if ( $wpdb->get_var( 'show tables like \'' . $wpdb->avhfdasipcache . '\'' ) != $wpdb->avhfdasipcache ) {
@@ -1222,7 +1219,7 @@ final class AVH_FDAS_Admin
 	{
 		echo '<div class="clear">';
 		echo '<p class="footer_avhfdas">';
-		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->Settings->getSetting('version') );
+		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->Settings->getSetting( 'version' ) );
 		echo '</p>';
 	}
 
@@ -1230,13 +1227,14 @@ final class AVH_FDAS_Admin
 	 * Display WP alert
 	 *
 	 */
-	private function displayMessage() {
-		if ($this->message != '') {
+	private function displayMessage ()
+	{
+		if ( $this->message != '' ) {
 			$message = $this->message;
 			$status = $this->status;
 			$this->message = $this->status = ''; // Reset
 		}
-		if (isset ( $message )) {
+		if ( isset( $message ) ) {
 			$status = ($status != '') ? $status : 'updated fade';
 			echo '<div id="message"	class="' . $status . '">';
 			echo '<p><strong>' . $message . '</strong></p></div>';
