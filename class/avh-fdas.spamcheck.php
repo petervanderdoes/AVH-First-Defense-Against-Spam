@@ -77,7 +77,7 @@ class AVH_FDAS_SpamCheck
 			}
 
 			$ip_in_cache = false;
-			if ( $this->use_cache && 1 == $options['general']['useipcache'] ) {
+			if ( $this->use_cache ) {
 				$ipcachedb = $this->Classes->load_class( 'DB', 'plugin', TRUE );
 				$time_start = microtime( true );
 				$ip_in_cache = $ipcachedb->getIP( $ip );
@@ -87,18 +87,18 @@ class AVH_FDAS_SpamCheck
 			}
 
 			if ( false === $ip_in_cache ) {
-				if ( $options['general']['use_sfs'] || $options['general']['use_php'] ) {
+				if ( $this->use_sfs || $this->use_php ) {
 					$spaminfo = null;
 					$spaminfo['detected'] = FALSE;
 
-					if ( $this->use_sfs && $options['general']['use_sfs'] ) {
+					if ( $this->use_sfs ) {
 						$spaminfo['sfs'] = $this->checkStopForumSpam( $ip );
 						if ( 'yes' == $spaminfo['sfs']['appears'] ) {
 							$spaminfo['detected'] = true;
 						}
 					}
 
-					if ( $this->use_php && $options['general']['use_php'] ) {
+					if ( $this->use_php ) {
 						$spaminfo['php'] = $this->checkProjectHoneyPot( $ip );
 						if ( $spaminfo['php'] != null ) {
 							$spaminfo['detected'] = true;
@@ -108,7 +108,7 @@ class AVH_FDAS_SpamCheck
 					if ( $spaminfo['detected'] ) {
 						$this->handleSpammer( $ip, $spaminfo );
 					} else {
-						if ( $this->use_cache && 1 == $options['general']['useipcache'] && (! isset( $spaminfo['Error'] )) ) {
+						if ( $this->use_cache && (! isset( $spaminfo['Error'] )) ) {
 							$ipcachedb->insertIP( $ip, 0 );
 						}
 					}
@@ -128,24 +128,24 @@ class AVH_FDAS_SpamCheck
 		switch ( strtolower( $this->checkSection ) )
 		{
 			case 'comment' :
-				$this->use_sfs = TRUE;
-				$this->use_php = TRUE;
-				$this->use_cache = TRUE;
+				$this->setUse_sfs( TRUE );
+				$this->setUse_php( TRUE );
+				$this->setUse_cache( TRUE );
 				break;
 			case 'main' :
-				$this->use_sfs = FALSE;
-				$this->use_php = TRUE;
-				$this->use_cache = TRUE;
+				$this->setUse_sfs( FALSE );
+				$this->setUse_php( TRUE );
+				$this->setUse_cache( TRUE );
 				break;
 			case 'registration' :
-				$this->use_sfs = TRUE;
-				$this->use_php = TRUE;
-				$this->use_cache = TRUE;
+				$this->setUse_sfs( TRUE );
+				$this->setUse_php( TRUE );
+				$this->setUse_cache( TRUE );
 				break;
 			default :
-				$this->use_sfs = FALSE;
-				$this->use_php = TRUE;
-				$this->use_cache = TRUE;
+				$this->setUse_sfs( FALSE );
+				$this->setUse_php( TRUE );
+				$this->setUse_cache( TRUE );
 				break;
 		}
 
@@ -325,8 +325,8 @@ class AVH_FDAS_SpamCheck
 		$options = $this->core->getOptions();
 
 		// Email
-		$sfs_email = $options['general']['use_sfs'] && ( int ) $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
-		$php_email = $options['general']['use_php'] && ( int ) $options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && ( int ) $info['php']['score'] >= $options['php']['whentoemail'];
+		$sfs_email = $this->use_sfs && ( int ) $options['sfs']['whentoemail'] >= 0 && ( int ) $info['sfs']['frequency'] >= $options['sfs']['whentoemail'];
+		$php_email = $this->use_php && ( int ) $options['php']['whentoemail'] >= 0 && $info['php']['type'] >= $options['php']['whentoemailtype'] && ( int ) $info['php']['score'] >= $options['php']['whentoemail'];
 
 		if ( $sfs_email || $php_email ) {
 
@@ -338,7 +338,7 @@ class AVH_FDAS_SpamCheck
 			$message .= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) . "\r\n\r\n";
 
 			// Stop Forum Spam Mail Part
-			if ( $options['general']['use_sfs'] && $sfs_email && $this->use_sfs === TRUE ) {
+			if ( $sfs_email && $this->use_sfs ) {
 				if ( 'yes' == $info['sfs']['appears'] ) {
 					$message .= __( 'Checked at Stop Forum Spam', 'avhfdas' ) . "\r\n";
 					$message .= '	' . __( 'Information', 'avhfdas' ) . "\r\n";
@@ -360,7 +360,7 @@ class AVH_FDAS_SpamCheck
 			}
 
 			// Project Honey pot Mail Part
-			if ( $options['general']['use_php'] && ($php_email || $options['sfs']['emailphp']) ) {
+			if ( $this->use_php && ($php_email || $options['sfs']['emailphp']) ) {
 				if ( $info['php'] != null ) {
 					$message .= __( 'Checked at Project Honey Pot', 'avhfdas' ) . "\r\n";
 					$message .= '	' . __( 'Information', 'avhfdas' ) . "\r\n";
@@ -420,8 +420,8 @@ class AVH_FDAS_SpamCheck
 
 		// Check if we have to terminate the connection.
 		// This should be the very last option.
-		$sfs_die = $options['general']['use_sfs'] && $info['sfs']['frequency'] >= $options['sfs']['whentodie'];
-		$php_die = $options['general']['use_php'] && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'];
+		$sfs_die = $this->use_sfs && $info['sfs']['frequency'] >= $options['sfs']['whentodie'];
+		$php_die = $this->use_php && $info['php']['type'] >= $options['php']['whentodietype'] && $info['php']['score'] >= $options['php']['whentodie'];
 		$blacklist_die = 'Blacklisted' == $info['blacklist']['time'];
 
 		if ( 1 == $options['general']['useipcache'] ) {
@@ -520,5 +520,54 @@ class AVH_FDAS_SpamCheck
 		wp_mail( $to, $subject, $message );
 		return;
 	}
+
+	/**
+	 * @return the $use_sfs
+	 */
+	function getUse_sfs ()
+	{
+		return $this->use_sfs;
+	}
+
+	/**
+	 * @param $use_sfs the $use_sfs to set
+	 */
+	function setUse_sfs ( $use_sfs )
+	{
+		$this->use_sfs = $this->core->getOptionElement( 'general', 'use_sfs' ) ? $use_sfs : FALSE;
+	}
+
+	/**
+	 * @return the $use_php
+	 */
+	function getUse_php ()
+	{
+		return $this->use_php;
+	}
+
+	/**
+	 * @param $use_php the $use_php to set
+	 */
+	function setUse_php ( $use_php )
+	{
+		$this->use_php = $this->core->getOptionElement( 'general', 'use_php' ) ? $use_ph : FALSE;
+	}
+
+	/**
+	 * @return the $use_cache
+	 */
+	function getUse_cache ()
+	{
+		return $this->use_cache;
+	}
+
+	/**
+	 * @param $use_cache the $use_cache to set
+	 */
+	function setUse_cache ( $use_cache )
+	{
+		$this->use_cache = $this->core->getOptionElement( 'general', 'useipcache' ) ? $use_cache : FALSE;
+	}
+
 }
 ?>
