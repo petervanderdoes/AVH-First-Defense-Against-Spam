@@ -1086,7 +1086,7 @@ final class AVH_FDAS_Admin
 			if ( 1 == $options['general']['useipcache'] ) {
 				$ip_info = $this->db->getIP( $comment->comment_author_IP );
 				if ( is_object( $ip_info ) && 0 == $ip_info->spam ) {
-					$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE WHERE ip=INET_ATON(%s)", $comment->comment_author_IP ) );
+					$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ip=INET_ATON(%s)", $comment->comment_author_IP ) );
 				}
 			}
 			$this->handleReportSpammer( $comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP );
