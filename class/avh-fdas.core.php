@@ -111,9 +111,9 @@ class AVH_FDAS_Core
 
 		$this->Settings->storeSetting( 'siteurl', get_option( 'siteurl' ) );
 		$this->Settings->storeSetting( 'lang_dir', $this->Settings->getSetting( 'working_dir' ) . '/lang' );
-		$this->Settings->storeSetting( 'graphics_url', plugins_url( 'images' ) );
-		$this->Settings->storeSetting( 'js_url', plugins_url( 'js' ) );
-		$this->Settings->storeSetting( 'css_url', plugins_url( 'css' ) );
+		$this->Settings->storeSetting( 'graphics_url', plugins_url( 'images', $this->Settings->getSetting('basename') ) );
+		$this->Settings->storeSetting( 'js_url', plugins_url( 'js', $this->Settings->getSetting('basename') ) );
+		$this->Settings->storeSetting( 'css_url', plugins_url( 'css', $this->Settings->getSetting('basename') ) );
 		$this->Settings->storeSetting( 'searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ) );
 		$this->Settings->storeSetting( 'stopforumspam_endpoint', 'http://www.stopforumspam.com/api' );
 
