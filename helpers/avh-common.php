@@ -1,6 +1,5 @@
 <?php
-if ( ! defined( 'AVH_FRAMEWORK' ) )
-	die( 'You are not allowed to call this page directly.' );
+if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
 if ( ! function_exists( 'avh_getBaseDirectory' ) ) {
 
