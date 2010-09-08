@@ -45,11 +45,10 @@ function avh_FDAS_init ()
 {
 	$Settings = AVH_FDAS_Settings::getInstance();
 	$Settings->storeSetting( 'working_dir', pathinfo( __FILE__, PATHINFO_DIRNAME ) );
-	unset( $Settings );
 
 	// Admin
 	if ( is_admin() ) {
-		require_once (dirname( __FILE__ ) . '/class/avh-fdas.admin.php');
+		require_once ($Settings->getSetting('working_dir') . '/class/avh-fdas.admin.php');
 		$avhfdas_admin = new AVH_FDAS_Admin();
 
 		// Activation Hook
@@ -59,7 +58,7 @@ function avh_FDAS_init ()
 		register_deactivation_hook( __FILE__, array (&$avhfdas_admin, 'deactivatePlugin' ) );
 	}
 
-	require_once (dirname( __FILE__ ) . '/class/avh-fdas.public.php');
+	require_once ($Settings->getSetting('working_dir') . '/class/avh-fdas.public.php');
 	$avhfdas_public = new AVH_FDAS_Public();
 
 } // End avh_FDAS__init()

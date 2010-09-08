@@ -70,14 +70,14 @@ final class AVH_FDAS_Admin
 		 */
 		add_action( 'admin_action_blacklist', array (&$this, 'actionHandleBlacklistUrl' ) );
 		add_action( 'admin_action_emailreportspammer', array (&$this, 'actionHandleEmailReportingUrl' ) );
-		add_action( 'in_plugin_update_message-avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'actionInPluginUpdateMessage' ) );
+		add_action( 'in_plugin_update_message-'.AVHFDAS_FILE, array (&$this, 'actionInPluginUpdateMessage' ) );
 
 		/**
 		 * Admin Filters
 		 *
 		 */
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
-		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
+		add_filter( 'plugin_action_links_'.AVHFDAS_FILE, array (&$this, 'filterPluginActions' ), 10, 2 );
 
 		// If the version compare fails do not display the Upgrade notice.
 		if ( version_compare( PHP_VERSION, '5', '<' ) ) {

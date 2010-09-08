@@ -42,6 +42,7 @@ define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
 define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 define( 'AVHFDAS_README_URL', 'http://svn.wp-plugins.org/avh-first-defense-against-spam/trunk/readme.txt' );
+define( 'AVHFDAS_FILE', 'avh-first-defense-against-spam/avh-fdas.php' );
 
 require_once ($_dir . '/class/avh-fdas.registry.php');
 
@@ -61,16 +62,33 @@ if ( avh_getWordpressVersion() >= 2.7 ) {
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {
-	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_fdas_remove_plugin' );
+	add_action( 'activate_' . AVHFDAS_FILE, 'avh_fdas_remove_plugin' );
 
 }
 
 function avh_fdas_remove_plugin ()
 {
-	$current = get_option( 'active_plugins' );
-	$num = array_search( 'avh-first-defense-against-spam/avh-fdas.php', $current );
-	array_splice( $current, $num, 1 ); // Array-fu!
-	update_option( 'active_plugins', $current );
+	$active_plugins = ( array ) get_option( 'active_plugins' );
+
+	// workaround for WPMU deactivation bug
+	remove_action( 'deactivate_' . AVHFDAS_FILE, 'deactivate_sitewide_plugin' );
+
+	$key = array_search( AVHFDAS_FILE, $active_plugins );
+
+	if ( $key !== false ) {
+		do_action( 'deactivate_plugin', AVHFDAS_FILE );
+
+		array_splice( $active_plugins, $key, 1 );
+
+		do_action( 'deactivate_' . AVHFDAS_FILE );
+		do_action( 'deactivated_plugin', AVHFDAS_FILE );
+
+		update_option( 'active_plugins', $active_plugins );
+
+	} else {
+		do_action( 'deactivate_' . AVHFDAS_FILE );
+	}
+
 	ob_end_clean();
 	wp_die( __( 'AVH First Defense Against Spam can\'t work with this WordPress version!', 'avhfdas' ) );
 }
