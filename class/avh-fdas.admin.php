@@ -29,6 +29,7 @@ final class AVH_FDAS_Admin
 	 */
 	private $db;
 
+	private $add_disabled_notice = false;
 	private $hooks = array ();
 
 	/**
@@ -64,13 +65,28 @@ final class AVH_FDAS_Admin
 		// Add the ajax action
 		add_action( 'wp_ajax_avh-fdas-reportcomment', array (&$this, 'actionAjaxReportComment' ) );
 
-		// Add admin actions
+		/**
+		 * Admin actions
+		 */
 		add_action( 'admin_action_blacklist', array (&$this, 'actionHandleBlacklistUrl' ) );
 		add_action( 'admin_action_emailreportspammer', array (&$this, 'actionHandleEmailReportingUrl' ) );
+		add_action( 'in_plugin_update_message-avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'actionInPluginUpdateMessage' ) );
 
-		// Add Filters
+		/**
+		 * Admin Filters
+		 *
+		 */
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
 		add_filter( 'plugin_action_links_avh-first-defense-against-spam/avh-fdas.php', array (&$this, 'filterPluginActions' ), 10, 2 );
+
+		// If the version compare fails do not display the Upgrade notice.
+		if ( version_compare( PHP_VERSION, '5', '<' ) ) {
+			if ( avh_getWordpressVersion() < 2.8 ) {
+				add_filter( 'option_update_plugins', array (&$this, 'filterDisableUpgrade' ) );
+			} else {
+				add_filter( 'transient_update_plugins', array (&$this, 'filterDisableUpgrade' ) );
+			}
+		}
 
 		return;
 	}
@@ -121,6 +137,70 @@ final class AVH_FDAS_Admin
 		wp_register_script( 'avhfdas-admin-js', $this->Settings->getSetting( 'js_url' ) . '/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->Settings->getSetting( 'version' ), true );
 		wp_register_style( 'avhfdas-admin-css', $this->Settings->getSetting( 'css_url' ) . '/avh-fdas.admin.css', array (), $this->Settings->getSetting( 'version' ), 'screen' );
 
+	}
+
+	/**
+	 * This function is called when there's an update of the plugin available @ WordPress
+	 */
+	public function actionInPluginUpdateMessage ()
+	{
+		$response = wp_remote_get( AVHFDAS_README_URL, array ('user-agent' => 'WordPress/AVH ' . $this->Settings->getSetting( 'version' ) . '; ' . get_bloginfo( 'url' ) ) );
+		if ( ! is_wp_error() || is_array( $response ) ) {
+			$data = $response['body'];
+			$matches = null;
+			if ( preg_match( '~==\s*Changelog\s*==\s*=\s*Version\s*[0-9.]+\s*=(.*)(=\s*Version\s*[0-9.]+\s*=|$)~Uis', $data, $matches ) ) {
+				$changelog = ( array ) preg_split( '~[\r\n]+~', trim( $matches[1] ) );
+
+				echo '<div style="color: #f00;">Consider updating, here\'s why:</div><div style="font-weight: normal;">';
+				$ul = false;
+
+				foreach ( $changelog as $index => $line ) {
+					if ( preg_match( '~^\s*\*\s*~', $line ) ) {
+						if ( ! $ul ) {
+							echo '<ul style="list-style: disc; margin-left: 20px;">';
+							$ul = true;
+						}
+						$line = preg_replace( '~^\s*\*\s*~', '', htmlspecialchars( $line ) );
+						echo '<li style="width: 50%; margin: 0; float: left; ' . ($index % 2 == 0 ? 'clear: left;' : '') . '">' . $line . '</li>';
+					} else {
+						if ( $ul ) {
+							echo '</ul><div style="clear: left;"></div>';
+							$ul = false;
+						}
+						echo '<p style="margin: 5px 0;">' . htmlspecialchars( $line ) . '</p>';
+					}
+				}
+
+				if ( $ul ) {
+					echo '</ul><div style="clear: left;"></div>';
+				}
+
+				echo '</div>';
+			}
+		}
+	}
+
+	/**
+	 * This function allows the upgrade notice not to appear
+	 * @param $option
+	 */
+	function filterDisableUpgrade ( $option )
+	{
+
+		$this_plugin = $this->Settings->getSetting( 'basename' );
+
+		// Allow upgrade for version 2
+		if ( version_compare( $option->response[$this_plugin]->new_version, '2', '>=' ) ) return $option;
+		if ( isset( $option->response[$this_plugin] ) ) {
+			//Clear its download link:
+			$option->response[$this_plugin]->package = '';
+			//Add a notice message
+			if ( $this->add_disabled_notice == false ) {
+				add_action( "in_plugin_update_message-$this->plugin_name", create_function( '', 'echo \'<br /><span style="color:red">You need to have PHP 5.2 or higher for the new version !!!</span>\';' ) );
+				$this->add_disabled_notice = true;
+			}
+		}
+		return $option;
 	}
 
 	/**
