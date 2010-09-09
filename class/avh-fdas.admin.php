@@ -1267,29 +1267,6 @@ final class AVH_FDAS_Admin
 		wp_clear_scheduled_hook( 'avhfdas_clean_ipcache' );
 	}
 
-	/**
-	 * Update an option value  -- note that this will NOT save the options.
-	 *
-	 * @param array $optkeys
-	 * @param string $optval
-	 */
-	private function setOption ( $optkeys, $optval )
-	{
-		$key1 = $optkeys[0];
-		$key2 = $optkeys[1];
-		$this->core->options[$key1][$key2] = $optval;
-	}
-
-	/**
-	 * Delete all options from DB.
-	 *
-	 */
-	private function deleteAllOptions ()
-	{
-		delete_option( $this->core->db_options_core, $this->core->default_options );
-		wp_cache_flush(); // Delete cache
-	}
-
 	############## Admin WP Helper ##############
 	/**
 	 * Display plugin Copyright
