@@ -46,7 +46,7 @@ define( 'AVHFDAS_FILE', 'avh-first-defense-against-spam/avh-fdas.php' );
 
 require_once ($_dir . '/class/avh-fdas.registry.php');
 
-if ( avh_getWordpressVersion() >= 2.7 ) {
+if ( avh_getWordpressVersion() >= 2.8 ) {
 	require_once ($_dir . '/helpers/avh-security.php');
 	require_once ($_dir . '/helpers/avh-visitor.php');
 

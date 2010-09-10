@@ -70,22 +70,18 @@ final class AVH_FDAS_Admin
 		 */
 		add_action( 'admin_action_blacklist', array (&$this, 'actionHandleBlacklistUrl' ) );
 		add_action( 'admin_action_emailreportspammer', array (&$this, 'actionHandleEmailReportingUrl' ) );
-		add_action( 'in_plugin_update_message-'.AVHFDAS_FILE, array (&$this, 'actionInPluginUpdateMessage' ) );
+		add_action( 'in_plugin_update_message-' . AVHFDAS_FILE, array (&$this, 'actionInPluginUpdateMessage' ) );
 
 		/**
 		 * Admin Filters
 		 *
 		 */
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
-		add_filter( 'plugin_action_links_'.AVHFDAS_FILE, array (&$this, 'filterPluginActions' ), 10, 2 );
+		add_filter( 'plugin_action_links_' . AVHFDAS_FILE, array (&$this, 'filterPluginActions' ), 10, 2 );
 
 		// If the version compare fails do not display the Upgrade notice.
 		if ( version_compare( PHP_VERSION, '5', '<' ) ) {
-			if ( avh_getWordpressVersion() < 2.8 ) {
-				add_filter( 'option_update_plugins', array (&$this, 'filterDisableUpgrade' ) );
-			} else {
-				add_filter( 'transient_update_plugins', array (&$this, 'filterDisableUpgrade' ) );
-			}
+			add_filter( 'transient_update_plugins', array (&$this, 'filterDisableUpgrade' ) );
 		}
 
 		return;
@@ -1109,9 +1105,10 @@ final class AVH_FDAS_Admin
 		if ( ! (isset( $_REQUEST['action'] ) && 'emailreportspammer' == $_REQUEST['action']) ) {
 			return;
 		}
-		$a = wp_specialchars( $_REQUEST['a'] );
-		$e = wp_specialchars( $_REQUEST['e'] );
-		$i = wp_specialchars( $_REQUEST['i'] );
+		$a = esc_html( $_REQUEST['a'] );
+		$e = esc_html( $_REQUEST['e'] );
+		$i = esc_html( $_REQUEST['i'] );
+
 		$extra = '&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $i;
 		if ( avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
 			$all = get_option( $this->core->db_options_nonces );
