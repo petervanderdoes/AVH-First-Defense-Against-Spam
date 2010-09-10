@@ -147,7 +147,7 @@ final class AVH_FDAS_Admin
 			if ( preg_match( '~==\s*Changelog\s*==\s*=\s*Version\s*[0-9.]+\s*=(.*)(=\s*Version\s*[0-9.]+\s*=|$)~Uis', $data, $matches ) ) {
 				$changelog = ( array ) preg_split( '~[\r\n]+~', trim( $matches[1] ) );
 
-				echo '<div style="color: #f00;">Consider updating, here\'s why:</div><div style="font-weight: normal;">';
+				echo '<div style="color: #f00;">What\'s new in this version:</div><div style="font-weight: normal;">';
 				$ul = false;
 
 				foreach ( $changelog as $index => $line ) {
