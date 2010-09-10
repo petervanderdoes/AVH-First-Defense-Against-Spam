@@ -72,7 +72,7 @@ class AVH_FDAS_Core
 	{
 		$this->Settings = AVH_FDAS_Settings::getInstance();
 
-		$this->Settings->storeSetting( 'version', '3.0-dev1' );
+		$this->Settings->storeSetting( 'version', '2.0-dev31' );
 		$this->db_version = 8;
 		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->Settings->getSetting( 'version' );
 		$this->db_options_core = 'avhfdas';
