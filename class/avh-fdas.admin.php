@@ -147,6 +147,8 @@ final class AVH_FDAS_Admin
 			if ( preg_match( '~==\s*Changelog\s*==\s*=\s*Version\s*[0-9.]+\s*=(.*)(=\s*Version\s*[0-9.]+\s*=|$)~Uis', $data, $matches ) ) {
 				$changelog = ( array ) preg_split( '~[\r\n]+~', trim( $matches[1] ) );
 
+				$prev_version=null;
+				preg_match('([0-9.]+)',$matches[2],$prev_version);
 				echo '<div style="color: #f00;">What\'s new in this version:</div><div style="font-weight: normal;">';
 				$ul = false;
 
@@ -169,6 +171,13 @@ final class AVH_FDAS_Admin
 
 				if ( $ul ) {
 					echo '</ul><div style="clear: left;"></div>';
+				}
+
+				if ($prev_version[0] != $this->Settings->getSetting( 'version' ) ) {
+					echo '<div style="color: #f00; font-weight: bold;">';
+					echo '<br />The installed version, '. $this->Settings->getSetting( 'version' ).', is more than one version behind.<br />';
+					echo 'More changes have been made since the currently installed version, consider checking the changelog at the plugin\'s <a href="http://blog.avirtualhome.com/wordpress-plugins/avh-first-defense-against-spam/" target="_blank">homepage</a>';
+					echo '</div><div style="clear: left;"></div>';
 				}
 
 				echo '</div>';
