@@ -215,7 +215,7 @@ class AVH_FDAS_SpamCheck
 			$spaminfo['type'] = $info[3];
 			if ( '0' == $info[3] ) {
 				$spaminfo['score'] = '0';
-				$searchengines = $this->Settings->getSetting( searchengines );
+				$searchengines = $this->Settings->searchengines;
 				$spaminfo['engine'] = $searchengines[$info[2]];
 			} else {
 				$spaminfo['score'] = $info[2];
@@ -514,7 +514,7 @@ class AVH_FDAS_SpamCheck
 	private function mail ( $to, $subject, $message )
 	{
 		$message .= "\r\n" . '--' . "\r\n";
-		$message .= sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->Settings->getSetting( 'version' ) ) . "\r\n";
+		$message .= sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->Settings->version ) . "\r\n";
 		$message .= 'http://blog.avirtualhome.com/wordpress-plugins' . "\r\n";
 
 		wp_mail( $to, $subject, $message );
