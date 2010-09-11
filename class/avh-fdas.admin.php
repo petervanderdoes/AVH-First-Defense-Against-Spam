@@ -192,7 +192,7 @@ final class AVH_FDAS_Admin
 	function filterDisableUpgrade ( $option )
 	{
 
-		$this_plugin = $this->Settings->basename;
+		$this_plugin = $this->Settings->plugin_basename;
 
 		// Allow upgrade for version 2
 		if ( version_compare( $option->response[$this_plugin]->new_version, '2', '>=' ) ) return $option;

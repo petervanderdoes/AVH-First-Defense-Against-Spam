@@ -58,7 +58,7 @@ if ( avh_getWordpressVersion() >= 2.8 ) {
 
 	$Settings = AVH_FDAS_Settings::getInstance();
 	$Settings->storeSetting( 'plugin_dir', $_dir );
-	$Settings->storeSetting( 'basename', $_basename );
+	$Settings->storeSetting( 'plugin_basename', $_basename );
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {
