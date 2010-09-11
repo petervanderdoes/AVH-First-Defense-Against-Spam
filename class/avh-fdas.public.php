@@ -231,8 +231,6 @@ class AVH_FDAS_Public
 	/**
 	 * Handle when posting a comment.
 	 *
-	 * Get the visitors IP and call the stopforumspam API to check if it's a known spammer
-	 *
 	 * @uses SFS, PHP
 	 * @WordPress Action preprocess_comment
 	 */
@@ -242,6 +240,11 @@ class AVH_FDAS_Public
 		return ($commentdata);
 	}
 
+	/**
+	 * Handle when a user registers
+	 *
+	 * @WordPress Action register_post
+	 */
 	function actionHandleRegistration ( $sanitized_user_login, $user_email, $errors )
 	{
 		$this->spamcheck->doIPCheck( 'registration' );
