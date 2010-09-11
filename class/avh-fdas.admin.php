@@ -115,12 +115,12 @@ final class AVH_FDAS_Admin
 	public function actionAdminMenu ()
 	{
 		// Add menu system
-		$folder = plugin_basename( $this->Settings->plugin_dir );
-		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
-		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $folder, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $folder, array (&$this, 'doMenuOverview' ) );
-		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-general', array (&$this, 'doMenuGeneralOptions' ) );
-		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-3rd-party', array (&$this, 'doMenu3rdPartyOptions' ) );
-		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $folder, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', 'avh-fdas-faq', array (&$this, 'doMenuFAQ' ) );
+		$menu_slug = avh_getBaseDirectory( $this->Settings->plugin_basename );
+		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', $menu_slug, array (&$this, 'doMenuOverview' ) );
+		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $menu_slug, array (&$this, 'doMenuOverview' ) );
+		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', $menu_slug.'-general', array (&$this, 'doMenuGeneralOptions' ) );
+		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', $menu_slug.'-3rd-party', array (&$this, 'doMenu3rdPartyOptions' ) );
+		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', $menu_slug.'-faq', array (&$this, 'doMenuFAQ' ) );
 
 		// Add actions for menu pages
 		add_action( 'load-' . $this->hooks['avhfdas_menu_overview'], array (&$this, 'actionLoadPageHook_Overview' ) );
@@ -1044,7 +1044,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterPluginActions ( $links )
 	{
-		$folder = plugin_basename( $this->Settings->plugin_dir );
+		$folder = avh_getBaseDirectory( $this->Settings->plugin_basename );
 		$settings_link = '<a href="admin.php?page=' . $folder . '">' . __( 'Settings', 'avhfdas' ) . '</a>';
 		array_unshift( $links, $settings_link ); // before other links
 		return $links;
