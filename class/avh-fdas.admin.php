@@ -118,9 +118,9 @@ final class AVH_FDAS_Admin
 		$menu_slug = avh_getBaseDirectory( $this->Settings->plugin_basename );
 		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', $menu_slug, array (&$this, 'doMenuOverview' ) );
 		$this->hooks['avhfdas_menu_overview'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $menu_slug, array (&$this, 'doMenuOverview' ) );
-		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', $menu_slug.'-general', array (&$this, 'doMenuGeneralOptions' ) );
-		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', $menu_slug.'-3rd-party', array (&$this, 'doMenu3rdPartyOptions' ) );
-		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', $menu_slug.'-faq', array (&$this, 'doMenuFAQ' ) );
+		$this->hooks['avhfdas_menu_general'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', $menu_slug . '-general', array (&$this, 'doMenuGeneralOptions' ) );
+		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', $menu_slug . '-3rd-party', array (&$this, 'doMenu3rdPartyOptions' ) );
+		$this->hooks['avhfdas_menu_faq'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', $menu_slug . '-faq', array (&$this, 'doMenuFAQ' ) );
 
 		// Add actions for menu pages
 		add_action( 'load-' . $this->hooks['avhfdas_menu_overview'], array (&$this, 'actionLoadPageHook_Overview' ) );
@@ -147,8 +147,8 @@ final class AVH_FDAS_Admin
 			if ( preg_match( '~==\s*Changelog\s*==\s*=\s*Version\s*[0-9.]+\s*=(.*)(=\s*Version\s*[0-9.]+\s*=|$)~Uis', $data, $matches ) ) {
 				$changelog = ( array ) preg_split( '~[\r\n]+~', trim( $matches[1] ) );
 
-				$prev_version=null;
-				preg_match('([0-9.]+)',$matches[2],$prev_version);
+				$prev_version = null;
+				preg_match( '([0-9.]+)', $matches[2], $prev_version );
 				echo '<div style="color: #f00;">What\'s new in this version:</div><div style="font-weight: normal;">';
 				$ul = false;
 
@@ -173,9 +173,9 @@ final class AVH_FDAS_Admin
 					echo '</ul><div style="clear: left;"></div>';
 				}
 
-				if ($prev_version[0] != $this->Settings->version ) {
+				if ( $prev_version[0] != $this->Settings->version ) {
 					echo '<div style="color: #f00; font-weight: bold;">';
-					echo '<br />The installed version, '. $this->Settings->version.', is more than one version behind.<br />';
+					echo '<br />The installed version, ' . $this->Settings->version . ', is more than one version behind.<br />';
 					echo 'More changes have been made since the currently installed version, consider checking the changelog at the plugin\'s <a href="http://blog.avirtualhome.com/wordpress-plugins/avh-first-defense-against-spam/" target="_blank">homepage</a>';
 					echo '</div><div style="clear: left;"></div>';
 				}
