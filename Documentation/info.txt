@@ -1,0 +1,11 @@
+Variables used in the class Settings
+plugin_dir - string - Full path the the plugin directory
+plugin_basename - string - plugin directory + main file (avh-first-defense-against-spam/avh-fdas.php)
+version - string - Version of the plugin
+siteurl - string - value of get_option('siteurl')
+lang_dir - string - Language directory
+graphics_url - string - Full URL to the images directory
+js_url - string - Full URL to the Javascript diectory
+css_url - string - Full URL to teh stylesheet directory
+searchengines - Array with serachengines regonized by Project Honey Pot
+stopforumspam_endpoint - String - URL for the API call of Stop Forum Spam
