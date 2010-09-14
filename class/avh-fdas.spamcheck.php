@@ -177,14 +177,14 @@ class AVH_FDAS_SpamCheck
 				$error = $this->_core->getHttpError( $spaminfo['Error'] );
 				$to = get_option( 'admin_email' );
 				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
-				$message[] = __( 'An error has been detected', 'avhfdas' ) ;
-				$message[] = sprintf( __( 'Error:	%s', 'avhfdas' ), $error ) ;
-				$message[]='';
-				$message[]= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) ;
-				$message []= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] ) ;
-				$message []= sprintf( __( 'Call took:	%s', 'avhafdas' ), $time );
+				$message[] = __( 'An error has been detected', 'avhfdas' );
+				$message[] = sprintf( __( 'Error:	%s', 'avhfdas' ), $error );
+				$message[] = '';
+				$message[] = sprintf( __( 'IP:		%s', 'avhfdas' ), $ip );
+				$message[] = sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] );
+				$message[] = sprintf( __( 'Call took:	%s', 'avhafdas' ), $time );
 				if ( isset( $spaminfo['Debug'] ) ) {
-					$message []= sprintf( __( 'Debug:	%s', 'avhafdas' ), $spaminfo['Debug'] ) ;
+					$message[] = sprintf( __( 'Debug:	%s', 'avhafdas' ), $spaminfo['Debug'] );
 				}
 				AVH_Common::sendMail( $to, $subject, $message );
 			}
@@ -335,41 +335,41 @@ class AVH_FDAS_SpamCheck
 			// General part of the email
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), $ip );
-			$message []= sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip ) ;
-			$message []= sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] );
-			$message[]='';
+			$message[] = sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $ip );
+			$message[] = sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] );
+			$message[] = '';
 
 			// Stop Forum Spam Mail Part
 			if ( $sfs_email && $this->_useStopForumSpam ) {
 				if ( 'yes' == $info['sfs']['appears'] ) {
-					$message []= __( 'Checked at Stop Forum Spam', 'avhfdas' );
-					$message []= '	' . __( 'Information', 'avhfdas' );
-					$message []= '	' . sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] );
-					$message []= '	' . sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] );
-					$message []= '	' . sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['sfs']['time'] );
+					$message[] = __( 'Checked at Stop Forum Spam', 'avhfdas' );
+					$message[] = '	' . __( 'Information', 'avhfdas' );
+					$message[] = '	' . sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $info['sfs']['lastseen'] );
+					$message[] = '	' . sprintf( __( 'Frequency:	%s', 'avhfdas' ), $info['sfs']['frequency'] );
+					$message[] = '	' . sprintf( __( 'Call took:	%s', 'avhafdas' ), $info['sfs']['time'] );
 
 					if ( $info['sfs']['frequency'] >= $options['sfs']['whentodie'] ) {
-						$message []= '	' . sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] ) ;
+						$message[] = '	' . sprintf( __( 'Threshold (%s) reached. Connection terminated', 'avhfdas' ), $options['sfs']['whentodie'] );
 					}
 				} else {
-					$message []= __( 'Stop Forum Spam has no information', 'avhfdas' ) ;
+					$message[] = __( 'Stop Forum Spam has no information', 'avhfdas' );
 				}
-				$message[]='';
-				$message []= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip );
-				$message[]='';
+				$message[] = '';
+				$message[] = sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip );
+				$message[] = '';
 			}
 
 			if ( 'no' == $info['sfs']['appears'] ) {
-				$message []= __( 'Stop Forum Spam has no information', 'avhfdas' );
-				$message[]='';
+				$message[] = __( 'Stop Forum Spam has no information', 'avhfdas' );
+				$message[] = '';
 			}
 
 			// Project Honey pot Mail Part
 			if ( $this->_useProjectHoneyPot && ($php_email || $options['sfs']['emailphp']) ) {
 				if ( $info['php'] != null ) {
-					$message []= __( 'Checked at Project Honey Pot', 'avhfdas' ) ;
-					$message []= '	' . __( 'Information', 'avhfdas' ) ;
-					$message []= '	' . sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] ) ;
+					$message[] = __( 'Checked at Project Honey Pot', 'avhfdas' );
+					$message[] = '	' . __( 'Information', 'avhfdas' );
+					$message[] = '	' . sprintf( __( 'Days since last activity:	%s', 'avhfdas' ), $info['php']['days'] );
 					switch ( $info['php']['type'] )
 					{
 						case "0" :
@@ -398,27 +398,27 @@ class AVH_FDAS_SpamCheck
 							break;
 					}
 
-					$message []= '	' . sprintf( __( 'Type:				%s', 'avhfdas' ), $type );
+					$message[] = '	' . sprintf( __( 'Type:				%s', 'avhfdas' ), $type );
 					if ( 0 == $info['php']['type'] ) {
-						$message []= '	' . sprintf( __( 'Search Engine:	%s', 'avhfdas' ), $info['php']['engine'] ) ;
+						$message[] = '	' . sprintf( __( 'Search Engine:	%s', 'avhfdas' ), $info['php']['engine'] );
 					} else {
-						$message []= '	' . sprintf( __( 'Score:				%s', 'avhfdas' ), $info['php']['score'] ) ;
+						$message[] = '	' . sprintf( __( 'Score:				%s', 'avhfdas' ), $info['php']['score'] );
 					}
-					$message []= '	' . sprintf( __( 'Call took:			%s', 'avhafdas' ), $info['php']['time'] ) ;
+					$message[] = '	' . sprintf( __( 'Call took:			%s', 'avhafdas' ), $info['php']['time'] );
 
 					if ( $info['php']['score'] >= $options['php']['whentodie'] && $info['php']['type'] >= $options['php']['whentodietype'] ) {
-						$message []= '	' . sprintf( __( 'Threshold score (%s) and type (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'], $type ) ;
+						$message[] = '	' . sprintf( __( 'Threshold score (%s) and type (%s) reached. Connection terminated', 'avhfdas' ), $options['php']['whentodie'], $type );
 					}
 				} else {
-					$message []= __( 'Project Honey Pot has no information', 'avhfdas' ) ;
+					$message[] = __( 'Project Honey Pot has no information', 'avhfdas' );
 				}
-				$message[]='';
+				$message[] = '';
 			}
 
 			// General End
 			if ( 'Blacklisted' != $info['blacklist']['time'] ) {
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . avh_create_nonce( $ip );
-				$message []= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) ;
+				$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
 			}
 			AVH_Common::sendMail( $to, $subject, $message );
 		}
@@ -478,7 +478,7 @@ class AVH_FDAS_SpamCheck
 			// General part of the email
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), $info['ip'] );
-			$message = array();
+			$message = array ();
 			$message[] = sprintf( __( 'Spam IP:	%s', 'avhfdas' ), $info['ip'] );
 			$message[] = sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] );
 			$message[] = '';
@@ -488,7 +488,7 @@ class AVH_FDAS_SpamCheck
 
 			// General End
 			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $info['ip'] . '&_avhnonce=' . avh_create_nonce( $info['ip'] );
-			$message []= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) ;
+			$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
 			AVH_Common::sendMail( $to, $subject, $message );
 		}
 
