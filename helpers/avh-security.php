@@ -1,7 +1,9 @@
 <?php
 if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
-if ( ! function_exists( 'avh_create_nonce' ) ) {
+if ( ! class_exists( 'AVH_Security' ) ) {
+	final class AVH_Security
+	{
 
 	/**
 	 * Local nonce creation. WordPress uses the UID and sometimes I don't want that
@@ -11,14 +13,11 @@ if ( ! function_exists( 'avh_create_nonce' ) ) {
 	 * @return string The one use form token
 	 *
 	 */
-	function avh_create_nonce ( $action = -1 )
+	public static function createNonce ( $action = -1 )
 	{
 		$i = wp_nonce_tick();
 		return substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 );
 	}
-}
-
-if ( ! function_exists( 'avh_verify_nonce' ) ) {
 
 	/**
 	 * Local nonce verification. WordPress uses the UID and sometimes I don't want that
@@ -31,7 +30,7 @@ if ( ! function_exists( 'avh_verify_nonce' ) ) {
 	 * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
 	 * @return bool Whether the nonce check passed or failed.
 	 */
-	function avh_verify_nonce ( $nonce, $action = -1 )
+	public static function verifyNonce ( $nonce, $action = -1 )
 	{
 
 		$r = false;

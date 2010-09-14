@@ -82,7 +82,7 @@ class AVH_FDAS_Public
 		$all = get_option( $this->core->db_options_nonces );
 		if ( is_array( $all ) ) {
 			foreach ( $all as $key => $value ) {
-				if ( ! avh_verify_nonce( $key, $value ) ) {
+				if ( ! AVH_Security::verifyNonce( $key, $value ) ) {
 					unset( $all[$key] );
 					$removed ++;
 				}
@@ -160,14 +160,14 @@ class AVH_FDAS_Public
 							$q['a'] = $commentdata['comment_author'];
 							$q['e'] = $commentdata['comment_author_email'];
 							$q['i'] = $ip;
-							$q['_avhnonce'] = avh_create_nonce( $q['a'] . $q['e'] . $q['i'] );
+							$q['_avhnonce'] = AVH_Security::createNonce( $q['a'] . $q['e'] . $q['i'] );
 							$query = $this->core->BuildQuery( $q );
 							$report_url = admin_url( 'admin.php?' . $query );
 							$message []= sprintf( __( 'Report spammer: %s' ), $report_url );
 						}
 						$message []= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) ;
 
-						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . avh_create_nonce( $ip );
+						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . AVH_Security::createNonce( $ip );
 						$message []= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) ;
 
 						AVH_Common::sendMail( $to, $subject, $message );

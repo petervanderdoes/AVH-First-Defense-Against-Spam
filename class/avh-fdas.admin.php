@@ -1119,7 +1119,7 @@ final class AVH_FDAS_Admin
 		$i = esc_html( $_REQUEST['i'] );
 
 		$extra = '&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $i;
-		if ( avh_verify_nonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
+		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
 			$all = get_option( $this->core->db_options_nonces );
 			$extra = '&m=' . AVHFDAS_ERROR_NOT_REPORTED . '&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
@@ -1160,7 +1160,7 @@ final class AVH_FDAS_Admin
 		}
 		$ip = $_REQUEST['i'];
 
-		if ( avh_verify_nonce( $_REQUEST['_avhnonce'], $ip ) ) {
+		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $ip ) ) {
 			$blacklist = $this->core->data['lists']['blacklist'];
 			if ( ! empty( $blacklist ) ) {
 				$b = explode( "\r\n", $blacklist );

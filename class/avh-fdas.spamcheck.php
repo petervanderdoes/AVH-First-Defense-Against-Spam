@@ -417,7 +417,7 @@ class AVH_FDAS_SpamCheck
 
 			// General End
 			if ( 'Blacklisted' != $info['blacklist']['time'] ) {
-				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . avh_create_nonce( $ip );
+				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . AVH_Security::createNonce( $ip );
 				$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
 			}
 			AVH_Common::sendMail( $to, $subject, $message );
@@ -487,7 +487,7 @@ class AVH_FDAS_SpamCheck
 			$message[] = '';
 
 			// General End
-			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $info['ip'] . '&_avhnonce=' . avh_create_nonce( $info['ip'] );
+			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $info['ip'] . '&_avhnonce=' . AVH_Security::createNonce( $info['ip'] );
 			$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
 			AVH_Common::sendMail( $to, $subject, $message );
 		}
