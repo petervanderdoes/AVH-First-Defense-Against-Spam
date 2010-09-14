@@ -46,19 +46,19 @@ define( 'AVHFDAS_FILE', 'avh-first-defense-against-spam/avh-fdas.php' );
 
 require_once ($_dir . '/class/avh-fdas.registry.php');
 
-if ( avh_getWordpressVersion() >= 2.8 ) {
+if ( AVH_Common::getWordpressVersion() >= 2.8 ) {
 	require_once ($_dir . '/helpers/avh-security.php');
 	require_once ($_dir . '/helpers/avh-visitor.php');
 
-	$Classes = AVH_FDAS_Classes::getInstance();
-	$Classes->setDir( $_dir );
-	$Classes->setClassFilePrefix( 'avh-fdas.' );
-	$Classes->setClassNamePrefix( 'AVH_FDAS_' );
-	unset( $Classes );
+	$_classes = AVH_FDAS_Classes::getInstance();
+	$_classes->setDir( $_dir );
+	$_classes->setClassFilePrefix( 'avh-fdas.' );
+	$_classes->setClassNamePrefix( 'AVH_FDAS_' );
+	unset( $_classes );
 
-	$Settings = AVH_FDAS_Settings::getInstance();
-	$Settings->storeSetting( 'plugin_dir', $_dir );
-	$Settings->storeSetting( 'plugin_basename', $_basename );
+	$_settings = AVH_FDAS_Settings::getInstance();
+	$_settings->storeSetting( 'plugin_dir', $_dir );
+	$_settings->storeSetting( 'plugin_basename', $_basename );
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {
