@@ -29,10 +29,11 @@ if ( ! defined( 'AVH_FRAMEWORK' ) ) {
 
 $_dir = pathinfo( __FILE__, PATHINFO_DIRNAME );
 $_basename = plugin_basename( __FILE__ );
-require_once ($_dir . '/libs/class-registry.php');
-require_once ($_dir . '/helpers/avh-common.php');
-require_once ($_dir . '/helpers/avh-security.php');
-require_once ($_dir . '/helpers/avh-visitor.php');
+require_once ($_dir . '/libs/avh-registry.php');
+require_once ($_dir . '/libs/avh-common.php');
+require_once ($_dir . '/libs/avh-security.php');
+require_once ($_dir . '/libs/avh-visitor.php');
+require_once ($_dir . '/class/avh-fdas.registry.php');
 
 // Define Message Numbers
 define( 'AVHFDAS_REPORTED_DELETED', '100' );
@@ -44,11 +45,9 @@ define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 define( 'AVHFDAS_README_URL', 'http://svn.wp-plugins.org/avh-first-defense-against-spam/trunk/readme.txt' );
 define( 'AVHFDAS_FILE', 'avh-first-defense-against-spam/avh-fdas.php' );
 
-require_once ($_dir . '/class/avh-fdas.registry.php');
+
 
 if ( AVH_Common::getWordpressVersion() >= 2.8 ) {
-	require_once ($_dir . '/helpers/avh-security.php');
-	require_once ($_dir . '/helpers/avh-visitor.php');
 
 	$_classes = AVH_FDAS_Classes::getInstance();
 	$_classes->setDir( $_dir );
