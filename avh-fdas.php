@@ -44,8 +44,6 @@ define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
 define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
 define( 'AVHFDAS_README_URL', 'http://svn.wp-plugins.org/avh-first-defense-against-spam/trunk/readme.txt' );
 define( 'AVHFDAS_FILE', 'avh-first-defense-against-spam/avh-fdas.php' );
-define('AVH_FDAS_VERSION','2.0-dev3');
-
 
 if ( AVH_Common::getWordpressVersion() >= 2.8 ) {
 

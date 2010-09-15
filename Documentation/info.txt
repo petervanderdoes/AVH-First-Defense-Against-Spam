@@ -9,3 +9,4 @@ js_url - string - Full URL to the Javascript diectory
 css_url - string - Full URL to teh stylesheet directory
 searchengines - Array with serachengines regonized by Project Honey Pot
 stopforumspam_endpoint - String - URL for the API call of Stop Forum Spam
+mail_footer - Array - Footer used in the email.

@@ -117,6 +117,12 @@ class AVH_FDAS_Core
 		$this->_settings->storeSetting( 'searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ) );
 		$this->_settings->storeSetting( 'stopforumspam_endpoint', 'http://www.stopforumspam.com/api' );
 
+		$footer[] = '';
+		$footer[] = '--';
+		$footer[] = sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->_settings->version );
+		$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
+		$this->_settings->storeSetting( 'mail_footer', $footer );
+
 		return;
 	}
 

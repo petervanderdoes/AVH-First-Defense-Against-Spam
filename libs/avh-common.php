@@ -9,16 +9,12 @@ if ( ! class_exists( 'AVH_Common' ) ) {
 		 * Sends the email
 		 *
 		 */
-		public static function sendMail ( $to, $subject, $message )
+		public static function sendMail ( $to, $subject, $message, $footer=array() )
 		{
-			$footer[] = '';
-			$footer[] = '--';
-			$footer[] = sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), AVH_FDAS_VERSION );
-			$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
-
 			$message = array_merge( $message, $footer );
+			$msg='';
 			foreach ( $message as $line ) {
-				$msg .= $line . "/r/n";
+				$msg .= $line . "\r\n";
 			}
 
 			wp_mail( $to, $subject, $msg );

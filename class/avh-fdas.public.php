@@ -94,7 +94,7 @@ class AVH_FDAS_Public
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean nonces', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 			$message []= sprintf( __( 'Deleted %d nonce\'s from the database', 'avhfdas' ), $removed );
-			AVH_Common::sendMail( $to, $subject, $message );
+			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 		}
 	}
 
@@ -116,7 +116,7 @@ class AVH_FDAS_Public
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean IP cache', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 			$message []= sprintf( __( 'Deleted %d IP\'s from the cache', 'avhfdas' ), $result );
-			AVH_Common::sendMail( $to, $subject, $message );
+			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer') );
 		}
 	}
 
@@ -170,7 +170,7 @@ class AVH_FDAS_Public
 						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . AVH_Security::createNonce( $ip );
 						$message []= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) ;
 
-						AVH_Common::sendMail( $to, $subject, $message );
+						AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer') );
 
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam

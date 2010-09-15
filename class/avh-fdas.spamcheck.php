@@ -203,7 +203,7 @@ class AVH_FDAS_SpamCheck
 				if ( isset( $spaminfo['Debug'] ) ) {
 					$message[] = sprintf( __( 'Debug:	%s', 'avhafdas' ), $spaminfo['Debug'] );
 				}
-				AVH_Common::sendMail( $to, $subject, $message );
+				AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer') );
 			}
 		}
 		return ($spaminfo);
@@ -437,7 +437,7 @@ class AVH_FDAS_SpamCheck
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . AVH_Security::createNonce( $ip );
 				$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
 			}
-			AVH_Common::sendMail( $to, $subject, $message );
+			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer') );
 		}
 
 		// Check if we have to terminate the connection.
@@ -506,7 +506,7 @@ class AVH_FDAS_SpamCheck
 			// General End
 			$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $info['ip'] . '&_avhnonce=' . AVH_Security::createNonce( $info['ip'] );
 			$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
-			AVH_Common::sendMail( $to, $subject, $message );
+			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer') );
 		}
 
 		// Update the counter
