@@ -153,6 +153,21 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
+	 * Convert the Stop Forum Spam data to something I already was using.
+	 *
+	 * @param $data
+	 */
+	private function _convertStopForumSpamCall ( $data )
+	{
+		if ( isset( $data['Error'] ) ) {
+			return ($data);
+		}
+		if ( isset( $data['ip'] ) ) {
+			return ($data['ip']);
+		}
+	}
+
+	/**
 	 * Check an IP with Stop Forum Spam
 	 *
 	 * @param $ip Visitor's IP
@@ -162,14 +177,16 @@ class AVH_FDAS_SpamCheck
 	{
 		$options = $this->_core->getOptions();
 		$time_start = microtime( true );
-		$spaminfo = $this->_core->handleRESTcall( $this->_core->getRestIPLookup( $ip ) );
+		$result = $this->_core->handleRESTcall( $this->_core->getRestIPLookup( $ip ) );
+		$spaminfo = $this->_convertStopForumSpamCall( $result );
 		$time_end = microtime( true );
 		$time = $time_end - $time_start;
 		$spaminfo['time'] = $time;
 		if ( isset( $spaminfo['Error'] ) ) {
 			// Let's give it one more try.
 			$time_start = microtime( true );
-			$spaminfo = $this->_core->handleRESTcall( $this->_core->getRestIPLookup( $ip ) );
+			$result = $this->_core->handleRESTcall( $this->_core->getRestIPLookup( $ip ) );
+			$spaminfo = $this->_convertStopForumSpamCall( $result );
 			$time_end = microtime( true );
 			$time = $time_end - $time_start;
 			$spaminfo['time'] = $time;
