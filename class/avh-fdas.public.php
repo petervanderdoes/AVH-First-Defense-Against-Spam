@@ -110,7 +110,7 @@ class AVH_FDAS_Public
 		$options = $this->core->getOptions();
 		$date = current_time( 'mysql' );
 		$days = $options['ipcache']['daystokeep'];
-		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(lastseen))) > %d", $date, $days ) );
+		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(added))) > %d", $date, $days ) );
 
 		if ( $options['general']['cron_ipcache_email'] ) {
 			$to = get_option( 'admin_email' );
