@@ -70,14 +70,14 @@ final class AVH_FDAS_Admin
 		 */
 		add_action( 'admin_action_blacklist', array (&$this, 'actionHandleBlacklistUrl' ) );
 		add_action( 'admin_action_emailreportspammer', array (&$this, 'actionHandleEmailReportingUrl' ) );
-		add_action( 'in_plugin_update_message-' . AVHFDAS_FILE, array (&$this, 'actionInPluginUpdateMessage' ) );
+		add_action( 'in_plugin_update_message-' . AVH_FDAS_Define::PLUGIN_FILE, array (&$this, 'actionInPluginUpdateMessage' ) );
 
 		/**
 		 * Admin Filters
 		 *
 		 */
 		add_filter( 'comment_row_actions', array (&$this, 'filterCommentRowActions' ), 10, 2 );
-		add_filter( 'plugin_action_links_' . AVHFDAS_FILE, array (&$this, 'filterPluginActions' ), 10, 2 );
+		add_filter( 'plugin_action_links_' . AVH_FDAS_Define::PLUGIN_FILE, array (&$this, 'filterPluginActions' ), 10, 2 );
 
 		// If the version compare fails do not display the Upgrade notice.
 		if ( version_compare( PHP_VERSION, '5', '<' ) ) {
@@ -130,8 +130,8 @@ final class AVH_FDAS_Admin
 
 		// Register Styles and Scripts
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		wp_register_script( 'avhfdas-admin-js', $this->_settings->js_url . '/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), $this->_settings->version, true );
-		wp_register_style( 'avhfdas-admin-css', $this->_settings->css_url . '/avh-fdas.admin.css', array (), $this->_settings->version, 'screen' );
+		wp_register_script( 'avhfdas-admin-js', $this->_settings->js_url . '/avh-fdas.admin' . $suffix . '.js', array ('jquery' ), AVH_FDAS_Define::PLUGIN_VERSION, true );
+		wp_register_style( 'avhfdas-admin-css', $this->_settings->css_url . '/avh-fdas.admin.css', array (), AVH_FDAS_Define::PLUGIN_VERSION, 'screen' );
 
 	}
 
@@ -140,7 +140,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionInPluginUpdateMessage ()
 	{
-		$response = wp_remote_get( AVHFDAS_README_URL, array ('user-agent' => 'WordPress/AVH ' . $this->_settings->version . '; ' . get_bloginfo( 'url' ) ) );
+		$response = wp_remote_get( AVH_FDAS_Define::PLUGIN_README_URL, array ('user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo( 'url' ) ) );
 		if ( ! is_wp_error() || is_array( $response ) ) {
 			$data = $response['body'];
 			$matches = null;
@@ -173,9 +173,9 @@ final class AVH_FDAS_Admin
 					echo '</ul><div style="clear: left;"></div>';
 				}
 
-				if ( $prev_version[0] != $this->_settings->version ) {
+				if ( $prev_version[0] != AVH_FDAS_Define::PLUGIN_VERSION ) {
 					echo '<div style="color: #f00; font-weight: bold;">';
-					echo '<br />The installed version, ' . $this->_settings->version . ', is more than one version behind.<br />';
+					echo '<br />The installed version, ' . AVH_FDAS_Define::PLUGIN_VERSION . ', is more than one version behind.<br />';
 					echo 'More changes have been made since the currently installed version, consider checking the changelog at the plugin\'s <a href="http://blog.avirtualhome.com/wordpress-plugins/avh-first-defense-against-spam/" target="_blank">homepage</a>';
 					echo '</div><div style="clear: left;"></div>';
 				}
@@ -513,27 +513,27 @@ final class AVH_FDAS_Admin
 		if ( isset( $_REQUEST['m'] ) ) {
 			switch ( $_REQUEST['m'] )
 			{
-				case AVHFDAS_REPORTED_DELETED :
+				case AVH_FDAS_Define::REPORTED_DELETED :
 					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] Reported and deleted', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
-				case AVHFDAS_ADDED_BLACKLIST :
+				case AVH_FDAS_Define::ADDED_BLACKLIST :
 					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] has been added to the blacklist', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
-				case AVHFDAS_REPORTED :
+				case AVH_FDAS_Define::REPORTED :
 					$this->status = 'updated fade';
 					$this->message = sprintf( __( 'IP [%s] reported.', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
-				case AVHFDAS_ERROR_INVALID_REQUEST :
+				case AVH_FDAS_Define::ERROR_INVALID_REQUEST :
 					$this->status = 'error';
 					$this->message = sprintf( __( 'Invalid request.', 'avhfdas' ) );
 					break;
-				case AVHFDAS_ERROR_NOT_REPORTED :
+				case AVH_FDAS_Define::ERROR_NOT_REPORTED :
 					$this->status = 'error';
 					$this->message = sprintf( __( 'IP [%s] not reported. Probably already processed.', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
-				case AVHFDAS_ERROR_EXISTS_IN_BLACKLIST :
+				case AVH_FDAS_Define::ERROR_EXISTS_IN_BLACKLIST :
 					$this->status = 'error';
 					$this->message = sprintf( __( 'IP [%s] already exists in the blacklist.', 'avhfdas' ), esc_attr( $_REQUEST['i'] ) );
 					break;
@@ -1282,7 +1282,7 @@ final class AVH_FDAS_Admin
 	{
 		echo '<div class="clear">';
 		echo '<p class="footer_avhfdas">';
-		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), $this->_settings->version );
+		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), AVH_FDAS_Define::PLUGIN_VERSION );
 		echo '</p>';
 	}
 

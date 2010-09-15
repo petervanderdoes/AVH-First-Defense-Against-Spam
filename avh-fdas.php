@@ -34,16 +34,8 @@ require_once ($_dir . '/libs/avh-common.php');
 require_once ($_dir . '/libs/avh-security.php');
 require_once ($_dir . '/libs/avh-visitor.php');
 require_once ($_dir . '/class/avh-fdas.registry.php');
+require_once ($_dir . '/class/avh-fdas.define.php');
 
-// Define Message Numbers
-define( 'AVHFDAS_REPORTED_DELETED', '100' );
-define( 'AVHFDAS_ADDED_BLACKLIST', '101' );
-define( 'AVHFDAS_REPORTED', '102' );
-define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
-define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
-define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
-define( 'AVHFDAS_README_URL', 'http://svn.wp-plugins.org/avh-first-defense-against-spam/trunk/readme.txt' );
-define( 'AVHFDAS_FILE', 'avh-first-defense-against-spam/avh-fdas.php' );
 
 if ( AVH_Common::getWordpressVersion() >= 2.8 ) {
 
@@ -59,7 +51,7 @@ if ( AVH_Common::getWordpressVersion() >= 2.8 ) {
 
 	require ($_dir . '/avh-fdas.client.php');
 } else {
-	add_action( 'activate_' . AVHFDAS_FILE, 'avh_fdas_remove_plugin' );
+	add_action( 'activate_' . AVH_FDAS_Define::PLUGIN_FILE, 'avh_fdas_remove_plugin' );
 
 }
 
@@ -68,22 +60,22 @@ function avh_fdas_remove_plugin ()
 	$active_plugins = ( array ) get_option( 'active_plugins' );
 
 	// workaround for WPMU deactivation bug
-	remove_action( 'deactivate_' . AVHFDAS_FILE, 'deactivate_sitewide_plugin' );
+	remove_action( 'deactivate_' . AVH_FDAS_Define::PLUGIN_FILE, 'deactivate_sitewide_plugin' );
 
-	$key = array_search( AVHFDAS_FILE, $active_plugins );
+	$key = array_search( AVH_FDAS_Define::PLUGIN_FILE, $active_plugins );
 
 	if ( $key !== false ) {
-		do_action( 'deactivate_plugin', AVHFDAS_FILE );
+		do_action( 'deactivate_plugin', AVH_FDAS_Define::PLUGIN_FILE );
 
 		array_splice( $active_plugins, $key, 1 );
 
-		do_action( 'deactivate_' . AVHFDAS_FILE );
-		do_action( 'deactivated_plugin', AVHFDAS_FILE );
+		do_action( 'deactivate_' . AVH_FDAS_Define::PLUGIN_FILE );
+		do_action( 'deactivated_plugin', AVH_FDAS_Define::PLUGIN_FILE );
 
 		update_option( 'active_plugins', $active_plugins );
 
 	} else {
-		do_action( 'deactivate_' . AVHFDAS_FILE );
+		do_action( 'deactivate_' . AVH_FDAS_Define::PLUGIN_FILE );
 	}
 
 	ob_end_clean();
