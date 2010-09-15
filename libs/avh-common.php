@@ -13,7 +13,7 @@ if ( ! class_exists( 'AVH_Common' ) ) {
 		{
 			$footer[] = '';
 			$footer[] = '--';
-			$footer[] = sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), $this->_settings->version );
+			$footer[] = sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), AVH_FDAS_VERSION );
 			$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
 
 			$message = array_merge( $message, $footer );
