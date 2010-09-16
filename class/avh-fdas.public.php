@@ -49,6 +49,8 @@ class AVH_FDAS_Public
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
 		add_action( 'avhfdas_clean_ipcache', array (&$this, 'actionHandleCronCleanIPCache' ) );
 
+		add_action('avhfdas_checkspamip', array(&$this->_spamcheck, 'doIPCheck'));
+
 	}
 
 	/**
@@ -226,8 +228,9 @@ class AVH_FDAS_Public
 	function actionHandleMainAction ()
 	{
 
-		// For the main action we don't check with Stop Forum Spam
-		$this->_spamcheck->doIPCheck( 'main' );
+		$this->_spamcheck->checkSection = 'main';
+		do_action('avhfdas_checkspamip');
+
 	}
 
 	/**

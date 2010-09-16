@@ -57,7 +57,7 @@ class AVH_FDAS_SpamCheck
 	 *
 	 * @uses SFS, PHP
 	 */
-	public function doIPCheck ( $check )
+	public function doIPCheck ( )
 	{
 		$this->checkSection = $check;
 		$this->_setWhichSpam();
