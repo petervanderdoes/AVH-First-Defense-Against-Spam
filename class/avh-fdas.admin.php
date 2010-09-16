@@ -141,7 +141,7 @@ final class AVH_FDAS_Admin
 	public function actionInPluginUpdateMessage ()
 	{
 		$response = wp_remote_get( AVH_FDAS_Define::PLUGIN_README_URL, array ('user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo( 'url' ) ) );
-		if ( ! is_wp_error() || is_array( $response ) ) {
+		if ( ! is_wp_error($response) || is_array( $response ) ) {
 			$data = $response['body'];
 			$matches = null;
 			if ( preg_match( '~==\s*Changelog\s*==\s*=\s*Version\s*[0-9.]+\s*=(.*)(=\s*Version\s*[0-9.]+\s*=|$)~Uis', $data, $matches ) ) {
