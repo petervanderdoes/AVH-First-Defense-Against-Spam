@@ -51,12 +51,11 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
-	 * Handle when posting a comment.
+	 * Check for spam based on IP.
 	 *
 	 * Get the visitors IP and call the stopforumspam API to check if it's a known spammer
 	 *
 	 * @uses SFS, PHP
-	 * @WordPress Action preprocess_comment
 	 */
 	public function doIPCheck ( $check )
 	{
@@ -182,15 +181,8 @@ class AVH_FDAS_SpamCheck
 		$time_end = microtime( true );
 		$time = $time_end - $time_start;
 		$spaminfo['time'] = $time;
-		if ( isset( $spaminfo['Error'] ) ) {
-			// Let's give it one more try.
-			$time_start = microtime( true );
-			$result = $this->_core->handleRESTcall( $this->_core->getRestIPLookup( $ip ) );
-			$spaminfo = $this->_convertStopForumSpamCall( $result );
-			$time_end = microtime( true );
-			$time = $time_end - $time_start;
-			$spaminfo['time'] = $time;
-			if ( isset( $spaminfo['Error'] ) && $options['sfs']['error'] ) {
+		if ( isset( $spaminfo['Error'] ) && $options['sfs']['error']) {
+			if ( isset( $spaminfo['Error'] )  ) {
 				$error = $this->_core->getHttpError( $spaminfo['Error'] );
 				$to = get_option( 'admin_email' );
 				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
