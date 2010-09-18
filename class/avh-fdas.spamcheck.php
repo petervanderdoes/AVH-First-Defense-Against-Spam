@@ -59,7 +59,7 @@ class AVH_FDAS_SpamCheck
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class( 'Core', 'plugin', TRUE );
 
-		$this->_visting_ip = avh_getUserIP();
+		$this->_visiting_ip = avh_getUserIP();
 		$this->_core_options = $this->_core->getOptions();
 		$this->_core_data = $this->_core->getData();
 		$this->spaminfo = null;
@@ -178,7 +178,7 @@ class AVH_FDAS_SpamCheck
 				$message[] = __( 'An error has been detected', 'avhfdas' );
 				$message[] = sprintf( __( 'Error:	%s', 'avhfdas' ), $error );
 				$message[] = '';
-				$message[] = sprintf( __( 'IP:		%s', 'avhfdas' ), $ip );
+				$message[] = sprintf( __( 'IP:		%s', 'avhfdas' ), $this->_visiting_ip );
 				$message[] = sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] );
 				$message[] = sprintf( __( 'Call took:	%s', 'avhfdas' ), $time );
 				AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting( 'mail_footer' ) );
@@ -322,7 +322,7 @@ class AVH_FDAS_SpamCheck
 				$message[] = '';
 			}
 
-			if ( 'no' == $info['sfs']['appears'] ) {
+			if ( isset( $this->spaminfo['sfs'] ) && 'no' == $this->spaminfo['sfs']['appears'] ) {
 				$message[] = __( 'Stop Forum Spam has no information', 'avhfdas' );
 				$message[] = '';
 			}
@@ -401,12 +401,12 @@ class AVH_FDAS_SpamCheck
 		if ( $sfs_die || $php_die || $blacklist_die ) {
 			// Update the counter
 			$period = date( 'Ym' );
-			if ( array_key_exists( $period, $data['counters'] ) ) {
-				$data['counters'][$period] += 1;
+			if ( array_key_exists( $period, $this->_core_data['counters'] ) ) {
+				$this->_core_data['counters'][$period] += 1;
 			} else {
-				$data['counters'][$period] = 1;
+				$this->_core_data['counters'][$period] = 1;
 			}
-			$this->_core->saveData( $data );
+			$this->_core->saveData( $this->_core_data );
 			if ( 1 == $this->_core_options['general']['diewithmessage'] ) {
 				if ( 'Blacklisted' == $this->spaminfo['blacklist']['time'] ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $this->_visiting_ip );
