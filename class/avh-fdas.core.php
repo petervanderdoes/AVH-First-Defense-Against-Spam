@@ -64,7 +64,6 @@ class AVH_FDAS_Core
 	 */
 	private $_settings;
 
-
 	/**
 	 * PHP5 constructor
 	 *

@@ -24,6 +24,8 @@ class AVH_FDAS_Public
 	 */
 	private $_spamcheck;
 
+	private $_core_options;
+
 	/**
 	 * PHP5 Constructor
 	 *
@@ -37,6 +39,7 @@ class AVH_FDAS_Public
 		// Initialize the plugin
 		$this->core = $this->_classes->load_class( 'Core', 'plugin', TRUE );
 		$this->_spamcheck = $this->_classes->load_class( 'SpamCheck', 'plugin', TRUE );
+		$this->_core_options = $this->core->getOptions();
 
 		// Public actions and filters
 		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
@@ -49,8 +52,8 @@ class AVH_FDAS_Public
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
 		add_action( 'avhfdas_clean_ipcache', array (&$this, 'actionHandleCronCleanIPCache' ) );
 
-		add_action('avhfdas_checkspamip', array(&$this->_spamcheck, 'doIPCheck'));
-
+		add_action( 'avhfdas_checkspam_ip_header', array (&$this->_spamcheck, 'doIPCacheCheck' ) );
+		add_action( 'avhfdas_checkspam_ip_header', array (&$this->_spamcheck, 'doProjectHoneyPotIPCheck' ) );
 	}
 
 	/**
@@ -95,8 +98,8 @@ class AVH_FDAS_Public
 		if ( $options['general']['cron_nonces_email'] ) {
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean nonces', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
-			$message []= sprintf( __( 'Deleted %d nonce\'s from the database', 'avhfdas' ), $removed );
-			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer'));
+			$message[] = sprintf( __( 'Deleted %d nonce\'s from the database', 'avhfdas' ), $removed );
+			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting( 'mail_footer' ) );
 		}
 	}
 
@@ -117,8 +120,8 @@ class AVH_FDAS_Public
 		if ( $options['general']['cron_ipcache_email'] ) {
 			$to = get_option( 'admin_email' );
 			$subject = sprintf( '[%s] AVH First Defense Against Spam - Cron - ' . __( 'Clean IP cache', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
-			$message []= sprintf( __( 'Deleted %d IP\'s from the cache', 'avhfdas' ), $result );
-			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer') );
+			$message[] = sprintf( __( 'Deleted %d IP\'s from the cache', 'avhfdas' ), $result );
+			AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting( 'mail_footer' ) );
 		}
 	}
 
@@ -144,19 +147,19 @@ class AVH_FDAS_Public
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
 						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
-							$message[] = __( 'Reason:	The nonce check failed.', 'avhfdas' ) ;
+							$message[] = __( 'Reason:	The nonce check failed.', 'avhfdas' );
 						} else {
-							$message[] = __( 'Reason:	An attempt was made to directly access wp-comment-post.php', 'avhfdas' ) ;
+							$message[] = __( 'Reason:	An attempt was made to directly access wp-comment-post.php', 'avhfdas' );
 						}
-						$message []= sprintf( __( 'Username:	%s', 'avhfdas' ), $commentdata['comment_author'] ) ;
-						$message []= sprintf( __( 'Email:		%s', 'avhfdas' ), $commentdata['comment_author_email'] ) ;
-						$message []= sprintf( __( 'IP:		%s', 'avhfdas' ), $ip ) ;
-						$message[]='';
-						$message []= __( 'Comment trying to post:', 'avhfdas' ) ;
-						$message []= __( '--- START OF COMMENT ---', 'avhfdas' ) ;
-						$message []= $commentdata['comment_content'] ;
-						$message []= __( '--- END OF COMMENT ---', 'avhfdas' ) ;
-						$message[]='';
+						$message[] = sprintf( __( 'Username:	%s', 'avhfdas' ), $commentdata['comment_author'] );
+						$message[] = sprintf( __( 'Email:		%s', 'avhfdas' ), $commentdata['comment_author_email'] );
+						$message[] = sprintf( __( 'IP:		%s', 'avhfdas' ), $ip );
+						$message[] = '';
+						$message[] = __( 'Comment trying to post:', 'avhfdas' );
+						$message[] = __( '--- START OF COMMENT ---', 'avhfdas' );
+						$message[] = $commentdata['comment_content'];
+						$message[] = __( '--- END OF COMMENT ---', 'avhfdas' );
+						$message[] = '';
 						if ( ! empty( $this->core->options['sfs']['sfsapikey'] ) ) {
 							$q['action'] = 'emailreportspammer';
 							$q['a'] = $commentdata['comment_author'];
@@ -165,14 +168,14 @@ class AVH_FDAS_Public
 							$q['_avhnonce'] = AVH_Security::createNonce( $q['a'] . $q['e'] . $q['i'] );
 							$query = $this->core->BuildQuery( $q );
 							$report_url = admin_url( 'admin.php?' . $query );
-							$message []= sprintf( __( 'Report spammer: %s' ), $report_url );
+							$message[] = sprintf( __( 'Report spammer: %s' ), $report_url );
 						}
-						$message []= sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip ) ;
+						$message[] = sprintf( __( 'For more information: http://www.stopforumspam.com/search?q=%s' ), $ip );
 
 						$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $ip . '&_avhnonce=' . AVH_Security::createNonce( $ip );
-						$message []= sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl ) ;
+						$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
 
-						AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting('mail_footer') );
+						AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting( 'mail_footer' ) );
 
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam
@@ -227,10 +230,19 @@ class AVH_FDAS_Public
 	 */
 	function actionHandleMainAction ()
 	{
-
-		$this->_spamcheck->checkSection = 'main';
-		do_action('avhfdas_checkspamip');
-
+		// To be safe, set the spammer_detected to false;
+		$this->_spamcheck->spammer_detected = FALSE;
+		$this->_spamcheck->checkWhitelist();
+		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
+			$this->_spamcheck->checkBlacklist();
+			if ( $this->_spamcheck->spammer_detected === FALSE ) {
+				$this->_spamcheck->doIPCacheCheck();
+				if ( $this->_spamcheck->spammer_detected === FALSE ) {
+					$this->_spamcheck->doProjectHoneyPotIPCheck();
+				}
+			}
+			$this->_spamcheck->handleResults();
+		}
 	}
 
 	/**
@@ -241,7 +253,20 @@ class AVH_FDAS_Public
 	 */
 	function actionHandlePostingComment ( $commentdata )
 	{
-		$this->_spamcheck->doIPCheck( 'comment' );
+		// To be safe, set the spammer_detected to false;
+		$this->_spamcheck->spammer_detected = FALSE;
+		$this->_spamcheck->checkWhitelist();
+		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
+			$this->_spamcheck->checkBlacklist();
+			if ( $this->_spamcheck->spammer_detected === FALSE ) {
+				$this->_spamcheck->doIPCacheCheck();
+				if ( $this->_spamcheck->spammer_detected === FALSE ) {
+					$this->_spamcheck->doStopForumSpamIPCheck();
+					$this->_spamcheck->doProjectHoneyPotIPCheck();
+				}
+			}
+			$this->_spamcheck->handleResults();
+		}
 		return ($commentdata);
 	}
 
@@ -252,7 +277,20 @@ class AVH_FDAS_Public
 	 */
 	function actionHandleRegistration ( $sanitized_user_login, $user_email, $errors )
 	{
-		$this->_spamcheck->doIPCheck( 'registration' );
+		// To be safe, set the spammer_detected to false;
+		$this->_spamcheck->spammer_detected = FALSE;
+		$this->_spamcheck->checkWhitelist();
+		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
+			$this->_spamcheck->checkBlacklist();
+			if ( $this->_spamcheck->spammer_detected === FALSE ) {
+				$this->_spamcheck->doIPCacheCheck();
+				if ( $this->_spamcheck->spammer_detected === FALSE ) {
+					$this->_spamcheck->doStopForumSpamIPCheck();
+					$this->_spamcheck->doProjectHoneyPotIPCheck();
+				}
+			}
+			$this->_spamcheck->handleResults();
+		}
 
 	}
 }
