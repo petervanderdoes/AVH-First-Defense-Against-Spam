@@ -163,14 +163,13 @@ class AVH_FDAS_SpamCheck
 	 */
 	public function doStopForumSpamIPCheck ()
 	{
-		$options = $this->_core->getOptions();
 		$time_start = microtime( true );
 		$result = $this->_core->handleRESTcall( $this->_core->getRestIPLookup( $this->_visiting_ip ) );
 		$time_end = microtime( true );
 		$this->spaminfo['sfs'] = $this->_convertStopForumSpamCall( $result );
 		$time = $time_end - $time_start;
 		$this->spaminfo['sfs']['time'] = $time;
-		if ( isset( $this->spaminfo['sfs']['Error'] ) && $options['sfs']['error'] ) {
+		if ( isset( $this->spaminfo['sfs']['Error'] ) && $this->_core_options['sfs']['error'] ) {
 			if ( isset( $this->spaminfo['sfs']['Error'] ) ) {
 				$error = $this->_core->getHttpError( $this->spaminfo['sfs']['Error'] );
 				$to = get_option( 'admin_email' );
