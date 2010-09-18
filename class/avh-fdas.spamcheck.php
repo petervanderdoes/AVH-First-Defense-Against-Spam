@@ -161,7 +161,7 @@ class AVH_FDAS_SpamCheck
 	 * @param $ip Visitor's IP
 	 * @return $spaminfo Query result
 	 */
-	private function doStopForumSpamIPCheck ()
+	public function doStopForumSpamIPCheck ()
 	{
 		$options = $this->_core->getOptions();
 		$time_start = microtime( true );
