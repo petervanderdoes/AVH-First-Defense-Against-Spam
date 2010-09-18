@@ -129,7 +129,7 @@ class AVH_FDAS_SpamCheck
 	public function handleResults ()
 	{
 
-		if ( $this->_spamcheck->spammer_detected === TRUE ) {
+		if ( $this->spammer_detected === TRUE ) {
 			if ( $this->ip_in_cache === FALSE ) {
 				$this->_handleSpammer();
 			} else {
@@ -194,7 +194,7 @@ class AVH_FDAS_SpamCheck
 	 */
 	public function checkBlacklist ()
 	{
-		if ( $this->_core_options['general']['useblacklistlist'] ) {
+		if ( $this->_core_options['general']['useblacklist'] ) {
 			$found = $this->_checkList( $this->_core->data['lists']['blacklist'] );
 			if ( $found ) {
 				$this->spammer_detected = TRUE;
