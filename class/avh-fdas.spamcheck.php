@@ -168,8 +168,8 @@ class AVH_FDAS_SpamCheck
 		$this->spaminfo['sfs'] = $this->_convertStopForumSpamCall( $result );
 		$time = $time_end - $time_start;
 		$this->spaminfo['sfs']['time'] = $time;
-		if ( isset( $this->spaminfo['sfs']['Error'] ) )  {
-			if ( $this->_core_options['sfs']['error']  ) {
+		if ( isset( $this->spaminfo['sfs']['Error'] ) ) {
+			if ( $this->_core_options['sfs']['error'] ) {
 				$error = $this->_core->getHttpError( $this->spaminfo['sfs']['Error'] );
 				$to = get_option( 'admin_email' );
 				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
@@ -377,7 +377,7 @@ class AVH_FDAS_SpamCheck
 			}
 
 			// General End
-			if ( !isset($this->spaminfo['blacklist']) ) {
+			if ( ! isset( $this->spaminfo['blacklist'] ) ) {
 				$blacklisturl = admin_url( 'admin.php?action=blacklist&i=' ) . $this->_visiting_ip . '&_avhnonce=' . AVH_Security::createNonce( $this->_visiting_ip );
 				$message[] = sprintf( __( 'Add to the local blacklist: %s' ), $blacklisturl );
 			}
@@ -388,7 +388,7 @@ class AVH_FDAS_SpamCheck
 		// This should be the very last option.
 		$sfs_die = isset( $this->spaminfo['sfs'] ) && $this->spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentodie'];
 		$php_die = isset( $this->spaminfo['php'] ) && $this->spaminfo['php']['type'] >= $this->_core_options['php']['whentodietype'] && $this->spaminfo['php']['score'] >= $this->_core_options['php']['whentodie'];
-		$blacklist_die = (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']);
+		$blacklist_die = (isset( $this->spaminfo['blacklist'] ) && 'Blacklisted' == $this->spaminfo['blacklist']['time']);
 
 		if ( 1 == $this->_core_options['general']['useipcache'] ) {
 			if ( $sfs_die || $php_die ) {
@@ -406,7 +406,7 @@ class AVH_FDAS_SpamCheck
 			}
 			$this->_core->saveData( $this->_core_data );
 			if ( 1 == $this->_core_options['general']['diewithmessage'] ) {
-				if ( isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time'] ) {
+				if ( isset( $this->spaminfo['blacklist'] ) && 'Blacklisted' == $this->spaminfo['blacklist']['time'] ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $this->_visiting_ip );
 				} else {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.<BR />If you feel this is incorrect please contact them</p>', 'avhfdas' ), $this->_visiting_ip );

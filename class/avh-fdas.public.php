@@ -291,7 +291,6 @@ class AVH_FDAS_Public
 			}
 			$this->_spamcheck->handleResults();
 		}
-
 	}
 }
 ?>

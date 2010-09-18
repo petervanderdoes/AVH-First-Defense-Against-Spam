@@ -9,10 +9,10 @@ if ( ! class_exists( 'AVH_Common' ) ) {
 		 * Sends the email
 		 *
 		 */
-		public static function sendMail ( $to, $subject, $message, $footer=array() )
+		public static function sendMail ( $to, $subject, $message, $footer = array() )
 		{
 			$message = array_merge( $message, $footer );
-			$msg='';
+			$msg = '';
 			foreach ( $message as $line ) {
 				$msg .= $line . "\r\n";
 			}
