@@ -169,8 +169,8 @@ class AVH_FDAS_SpamCheck
 		$this->spaminfo['sfs'] = $this->_convertStopForumSpamCall( $result );
 		$time = $time_end - $time_start;
 		$this->spaminfo['sfs']['time'] = $time;
-		if ( isset( $this->spaminfo['sfs']['Error'] ) && $this->_core_options['sfs']['error'] ) {
-			if ( isset( $this->spaminfo['sfs']['Error'] ) ) {
+		if ( isset( $this->spaminfo['sfs']['Error'] ) )  {
+			if ( $this->_core_options['sfs']['error']  ) {
 				$error = $this->_core->getHttpError( $this->spaminfo['sfs']['Error'] );
 				$to = get_option( 'admin_email' );
 				$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Error detected', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
@@ -181,8 +181,8 @@ class AVH_FDAS_SpamCheck
 				$message[] = sprintf( __( 'Accessing:	%s', 'avhfdas' ), $_SERVER['REQUEST_URI'] );
 				$message[] = sprintf( __( 'Call took:	%s', 'avhfdas' ), $time );
 				AVH_Common::sendMail( $to, $subject, $message, $this->_settings->getSetting( 'mail_footer' ) );
-				$this->spaminfo['sfs'] = NULL;
 			}
+			$this->spaminfo['sfs'] = NULL;
 		}
 	}
 
