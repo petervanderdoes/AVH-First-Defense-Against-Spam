@@ -303,7 +303,7 @@ class AVH_FDAS_SpamCheck
 
 			// Stop Forum Spam Mail Part
 			if ( $sfs_email ) {
-				if ( 'yes' == $this->spaminfo['sfs']['appears'] ) {
+				if ( $this->spaminfo['sfs']['appears'] ) {
 					$message[] = __( 'Checked at Stop Forum Spam', 'avhfdas' );
 					$message[] = '	' . __( 'Information', 'avhfdas' );
 					$message[] = '	' . sprintf( __( 'Last Seen:	%s', 'avhfdas' ), $this->spaminfo['sfs']['lastseen'] );
