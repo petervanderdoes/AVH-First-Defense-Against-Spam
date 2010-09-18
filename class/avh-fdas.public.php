@@ -143,7 +143,7 @@ class AVH_FDAS_Public
 				if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
 					if ( 1 == $this->core->options['general']['emailsecuritycheck'] ) {
 						$to = get_option( 'admin_email' );
-						$ip = avh_getUserIP();
+						$ip = AVH_Visitor::getUserIP();
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
 						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {

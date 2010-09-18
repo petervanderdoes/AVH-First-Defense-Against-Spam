@@ -58,7 +58,7 @@ class AVH_FDAS_SpamCheck
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class( 'Core', 'plugin', TRUE );
 
-		$this->_visiting_ip = avh_getUserIP();
+		$this->_visiting_ip = AVH_Visitor::getUserIP();
 		$this->_core_options = $this->_core->getOptions();
 		$this->_core_data = $this->_core->getData();
 		$this->spaminfo = null;
