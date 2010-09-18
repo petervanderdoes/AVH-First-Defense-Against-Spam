@@ -238,7 +238,6 @@ class AVH_FDAS_Public
 			if ( $this->_spamcheck->spammer_detected === FALSE ) {
 				$this->_spamcheck->doIPCacheCheck();
 				if ( $this->_spamcheck->spammer_detected === FALSE ) {
-					$this->_spamcheck->doStopForumSpamIPCheck();
 					$this->_spamcheck->doProjectHoneyPotIPCheck();
 				}
 			}
