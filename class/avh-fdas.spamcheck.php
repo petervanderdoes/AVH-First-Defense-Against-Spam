@@ -42,7 +42,6 @@ class AVH_FDAS_SpamCheck
 
 	public $spaminfo;
 	public $spammer_detected;
-	public $checkSection;
 	public $ip_in_cache;
 	public $ip_in_white_list;
 
