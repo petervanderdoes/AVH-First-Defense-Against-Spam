@@ -33,7 +33,7 @@ class AVH_FDAS_DB
 	 * @param $ip
 	 * @return ip Object (false if not found)
 	 */
-	function getIP ( $ip )
+	public function getIP ( $ip )
 	{
 		global $wpdb;
 
@@ -53,7 +53,7 @@ class AVH_FDAS_DB
 	 * @param $spam number
 	 * @return Object (false if not found)
 	 */
-	function insertIP ( $ip, $spam )
+	public function insertIP ( $ip, $spam )
 	{
 		global $wpdb;
 		$date = current_time( 'mysql' );
@@ -71,7 +71,7 @@ class AVH_FDAS_DB
 	 * @param $ip string
 	 * @return Object (false if not found)
 	 */
-	function updateIP ( $ip )
+	public function updateIP ( $ip )
 	{
 		global $wpdb;
 		$date = current_time( 'mysql' );
@@ -88,7 +88,7 @@ class AVH_FDAS_DB
 	 * Mark an known IP as spam
 	 * @param $ip
 	 */
-	function doMarkIPSpam ( $ip )
+	public function doMarkIPSpam ( $ip )
 	{
 		global $wpdb;
 		$ip_info = $this->getIP( $ip );

@@ -34,9 +34,10 @@ class AVH_FDAS_SpamCheck
 
 	private $_core_options;
 	private $_core_data;
+
 	/**
 	 *
-	 * @var AVH_Class_DB
+	 * @var AVH_FDAS_DB
 	 */
 	private $_ipcachedb;
 
@@ -58,6 +59,8 @@ class AVH_FDAS_SpamCheck
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class( 'Core', 'plugin', TRUE );
 
+		$this->_ipcachedb = $this->_classes->load_class( 'DB', 'plugin', TRUE );
+
 		$this->_visiting_ip = AVH_Visitor::getUserIP();
 		$this->_core_options = $this->_core->getOptions();
 		$this->_core_data = $this->_core->getData();
@@ -75,7 +78,6 @@ class AVH_FDAS_SpamCheck
 	public function doIPCacheCheck ()
 	{
 		$this->ip_in_cache = FALSE;
-		$this->_ipcachedb = $this->_classes->load_class( 'DB', 'plugin', TRUE );
 		$time_start = microtime( true );
 		$this->ip_in_cache = $this->_ipcachedb->getIP( $this->_visiting_ip );
 		$time_end = microtime( true );
@@ -129,15 +131,18 @@ class AVH_FDAS_SpamCheck
 	 */
 	public function handleResults ()
 	{
-
-		if ( $this->spammer_detected === TRUE ) {
-			if ( $this->ip_in_cache === FALSE ) {
-				$this->_handleSpammer();
-			} else {
+		if ( TRUE === $this->spammer_detected ) {
+			if ( is_object( $this->ip_in_cache ) ) {
 				$this->_handleSpammerCache();
+			} else {
+				$this->_handleSpammer();
 			}
 		} else {
-			$this->_ipcachedb->insertIP( $this->_visiting_ip, 0 );
+			if ( is_object( $this->ip_in_cache ) ) {
+				$this->_ipcachedb->updateIP( $this->_visiting_ip );
+			} else {
+				$this->_ipcachedb->insertIP( $this->_visiting_ip, 0 );
+			}
 		}
 	}
 
