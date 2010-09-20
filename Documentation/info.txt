@@ -8,3 +8,7 @@ js_url - string - Full URL to the Javascript diectory
 css_url - string - Full URL to teh stylesheet directory
 searchengines - Array with serachengines regonized by Project Honey Pot
 mail_footer - Array - Footer used in the email.
+menu_overview - String - Menu Slug
+menu_general - String - Menu Slug
+menu_3rd_party - String - Menu Slug
+menu_faq- String - Menu Slug
