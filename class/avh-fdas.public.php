@@ -237,7 +237,7 @@ class AVH_FDAS_Public
 			$this->_spamcheck->checkBlacklist();
 			if ( $this->_spamcheck->spammer_detected === FALSE ) {
 				$this->_spamcheck->doIPCacheCheck();
-				if ( $this->_spamcheck->spammer_detected === FALSE ) {
+				if ( $this->_spamcheck->ip_in_cache === FALSE ) {
 					$this->_spamcheck->doProjectHoneyPotIPCheck();
 				}
 			}
@@ -260,7 +260,7 @@ class AVH_FDAS_Public
 			$this->_spamcheck->checkBlacklist();
 			if ( $this->_spamcheck->spammer_detected === FALSE ) {
 				$this->_spamcheck->doIPCacheCheck();
-				if ( $this->_spamcheck->spammer_detected === FALSE ) {
+				if ( $this->_spamcheck->ip_in_cache === FALSE ) {
 					$this->_spamcheck->doStopForumSpamIPCheck();
 					$this->_spamcheck->doProjectHoneyPotIPCheck();
 				}
@@ -284,7 +284,7 @@ class AVH_FDAS_Public
 			$this->_spamcheck->checkBlacklist();
 			if ( $this->_spamcheck->spammer_detected === FALSE ) {
 				$this->_spamcheck->doIPCacheCheck();
-				if ( $this->_spamcheck->spammer_detected === FALSE ) {
+				if ( $this->_spamcheck->ip_in_cache === FALSE ) {
 					$this->_spamcheck->doStopForumSpamIPCheck();
 					$this->_spamcheck->doProjectHoneyPotIPCheck();
 				}
