@@ -1287,7 +1287,7 @@ final class AVH_FDAS_Admin
 	{
 		echo '<div class="clear">';
 		echo '<p class="footer_avhfdas">';
-		printf( __( '&copy; Copyright 2009 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam Version %s', 'avhfdas' ), AVH_FDAS_Define::PLUGIN_VERSION );
+		printf( __( '&copy; Copyright 2010 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam version %s', 'avhfdas' ), AVH_FDAS_Define::PLUGIN_VERSION );
 		echo '</p>';
 	}
 
