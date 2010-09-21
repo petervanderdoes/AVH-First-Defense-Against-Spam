@@ -114,18 +114,11 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionAdminMenu ()
 	{
-		// Add menu system
-		$menu_slug = AVH_Common::getBaseDirectory( $this->_settings->plugin_basename );
-		$this->_settings->storeSetting('menu-overview',$menu_slug);
-		$this->_settings->storeSetting('menu-general',$menu_slug.'-general');
-		$this->_settings->storeSetting('menu-3rd-party',$menu_slug.'-3rd-party');
-		$this->_settings->storeSetting('menu-faq',$menu_slug.'-faq');
-
-		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', $menu_slug, array (&$this, 'doMenuOverview' ) );
-		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', $this->_settings->getSetting('menu-overview'), array (&$this, 'doMenuOverview' ) );
-		$this->_hooks['avhfdas_menu_general'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', $this->_settings->getSetting('menu-general'), array (&$this, 'doMenuGeneralOptions' ) );
-		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', $this->_settings->getSetting('menu-3rd-party'), array (&$this, 'doMenu3rdPartyOptions' ) );
-		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page( $menu_slug, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', $this->_settings->getSetting('menu-faq'), array (&$this, 'doMenuFAQ' ) );
+		add_menu_page( 'AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG, array (&$this, 'doMenuOverview' ) );
+		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page( AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __( 'Overview', 'avh-fdas' ), __( 'Overview', 'avh-fdas' ), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array (&$this, 'doMenuOverview' ) );
+		$this->_hooks['avhfdas_menu_general'] = add_submenu_page( AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __( 'General Options', 'avh-fdas' ), __( 'General Options', 'avh-fdas' ), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_GENERAL, array (&$this, 'doMenuGeneralOptions' ) );
+		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page( AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __( '3rd Party Options', 'avh-fdas' ), __( '3rd Party Options', 'avh-fdas' ), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array (&$this, 'doMenu3rdPartyOptions' ) );
+		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page( AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __( 'F.A.Q', 'avh-fdas' ), __( 'F.A.Q', 'avh-fdas' ), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_FAQ, array (&$this, 'doMenuFAQ' ) );
 
 		// Add actions for menu pages
 		add_action( 'load-' . $this->_hooks['avhfdas_menu_overview'], array (&$this, 'actionLoadPageHook_Overview' ) );
@@ -146,7 +139,7 @@ final class AVH_FDAS_Admin
 	public function actionInPluginUpdateMessage ()
 	{
 		$response = wp_remote_get( AVH_FDAS_Define::PLUGIN_README_URL, array ('user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo( 'url' ) ) );
-		if ( ! is_wp_error($response) || is_array( $response ) ) {
+		if ( ! is_wp_error( $response ) || is_array( $response ) ) {
 			$data = $response['body'];
 			$matches = null;
 			if ( preg_match( '~==\s*Changelog\s*==\s*=\s*Version\s*[0-9.]+\s*=(.*)(=\s*Version\s*[0-9.]+\s*=|$)~Uis', $data, $matches ) ) {
@@ -573,7 +566,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="wrap">';
 		echo $this->_displayIcon( 'options-general' );
 		echo '<h2>' . __( 'General Options', 'avhfdas' ) . '</h2>';
-		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" action="admin.php?page='.$this->_settings->getSetting('menu-general').'" accept-charset="utf-8" >';
+		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" action="admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_generaloptions' );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
@@ -763,7 +756,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="wrap">';
 		echo $this->_displayIcon( 'options-general' );
 		echo '<h2>' . __( '3rd Party Options', 'avhfdas' ) . '</h2>';
-		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page='.$this->_settings->getSetting('menu-3rd-party').'" accept-charset="utf-8" >';
+		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_3RD_PARTY . '" accept-charset="utf-8" >';
 		wp_nonce_field( 'avh_fdas_options' );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
@@ -1135,7 +1128,7 @@ final class AVH_FDAS_Admin
 			}
 			unset( $all );
 		}
-		wp_redirect( admin_url( 'admin.php?page='.$this->_settings->getSetting('menu-general') . $extra ) );
+		wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . $extra ) );
 	}
 
 	/**
@@ -1175,12 +1168,12 @@ final class AVH_FDAS_Admin
 			if ( ! (in_array( $ip, $b )) ) {
 				array_push( $b, $ip );
 				$this->_setBlacklistOption( $b );
-				wp_redirect( admin_url( 'admin.php?page='.$this->_settings->getSetting('menu-general').'&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
+				wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
 			} else {
-				wp_redirect( admin_url( 'admin.php?page='.$this->_settings->getSetting('menu-general').'&m=' . AVHFDAS_ERROR_EXISTS_IN_BLACKLIST . '&i=' . $ip ) );
+				wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVHFDAS_ERROR_EXISTS_IN_BLACKLIST . '&i=' . $ip ) );
 			}
 		} else {
-			wp_redirect( admin_url( 'admin.php?page='.$this->_settings->getSetting('menu-general').'&m=' . AVHFDAS_ERROR_INVALID_REQUEST ) );
+			wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVHFDAS_ERROR_INVALID_REQUEST ) );
 		}
 	}
 

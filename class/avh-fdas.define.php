@@ -25,4 +25,11 @@ final class AVH_FDAS_Define
 
 	// URL For Stop Forum API
 	const STOPFORUMSPAM_ENDPOINT = 'http://www.stopforumspam.com/api';
+
+	// Menu Slugs for Admin menu
+	const MENU_SLUG = 'avh-first-defense-against-spam';
+	const MENU_SLUG_OVERVIEW = 'avh-first-defense-against-spam';
+	const MENU_SLUG_GENERAL = 'avh-first-defense-against-spam-general';
+	const MENU_SLUG_3RD_PARTY = 'avh-first-defense-against-3rd-party';
+	const MENU_SLUG_FAQ = 'avh-first-defense-against-spam-faq';
 }
