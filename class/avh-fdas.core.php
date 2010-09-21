@@ -57,7 +57,7 @@ class AVH_FDAS_Core
 	 *
 	 * Properties used for the plugin nonces data
 	 */
-	public  $db_nonces;
+	private $_db_nonces;
 	private $_default_nonces;
 	private $_default_nonces_data;
 
@@ -79,7 +79,7 @@ class AVH_FDAS_Core
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
 		$this->_db_options = 'avhfdas';
 		$this->_db_data = 'avhfdas_data';
-		$this->db_nonces = 'avhfdas_nonces';
+		$this->_db_nonces = 'avhfdas_nonces';
 
 		/**
 		 * Default options - General Purpose
@@ -586,6 +586,22 @@ class AVH_FDAS_Core
 	{
 		return $this->_comment . ' ' . trim( $str ) . ' -->';
 	}
+	/**
+	 * @return the $_db_nonces
+	 */
+	public function get_db_nonces ()
+	{
+		return $this->_db_nonces;
+	}
+	/**
+	 * @return the $_default_nonces
+	 */
+	public function get_default_nonces ()
+	{
+		return $this->_default_nonces;
+	}
+
+
 
 } //End Class AVH_FDAS_Core
 ?>

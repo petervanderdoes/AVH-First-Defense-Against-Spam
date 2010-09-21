@@ -84,7 +84,7 @@ class AVH_FDAS_Public
 	{
 		$removed = 0;
 		$options = $this->core->getOptions();
-		$all = get_option( $this->core->db_nonces );
+		$all = get_option( $this->core->get_db_nonces() );
 		if ( is_array( $all ) ) {
 			foreach ( $all as $key => $value ) {
 				if ( ! AVH_Security::verifyNonce( $key, $value ) ) {
@@ -92,7 +92,7 @@ class AVH_FDAS_Public
 					$removed ++;
 				}
 			}
-			update_option( $this->core->db_nonces, $all );
+			update_option( $this->core->get_db_nonces(), $all );
 		}
 
 		if ( $options['general']['cron_nonces_email'] ) {
@@ -182,9 +182,9 @@ class AVH_FDAS_Public
 					if ( ! empty( $this->core->getOptionElement('sfs','sfsapikey') ) ) {
 						// Prevent a spam attack to overflow the database.
 						if ( ! ($this->checkDB_Nonces( $q['_avhnonce'] )) ) {
-							$option = get_option( $this->core->db_nonces );
+							$option = get_option( $this->core->get_db_nonces() );
 							$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
-							update_option( $this->core->db_nonces, $option );
+							update_option( $this->core->get_db_nonces(), $option );
 						}
 					}
 					$m = __( '<p>Cheating huh</p>', 'avhfdas' );
@@ -210,7 +210,7 @@ class AVH_FDAS_Public
 	function checkDB_Nonces ( $nonce )
 	{
 		$return = false;
-		$all = get_option( $this->core->db_nonces );
+		$all = get_option( $this->core->get_db_nonces() );
 		if ( is_array( $all ) ) {
 			if ( array_key_exists( $nonce, $all ) ) {
 				$return = true;

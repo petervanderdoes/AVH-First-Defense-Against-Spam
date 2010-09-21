@@ -1120,7 +1120,7 @@ final class AVH_FDAS_Admin
 
 		$extra = '&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $i;
 		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
-			$all = get_option( $this->_core->db_nonces );
+			$all = get_option( $this->_core->get_db_nonces() );
 			$extra = '&m=' . AVHFDAS_ERROR_NOT_REPORTED . '&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
 				$this->handleReportSpammer( $a, $e, $i );
@@ -1223,8 +1223,8 @@ final class AVH_FDAS_Admin
 		}
 
 		// Setup nonces db in options
-		if ( ! (get_option( $this->_core->db_nonces )) ) {
-			update_option( $this->_core->db_nonces, $this->_core->default_nonces );
+		if ( ! (get_option( $this->_core->get_db_nonces() )) ) {
+			update_option( $this->_core->get_db_nonces(), $this->_core->get_default_nonces() );
 			wp_cache_flush(); // Delete cache
 		}
 
