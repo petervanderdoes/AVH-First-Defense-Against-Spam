@@ -30,33 +30,36 @@ class AVH_FDAS_Core
 	 *
 	 * @var array
 	 */
-	var $options;
+
 
 	/**
-	 * Default options for the plugin
+	 * Properties used for the plugin options
 	 *
-	 * @var array
 	 */
-	private $_default_general_options;
+	private $_db_options;
 	private $_default_options;
-	private $_default_spam;
-	private $_default_honey;
-	private $_default_ipcache;
-	private $_default_nonces;
-	var $data;
+	private $_default_options_general;
+	private $_default_options_spam;
+	private $_default_options_honey;
+	private $_default_options_ipcache;
+	private $_options;
+
+	/**
+	 * Properties used for the plugin data
+	 */
+	private $_db_data;
 	private $_default_data;
 	private $_default_data_lists;
-	private $_default_spam_data;
-	private $_default_nonces_data;
+	private $_default_data_spam;
+	private $_data;
 
 	/**
-	 * Name of the options field in the WordPress database options table.
 	 *
-	 * @var string
+	 * Properties used for the plugin nonces data
 	 */
-	var $db_options_core;
-	var $db_options_data;
-	var $db_options_nonces;
+	public  $db_nonces;
+	private $_default_nonces;
+	private $_default_nonces_data;
 
 	/**
 	 *
@@ -74,25 +77,31 @@ class AVH_FDAS_Core
 
 		$this->_db_version = 8;
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
-		$this->db_options_core = 'avhfdas';
-		$this->db_options_data = 'avhfdas_data';
-		$this->db_options_nonces = 'avhfdas_nonces';
+		$this->_db_options = 'avhfdas';
+		$this->_db_data = 'avhfdas_data';
+		$this->db_nonces = 'avhfdas_nonces';
 
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->_default_general_options = array ('version' => AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion' => $this->_db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
-		$this->_default_spam = array ('whentoemail' => - 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
-		$this->_default_honey = array ('whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
-		$this->_default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
-		$this->_default_spam_data = array ('190001' => 0 );
-		$this->_default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
+		$this->_default_options_general = array ('version' => AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion' => $this->_db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
+		$this->_default_options_spam = array ('whentoemail' => - 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
+		$this->_default_options_honey = array ('whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
+		$this->_default_options_ipcache = array ('email' => 0, 'daystokeep' => 7 );
+		$this->_default_options = array ('general' => $this->_default_options_general, 'sfs' => $this->_default_options_spam, 'php' => $this->_default_options_honey, 'ipcache' => $this->_default_options_ipcache );
 
 		/**
-		 * Default Options - All as stored in the DB
+		 *
+		 * Default Data
 		 */
-		$this->_default_options = array ('general' => $this->_default_general_options, 'sfs' => $this->_default_spam, 'php' => $this->_default_honey, 'ipcache' => $this->_default_ipcache );
-		$this->_default_data = array ('counters' => $this->_default_spam_data, 'lists' => $this->_default_data_lists );
+		$this->_default_data_spam = array ('190001' => 0 );
+		$this->_default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
+		$this->_default_data = array ('counters' => $this->_default_data_spam, 'lists' => $this->_default_data_lists );
+
+		/**
+		 * Default Nonces
+		 */
+		$this->_default_nonces_data = NULL;
 		$this->_default_nonces = array ('default' => $this->_default_nonces_data );
 
 		/**
@@ -104,7 +113,7 @@ class AVH_FDAS_Core
 		$this->setTables();
 
 		// Check if we have to do upgrades
-		if ( (! isset( $this->options['general']['dbversion'] )) || $this->options['general']['dbversion'] < $this->_db_version ) {
+		if ( (! isset( $this->getOptionElement('general','dbversion') )) || $this->getOptionElement('general','dbversion') < $this->_db_version ) {
 			$this->doUpgrade();
 		}
 
@@ -421,7 +430,7 @@ class AVH_FDAS_Core
 	 */
 	function setOptions ( $options )
 	{
-		$this->options = $options;
+		$this->_options = $options;
 	}
 
 	/**
@@ -429,7 +438,7 @@ class AVH_FDAS_Core
 	 */
 	function getOptions ()
 	{
-		return ($this->options);
+		return ($this->_options);
 	}
 
 	/**
@@ -438,7 +447,7 @@ class AVH_FDAS_Core
 	 */
 	function saveOptions ( $options )
 	{
-		update_option( $this->db_options_core, $options );
+		update_option( $this->_db_options, $options );
 		wp_cache_flush(); // Delete cache
 		$this->setOptions( $options );
 	}
@@ -451,7 +460,7 @@ class AVH_FDAS_Core
 	 */
 	function loadOptions ()
 	{
-		$options = get_option( $this->db_options_core );
+		$options = get_option( $this->_db_options );
 		if ( false === $options ) { // New installation
 			$this->resetToDefaultOptions();
 		} else {
@@ -468,8 +477,8 @@ class AVH_FDAS_Core
 	 */
 	function getOptionElement ( $option, $key )
 	{
-		if ( $this->options[$option][$key] ) {
-			$return = $this->options[$option][$key]; // From Admin Page
+		if ( $this->_options[$option][$key] ) {
+			$return = $this->_options[$option][$key]; // From Admin Page
 		} else {
 			$return = $this->_default_options[$option][$key]; // Default
 		}
@@ -482,7 +491,7 @@ class AVH_FDAS_Core
 	 */
 	function resetToDefaultOptions ()
 	{
-		$this->options = $this->_default_options;
+		$this->_options = $this->_default_options;
 		$this->saveOptions( $this->_default_options );
 	}
 
@@ -497,7 +506,7 @@ class AVH_FDAS_Core
 	 */
 	function setData ( $data )
 	{
-		$this->data = $data;
+		$this->_data = $data;
 	}
 
 	/**
@@ -505,7 +514,7 @@ class AVH_FDAS_Core
 	 */
 	function getData ()
 	{
-		return ($this->data);
+		return ($this->_data);
 	}
 
 	/**
@@ -515,7 +524,7 @@ class AVH_FDAS_Core
 	 */
 	function saveData ( $data )
 	{
-		update_option( $this->db_options_data, $data );
+		update_option( $this->_db_data, $data );
 		wp_cache_flush(); // Delete cache
 		$this->setData( $data );
 	}
@@ -527,7 +536,7 @@ class AVH_FDAS_Core
 	 */
 	function loadData ()
 	{
-		$data = get_option( $this->db_options_data );
+		$data = get_option( $this->_db_data );
 		if ( false === $data ) { // New installation
 			$this->resetToDefaultData();
 		} else {
@@ -546,8 +555,8 @@ class AVH_FDAS_Core
 	 */
 	function getDataElement ( $option, $key )
 	{
-		if ( $this->data[$option][$key] ) {
-			$return = $this->data[$option][$key];
+		if ( $this->_data[$option][$key] ) {
+			$return = $this->_data[$option][$key];
 		} else {
 			$return = false;
 		}
@@ -560,7 +569,7 @@ class AVH_FDAS_Core
 	 */
 	function resetToDefaultData ()
 	{
-		$this->data = $this->_default_data;
+		$this->_data = $this->_default_data;
 		$this->saveData( $this->_default_data );
 	}
 

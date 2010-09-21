@@ -322,12 +322,14 @@ final class AVH_FDAS_Admin
 		echo '</tbody></table></div>';
 		echo '<div class="versions">';
 		echo '<p>';
-		if ( $this->_core->options['general']['use_sfs'] || $this->_core->options['general']['use_php'] ) {
+		$use_sfs = $this->_core->getOptionElement('general','use_sfs');
+		$use_php = $this->_core->getOptionElement('general','use_php');
+		if ( $use_sfs || $use_php ) {
 			echo __( 'Checking with ', 'avhfdas' );
-			echo ($this->_core->options['general']['use_sfs'] ? '<span class="b">' . __( 'Stop Forum Spam', 'avhfdas' ) . '</span>' : '');
+			echo ($use_sfs ? '<span class="b">' . __( 'Stop Forum Spam', 'avhfdas' ) . '</span>' : '');
 
-			if ( $this->_core->options['general']['use_php'] ) {
-				echo ($this->_core->options['general']['use_sfs'] ? __( ' and ', 'avhfdas' ) : ' ');
+			if ( $use_php ) {
+				echo ($use_sfs ? __( ' and ', 'avhfdas' ) : ' ');
 				echo '<span class="b">' . __( 'Project Honey Pot', 'avhfdas' ) . '</span>';
 			}
 		}
@@ -339,7 +341,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="versions">';
 		echo '<p>';
 		echo 'IP caching is ';
-		if ( 0 == $this->_core->options['general']['useipcache'] ) {
+		if ( 0 == $this->_core->getOptionElement('general','useipcache') ) {
 			echo '<span class="b">disabled</span>';
 			echo '</p></div>';
 		} else {
@@ -1059,7 +1061,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterCommentRowActions ( $actions, $comment )
 	{
-		if ( (! empty( $this->_core->options['sfs']['sfsapikey'] )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
+		if ( (! empty( $this->_core->getOptionElement('sfs','sfsapikey') )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
 			$report_url = clean_url( wp_nonce_url( "admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID" ) );
 			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">Report & Delete</a>';
 		}
@@ -1118,7 +1120,7 @@ final class AVH_FDAS_Admin
 
 		$extra = '&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $i;
 		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
-			$all = get_option( $this->_core->db_options_nonces );
+			$all = get_option( $this->_core->db_nonces );
 			$extra = '&m=' . AVHFDAS_ERROR_NOT_REPORTED . '&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
 				$this->handleReportSpammer( $a, $e, $i );
@@ -1138,11 +1140,11 @@ final class AVH_FDAS_Admin
 	 * @param unknown_type $email
 	 * @param unknown_type $ip_addr
 	 */
-	private function __autoloadhandleReportSpammer ( $username, $email, $ip_addr )
+	private function _handleReportSpammer ( $username, $email, $ip_addr )
 	{
 		$email = empty( $email ) ? 'meseaffibia@gmail.com' : $email;
 		$url = 'http://www.stopforumspam.com/post.php';
-		wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->options['sfs']['sfsapikey'] ) ) );
+		wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->getOptionElement('sfs','sfsapikey') ) ) );
 	}
 
 	/**
@@ -1159,7 +1161,7 @@ final class AVH_FDAS_Admin
 		$ip = $_REQUEST['i'];
 
 		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $ip ) ) {
-			$blacklist = $this->_core->data['lists']['blacklist'];
+			$blacklist = $this->_core->getDataElement('lists','blacklist');
 			if ( ! empty( $blacklist ) ) {
 				$b = explode( "\r\n", $blacklist );
 			} else {
@@ -1221,8 +1223,8 @@ final class AVH_FDAS_Admin
 		}
 
 		// Setup nonces db in options
-		if ( ! (get_option( $this->_core->db_options_nonces )) ) {
-			update_option( $this->_core->db_options_nonces, $this->_core->default_nonces );
+		if ( ! (get_option( $this->_core->db_nonces )) ) {
+			update_option( $this->_core->db_nonces, $this->_core->default_nonces );
 			wp_cache_flush(); // Delete cache
 		}
 

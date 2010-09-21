@@ -84,7 +84,7 @@ class AVH_FDAS_Public
 	{
 		$removed = 0;
 		$options = $this->core->getOptions();
-		$all = get_option( $this->core->db_options_nonces );
+		$all = get_option( $this->core->db_nonces );
 		if ( is_array( $all ) ) {
 			foreach ( $all as $key => $value ) {
 				if ( ! AVH_Security::verifyNonce( $key, $value ) ) {
@@ -92,7 +92,7 @@ class AVH_FDAS_Public
 					$removed ++;
 				}
 			}
-			update_option( $this->core->db_options_nonces, $all );
+			update_option( $this->core->db_nonces, $all );
 		}
 
 		if ( $options['general']['cron_nonces_email'] ) {
@@ -141,7 +141,7 @@ class AVH_FDAS_Public
 			if ( empty( $commentdata['comment_type'] ) ) { // If it's a trackback or pingback this has a value
 				$nonce = wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'] );
 				if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
-					if ( 1 == $this->core->options['general']['emailsecuritycheck'] ) {
+					if ( 1 == $this->core->getOptionElement('general','emailsecuritycheck') ) {
 						$to = get_option( 'admin_email' );
 						$ip = AVH_Visitor::getUserIP();
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
@@ -160,7 +160,7 @@ class AVH_FDAS_Public
 						$message[] = $commentdata['comment_content'];
 						$message[] = __( '--- END OF COMMENT ---', 'avhfdas' );
 						$message[] = '';
-						if ( ! empty( $this->core->options['sfs']['sfsapikey'] ) ) {
+						if ( ! empty( $this->core->getOptionElement('sfs','sfsapikey') ) ) {
 							$q['action'] = 'emailreportspammer';
 							$q['a'] = $commentdata['comment_author'];
 							$q['e'] = $commentdata['comment_author_email'];
@@ -179,19 +179,19 @@ class AVH_FDAS_Public
 
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam
-					if ( ! empty( $this->core->options['sfs']['sfsapikey'] ) ) {
+					if ( ! empty( $this->core->getOptionElement('sfs','sfsapikey') ) ) {
 						// Prevent a spam attack to overflow the database.
 						if ( ! ($this->checkDB_Nonces( $q['_avhnonce'] )) ) {
-							$option = get_option( $this->core->db_options_nonces );
+							$option = get_option( $this->core->db_nonces );
 							$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
-							update_option( $this->core->db_options_nonces, $option );
+							update_option( $this->core->db_nonces, $option );
 						}
 					}
 					$m = __( '<p>Cheating huh</p>', 'avhfdas' );
 					$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
 
-					if ( $this->core->options['php']['usehoneypot'] ) {
-						$m .= '<p>' . $this->core->options['php']['honeypoturl'] . '</p>';
+					if ( $this->core->getOptionElement('php','usehoneypot') ) {
+						$m .= '<p>' . $this->core->getOptionElement('php','honeypoturl') . '</p>';
 					}
 					wp_die( $m );
 				}
@@ -210,7 +210,7 @@ class AVH_FDAS_Public
 	function checkDB_Nonces ( $nonce )
 	{
 		$return = false;
-		$all = get_option( $this->core->db_options_nonces );
+		$all = get_option( $this->core->db_nonces );
 		if ( is_array( $all ) ) {
 			if ( array_key_exists( $nonce, $all ) ) {
 				$return = true;
