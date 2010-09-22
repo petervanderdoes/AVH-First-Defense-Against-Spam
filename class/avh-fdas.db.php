@@ -13,7 +13,7 @@ class AVH_FDAS_DB
 	 * Init the Database Abstraction layer
 	 *
 	 */
-	function __construct ()
+	public function __construct ()
 	{
 		register_shutdown_function( array (&$this, '__destruct' ) );
 	}
@@ -23,7 +23,7 @@ class AVH_FDAS_DB
 	 *
 	 * @return bool Always true
 	 */
-	function __destruct ()
+	public function __destruct ()
 	{
 		return true;
 	}

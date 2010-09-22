@@ -71,7 +71,7 @@ class AVH_FDAS_Core
 	 * PHP5 constructor
 	 *
 	 */
-	function __construct ()
+	public function __construct ()
 	{
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 
@@ -108,13 +108,13 @@ class AVH_FDAS_Core
 		 * Set the options for the program
 		 *
 		 */
-		$this->loadOptions();
-		$this->loadData();
-		$this->setTables();
+		$this->load_options();
+		$this->load_data();
+		$this->_setTables();
 
 		// Check if we have to do upgrades
-		if ( (! isset( $this->getOptionElement('general','dbversion') )) || $this->getOptionElement('general','dbversion') < $this->_db_version ) {
-			$this->doUpgrade();
+		if ( (! isset( $this->get_optionElement('general','dbversion') )) || $this->get_optionElement('general','dbversion') < $this->_db_version ) {
+			$this->_doUpgrade();
 		}
 
 		$this->_settings->storeSetting( 'siteurl', get_option( 'siteurl' ) );
@@ -134,23 +134,10 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * Test if local installation is mu-plugin or a classic plugin
-	 *
-	 * @return boolean
-	 */
-	function isMuPlugin ()
-	{
-		if ( strpos( dirname( __FILE__ ), 'mu-plugins' ) ) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Setup DB Tables
 	 * @return unknown_type
 	 */
-	function setTables ()
+	private function _setTables ()
 	{
 		global $wpdb;
 
@@ -159,57 +146,25 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * Sets data according to the the DB
-	 *
-	 * @param array $default_data
-	 * @param atring $optionsdb
-	 * @return array
-	 *
-	 */
-	function handleOptionsDB ( $default_data, $optionsdb )
-	{
-		// Get options from WP options
-		$data_from_table = get_option( $optionsdb );
-		if ( is_array( $data_from_table ) ) {
-			// Update default options by getting not empty values from options table
-			foreach ( $default_data as $section_key => $section_array ) {
-				foreach ( array_keys( $section_array ) as $name ) {
-					/**
-					 * We only set the data if the following is all TRUE
-					 * 1. The option exists in the DB.
-					 * 2. If the value and type are different in the DB
-					 *
-					 * We don't handle the version option. This is handled seperately to accomodate upgrades.
-					 */
-					if ( isset( $data_from_table[$section_key][$name] ) && ('version' != $name) && (! ($default_data[$section_key][$name] === $data_from_table[$section_key][$name])) ) {
-						$default_data[$section_key][$name] = $data_from_table[$section_key][$name];
-					}
-				}
-			}
-		}
-		return ($default_data);
-	}
-
-	/**
 	 * Checks if running version is newer and do upgrades if necessary
 	 *
 	 */
-	function doUpgrade ()
+	private function _doUpgrade ()
 	{
-		$options = $this->getOptions();
-		$data = $this->getData();
+		$options = $this->get_options();
+		$data = $this->get_data();
 
 		if ( version_compare( $options['general']['version'], '2.0-rc1', '<' ) ) {
-			list ( $options, $data ) = $this->doUpgrade20( $options, $data );
+			list ( $options, $data ) = $this->_doUpgrade20( $options, $data );
 		}
 
 		// Introduced dbversion starting with v2.1
 		if ( ! isset( $options['general']['dbversion'] ) || $options['general']['dbversion'] < 4 ) {
-			list ( $options, $data ) = $this->doUpgrade21( $options, $data );
+			list ( $options, $data ) = $this->_doUpgrade21( $options, $data );
 		}
 
 		if ( $options['general']['dbversion'] < 5 ) {
-			list ( $options, $data ) = $this->doUpgrade22( $options, $data );
+			list ( $options, $data ) = $this->_doUpgrade22( $options, $data );
 		}
 
 		// Add none existing sections and/or elements to the options
@@ -239,8 +194,8 @@ class AVH_FDAS_Core
 		}
 		$options['general']['version'] = AVH_FDAS_Define::PLUGIN_VERSION;
 		$options['general']['dbversion'] = $this->_db_version;
-		$this->saveOptions( $options );
-		$this->saveData( $data );
+		$this->save_options( $options );
+		$this->save_data( $data );
 	}
 
 	/**
@@ -251,7 +206,7 @@ class AVH_FDAS_Core
 	 * @return array
 	 *
 	 */
-	function doUpgrade20 ( $old_options, $old_data )
+	private function _doUpgrade20 ( $old_options, $old_data )
 	{
 		$new_options = $old_options;
 		$new_data = $old_data;
@@ -288,7 +243,7 @@ class AVH_FDAS_Core
 	 * @return array
 	 *
 	 */
-	function doUpgrade21 ( $old_options, $old_data )
+	private function _doUpgrade21 ( $old_options, $old_data )
 	{
 		$new_options = $old_options;
 		$new_data = $old_data;
@@ -313,7 +268,7 @@ class AVH_FDAS_Core
 	 * @param $options
 	 * @param $data
 	 */
-	function doUpgrade22 ( $old_options, $old_data )
+	private function _doUpgrade22 ( $old_options, $old_data )
 	{
 		global $wpdb;
 
@@ -340,7 +295,7 @@ class AVH_FDAS_Core
 	 * @param array $query_array
 	 * @return array
 	 */
-	function handleRESTcall ( $query_array )
+	public function handleRESTcall ( $query_array )
 	{
 		$querystring = $this->BuildQuery( $query_array );
 		$url = AVH_FDAS_Define::STOPFORUMSPAM_ENDPOINT . '?' . $querystring;
@@ -362,7 +317,7 @@ class AVH_FDAS_Core
 	 * @param array $error
 	 * @return string
 	 */
-	function getHttpError ( $error )
+	public function getHttpError ( $error )
 	{
 		if ( is_array( $error ) ) {
 			foreach ( $error as $key => $value ) {
@@ -383,7 +338,7 @@ class AVH_FDAS_Core
 	 * @param string $convention
 	 * @return string
 	 */
-	function BuildQuery ( $array = NULL, $convention = '%s' )
+	public function BuildQuery ( $array = NULL, $convention = '%s' )
 	{
 		if ( count( $array ) == 0 ) {
 			return '';
@@ -413,7 +368,7 @@ class AVH_FDAS_Core
 	 * @param string $ip
 	 * @return array
 	 */
-	function getRestIPLookup ( $ip )
+	public function getRestIPLookup ( $ip )
 	{
 		$iplookup = array ('ip' => $ip, 'f' => 'serial' );
 		return $iplookup;
@@ -428,7 +383,7 @@ class AVH_FDAS_Core
 	/**
 	 * @param array $data
 	 */
-	function setOptions ( $options )
+	public function set_options ( $options )
 	{
 		$this->_options = $options;
 	}
@@ -436,7 +391,7 @@ class AVH_FDAS_Core
 	/**
 	 * return array
 	 */
-	function getOptions ()
+	public function get_options ()
 	{
 		return ($this->_options);
 	}
@@ -445,11 +400,11 @@ class AVH_FDAS_Core
 	 * Save all current options and set the options
 	 *
 	 */
-	function saveOptions ( $options )
+	public function save_options ( $options )
 	{
 		update_option( $this->_db_options, $options );
 		wp_cache_flush(); // Delete cache
-		$this->setOptions( $options );
+		$this->set_options( $options );
 	}
 
 	/**
@@ -458,13 +413,13 @@ class AVH_FDAS_Core
 	 *
 	 * @return none
 	 */
-	function loadOptions ()
+	public function load_options ()
 	{
 		$options = get_option( $this->_db_options );
 		if ( false === $options ) { // New installation
-			$this->resetToDefaultOptions();
+			$this->resetToDefault_options();
 		} else {
-			$this->setOptions( $options );
+			$this->set_options( $options );
 		}
 	}
 
@@ -475,7 +430,7 @@ class AVH_FDAS_Core
 	 * @param string $option
 	 * @return mixed
 	 */
-	function getOptionElement ( $option, $key )
+	public function get_optionElement ( $option, $key )
 	{
 		if ( $this->_options[$option][$key] ) {
 			$return = $this->_options[$option][$key]; // From Admin Page
@@ -489,10 +444,10 @@ class AVH_FDAS_Core
 	 * Reset to default options and save in DB
 	 *
 	 */
-	function resetToDefaultOptions ()
+	private function resetToDefault_options ()
 	{
 		$this->_options = $this->_default_options;
-		$this->saveOptions( $this->_default_options );
+		$this->save_options( $this->_default_options );
 	}
 
 	/******************************
@@ -504,7 +459,7 @@ class AVH_FDAS_Core
 	/**
 	 * @param array $data
 	 */
-	function setData ( $data )
+	public function set_data ( $data )
 	{
 		$this->_data = $data;
 	}
@@ -512,7 +467,7 @@ class AVH_FDAS_Core
 	/**
 	 * @return array
 	 */
-	function getData ()
+	public function get_data ()
 	{
 		return ($this->_data);
 	}
@@ -522,11 +477,11 @@ class AVH_FDAS_Core
 	 * @param array $data
 	 *
 	 */
-	function saveData ( $data )
+	public function save_data ( $data )
 	{
 		update_option( $this->_db_data, $data );
 		wp_cache_flush(); // Delete cache
-		$this->setData( $data );
+		$this->set_data( $data );
 	}
 
 	/**
@@ -534,13 +489,13 @@ class AVH_FDAS_Core
 	 *
 	 * @return array
 	 */
-	function loadData ()
+	public function load_data ()
 	{
 		$data = get_option( $this->_db_data );
 		if ( false === $data ) { // New installation
-			$this->resetToDefaultData();
+			$this->resetToDefault_data();
 		} else {
-			$this->setData( $data );
+			$this->set_data( $data );
 		}
 		return;
 	}
@@ -553,7 +508,7 @@ class AVH_FDAS_Core
 	 * @return mixed
 	 * @since 0.1
 	 */
-	function getDataElement ( $option, $key )
+	public function get_dataElement ( $option, $key )
 	{
 		if ( $this->_data[$option][$key] ) {
 			$return = $this->_data[$option][$key];
@@ -567,25 +522,20 @@ class AVH_FDAS_Core
 	 * Reset to default data and save in DB
 	 *
 	 */
-	function resetToDefaultData ()
+	private function resetToDefault_data ()
 	{
 		$this->_data = $this->_default_data;
-		$this->saveData( $this->_default_data );
+		$this->save_data( $this->_default_data );
 	}
-
-	/*********************************
-	 * *
-	 * Methods for variable: comment *
-	 * *
-	 *********************************/
 
 	/**
 	 * @return string
 	 */
-	function getComment ( $str = '' )
+	public function getComment ( $str = '' )
 	{
 		return $this->_comment . ' ' . trim( $str ) . ' -->';
 	}
+
 	/**
 	 * @return the $_db_nonces
 	 */

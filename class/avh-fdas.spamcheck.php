@@ -62,8 +62,8 @@ class AVH_FDAS_SpamCheck
 		$this->_ipcachedb = $this->_classes->load_class( 'DB', 'plugin', TRUE );
 
 		$this->_visiting_ip = AVH_Visitor::getUserIP();
-		$this->_core_options = $this->_core->getOptions();
-		$this->_core_data = $this->_core->getData();
+		$this->_core_options = $this->_core->get_options();
+		$this->_core_data = $this->_core->get_data();
 		$this->spaminfo = null;
 		$this->spammer_detected = FALSE;
 		$this->ip_in_white_list = FALSE;
@@ -200,7 +200,7 @@ class AVH_FDAS_SpamCheck
 	public function checkBlacklist ()
 	{
 		if ( $this->_core_options['general']['useblacklist'] ) {
-			$found = $this->_checkList( $this->_core->getDataElement('lists','blacklist') );
+			$found = $this->_checkList( $this->_core->get_dataElement('lists','blacklist') );
 			if ( $found ) {
 				$this->spammer_detected = TRUE;
 				$this->spaminfo['blacklist']['time'] = 'Blacklisted';
@@ -219,7 +219,7 @@ class AVH_FDAS_SpamCheck
 	public function checkWhitelist ()
 	{
 		if ( $this->_core_options['general']['usewhitelist'] ) {
-			$found = $this->_checkList( $this->_core->getDataElement('lists','whitelist') );
+			$found = $this->_checkList( $this->_core->get_dataElement('lists','whitelist') );
 			if ( $found ) {
 				$this->ip_in_white_list = true;
 			}
@@ -411,7 +411,7 @@ class AVH_FDAS_SpamCheck
 			} else {
 				$this->_core_data['counters'][$period] = 1;
 			}
-			$this->_core->saveData( $this->_core_data );
+			$this->_core->save_data( $this->_core_data );
 			if ( 1 == $this->_core_options['general']['diewithmessage'] ) {
 				if ( isset( $this->spaminfo['blacklist'] ) && 'Blacklisted' == $this->spaminfo['blacklist']['time'] ) {
 					$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas' ), $this->_visiting_ip );
@@ -462,7 +462,7 @@ class AVH_FDAS_SpamCheck
 		} else {
 			$this->_core_data['counters'][$period] = 1;
 		}
-		$this->_core->saveData( $this->_core_data );
+		$this->_core->save_data( $this->_core_data );
 		if ( 1 == $this->_core_options['general']['diewithmessage'] ) {
 			$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas' ), $this->_visiting_ip );
 			$m .= '<p>Protected by: AVH First Defense Against Spam</p>';

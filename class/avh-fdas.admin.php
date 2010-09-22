@@ -187,7 +187,7 @@ final class AVH_FDAS_Admin
 	 * This function allows the upgrade notice not to appear
 	 * @param $option
 	 */
-	function filterDisableUpgrade ( $option )
+	public function filterDisableUpgrade ( $option )
 	{
 
 		$this_plugin = $this->_settings->plugin_basename;
@@ -293,7 +293,7 @@ final class AVH_FDAS_Admin
 		echo '<tbody>';
 		echo '<tr class="first">';
 
-		$data = $this->_core->getData();
+		$data = $this->_core->get_data();
 		$spam_count = $data['counters'];
 		krsort( $spam_count );
 		$have_spam_count_data = false;
@@ -322,8 +322,8 @@ final class AVH_FDAS_Admin
 		echo '</tbody></table></div>';
 		echo '<div class="versions">';
 		echo '<p>';
-		$use_sfs = $this->_core->getOptionElement('general','use_sfs');
-		$use_php = $this->_core->getOptionElement('general','use_php');
+		$use_sfs = $this->_core->get_optionElement('general','use_sfs');
+		$use_php = $this->_core->get_optionElement('general','use_php');
 		if ( $use_sfs || $use_php ) {
 			echo __( 'Checking with ', 'avhfdas' );
 			echo ($use_sfs ? '<span class="b">' . __( 'Stop Forum Spam', 'avhfdas' ) . '</span>' : '');
@@ -341,7 +341,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="versions">';
 		echo '<p>';
 		echo 'IP caching is ';
-		if ( 0 == $this->_core->getOptionElement('general','useipcache') ) {
+		if ( 0 == $this->_core->get_optionElement('general','useipcache') ) {
 			echo '<span class="b">disabled</span>';
 			echo '</p></div>';
 		} else {
@@ -448,8 +448,8 @@ final class AVH_FDAS_Admin
 			check_admin_referer( 'avh_fdas_generaloptions' );
 
 			$formoptions = $_POST['avhfdas'];
-			$options = $this->_core->getOptions();
-			$data = $this->_core->getData();
+			$options = $this->_core->get_options();
+			$data = $this->_core->get_data();
 
 			$all_data = array_merge( $options_general, $options_blacklist, $options_whitelist, $options_ipcache, $options_cron );
 			foreach ( $all_data as $option ) {
@@ -504,8 +504,8 @@ final class AVH_FDAS_Admin
 					wp_clear_scheduled_hook( 'avhfdas_clean_ipcache' );
 				}
 			}
-			$this->_core->saveOptions( $options );
-			$this->_core->saveData( $data );
+			$this->_core->save_options( $options );
+			$this->_core->save_data( $data );
 			$this->_message = __( 'Options saved', 'avhfdas' );
 			$this->_status = 'updated fade';
 		}
@@ -545,7 +545,7 @@ final class AVH_FDAS_Admin
 
 		$this->_displayMessage();
 
-		$actual_options = array_merge( $this->_core->getOptions(), $this->_core->getData() );
+		$actual_options = array_merge( $this->_core->get_options(), $this->_core->get_data() );
 
 		$hide2 = '';
 		switch ( $screen_layout_columns )
@@ -699,7 +699,7 @@ final class AVH_FDAS_Admin
 			check_admin_referer( 'avh_fdas_options' );
 
 			$formoptions = $_POST['avhfdas'];
-			$options = $this->_core->getOptions();
+			$options = $this->_core->get_options();
 
 			$all_data = array_merge( $options_sfs, $options_php );
 			foreach ( $all_data as $option ) {
@@ -731,14 +731,14 @@ final class AVH_FDAS_Admin
 				$options['general']['use_php'] = 0;
 				$note = '<br \><br \>' . __( 'You can not use Project Honey Pot without an API key. Use of Project Honey Pot has been disabled', 'avhfdas' );
 			}
-			$this->_core->saveOptions( $options );
+			$this->_core->save_options( $options );
 			$this->_message = __( 'Options saved', 'avhfdas' );
 			$this->_message .= $note;
 			$this->_status = 'updated fade';
 			$this->_displayMessage();
 		}
 
-		$actual_options = array_merge( $this->_core->getOptions(), $this->_core->getData() );
+		$actual_options = array_merge( $this->_core->get_options(), $this->_core->get_data() );
 
 		$hide2 = '';
 		switch ( $screen_layout_columns )
@@ -1061,7 +1061,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterCommentRowActions ( $actions, $comment )
 	{
-		if ( (! empty( $this->_core->getOptionElement('sfs','sfsapikey') )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
+		if ( (! empty( $this->_core->get_optionElement('sfs','sfsapikey') )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
 			$report_url = clean_url( wp_nonce_url( "admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID" ) );
 			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">Report & Delete</a>';
 		}
@@ -1086,7 +1086,7 @@ final class AVH_FDAS_Admin
 			if ( ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
 				$this->_comment_footer_die( __( 'You are not allowed to edit comments on this post.' ) );
 			}
-			$options = $this->_core->getOptions();
+			$options = $this->_core->get_options();
 			// If we use IP Cache and the Reported IP isn't spam, delete it from the IP cache.
 			if ( 1 == $options['general']['useipcache'] ) {
 				$ip_info = $this->_db->getIP( $comment->comment_author_IP );
@@ -1144,7 +1144,7 @@ final class AVH_FDAS_Admin
 	{
 		$email = empty( $email ) ? 'meseaffibia@gmail.com' : $email;
 		$url = 'http://www.stopforumspam.com/post.php';
-		wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->getOptionElement('sfs','sfsapikey') ) ) );
+		wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->get_optionElement('sfs','sfsapikey') ) ) );
 	}
 
 	/**
@@ -1161,7 +1161,7 @@ final class AVH_FDAS_Admin
 		$ip = $_REQUEST['i'];
 
 		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $ip ) ) {
-			$blacklist = $this->_core->getDataElement('lists','blacklist');
+			$blacklist = $this->_core->get_dataElement('lists','blacklist');
 			if ( ! empty( $blacklist ) ) {
 				$b = explode( "\r\n", $blacklist );
 			} else {
@@ -1186,11 +1186,11 @@ final class AVH_FDAS_Admin
 	 */
 	private function _setBlacklistOption ( $blacklist )
 	{
-		$data = $this->_core->getData();
+		$data = $this->_core->get_data();
 		natsort( $blacklist );
 		$blacklist_formatted = implode( "\r\n", $blacklist );
 		$data['lists']['blacklist'] = $blacklist_formatted;
-		$this->_core->saveData( $data );
+		$this->_core->save_data( $data );
 	}
 
 	/**
@@ -1200,11 +1200,11 @@ final class AVH_FDAS_Admin
 	 */
 	private function _setWhitelistOption ( $b )
 	{
-		$data = $this->_core->getData();
+		$data = $this->_core->get_data();
 		natsort( $b );
 		$x = implode( "\r\n", $b );
 		$data['lists']['whitelist'] = $x;
-		$this->_core->saveData( $data );
+		$this->_core->save_data( $data );
 	}
 
 	/**
