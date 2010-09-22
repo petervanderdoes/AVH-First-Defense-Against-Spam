@@ -103,6 +103,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 = 3.0-dev1 =
 * Plugin is for PHP5 only
 * RFC: Spam check is performed when a user registers.
+* Important!: When using a Honey Pot URL, change the option to be a URL only, the plugin will add the neccessary HTML by default.
 * Bugfix: On pages the nonce check would fail.
 * Bugfix: Typo in window title for menu option overview
 * Bugfix: Blogname would show up as html safe text

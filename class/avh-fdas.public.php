@@ -191,7 +191,7 @@ class AVH_FDAS_Public
 					$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
 
 					if ( $this->_core->get_optionElement('php','usehoneypot') ) {
-						$m .= '<p>' . $this->_core->get_optionElement('php','honeypoturl') . '</p>';
+						$m .= '<p><div style="display: none;"><a href="' . $this->_core->get_optionElement('php','honeypoturl') . '">AVH Software</a></div></p>';
 					}
 					wp_die( $m );
 				}
