@@ -219,7 +219,7 @@ class AVH_FDAS_SpamCheck
 	public function checkWhitelist ()
 	{
 		if ( $this->_core_options['general']['usewhitelist'] ) {
-			$found = $this->_checkList( getDataElement('lists','whitelist') );
+			$found = $this->_checkList( $this->_core->getDataElement('lists','whitelist') );
 			if ( $found ) {
 				$this->ip_in_white_list = true;
 			}
