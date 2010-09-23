@@ -141,10 +141,10 @@ class AVH_FDAS_Public
 			if ( empty( $commentdata['comment_type'] ) ) { // If it's a trackback or pingback this has a value
 				$nonce = wp_create_nonce( 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'] );
 				if ( $nonce != $_POST['_avh_first_defense_against_spam'] ) {
-					if ( 1 == $this->_core->get_optionElement('general','emailsecuritycheck') ) {
+					if ( 1 == $this->_core->get_optionElement( 'general', 'emailsecuritycheck' ) ) {
 						$to = get_option( 'admin_email' );
 						$ip = AVH_Visitor::getUserIP();
-						$sfs_apikey= $this->_core->get_optionElement('sfs','sfsapikey');
+						$sfs_apikey = $this->_core->get_optionElement( 'sfs', 'sfsapikey' );
 
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
 						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
@@ -162,7 +162,7 @@ class AVH_FDAS_Public
 						$message[] = $commentdata['comment_content'];
 						$message[] = __( '--- END OF COMMENT ---', 'avhfdas' );
 						$message[] = '';
-						if ( '' != $sfs_apikey  ) {
+						if ( '' != $sfs_apikey ) {
 							$q['action'] = 'emailreportspammer';
 							$q['a'] = $commentdata['comment_author'];
 							$q['e'] = $commentdata['comment_author_email'];
@@ -192,7 +192,7 @@ class AVH_FDAS_Public
 					$m = __( '<p>Cheating huh</p>', 'avhfdas' );
 					$m .= __( '<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas' );
 
-					if ( $this->_core->get_optionElement('php','usehoneypot') ) {
+					if ( $this->_core->get_optionElement( 'php', 'usehoneypot' ) ) {
 						$m .= $this->_spamcheck->getHtmlHoneyPotUrl();
 					}
 					wp_die( $m );

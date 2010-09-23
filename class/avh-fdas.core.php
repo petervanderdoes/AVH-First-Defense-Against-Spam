@@ -31,7 +31,6 @@ class AVH_FDAS_Core
 	 * @var array
 	 */
 
-
 	/**
 	 * Properties used for the plugin options
 	 *
@@ -113,7 +112,7 @@ class AVH_FDAS_Core
 		$this->_setTables();
 
 		// Check if we have to do upgrades
-		if ( (! isset( $this->_options['general']['dbversion'] )) || $this->get_optionElement('general','dbversion') < $this->_db_version ) {
+		if ( (! isset( $this->_options['general']['dbversion'] )) || $this->get_optionElement( 'general', 'dbversion' ) < $this->_db_version ) {
 			$this->_doUpgrade();
 		}
 
@@ -543,6 +542,7 @@ class AVH_FDAS_Core
 	{
 		return $this->_db_nonces;
 	}
+
 	/**
 	 * @return the $_default_nonces
 	 */
@@ -550,8 +550,6 @@ class AVH_FDAS_Core
 	{
 		return $this->_default_nonces;
 	}
-
-
 
 } //End Class AVH_FDAS_Core
 ?>

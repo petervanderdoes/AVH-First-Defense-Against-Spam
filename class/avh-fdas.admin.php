@@ -322,8 +322,8 @@ final class AVH_FDAS_Admin
 		echo '</tbody></table></div>';
 		echo '<div class="versions">';
 		echo '<p>';
-		$use_sfs = $this->_core->get_optionElement('general','use_sfs');
-		$use_php = $this->_core->get_optionElement('general','use_php');
+		$use_sfs = $this->_core->get_optionElement( 'general', 'use_sfs' );
+		$use_php = $this->_core->get_optionElement( 'general', 'use_php' );
 		if ( $use_sfs || $use_php ) {
 			echo __( 'Checking with ', 'avhfdas' );
 			echo ($use_sfs ? '<span class="b">' . __( 'Stop Forum Spam', 'avhfdas' ) . '</span>' : '');
@@ -341,7 +341,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="versions">';
 		echo '<p>';
 		echo 'IP caching is ';
-		if ( 0 == $this->_core->get_optionElement('general','useipcache') ) {
+		if ( 0 == $this->_core->get_optionElement( 'general', 'useipcache' ) ) {
 			echo '<span class="b">disabled</span>';
 			echo '</p></div>';
 		} else {
@@ -727,7 +727,7 @@ final class AVH_FDAS_Admin
 
 			}
 			$note = '';
-			if ( ( '' === trim($options['php']['phpapikey']) ) ) {
+			if ( ('' === trim( $options['php']['phpapikey'] )) ) {
 				$options['general']['use_php'] = 0;
 				$note = '<br \><br \>' . __( 'You can not use Project Honey Pot without an API key. Use of Project Honey Pot has been disabled', 'avhfdas' );
 			}
@@ -1061,7 +1061,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterCommentRowActions ( $actions, $comment )
 	{
-		if ( ( '' != $this->_core->get_optionElement('sfs','sfsapikey') ) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
+		if ( ('' != $this->_core->get_optionElement( 'sfs', 'sfsapikey' )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
 			$report_url = clean_url( wp_nonce_url( "admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID" ) );
 			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">Report & Delete</a>';
 		}
@@ -1144,7 +1144,7 @@ final class AVH_FDAS_Admin
 	{
 		$email = empty( $email ) ? 'meseaffibia@gmail.com' : $email;
 		$url = 'http://www.stopforumspam.com/post.php';
-		wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->get_optionElement('sfs','sfsapikey') ) ) );
+		wp_remote_post( $url, array ('body' => array ('username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->get_optionElement( 'sfs', 'sfsapikey' ) ) ) );
 	}
 
 	/**
@@ -1161,7 +1161,7 @@ final class AVH_FDAS_Admin
 		$ip = $_REQUEST['i'];
 
 		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $ip ) ) {
-			$blacklist = $this->_core->get_dataElement('lists','blacklist');
+			$blacklist = $this->_core->get_dataElement( 'lists', 'blacklist' );
 			if ( ! empty( $blacklist ) ) {
 				$b = explode( "\r\n", $blacklist );
 			} else {
@@ -1346,7 +1346,7 @@ final class AVH_FDAS_Admin
 					$seltext = explode( '/', $option[4] );
 					$seldata = '';
 					foreach ( ( array ) $selvalue as $key => $sel ) {
-						$seldata .= '<option value="' . $sel . '" ' . selected($sel, $option_actual[$section][$option_key],FALSE) . ' >' . ucfirst( $seltext[$key] ) . '</option>' . "\n";
+						$seldata .= '<option value="' . $sel . '" ' . selected( $sel, $option_actual[$section][$option_key], FALSE ) . ' >' . ucfirst( $seltext[$key] ) . '</option>' . "\n";
 					}
 					$input_type = '<select id="' . $option[0] . '" name="' . $option[0] . '">' . $seldata . '</select>' . "\n";
 					$explanation = $option[5];

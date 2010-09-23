@@ -82,7 +82,7 @@ class AVH_FDAS_SpamCheck
 		$this->ip_in_cache = $this->_ipcachedb->getIP( $this->_visiting_ip );
 		$time_end = microtime( true );
 		$time = $time_end - $time_start;
-		if ( !(FALSE === $this->ip_in_cache) ) {
+		if ( ! (FALSE === $this->ip_in_cache) ) {
 			if ( $this->ip_in_cache->spam === '1' ) {
 				$this->spaminfo['cache']['time'] = $time;
 				$this->spammer_detected = TRUE;
@@ -200,7 +200,7 @@ class AVH_FDAS_SpamCheck
 	public function checkBlacklist ()
 	{
 		if ( $this->_core_options['general']['useblacklist'] ) {
-			$found = $this->_checkList( $this->_core->get_dataElement('lists','blacklist') );
+			$found = $this->_checkList( $this->_core->get_dataElement( 'lists', 'blacklist' ) );
 			if ( $found ) {
 				$this->spammer_detected = TRUE;
 				$this->spaminfo['blacklist']['time'] = 'Blacklisted';
@@ -219,7 +219,7 @@ class AVH_FDAS_SpamCheck
 	public function checkWhitelist ()
 	{
 		if ( $this->_core_options['general']['usewhitelist'] ) {
-			$found = $this->_checkList( $this->_core->get_dataElement('lists','whitelist') );
+			$found = $this->_checkList( $this->_core->get_dataElement( 'lists', 'whitelist' ) );
 			if ( $found ) {
 				$this->ip_in_white_list = true;
 			}
@@ -467,7 +467,7 @@ class AVH_FDAS_SpamCheck
 			$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas' ), $this->_visiting_ip );
 			$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
 			if ( $this->_core_options['php']['usehoneypot'] ) {
-					$m .= $this->getHtmlHoneyPotUrl();
+				$m .= $this->getHtmlHoneyPotUrl();
 			}
 			wp_die( $m );
 		} else {
@@ -475,8 +475,9 @@ class AVH_FDAS_SpamCheck
 		}
 	}
 
-	public function getHtmlHoneyPotUrl (){
-		return ('<p><div style="display: none;"><a href="' . $this->_core->get_optionElement('php','honeypoturl') . '">AVH Software</a></div></p>');
+	public function getHtmlHoneyPotUrl ()
+	{
+		return ('<p><div style="display: none;"><a href="' . $this->_core->get_optionElement( 'php', 'honeypoturl' ) . '">AVH Software</a></div></p>');
 	}
 }
 ?>
