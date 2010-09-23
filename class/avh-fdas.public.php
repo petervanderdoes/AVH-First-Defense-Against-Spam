@@ -228,18 +228,18 @@ class AVH_FDAS_Public
 	 */
 	public function actionHandleMainAction ()
 	{
-		// To be safe, set the spammer_detected to false;
-		$this->_spamcheck->spammer_detected = FALSE;
-		$this->_spamcheck->checkWhitelist();
-		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
-			$this->_spamcheck->checkBlacklist();
-			if ( $this->_spamcheck->spammer_detected === FALSE ) {
-				$this->_spamcheck->doIPCacheCheck();
-				if ( $this->_spamcheck->ip_in_cache === FALSE ) {
-					$this->_spamcheck->doProjectHoneyPotIPCheck();
+		if ( ! (did_action( 'preprocess_comment' )) ) {
+			$this->_spamcheck->checkWhitelist();
+			if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
+				$this->_spamcheck->checkBlacklist();
+				if ( $this->_spamcheck->spammer_detected === FALSE ) {
+					$this->_spamcheck->doIPCacheCheck();
+					if ( $this->_spamcheck->ip_in_cache === FALSE ) {
+						$this->_spamcheck->doProjectHoneyPotIPCheck();
+					}
 				}
+				$this->_spamcheck->handleResults();
 			}
-			$this->_spamcheck->handleResults();
 		}
 	}
 
@@ -251,15 +251,20 @@ class AVH_FDAS_Public
 	 */
 	public function actionHandlePostingComment ( $commentdata )
 	{
-    	if ( $this->_spamcheck->spammer_detected === FALSE ) {
-			$this->_spamcheck->doIPCacheCheck();
-			if ( $this->_spamcheck->ip_in_cache === FALSE ) {
-				$this->_spamcheck->doStopForumSpamIPCheck();
+		$this->_spamcheck->checkWhitelist();
+		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
+			$this->_spamcheck->checkBlacklist();
+			if ( $this->_spamcheck->spammer_detected === FALSE ) {
+				$this->_spamcheck->doIPCacheCheck();
+				if ( $this->_spamcheck->ip_in_cache === FALSE ) {
+					$this->_spamcheck->doStopForumSpamIPCheck();
+					$this->_spamcheck->doProjectHoneyPotIPCheck();
+				}
 			}
+			$this->_spamcheck->handleResults();
 		}
-		$this->_spamcheck->handleResults();
 
-	return ($commentdata);
+		return ($commentdata);
 	}
 
 	/**
@@ -270,7 +275,7 @@ class AVH_FDAS_Public
 	 */
 	public function actionHandleRegistration ( $sanitized_user_login, $user_email, $errors )
 	{
-    	if ( $this->_spamcheck->spammer_detected === FALSE ) {
+		if ( $this->_spamcheck->spammer_detected === FALSE ) {
 			$this->_spamcheck->doIPCacheCheck();
 			if ( $this->_spamcheck->ip_in_cache === FALSE ) {
 				$this->_spamcheck->doStopForumSpamIPCheck();
