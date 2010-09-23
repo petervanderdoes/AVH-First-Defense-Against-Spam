@@ -276,7 +276,7 @@ class AVH_FDAS_Public
 	 */
 	public function actionHandleRegistration ( $sanitized_user_login, $user_email, $errors )
 	{
-			$this->_spamcheck->checkWhitelist();
+		$this->_spamcheck->checkWhitelist();
 		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
 			$this->_spamcheck->checkBlacklist();
 			if ( $this->_spamcheck->spammer_detected === FALSE ) {
