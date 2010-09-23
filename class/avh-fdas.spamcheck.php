@@ -83,7 +83,7 @@ class AVH_FDAS_SpamCheck
 		$time_end = microtime( true );
 		$time = $time_end - $time_start;
 		if ( !(FALSE === $this->ip_in_cache) ) {
-			if ( $this->ip_in_cache->spam === 1 ) {
+			if ( $this->ip_in_cache->spam === '1' ) {
 				$this->spaminfo['cache']['time'] = $time;
 				$this->spammer_detected = TRUE;
 			}
