@@ -48,6 +48,7 @@ final class AVH_FDAS_Admin
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class( 'Core', 'plugin', TRUE );
 		$this->_db = $this->_classes->load_class( 'DB', 'plugin', TRUE );
+		$this->_db = $this->_classes->load_class( 'DB', 'plugin', TRUE );
 
 		// Admin URL and Pagination
 		$this->_core->admin_base_url = $this->_settings->siteurl . '/wp-admin/admin.php?page=';
@@ -1094,7 +1095,7 @@ final class AVH_FDAS_Admin
 					$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->avhfdasipcache WHERE ip=INET_ATON(%s)", $comment->comment_author_IP ) );
 				}
 			}
-			$this->handleReportSpammer( $comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP );
+			$this->_handleReportSpammer( $comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP );
 
 			// Delete the comment
 			$r = wp_delete_comment( $comment->comment_ID );
@@ -1123,7 +1124,7 @@ final class AVH_FDAS_Admin
 			$all = get_option( $this->_core->get_db_nonces() );
 			$extra = '&m=' . AVHFDAS_ERROR_NOT_REPORTED . '&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
-				$this->handleReportSpammer( $a, $e, $i );
+				$this->_handleReportSpammer( $a, $e, $i );
 				unset( $all[$_REQUEST['_avhnonce']] );
 				update_option( $this->_core->db_nonce, $all );
 				$extra = '&m=' . AVHFDAS_REPORTED . '&i=' . $i;
