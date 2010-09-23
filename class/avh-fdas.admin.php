@@ -1338,7 +1338,7 @@ final class AVH_FDAS_Admin
 			switch ( $option[2] )
 			{
 				case 'checkbox' :
-					$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . esc_attr( $option[3] ) . '" ' . $this->_isChecked( '1', $option_actual[$section][$option_key] ) . ' />' . "\n";
+					$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . esc_attr( $option[3] ) . '" ' . checked( '1', $option_actual[$section][$option_key], FALSE ) . ' />' . "\n";
 					$explanation = $option[4];
 					break;
 				case 'dropdown' :
@@ -1346,7 +1346,7 @@ final class AVH_FDAS_Admin
 					$seltext = explode( '/', $option[4] );
 					$seldata = '';
 					foreach ( ( array ) $selvalue as $key => $sel ) {
-						$seldata .= '<option value="' . $sel . '" ' . (($option_actual[$section][$option_key] == $sel) ? 'selected="selected"' : '') . ' >' . ucfirst( $seltext[$key] ) . '</option>' . "\n";
+						$seldata .= '<option value="' . $sel . '" ' . selected($sel, $option_actual[$section][$option_key],FALSE) . ' >' . ucfirst( $seltext[$key] ) . '</option>' . "\n";
 					}
 					$input_type = '<select id="' . $option[0] . '" name="' . $option[0] . '">' . $seldata . '</select>' . "\n";
 					$explanation = $option[5];
@@ -1375,22 +1375,6 @@ final class AVH_FDAS_Admin
 		}
 		$output .= '</table>' . "\n";
 		return $output;
-	}
-
-	/**
-	 * Used in forms to set an option checked
-	 *
-	 * @param mixed $checked
-	 * @param mixed $current
-	 * @return strings
-	 */
-	private function _isChecked ( $checked, $current )
-	{
-		$return = '';
-		if ( $checked == $current ) {
-			$return = ' checked="checked"';
-		}
-		return $return;
 	}
 
 	/**
