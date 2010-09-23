@@ -420,7 +420,7 @@ class AVH_FDAS_SpamCheck
 				}
 				$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
 				if ( $this->_core_options['php']['usehoneypot'] ) {
-					$m .= '<p>' . $this->_core_options['php']['honeypoturl'] . '</p>';
+					$m .= $this->getHtmlHoneyPotUrl();
 				}
 				wp_die( $m );
 			} else {
@@ -466,10 +466,17 @@ class AVH_FDAS_SpamCheck
 		if ( 1 == $this->_core_options['general']['diewithmessage'] ) {
 			$m = sprintf( __( '<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas' ), $this->_visiting_ip );
 			$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
+			if ( $this->_core_options['php']['usehoneypot'] ) {
+					$m .= $this->getHtmlHoneyPotUrl();
+			}
 			wp_die( $m );
 		} else {
 			die();
 		}
+	}
+
+	public function getHtmlHoneyPotUrl (){
+		return ('<p><div style="display: none;"><a href="' . $this->_core->get_optionElement('php','honeypoturl') . '">AVH Software</a></div></p>');
 	}
 }
 ?>
