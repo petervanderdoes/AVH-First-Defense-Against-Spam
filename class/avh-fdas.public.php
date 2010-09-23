@@ -42,18 +42,15 @@ class AVH_FDAS_Public
 		$this->_core_options = $this->_core->get_options();
 
 		// Public actions and filters
-		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
-		add_action( 'preprocess_comment', array (&$this, 'actionHandlePostingComment' ), 1 );
 		add_action( 'comment_form', array (&$this, 'actionAddNonceFieldToComment' ) );
+		add_action( 'get_header', array (&$this, 'actionHandleMainAction' ) );
 		add_filter( 'preprocess_comment', array (&$this, 'filterCheckNonceFieldToComment' ), 1 );
+		add_action( 'preprocess_comment', array (&$this, 'actionHandlePostingComment' ), 1 );
 		add_action( 'register_post', array (&$this, 'actionHandleRegistration' ), 10, 3 );
 
 		// Private actions for Cron
 		add_action( 'avhfdas_clean_nonce', array (&$this, 'actionHandleCronCleanNonce' ) );
 		add_action( 'avhfdas_clean_ipcache', array (&$this, 'actionHandleCronCleanIPCache' ) );
-
-		add_action( 'avhfdas_checkspam_ip_header', array (&$this->_spamcheck, 'doIPCacheCheck' ) );
-		add_action( 'avhfdas_checkspam_ip_header', array (&$this->_spamcheck, 'doProjectHoneyPotIPCheck' ) );
 	}
 
 	/**
@@ -198,7 +195,6 @@ class AVH_FDAS_Public
 					wp_die( $m );
 				}
 			}
-			$this->actionHandleMainAction();
 		}
 		return $commentdata;
 	}
@@ -249,50 +245,38 @@ class AVH_FDAS_Public
 
 	/**
 	 * Handle when posting a comment.
+	 * We only check for Stop Forum Spam, other checks are done during the action get_header
 	 *
-	 * @uses SFS, PHP
 	 * @WordPress Action preprocess_comment
 	 */
 	public function actionHandlePostingComment ( $commentdata )
 	{
-		// To be safe, set the spammer_detected to false;
-		$this->_spamcheck->spammer_detected = FALSE;
-		$this->_spamcheck->checkWhitelist();
-		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
-			$this->_spamcheck->checkBlacklist();
-			if ( $this->_spamcheck->spammer_detected === FALSE ) {
-				$this->_spamcheck->doIPCacheCheck();
-				if ( $this->_spamcheck->ip_in_cache === FALSE ) {
-					$this->_spamcheck->doStopForumSpamIPCheck();
-					$this->_spamcheck->doProjectHoneyPotIPCheck();
-				}
+    	if ( $this->_spamcheck->spammer_detected === FALSE ) {
+			$this->_spamcheck->doIPCacheCheck();
+			if ( $this->_spamcheck->ip_in_cache === FALSE ) {
+				$this->_spamcheck->doStopForumSpamIPCheck();
 			}
-			$this->_spamcheck->handleResults();
 		}
-		return ($commentdata);
+		$this->_spamcheck->handleResults();
+
+	return ($commentdata);
 	}
 
 	/**
 	 * Handle when a user registers
+	 * * We only check for Stop Forum Spam, other checks are done during the action get_header
 	 *
 	 * @WordPress Action register_post
 	 */
 	public function actionHandleRegistration ( $sanitized_user_login, $user_email, $errors )
 	{
-		// To be safe, set the spammer_detected to false;
-		$this->_spamcheck->spammer_detected = FALSE;
-		$this->_spamcheck->checkWhitelist();
-		if ( $this->_spamcheck->ip_in_white_list === FALSE ) {
-			$this->_spamcheck->checkBlacklist();
-			if ( $this->_spamcheck->spammer_detected === FALSE ) {
-				$this->_spamcheck->doIPCacheCheck();
-				if ( $this->_spamcheck->ip_in_cache === FALSE ) {
-					$this->_spamcheck->doStopForumSpamIPCheck();
-					$this->_spamcheck->doProjectHoneyPotIPCheck();
-				}
+    	if ( $this->_spamcheck->spammer_detected === FALSE ) {
+			$this->_spamcheck->doIPCacheCheck();
+			if ( $this->_spamcheck->ip_in_cache === FALSE ) {
+				$this->_spamcheck->doStopForumSpamIPCheck();
 			}
-			$this->_spamcheck->handleResults();
 		}
+		$this->_spamcheck->handleResults();
 	}
 }
 ?>
