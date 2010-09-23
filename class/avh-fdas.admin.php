@@ -727,7 +727,7 @@ final class AVH_FDAS_Admin
 
 			}
 			$note = '';
-			if ( empty( $options['php']['phpapikey'] ) ) {
+			if ( ( '' === trim($options['php']['phpapikey']) ) ) {
 				$options['general']['use_php'] = 0;
 				$note = '<br \><br \>' . __( 'You can not use Project Honey Pot without an API key. Use of Project Honey Pot has been disabled', 'avhfdas' );
 			}
@@ -1061,7 +1061,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterCommentRowActions ( $actions, $comment )
 	{
-		if ( (! empty( $this->_core->get_optionElement('sfs','sfsapikey') )) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
+		if ( ( '' != $this->_core->get_optionElement('sfs','sfsapikey') ) && isset( $comment->comment_approved ) && 'spam' == $comment->comment_approved ) {
 			$report_url = clean_url( wp_nonce_url( "admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID" ) );
 			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">Report & Delete</a>';
 		}

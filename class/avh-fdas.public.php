@@ -144,6 +144,8 @@ class AVH_FDAS_Public
 					if ( 1 == $this->_core->get_optionElement('general','emailsecuritycheck') ) {
 						$to = get_option( 'admin_email' );
 						$ip = AVH_Visitor::getUserIP();
+						$sfs_apikey= $this->_core->get_optionElement('sfs','sfsapikey');
+
 						$commentdata['comment_author_email'] = empty( $commentdata['comment_author_email'] ) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
 						$subject = sprintf( __( '[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
 						if ( isset( $_POST['_avh_first_defense_against_spam'] ) ) {
@@ -160,7 +162,7 @@ class AVH_FDAS_Public
 						$message[] = $commentdata['comment_content'];
 						$message[] = __( '--- END OF COMMENT ---', 'avhfdas' );
 						$message[] = '';
-						if ( ! empty( $this->_core->get_optionElement('sfs','sfsapikey') ) ) {
+						if ( '' != $sfs_apikey  ) {
 							$q['action'] = 'emailreportspammer';
 							$q['a'] = $commentdata['comment_author'];
 							$q['e'] = $commentdata['comment_author_email'];
@@ -179,7 +181,7 @@ class AVH_FDAS_Public
 
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam
-					if ( ! empty( $this->_core->get_optionElement('sfs','sfsapikey') ) ) {
+					if ( '' != $sfs_apikey ) {
 						// Prevent a spam attack to overflow the database.
 						if ( ! ($this->_checkDB_Nonces( $q['_avhnonce'] )) ) {
 							$option = get_option( $this->_core->get_db_nonces() );
