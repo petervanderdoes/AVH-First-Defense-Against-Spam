@@ -113,7 +113,7 @@ class AVH_FDAS_Core
 		$this->_setTables();
 
 		// Check if we have to do upgrades
-		if ( (! isset( $this->get_optionElement('general','dbversion') )) || $this->get_optionElement('general','dbversion') < $this->_db_version ) {
+		if ( (! isset( $this->_options['general']['dbversion'] )) || $this->get_optionElement('general','dbversion') < $this->_db_version ) {
 			$this->_doUpgrade();
 		}
 
