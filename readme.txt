@@ -110,7 +110,7 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 * Bugfix: Checking for spammers when a comment is posted did not utilize the IP cache.
 * Plugin is refactored
 * When an IP is reported to Stop Forum Spam, using Report & Delete, and IP caching is used, the IP is deleted from the cache as the IP is marked as ham in the cache.
-* When an update is available it will show the changelog in the plugin screen of WordPress
+* When an update is available it will show the changelog on the plugin screen of WordPress
 
 = Version 2.3.2 =
 * Bugfix: Commenting didn't work anymore.
