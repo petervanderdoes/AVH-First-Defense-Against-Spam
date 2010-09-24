@@ -48,7 +48,6 @@ final class AVH_FDAS_Admin
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class( 'Core', 'plugin', TRUE );
 		$this->_db = $this->_classes->load_class( 'DB', 'plugin', TRUE );
-		$this->_db = $this->_classes->load_class( 'DB', 'plugin', TRUE );
 
 		// Admin URL and Pagination
 		$this->_core->admin_base_url = $this->_settings->siteurl . '/wp-admin/admin.php?page=';
@@ -1119,15 +1118,15 @@ final class AVH_FDAS_Admin
 		$e = esc_html( $_REQUEST['e'] );
 		$i = esc_html( $_REQUEST['i'] );
 
-		$extra = '&m=' . AVHFDAS_ERROR_INVALID_REQUEST . '&i=' . $i;
+		$extra = '&m=' . AVH_FDAS_Define::ERROR_INVALID_REQUEST . '&i=' . $i;
 		if ( AVH_Security::verifyNonce( $_REQUEST['_avhnonce'], $a . $e . $i ) ) {
 			$all = get_option( $this->_core->get_db_nonces() );
-			$extra = '&m=' . AVHFDAS_ERROR_NOT_REPORTED . '&i=' . $i;
+			$extra = '&m=' . AVH_FDAS_Define::ERROR_NOT_REPORTED . '&i=' . $i;
 			if ( isset( $all[$_REQUEST['_avhnonce']] ) ) {
 				$this->_handleReportSpammer( $a, $e, $i );
 				unset( $all[$_REQUEST['_avhnonce']] );
 				update_option( $this->_core->db_nonce, $all );
-				$extra = '&m=' . AVHFDAS_REPORTED . '&i=' . $i;
+				$extra = '&m=' . AVH_FDAS_Define::REPORTED . '&i=' . $i;
 			}
 			unset( $all );
 		}
@@ -1171,12 +1170,12 @@ final class AVH_FDAS_Admin
 			if ( ! (in_array( $ip, $b )) ) {
 				array_push( $b, $ip );
 				$this->_setBlacklistOption( $b );
-				wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVHFDAS_ADDED_BLACKLIST . '&i=' . $ip ) );
+				wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVH_FDAS_Define::ADDED_BLACKLIST . '&i=' . $ip ) );
 			} else {
-				wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVHFDAS_ERROR_EXISTS_IN_BLACKLIST . '&i=' . $ip ) );
+				wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVH_FDAS_Define::ERROR_EXISTS_IN_BLACKLIST . '&i=' . $ip ) );
 			}
 		} else {
-			wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVHFDAS_ERROR_INVALID_REQUEST ) );
+			wp_redirect( admin_url( 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '&m=' . AVH_FDAS_Define::ERROR_INVALID_REQUEST ) );
 		}
 	}
 
