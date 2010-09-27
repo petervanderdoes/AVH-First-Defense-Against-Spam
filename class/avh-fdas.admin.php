@@ -1236,7 +1236,7 @@ final class AVH_FDAS_Admin
 			if ( ! empty( $wpdb->collate ) ) $charset_collate .= ' COLLATE ' . $wpdb->collate;
 		}
 
-		if ( $wpdb->get_var( 'show tables like \'' . $wpdb->avhfdasipcache . '\'' ) != $wpdb->avhfdasipcache ) {
+		if ( $wpdb->get_var( 'show tables like \'' . $wpdb->avhfdasipcache . '\'' ) === NULL ) {
 
 			$sql = 'CREATE TABLE `' . $wpdb->avhfdasipcache . '` (
   					`ip` int(10) unsigned NOT NULL,
