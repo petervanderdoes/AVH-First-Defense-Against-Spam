@@ -99,8 +99,11 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 
 3. The option Report & Delete
 
+== Upgrade Notice ==
+Starting with version 3.0 this plugin is for PHP5 only.
+
 == Changelog ==
-= 3.0 =
+= Version 3.0 =
 * Plugin is for PHP5 only
 * RFC: Spam check is performed when a user registers.
 * Important!: When using a Honey Pot URL, change the option to be a URL only, the plugin will add the neccessary HTML by default.
