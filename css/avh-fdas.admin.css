@@ -26,14 +26,14 @@ table.avhfdas-options {
 #avhfdas-options input {
 	font-size: 11px;
 }
+
 #avhfdas-generaloptions input {
 	font-size: 11px;
 }
 
 /* Statistics */
-
-#avhfdasBoxStats p.sub,
-#avhfdasBoxStats .table, #avhfdasBoxStats .versions {
+#avhfdasBoxStats p.sub,#avhfdasBoxStats .table,#avhfdasBoxStats .versions
+	{
 	margin: -12px;
 }
 
@@ -43,7 +43,8 @@ table.avhfdas-options {
 
 #avhfdasBoxStats p.sub {
 	font-style: italic;
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times,
+		serif;
 	padding: 5px 10px 15px;
 	color: #777;
 	font-size: 13px;
@@ -74,7 +75,8 @@ table.avhfdas-options {
 #avhfdasBoxStats td.b {
 	padding-right: 6px;
 	text-align: right;
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times,
+		serif;
 	font-size: 14px;
 }
 
@@ -93,8 +95,7 @@ table.avhfdas-options {
 	color: #777;
 }
 
-#avhfdasBoxStats td.first,
-#avhfdasBoxStats td.last {
+#avhfdasBoxStats td.first,#avhfdasBoxStats td.last {
 	width: 1px;
 }
 
@@ -116,9 +117,9 @@ table.avhfdas-options {
 
 /* FAQ */
 #avhfdasBoxFAQ ul {
-	list-style-image:none;
-	list-style-position:inside;
-	list-style-type:disc;
+	list-style-image: none;
+	list-style-position: inside;
+	list-style-type: disc;
 }
 
 #avhfdasBoxFAQ li {
@@ -131,8 +132,8 @@ table.avhfdas-options {
 
 #avhfdasBoxFAQ table th {
 	font-size: 11px;
-	font-weight:normal;
-	padding-right:0.5em;
+	font-weight: normal;
+	padding-right: 0.5em;
 	vertical-align: bottom;
 }
 
@@ -153,7 +154,6 @@ table.avhfdas-options {
 	padding-top: 6px;
 }
 
-#avhfdasBoxFAQ td.first,
-#avhfdasBoxFAQ td.last {
+#avhfdasBoxFAQ td.first,#avhfdasBoxFAQ td.last {
 	width: 1px;
 }

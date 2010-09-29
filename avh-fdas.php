@@ -3,7 +3,7 @@
 Plugin Name: AVH First Defense Against Spam
 Plugin URI: http://blog.avirtualhome.com/wordpress-plugins
 Description: This plugin gives you the ability to block spammers before content is served.
-Version: 2.3.3
+Version: 3.0
 Author: Peter van der Does
 Author URI: http://blog.avirtualhome.com/
 
@@ -23,32 +23,60 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+if ( ! defined( 'AVH_FRAMEWORK' ) ) {
+	define( 'AVH_FRAMEWORK', TRUE );
+}
 
-// Define Message Numbers
-define( 'AVHFDAS_REPORTED_DELETED', '100' );
-define( 'AVHFDAS_ADDED_BLACKLIST', '101' );
-define( 'AVHFDAS_REPORTED', '102' );
-define( 'AVHFDAS_ERROR_INVALID_REQUEST', '200' );
-define( 'AVHFDAS_ERROR_NOT_REPORTED', '201' );
-define( 'AVHFDAS_ERROR_EXISTS_IN_BLACKLIST', '202' );
+$_dir = pathinfo( __FILE__, PATHINFO_DIRNAME );
+$_basename = plugin_basename( __FILE__ );
+require_once ($_dir . '/libs/avh-registry.php');
+require_once ($_dir . '/libs/avh-common.php');
+require_once ($_dir . '/libs/avh-security.php');
+require_once ($_dir . '/libs/avh-visitor.php');
+require_once ($_dir . '/class/avh-fdas.registry.php');
+require_once ($_dir . '/class/avh-fdas.define.php');
 
-// Check version.
-// Include WordPress version
-require (ABSPATH . WPINC . '/version.php');
+if ( AVH_Common::getWordpressVersion() >= 2.8 ) {
 
-if ( ( float ) $wp_version >= 2.7 ) {
-	require (dirname( __FILE__ ) . '/avh-fdas.client.php');
+	$_classes = AVH_FDAS_Classes::getInstance();
+	$_classes->setDir( $_dir );
+	$_classes->setClassFilePrefix( 'avh-fdas.' );
+	$_classes->setClassNamePrefix( 'AVH_FDAS_' );
+	unset( $_classes );
+
+	$_settings = AVH_FDAS_Settings::getInstance();
+	$_settings->storeSetting( 'plugin_dir', $_dir );
+	$_settings->storeSetting( 'plugin_basename', $_basename );
+
+	require ($_dir . '/avh-fdas.client.php');
 } else {
-	add_action( 'activate_avh-first-defense-against-spam/avh-fdas.php', 'avh_fdas_remove_plugin' );
+	add_action( 'activate_' . AVH_FDAS_Define::PLUGIN_FILE, 'avh_fdas_remove_plugin' );
 
 }
 
 function avh_fdas_remove_plugin ()
 {
-	$current = get_option( 'active_plugins' );
-	$num = array_search( 'avh-first-defense-against-spam/avh-fdas.php', $current );
-	array_splice( $current, $num, 1 ); // Array-fu!
-	update_option( 'active_plugins', $current );
+	$active_plugins = ( array ) get_option( 'active_plugins' );
+
+	// workaround for WPMU deactivation bug
+	remove_action( 'deactivate_' . AVH_FDAS_Define::PLUGIN_FILE, 'deactivate_sitewide_plugin' );
+
+	$key = array_search( AVH_FDAS_Define::PLUGIN_FILE, $active_plugins );
+
+	if ( $key !== false ) {
+		do_action( 'deactivate_plugin', AVH_FDAS_Define::PLUGIN_FILE );
+
+		array_splice( $active_plugins, $key, 1 );
+
+		do_action( 'deactivate_' . AVH_FDAS_Define::PLUGIN_FILE );
+		do_action( 'deactivated_plugin', AVH_FDAS_Define::PLUGIN_FILE );
+
+		update_option( 'active_plugins', $active_plugins );
+
+	} else {
+		do_action( 'deactivate_' . AVH_FDAS_Define::PLUGIN_FILE );
+	}
+
 	ob_end_clean();
 	wp_die( __( 'AVH First Defense Against Spam can\'t work with this WordPress version!', 'avhfdas' ) );
 }

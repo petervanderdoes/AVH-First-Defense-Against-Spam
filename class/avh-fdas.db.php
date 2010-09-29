@@ -9,20 +9,11 @@ class AVH_FDAS_DB
 {
 
 	/**
-	 * PHP4 constructor.
-	 *
-	 */
-	function AVH_FDAS_DB ()
-	{
-		return $this->__construct();
-	}
-
-	/**
 	 * PHP5 Constructor
 	 * Init the Database Abstraction layer
 	 *
 	 */
-	function __construct ()
+	public function __construct ()
 	{
 		register_shutdown_function( array (&$this, '__destruct' ) );
 	}
@@ -32,7 +23,7 @@ class AVH_FDAS_DB
 	 *
 	 * @return bool Always true
 	 */
-	function __destruct ()
+	public function __destruct ()
 	{
 		return true;
 	}
@@ -42,7 +33,7 @@ class AVH_FDAS_DB
 	 * @param $ip
 	 * @return ip Object (false if not found)
 	 */
-	function getIP ( $ip )
+	public function getIP ( $ip )
 	{
 		global $wpdb;
 
@@ -62,7 +53,7 @@ class AVH_FDAS_DB
 	 * @param $spam number
 	 * @return Object (false if not found)
 	 */
-	function insertIP ( $ip, $spam )
+	public function insertIP ( $ip, $spam )
 	{
 		global $wpdb;
 		$date = current_time( 'mysql' );
@@ -80,7 +71,7 @@ class AVH_FDAS_DB
 	 * @param $ip string
 	 * @return Object (false if not found)
 	 */
-	function updateIP ( $ip )
+	public function updateIP ( $ip )
 	{
 		global $wpdb;
 		$date = current_time( 'mysql' );
@@ -93,5 +84,17 @@ class AVH_FDAS_DB
 		}
 	}
 
+	/**
+	 * Mark an known IP as spam
+	 * @param $ip
+	 */
+	public function doMarkIPSpam ( $ip )
+	{
+		global $wpdb;
+		$ip_info = $this->getIP( $ip );
+		if ( is_object( $ip_info ) ) {
+			$result = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=INET_ATON(%s)", $ip ) );
+		}
+	}
 }
 ?>

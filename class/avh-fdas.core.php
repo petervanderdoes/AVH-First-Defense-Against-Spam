@@ -1,8 +1,5 @@
 <?php
-// Stop direct call
-if ( preg_match( '#' . basename( __FILE__ ) . '#', $_SERVER['PHP_SELF'] ) ) {
-	die( 'You are not allowed to call this page directly.' );
-}
+if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
 
 class AVH_FDAS_Core
 {
@@ -11,15 +8,15 @@ class AVH_FDAS_Core
 	 *
 	 * @var string
 	 */
-	var $version;
-	var $db_version;
+	private $_version;
+	private $_db_version;
 
 	/**
 	 * Comments used in HTML do identify the plugin
 	 *
 	 * @var string
 	 */
-	var $comment;
+	private $_comment;
 
 	/**
 	 * Paths and URI's of the WordPress information, 'home', 'siteurl', 'install_url', 'install_dir'
@@ -33,153 +30,113 @@ class AVH_FDAS_Core
 	 *
 	 * @var array
 	 */
-	var $options;
 
 	/**
-	 * Default options for the plugin
+	 * Properties used for the plugin options
 	 *
-	 * @var array
 	 */
-	var $default_general_options;
-	var $default_options;
-	var $default_spam;
-	var $default_honey;
-	var $default_ipcache;
-	var $default_nonces;
-	var $data;
-	var $default_data;
-	var $default_data_lists;
-	var $default_spam_data;
-	var $default_nonces_data;
+	private $_db_options;
+	private $_default_options;
+	private $_default_options_general;
+	private $_default_options_spam;
+	private $_default_options_honey;
+	private $_default_options_ipcache;
+	private $_options;
 
 	/**
-	 * Name of the options field in the WordPress database options table.
-	 *
-	 * @var string
+	 * Properties used for the plugin data
 	 */
-	var $db_options_core;
-	var $db_options_data;
-	var $db_options_nonces;
+	private $_db_data;
+	private $_default_data;
+	private $_default_data_lists;
+	private $_default_data_spam;
+	private $_data;
 
 	/**
-	 * Endpoint of the stopforumspam.com API
 	 *
-	 * @var string
+	 * Properties used for the plugin nonces data
 	 */
-	var $stopforumspam_endpoint;
+	private $_db_nonces;
+	private $_default_nonces;
+	private $_default_nonces_data;
 
-	var $searchengines;
+	/**
+	 *
+	 * @var AVH_FDAS_Settings
+	 */
+	private $_settings;
 
 	/**
 	 * PHP5 constructor
 	 *
 	 */
-	function __construct ()
+	public function __construct ()
 	{
-		$this->version = "2.3.3";
-		$this->db_version = 8;
-		$this->comment = '<!-- AVH First Defense Against Spam version ' . $this->version;
-		$this->db_options_core = 'avhfdas';
-		$this->db_options_data = 'avhfdas_data';
-		$this->db_options_nonces = 'avhfdas_nonces';
+		$this->_settings = AVH_FDAS_Settings::getInstance();
+
+		$this->_db_version = 8;
+		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
+		$this->_db_options = 'avhfdas';
+		$this->_db_data = 'avhfdas_data';
+		$this->_db_nonces = 'avhfdas_nonces';
 
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->default_general_options = array ('version' => $this->version, 'dbversion' => $this->db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
-		$this->default_spam = array ('whentoemail' => - 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
-		$this->default_honey = array ('whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
-		$this->default_ipcache = array ('email' => 0, 'daystokeep' => 7 );
-		$this->default_spam_data = array ('190001' => 0 );
-		$this->default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
+		$this->_default_options_general = array ('version' => AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion' => $this->_db_version, 'use_sfs' => 1, 'use_php' => 0, 'useblacklist' => 1, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
+		$this->_default_options_spam = array ('whentoemail' => - 1, 'emailphp' => 0, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
+		$this->_default_options_honey = array ('whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
+		$this->_default_options_ipcache = array ('email' => 0, 'daystokeep' => 7 );
+		$this->_default_options = array ('general' => $this->_default_options_general, 'sfs' => $this->_default_options_spam, 'php' => $this->_default_options_honey, 'ipcache' => $this->_default_options_ipcache );
 
 		/**
-		 * Default Options - All as stored in the DB
+		 *
+		 * Default Data
 		 */
-		$this->default_options = array ('general' => $this->default_general_options, 'sfs' => $this->default_spam, 'php' => $this->default_honey, 'ipcache' => $this->default_ipcache );
-		$this->default_data = array ('counters' => $this->default_spam_data, 'lists' => $this->default_data_lists );
-		$this->default_nonces = array ('default' => $this->default_nonces_data );
+		$this->_default_data_spam = array ('190001' => 0 );
+		$this->_default_data_lists = array ('blacklist' => '', 'whitelist' => '' );
+		$this->_default_data = array ('counters' => $this->_default_data_spam, 'lists' => $this->_default_data_lists );
+
+		/**
+		 * Default Nonces
+		 */
+		$this->_default_nonces_data = NULL;
+		$this->_default_nonces = array ('default' => $this->_default_nonces_data );
 
 		/**
 		 * Set the options for the program
 		 *
 		 */
-		$this->loadOptions();
-		$this->loadData();
-		$this->setTables();
-		//$this->data = $this->handleOptionsDB( $this->default_data, $this->db_options_data );
-
+		$this->load_options();
+		$this->load_data();
+		$this->_setTables();
 
 		// Check if we have to do upgrades
-		if ( (! isset( $this->options['general']['dbversion'] )) || $this->options['general']['dbversion'] < $this->db_version ) {
-			$this->doUpgrade();
+		if ( (! isset( $this->_options['general']['dbversion'] )) || $this->get_optionElement( 'general', 'dbversion' ) < $this->_db_version ) {
+			$this->_doUpgrade();
 		}
 
-		$this->searchengines = array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' );
+		$this->_settings->storeSetting( 'siteurl', get_option( 'siteurl' ) );
+		$this->_settings->storeSetting( 'lang_dir', $this->_settings->plugin_working_dir . '/lang' );
+		$this->_settings->storeSetting( 'graphics_url', plugins_url( 'images', $this->_settings->plugin_basename ) );
+		$this->_settings->storeSetting( 'js_url', plugins_url( 'js', $this->_settings->plugin_basename ) );
+		$this->_settings->storeSetting( 'css_url', plugins_url( 'css', $this->_settings->plugin_basename ) );
+		$this->_settings->storeSetting( 'searchengines', array ('0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ) );
 
-		$info['siteurl'] = get_option( 'siteurl' );
-		if ( $this->isMuPlugin() ) {
-			$info['plugin_url'] = WPMU_PLUGIN_URL;
-			$info['plugin_dir'] = WPMU_PLUGIN_DIR;
-		} else {
-			$info['plugin_url'] = WP_PLUGIN_URL;
-			$info['plugin_dir'] = WP_PLUGIN_DIR;
-		}
+		$footer[] = '';
+		$footer[] = '--';
+		$footer[] = sprintf( __( 'Your blog is protected by AVH First Defense Against Spam v%s' ), AVH_FDAS_Define::PLUGIN_VERSION );
+		$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
+		$this->_settings->storeSetting( 'mail_footer', $footer );
 
-		// Determine installation path & url
-		// $info['home_path'] = get_home_path();
-		$info['home_path'] = '';
-		$path = str_replace( '\\', '/', dirname( __FILE__ ) );
-		$path = str_replace( $info['plugin_dir'], '', $path );
-		$path = $this->getBaseDirectory( $path );
-
-		$info['plugin_url'] = $info['plugin_url'] . '/' . $path;
-		$info['plugin_dir'] = $info['plugin_dir'] . '/' . $path;
-
-		// Set class property for info
-		$this->info = array ('home' => get_option( 'home' ), 'siteurl' => $info['siteurl'], 'plugin_url' => $info['plugin_url'], 'plugin_dir' => $info['plugin_dir'], 'graphics_url' => $info['plugin_url'] . '/images', 'home_path' => $info['home_path'], 'wordpress_version' => $this->getWordpressVersion() );
-		$this->stopforumspam_endpoint = 'http://www.stopforumspam.com/api';
-
-		/**
-		 * TODO Localization
-		 */
-		// Localization.
-		//$locale = get_locale();
-		//if ( !empty( $locale ) ) {
-		//	$mofile = $this->info['plugin_dir'].'/languages/avhamazon-'.$locale.'.mo';
-		//	load_textdomain('avhfdas', $mofile);
-		//}
 		return;
-	}
-
-	/**
-	 * PHP4 constructor - Initialize the Core
-	 *
-	 * @return
-	 */
-	function AVH_FDAS_Core ()
-	{
-		$this->__construct();
-	}
-
-	/**
-	 * Test if local installation is mu-plugin or a classic plugin
-	 *
-	 * @return boolean
-	 */
-	function isMuPlugin ()
-	{
-		if ( strpos( dirname( __FILE__ ), 'mu-plugins' ) ) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
 	 * Setup DB Tables
 	 * @return unknown_type
 	 */
-	function setTables ()
+	private function _setTables ()
 	{
 		global $wpdb;
 
@@ -188,61 +145,29 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * Sets data according to the the DB
-	 *
-	 * @param array $default_data
-	 * @param atring $optionsdb
-	 * @return array
-	 *
-	 */
-	function handleOptionsDB ( $default_data, $optionsdb )
-	{
-		// Get options from WP options
-		$data_from_table = get_option( $optionsdb );
-		if ( is_array( $data_from_table ) ) {
-			// Update default options by getting not empty values from options table
-			foreach ( $default_data as $section_key => $section_array ) {
-				foreach ( array_keys( $section_array ) as $name ) {
-					/**
-					 * We only set the data if the following is all TRUE
-					 * 1. The option exists in the DB.
-					 * 2. If the value and type are different in the DB
-					 *
-					 * We don't handle the version option. This is handled seperately to accomodate upgrades.
-					 */
-					if ( isset( $data_from_table[$section_key][$name] ) && ('version' != $name) && (! ($default_data[$section_key][$name] === $data_from_table[$section_key][$name])) ) {
-						$default_data[$section_key][$name] = $data_from_table[$section_key][$name];
-					}
-				}
-			}
-		}
-		return ($default_data);
-	}
-
-	/**
 	 * Checks if running version is newer and do upgrades if necessary
 	 *
 	 */
-	function doUpgrade ()
+	private function _doUpgrade ()
 	{
-		$options = $this->getOptions();
-		$data = $this->getData();
+		$options = $this->get_options();
+		$data = $this->get_data();
 
 		if ( version_compare( $options['general']['version'], '2.0-rc1', '<' ) ) {
-			list ( $options, $data ) = $this->doUpgrade20( $options, $data );
+			list ( $options, $data ) = $this->_doUpgrade20( $options, $data );
 		}
 
 		// Introduced dbversion starting with v2.1
 		if ( ! isset( $options['general']['dbversion'] ) || $options['general']['dbversion'] < 4 ) {
-			list ( $options, $data ) = $this->doUpgrade21( $options, $data );
+			list ( $options, $data ) = $this->_doUpgrade21( $options, $data );
 		}
 
 		if ( $options['general']['dbversion'] < 5 ) {
-			list ( $options, $data ) = $this->doUpgrade22( $options, $data );
+			list ( $options, $data ) = $this->_doUpgrade22( $options, $data );
 		}
 
 		// Add none existing sections and/or elements to the options
-		foreach ( $this->default_options as $section => $default_options ) {
+		foreach ( $this->_default_options as $section => $default_options ) {
 			if ( ! array_key_exists( $section, $options ) ) {
 				$options[$section] = $default_options;
 				continue;
@@ -255,7 +180,7 @@ class AVH_FDAS_Core
 		}
 
 		// Add none existing sections and/or elements to the data
-		foreach ( $this->default_data as $section => $default_data ) {
+		foreach ( $this->_default_data as $section => $default_data ) {
 			if ( ! array_key_exists( $section, $data ) ) {
 				$data[$section] = $default_data;
 				continue;
@@ -266,10 +191,10 @@ class AVH_FDAS_Core
 				}
 			}
 		}
-		$options['general']['version'] = $this->version;
-		$options['general']['dbversion'] = $this->db_version;
-		$this->saveOptions( $options );
-		$this->saveData( $data );
+		$options['general']['version'] = AVH_FDAS_Define::PLUGIN_VERSION;
+		$options['general']['dbversion'] = $this->_db_version;
+		$this->save_options( $options );
+		$this->save_data( $data );
 	}
 
 	/**
@@ -280,7 +205,7 @@ class AVH_FDAS_Core
 	 * @return array
 	 *
 	 */
-	function doUpgrade20 ( $old_options, $old_data )
+	private function _doUpgrade20 ( $old_options, $old_data )
 	{
 		$new_options = $old_options;
 		$new_data = $old_data;
@@ -317,7 +242,7 @@ class AVH_FDAS_Core
 	 * @return array
 	 *
 	 */
-	function doUpgrade21 ( $old_options, $old_data )
+	private function _doUpgrade21 ( $old_options, $old_data )
 	{
 		$new_options = $old_options;
 		$new_data = $old_data;
@@ -342,7 +267,7 @@ class AVH_FDAS_Core
 	 * @param $options
 	 * @param $data
 	 */
-	function doUpgrade22 ( $old_options, $old_data )
+	private function _doUpgrade22 ( $old_options, $old_data )
 	{
 		global $wpdb;
 
@@ -364,183 +289,20 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * Get the base directory of a directory structure
-	 *
-	 * @param string $directory
-	 * @return string
-	 *
-	 */
-	function getBaseDirectory ( $directory )
-	{
-		//get public directory structure eg "/top/second/third"
-		$public_directory = dirname( $directory );
-		//place each directory into array
-		$directory_array = explode( '/', $public_directory );
-		//get highest or top level in array of directory strings
-		$public_base = max( $directory_array );
-		return $public_base;
-	}
-
-	/**
-	 * Returns the wordpress version
-	 * Note: 2.7.x will return 2.7
-	 *
-	 * @return float
-	 */
-	function getWordpressVersion ()
-	{
-		// Include WordPress version
-		require (ABSPATH . WPINC . '/version.php');
-		$version = ( float ) $wp_version;
-		return $version;
-	}
-
-	/**
-	 * Get the user's IP
-	 *
-	 * @return string
-	 */
-	function getUserIP ( $single = TRUE )
-	{
-		$ip = array ();
-
-		if ( isset( $_SERVER ) ) {
-			$ip[] = $_SERVER['REMOTE_ADDR'];
-
-			if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-				$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_CLIENT_IP'] ) );
-			}
-
-			if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-				$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
-			}
-
-			if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) {
-				$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_X_REAL_IP'] ) );
-			}
-		} else {
-			$ip[] = getenv( 'REMOTE_ADDR' );
-			if ( getenv( 'HTTP_CLIENT_IP' ) ) {
-				$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_CLIENT_IP' ) ) );
-			}
-
-			if ( getenv( 'HTTP_X_FORWARDED_FOR' ) ) {
-				$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_X_FORWARDED_FOR' ) ) );
-			}
-
-			if ( getenv( 'HTTP_X_REAL_IP' ) ) {
-				$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_X_REAL_IP' ) ) );
-			}
-		}
-
-		$dec_octet = '(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|[0-9])';
-		$ip4_address = $dec_octet . '.' . $dec_octet . '.' . $dec_octet . '.' . $dec_octet;
-
-		// Remove any non-IP stuff
-		$x = count( $ip );
-		$match = array ();
-		for ( $i = 0; $i < $x; $i ++ ) {
-			if ( preg_match( '/^' . $ip4_address . '$/', $ip[$i], $match ) ) {
-				$ip[$i] = $match[0];
-			} else {
-				$ip[$i] = '';
-			}
-			if ( empty( $ip[$i] ) ) {
-				unset( $ip[$i] );
-			}
-		}
-
-		$ip = array_values( array_unique( $ip ) );
-		if ( ! $ip[0] ) {
-			$ip[0] = '0.0.0.0'; // for some strange reason we don't have a IP
-		}
-		$return = $ip[0];
-		if ( ! $single ) {
-			$return = join( ',', $ip );
-		} else {
-
-			// decide which IP to use, trying to avoid local addresses
-			$ip = array_reverse( $ip );
-			foreach ( $ip as $i ) {
-				if ( preg_match( '/^(127\.|10\.|192\.168\.|172\.((1[6-9])|(2[0-9])|(3[0-1]))\.)/', $i ) ) {
-					continue;
-				} else {
-					$return = $i;
-					break;
-				}
-			}
-		}
-		return $return;
-	}
-
-	/**
-	 * Local nonce creation. WordPress uses the UID and sometimes I don't want that
-	 * Creates a random, one time use token.
-	 *
-	 * @param string|int $action Scalar value to add context to the nonce.
-	 * @return string The one use form token
-	 *
-	 */
-	function avh_create_nonce ( $action = -1 )
-	{
-		$i = wp_nonce_tick();
-		return substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 );
-	}
-
-	/**
-	 * Local nonce verification. WordPress uses the UID and sometimes I don't want that
-	 * Verify that correct nonce was used with time limit.
-	 *
-	 * The user is given an amount of time to use the token, so therefore, since the
-	 * $action remain the same, the independent variable is the time.
-	 *
-	 * @param string $nonce Nonce that was used in the form to verify
-	 * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
-	 * @return bool Whether the nonce check passed or failed.
-	 */
-	function avh_verify_nonce ( $nonce, $action = -1 )
-	{
-		$r = false;
-		$i = wp_nonce_tick();
-		// Nonce generated 0-12 hours ago
-		if ( substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 ) == $nonce ) {
-			$r = 1;
-		} elseif ( substr( wp_hash( ($i - 1) . $action, 'nonce' ), - 12, 10 ) == $nonce ) { // Nonce generated 12-24 hours ago
-			$r = 2;
-		}
-		return $r;
-	}
-
-	/**
 	 * Actual Rest Call
 	 *
 	 * @param array $query_array
 	 * @return array
 	 */
-	function handleRESTcall ( $query_array )
+	public function handleRESTcall ( $query_array )
 	{
-		$xml_array = array ();
 		$querystring = $this->BuildQuery( $query_array );
-		$url = $this->stopforumspam_endpoint . '?' . $querystring;
+		$url = AVH_FDAS_Define::STOPFORUMSPAM_ENDPOINT . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if ( function_exists( 'wp_remote_request' ) ) {
-			$response = wp_remote_request( $url, array('user-agent' => 'WordPress/AVH '.$this->version.'; ' . get_bloginfo( 'url' )) );
+			$response = wp_remote_request( $url, array ('user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo( 'url' ) ) );
 			if ( ! is_wp_error( $response ) ) {
-				$xml_array = $this->ConvertXML2Array( $response['body'] );
-				if ( ! empty( $xml_array ) ) {
-					// Did the call succeed?
-					if ( 'true' == $xml_array['response_attr']['success'] ) {
-						$return_array = $xml_array['response'];
-					} else {
-						if ( isset( $xml_array['response']['error'] ) ) {
-							$return_array = array ('Error' => $xml_array['response']['error'] );
-						} else {
-							$return_array = array ('Error' => 'Unsuccesfull response from SFS', 'Debug' => var_export( $response, true ) . "/n" . var_export( $xml_array, true ) );
-						}
-					}
-				} else {
-					$return_array = array ('Error' => 'Unknown response from stopforumspam', 'Debug' => var_export( $response, true ) . "/n" . var_export( $xml_array, true ) );
-				}
+				$return_array = unserialize( $response['body'] );
 			} else {
 				$return_array = array ('Error' => $response->errors );
 			}
@@ -554,7 +316,7 @@ class AVH_FDAS_Core
 	 * @param array $error
 	 * @return string
 	 */
-	function getHttpError ( $error )
+	public function getHttpError ( $error )
 	{
 		if ( is_array( $error ) ) {
 			foreach ( $error as $key => $value ) {
@@ -575,7 +337,7 @@ class AVH_FDAS_Core
 	 * @param string $convention
 	 * @return string
 	 */
-	function BuildQuery ( $array = NULL, $convention = '%s' )
+	public function BuildQuery ( $array = NULL, $convention = '%s' )
 	{
 		if ( count( $array ) == 0 ) {
 			return '';
@@ -600,166 +362,48 @@ class AVH_FDAS_Core
 	}
 
 	/**
-	 * Convert XML into an array
-	 *
-	 * @param string $contents
-	 * @param integer $get_attributes
-	 * @param string $priority
-	 * @return array
-	 * @see http://www.bin-co.com/php/scripts/xml2array/
-	 */
-	function ConvertXML2Array ( $contents = '', $get_attributes = 1, $priority = 'tag' )
-	{
-		$xml_values = '';
-		$return_array = array ();
-		$tag = '';
-		$type = '';
-		$level = 0;
-		$attributes = array ();
-		if ( function_exists( 'xml_parser_create' ) ) {
-			$parser = xml_parser_create( 'UTF-8' );
-			xml_parser_set_option( $parser, XML_OPTION_TARGET_ENCODING, "UTF-8" );
-			xml_parser_set_option( $parser, XML_OPTION_CASE_FOLDING, 0 );
-			xml_parser_set_option( $parser, XML_OPTION_SKIP_WHITE, 1 );
-			xml_parse_into_struct( $parser, trim( $contents ), $xml_values );
-			xml_parser_free( $parser );
-			//Initializations
-			$xml_array = array ();
-			$parent = array ();
-			$current = &$xml_array; // Reference
-			// Go through the tags.
-			$repeated_tag_index = array ();
-			// Multiple tags with same name will be turned into an array
-			foreach ( $xml_values as $data ) {
-				unset( $attributes, $value ); //Remove existing values, or there will be trouble
-				// This command will extract these variables into the foreach scope
-				// tag(string), type(string), level(int), attributes(array).
-				extract( $data ); //We could use the array by itself, but this cooler.
-				$result = array ();
-				$attributes_data = array ();
-				if ( isset( $value ) ) {
-					if ( $priority == 'tag' ) {
-						$result = $value;
-					} else {
-						$result['value'] = $value; //Put the value in an associate array if we are in the 'Attribute' mode
-					}
-				}
-				// Set the attributes too
-				if ( isset( $attributes ) and $get_attributes ) {
-					foreach ( $attributes as $attr => $val ) {
-						if ( $priority == 'tag' )
-							$attributes_data[$attr] = $val;
-						else
-							$result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
-					}
-				}
-				// See tag status and do what's needed
-				if ( $type == "open" ) { // The starting of the tag '<tag>'
-					$parent[$level - 1] = &$current;
-					if ( ! is_array( $current ) or (! in_array( $tag, array_keys( $current ) )) ) { //Insert New tag
-						$current[$tag] = $result;
-						if ( $attributes_data )
-							$current[$tag . '_attr'] = $attributes_data;
-						$repeated_tag_index[$tag . '_' . $level] = 1;
-						$current = &$current[$tag];
-					} else { // There was another element with the same tag name
-						if ( isset( $current[$tag][0] ) ) { //If there is a 0th element it is already an array
-							$current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-							$repeated_tag_index[$tag . '_' . $level] ++;
-						} else { //This section will make the value an array if multiple tags with the same name appear together
-							$current[$tag] = array ($current[$tag], $result );
-							//This will combine the existing item and the new item together to make an array
-							$repeated_tag_index[$tag . '_' . $level] = 2;
-							if ( isset( $current[$tag . '_attr'] ) ) { // The attribute of the last(0th) tag must be moved as well
-								$current[$tag]['0_attr'] = $current[$tag . '_attr'];
-								unset( $current[$tag . '_attr'] );
-							}
-						}
-						$last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
-						$current = &$current[$tag][$last_item_index];
-					}
-				} elseif ( $type == "complete" ) { //Tags that ends in 1 line '<tag />'
-					//See if the key is already taken.
-					if ( ! isset( $current[$tag] ) ) { // New key
-						$current[$tag] = $result;
-						$repeated_tag_index[$tag . '_' . $level] = 1;
-						if ( $priority == 'tag' and $attributes_data )
-							$current[$tag . '_attr'] = $attributes_data;
-					} else { //If taken, put all things inside a list(array)
-						if ( isset( $current[$tag][0] ) and is_array( $current[$tag] ) ) {
-							//This will combine the existing item and the new item together to make an array
-							$current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-							if ( $priority == 'tag' and $get_attributes and $attributes_data ) {
-								$current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-							}
-							$repeated_tag_index[$tag . '_' . $level] ++;
-						} else { //If it is not an array...
-							$current[$tag] = array ($current[$tag], $result ); //...Make it an array using using the existing value and the new value
-							$repeated_tag_index[$tag . '_' . $level] = 1;
-							if ( $priority == 'tag' and $get_attributes ) {
-								if ( isset( $current[$tag . '_attr'] ) ) { //The attribute of the last(0th) tag must be moved as well
-									$current[$tag]['0_attr'] = $current[$tag . '_attr'];
-									unset( $current[$tag . '_attr'] );
-								}
-								if ( $attributes_data ) {
-									$current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-								}
-							}
-							$repeated_tag_index[$tag . '_' . $level] ++; //0 and 1 index is already taken
-						}
-					}
-				} elseif ( $type == 'close' ) { //End of tag '</tag>'
-					$current = &$parent[$level - 1];
-				}
-			}
-			$return_array = $xml_array;
-		}
-		return ($return_array);
-	}
-
-	/**
 	 * Parameter for Rest Call IP Lookup
 	 *
 	 * @param string $ip
 	 * @return array
 	 */
-	function getRestIPLookup ( $ip )
+	public function getRestIPLookup ( $ip )
 	{
-		$iplookup = array ('ip' => $ip );
+		$iplookup = array ('ip' => $ip, 'f' => 'serial' );
 		return $iplookup;
 	}
 
 	/*********************************
-	 *                               *
+	 * *
 	 * Methods for variable: options *
-	 *                               *
+	 * *
 	 ********************************/
 
 	/**
 	 * @param array $data
 	 */
-	function setOptions ( $options )
+	public function set_options ( $options )
 	{
-		$this->options = $options;
+		$this->_options = $options;
 	}
 
 	/**
 	 * return array
 	 */
-	function getOptions ()
+	public function get_options ()
 	{
-		return ($this->options);
+		return ($this->_options);
 	}
 
 	/**
 	 * Save all current options and set the options
 	 *
 	 */
-	function saveOptions ( $options )
+	public function save_options ( $options )
 	{
-		update_option( $this->db_options_core, $options );
+		update_option( $this->_db_options, $options );
 		wp_cache_flush(); // Delete cache
-		$this->setOptions( $options );
+		$this->set_options( $options );
 	}
 
 	/**
@@ -768,13 +412,13 @@ class AVH_FDAS_Core
 	 *
 	 * @return none
 	 */
-	function loadOptions ()
+	public function load_options ()
 	{
-		$options = get_option( $this->db_options_core );
+		$options = get_option( $this->_db_options );
 		if ( false === $options ) { // New installation
-			$this->resetToDefaultOptions();
+			$this->resetToDefault_options();
 		} else {
-			$this->setOptions( $options );
+			$this->set_options( $options );
 		}
 	}
 
@@ -785,12 +429,12 @@ class AVH_FDAS_Core
 	 * @param string $option
 	 * @return mixed
 	 */
-	function getOptionElement ( $option, $key )
+	public function get_optionElement ( $option, $key )
 	{
-		if ( $this->options[$option][$key] ) {
-			$return = $this->options[$option][$key]; // From Admin Page
+		if ( $this->_options[$option][$key] ) {
+			$return = $this->_options[$option][$key]; // From Admin Page
 		} else {
-			$return = $this->default_options[$option][$key]; // Default
+			$return = $this->_default_options[$option][$key]; // Default
 		}
 		return ($return);
 	}
@@ -799,32 +443,32 @@ class AVH_FDAS_Core
 	 * Reset to default options and save in DB
 	 *
 	 */
-	function resetToDefaultOptions ()
+	private function resetToDefault_options ()
 	{
-		$this->options = $this->default_options;
-		$this->saveOptions( $this->default_options );
+		$this->_options = $this->_default_options;
+		$this->save_options( $this->_default_options );
 	}
 
 	/******************************
-	 *                            *
+	 * *
 	 * Methods for variable: data *
-	 *                            *
+	 * *
 	 *****************************/
 
 	/**
 	 * @param array $data
 	 */
-	function setData ( $data )
+	public function set_data ( $data )
 	{
-		$this->data = $data;
+		$this->_data = $data;
 	}
 
 	/**
 	 * @return array
 	 */
-	function getData ()
+	public function get_data ()
 	{
-		return ($this->data);
+		return ($this->_data);
 	}
 
 	/**
@@ -832,11 +476,11 @@ class AVH_FDAS_Core
 	 * @param array $data
 	 *
 	 */
-	function saveData ( $data )
+	public function save_data ( $data )
 	{
-		update_option( $this->db_options_data, $data );
+		update_option( $this->_db_data, $data );
 		wp_cache_flush(); // Delete cache
-		$this->setData( $data );
+		$this->set_data( $data );
 	}
 
 	/**
@@ -844,13 +488,13 @@ class AVH_FDAS_Core
 	 *
 	 * @return array
 	 */
-	function loadData ()
+	public function load_data ()
 	{
-		$data = get_option( $this->db_options_data );
+		$data = get_option( $this->_db_data );
 		if ( false === $data ) { // New installation
-			$this->resetToDefaultData();
+			$this->resetToDefault_data();
 		} else {
-			$this->setData( $data );
+			$this->set_data( $data );
 		}
 		return;
 	}
@@ -863,10 +507,10 @@ class AVH_FDAS_Core
 	 * @return mixed
 	 * @since 0.1
 	 */
-	function getDataElement ( $option, $key )
+	public function get_dataElement ( $option, $key )
 	{
-		if ( $this->data[$option][$key] ) {
-			$return = $this->data[$option][$key];
+		if ( $this->_data[$option][$key] ) {
+			$return = $this->_data[$option][$key];
 		} else {
 			$return = false;
 		}
@@ -877,24 +521,34 @@ class AVH_FDAS_Core
 	 * Reset to default data and save in DB
 	 *
 	 */
-	function resetToDefaultData ()
+	private function resetToDefault_data ()
 	{
-		$this->data = $this->default_data;
-		$this->saveData( $this->default_data );
+		$this->_data = $this->_default_data;
+		$this->save_data( $this->_default_data );
 	}
-
-	/*********************************
-	 *                               *
-	 * Methods for variable: comment *
-	 *                               *
-	 *********************************/
 
 	/**
 	 * @return string
 	 */
-	function getComment ( $str = '' )
+	public function getComment ( $str = '' )
 	{
-		return $this->comment . ' ' . trim( $str ) . ' -->';
+		return $this->_comment . ' ' . trim( $str ) . ' -->';
+	}
+
+	/**
+	 * @return the $_db_nonces
+	 */
+	public function get_db_nonces ()
+	{
+		return $this->_db_nonces;
+	}
+
+	/**
+	 * @return the $_default_nonces
+	 */
+	public function get_default_nonces ()
+	{
+		return $this->_default_nonces;
 	}
 
 } //End Class AVH_FDAS_Core
