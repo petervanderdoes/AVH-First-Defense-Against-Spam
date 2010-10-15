@@ -14,34 +14,14 @@ if ( ! class_exists( 'AVH_Visitor' ) ) {
 		{
 			$ip = array ();
 
-			if ( isset( $_SERVER ) ) {
-				$ip[] = $_SERVER['REMOTE_ADDR'];
+				foreach ( array ('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR' ) as $key ) {
+					if ( array_key_exists( $key, $_SERVER ) === true ) {
+						foreach ( explode( ',', $_SERVER[$key] ) as $visitors_ip ) {
+							$ip = array_merge( $ip, explode( ',', str_replace( ' ', '', $visitors_ip ) ) );
 
-				if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-					$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_CLIENT_IP'] ) );
+						}
+					}
 				}
-
-				if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-					$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
-				}
-
-				if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) {
-					$ip = array_merge( $ip, explode( ',', $_SERVER['HTTP_X_REAL_IP'] ) );
-				}
-			} else {
-				$ip[] = getenv( 'REMOTE_ADDR' );
-				if ( getenv( 'HTTP_CLIENT_IP' ) ) {
-					$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_CLIENT_IP' ) ) );
-				}
-
-				if ( getenv( 'HTTP_X_FORWARDED_FOR' ) ) {
-					$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_X_FORWARDED_FOR' ) ) );
-				}
-
-				if ( getenv( 'HTTP_X_REAL_IP' ) ) {
-					$ip = array_merge( $ip, explode( ',', getenv( 'HTTP_X_REAL_IP' ) ) );
-				}
-			}
 
 			$dec_octet = '(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|[0-9])';
 			$ip4_address = $dec_octet . '.' . $dec_octet . '.' . $dec_octet . '.' . $dec_octet;
