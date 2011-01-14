@@ -7,7 +7,7 @@ final class AVH_FDAS_Define
 	/**
 	 * General Constants
 	 */
-	const PLUGIN_VERSION = '2.0-dev3.1';
+	const PLUGIN_VERSION = '3.0.1';
 	const PLUGIN_README_URL = 'http://svn.wp-plugins.org/avh-first-defense-against-spam/trunk/readme.txt';
 	const PLUGIN_FILE = 'avh-first-defense-against-spam/avh-fdas.php';
 	/**
