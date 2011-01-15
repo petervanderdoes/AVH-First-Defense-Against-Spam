@@ -379,35 +379,10 @@ class AVH_FDAS_SpamCheck
 		}
 		if ($sfs_die || $php_die || $blacklist_die) {
 			// Update the counter
-			$period = date('Ym');
-			if (array_key_exists($period, $this->_core_data['counters'])) {
-				$this->_core_data['counters'][$period] += 1;
-			} else {
-				$this->_core_data['counters'][$period] = 1;
-			}
-			$this->_core->save_data($this->_core_data);
+			$this->_updateSpamCounter();
 
-			/**
-			 * This tells the following plugins to not cache this page
-			 * W3 Total cache
-			 * WP-Supercache
-			 */
-			define('DONOTCACHEPAGE', true);
-
-			if (1 == $this->_core_options['general']['diewithmessage']) {
-				if (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']) {
-					$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas'), $this->_visiting_ip);
-				} else {
-					$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.<BR />If you feel this is incorrect please contact them</p>', 'avhfdas'), $this->_visiting_ip);
-				}
-				$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
-				if ($this->_core_options['php']['usehoneypot']) {
-					$m .= $this->getHtmlHoneyPotUrl();
-				}
-				wp_die($m);
-			} else {
-				die();
-			}
+			// Terminate the connection
+			$this->_doTerminateConnection();
 		}
 	}
 
@@ -435,6 +410,19 @@ class AVH_FDAS_SpamCheck
 			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 		}
 		// Update the counter
+		$this->_updateSpamCounter();
+
+		// Terminate the connection
+		$this->_doTerminateConnection();
+	}
+
+	/**
+	 *
+	 * Updates the spam counter
+	 */
+	private function _updateSpamCounter ()
+	{
+		// Update the counter
 		$period = date('Ym');
 		if (array_key_exists($period, $this->_core_data['counters'])) {
 			$this->_core_data['counters'][$period] += 1;
@@ -442,15 +430,31 @@ class AVH_FDAS_SpamCheck
 			$this->_core_data['counters'][$period] = 1;
 		}
 		$this->_core->save_data($this->_core_data);
+	}
+
+	/**
+	 *
+	 * Terminates the connection.
+	 */
+	private function _doTerminateConnection ()
+	{
 		/**
-		* This tells the following plugins to not cache this page
-		* W3 Total cache
-		* WP-Supercache
-		*/
+		 * This tells the following plugins to not cache this page
+		 * W3 Total cache
+		 * WP-Supercache
+		 */
 		define('DONOTCACHEPAGE', true);
 
 		if (1 == $this->_core_options['general']['diewithmessage']) {
-			$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas'), $this->_visiting_ip);
+			if (is_object($this->ip_in_cache)) {
+				$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas'), $this->_visiting_ip);
+			} else {
+				if (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']) {
+					$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas'), $this->_visiting_ip);
+				} else {
+					$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.<BR />If you feel this is incorrect please contact them</p>', 'avhfdas'), $this->_visiting_ip);
+				}
+			}
 			$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
 			if ($this->_core_options['php']['usehoneypot']) {
 				$m .= $this->getHtmlHoneyPotUrl();
@@ -461,6 +465,10 @@ class AVH_FDAS_SpamCheck
 		}
 	}
 
+	/**
+	 *
+	 * Display the honeypot URL
+	 */
 	public function getHtmlHoneyPotUrl ()
 	{
 		return ('<p><div style="display: none;"><a href="' . $this->_core->get_optionElement('php', 'honeypoturl') . '">AVH Software</a></div></p>');
