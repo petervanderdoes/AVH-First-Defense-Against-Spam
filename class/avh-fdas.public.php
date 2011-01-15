@@ -37,9 +37,9 @@ class AVH_FDAS_Public
 		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', TRUE);
 		$this->_core_options = $this->_core->get_options();
 		// Public actions and filters
-		add_action('comment_form', array(&$this, 'actionAddNonceFieldToComment'));
+		//add_action('comment_form', array(&$this, 'actionAddNonceFieldToComment'));
 		add_action('get_header', array(&$this, 'actionHandleMainAction'));
-		add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
+		//add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
 		add_action('preprocess_comment', array(&$this, 'actionHandlePostingComment'), 1);
 		add_action('register_post', array(&$this, 'actionHandleRegistration'), 10, 3);
 		// Private actions for Cron
@@ -87,7 +87,7 @@ class AVH_FDAS_Public
 		}
 		if ($options['general']['cron_nonces_email']) {
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean nonces', 'avhfdas'), 
+			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean nonces', 'avhfdas'),
 			wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 			$message[] = sprintf(__('Deleted %d nonce\'s from the database', 'avhfdas'), $removed);
 			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
@@ -110,7 +110,7 @@ class AVH_FDAS_Public
 		$wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(added))) > %d", $date, $days));
 		if ($options['general']['cron_ipcache_email']) {
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean IP cache', 'avhfdas'), 
+			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean IP cache', 'avhfdas'),
 			wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 			$message[] = sprintf(__('Deleted %d IP\'s from the cache', 'avhfdas'), $result);
 			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
@@ -138,7 +138,7 @@ class AVH_FDAS_Public
 						$ip = AVH_Visitor::getUserIP();
 						$sfs_apikey = $this->_core->get_optionElement('sfs', 'sfsapikey');
 						$commentdata['comment_author_email'] = empty($commentdata['comment_author_email']) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
-						$subject = sprintf(__('[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas'), 
+						$subject = sprintf(__('[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas'),
 						wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 						if (isset($_POST['_avh_first_defense_against_spam'])) {
 							$message[] = __('Reason:	The nonce check failed.', 'avhfdas');

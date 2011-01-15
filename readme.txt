@@ -106,6 +106,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 == Changelog ==
 = Version 3.0.1 =
 * Pages shown to blocked visitors will not be cached. This is compatible with caching plugins W3 Total cache and WP Super Cache. The caching caused to show the blocked page to legit visitors.
+* Removed comment nonce check due to reported problems.
 
 = Version 3.0 =
 * Plugin is for PHP5 only
