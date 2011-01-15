@@ -388,7 +388,6 @@ class AVH_FDAS_SpamCheck
 			$this->_core->save_data($this->_core_data);
 
 			/**
-			 *
 			 * This tells the following plugins to not cache this page
 			 * W3 Total cache
 			 * WP-Supercache
@@ -443,6 +442,13 @@ class AVH_FDAS_SpamCheck
 			$this->_core_data['counters'][$period] = 1;
 		}
 		$this->_core->save_data($this->_core_data);
+		/**
+		* This tells the following plugins to not cache this page
+		* W3 Total cache
+		* WP-Supercache
+		*/
+		define('DONOTCACHEPAGE', true);
+
 		if (1 == $this->_core_options['general']['diewithmessage']) {
 			$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas'), $this->_visiting_ip);
 			$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
