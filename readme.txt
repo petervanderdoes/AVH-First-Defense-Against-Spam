@@ -3,8 +3,8 @@ Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.8
-Tested up to: 3.0.1
-Stable tag: 3.0
+Tested up to: 3.0.4
+Stable tag: 3.0.1
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -15,6 +15,7 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 
 
 = Features =
+* PHP 5 is required.
 * The visitor's IP can be checked at the following third parties:
 	* Stop Forum Spam. http://www.stopforumspam.com
 	* Project Honey Pot. http://www.projecthoneypot.org (An API key is needed to check the IP at this party. The key is free.)
@@ -27,7 +28,6 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 * When an IP is blocked a message can be displayed to the visitor with the reason why access was blocked.
 * Report a spammer to Stop Forum Spam. A valid API key from Stop Forum Spam is necessary.
 * Add a spammer to the local blacklist by clicking a link in the received email.
-* Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.
 * IP Caching system.
 * Use a honey pot from Project Honey Pot
 
@@ -39,7 +39,7 @@ Blocking a potential spammer before content is served has the following advantag
 
 
 = The IP Caching system. =
-Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it iset at 5000 calls a day.
+Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it is set at 5000 calls a day.
 This means that if you don't use the Blacklist and/or Whitelist you are limited to 5000 visits/day on your site. To overcome this possible problem I wrote an IP caching system.
 If you use the caching system you still have a limit with Stop Forum Spam , but the limit is set to 5000 unique visits/day.
 
@@ -49,7 +49,7 @@ The following IP's are cached locally:
 1. Every clean IP.
 
 Only returning IP's that were previously identified as spammer and who's connection was terminated will update their last seen date in the caching system. 
-Every day, once a day, a routine runs to remove the IP's who's last seen date is X amount of days older than the date the routine runs. You can set the days in the adminstration section of the plugin.
+Every day, once a day, a routine runs to remove the IP's who's last seen date is X amount of days older than the date the routine runs. You can set the days in the administration section of the plugin.
 You can check the statistics to see how many IP's are in the database. If you have a busy site, with a lot of unique visitors, you might have to play with the "Days to keep in cache" setting to keep the size under control.
 
 = Checking Order and Actions =
@@ -103,10 +103,14 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.0.1 =
+* Pages shown to blocked visitors will not be cached. This is compatible with caching plugins W3 Total cache and WP Super Cache. The caching caused to show the blocked page to legit visitors.
+* Removed comment nonce check due to reported problems.
+
 = Version 3.0 =
 * Plugin is for PHP5 only
 * RFC: Spam check is performed when a user registers.
-* Important!: When using a Honey Pot URL, change the option to be a URL only, the plugin will add the neccessary HTML by default.
+* Important!: When using a Honey Pot URL, change the option to be a URL only, the plugin will add the necessary HTML by default.
 * Bugfix: On pages the nonce check would fail.
 * Bugfix: Typo in window title for menu option overview
 * Bugfix: Blogname would show up as html safe text

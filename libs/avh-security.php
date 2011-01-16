@@ -1,7 +1,8 @@
 <?php
-if ( ! defined( 'AVH_FRAMEWORK' ) ) die( 'You are not allowed to call this page directly.' );
+if (! defined('AVH_FRAMEWORK'))
+	die('You are not allowed to call this page directly.');
+if (! class_exists('AVH_Security')) {
 
-if ( ! class_exists( 'AVH_Security' ) ) {
 	final class AVH_Security
 	{
 
@@ -13,10 +14,10 @@ if ( ! class_exists( 'AVH_Security' ) ) {
 		 * @return string The one use form token
 		 *
 		 */
-		public static function createNonce ( $action = -1 )
+		public static function createNonce ($action = -1)
 		{
 			$i = wp_nonce_tick();
-			return substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 );
+			return substr(wp_hash($i . $action, 'nonce'), - 12, 10);
 		}
 
 		/**
@@ -30,15 +31,14 @@ if ( ! class_exists( 'AVH_Security' ) ) {
 		 * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
 		 * @return bool Whether the nonce check passed or failed.
 		 */
-		public static function verifyNonce ( $nonce, $action = -1 )
+		public static function verifyNonce ($nonce, $action = -1)
 		{
-
 			$r = false;
 			$i = wp_nonce_tick();
 			// Nonce generated 0-12 hours ago
-			if ( substr( wp_hash( $i . $action, 'nonce' ), - 12, 10 ) == $nonce ) {
+			if (substr(wp_hash($i . $action, 'nonce'), - 12, 10) == $nonce) {
 				$r = 1;
-			} elseif ( substr( wp_hash( ($i - 1) . $action, 'nonce' ), - 12, 10 ) == $nonce ) { // Nonce generated 12-24 hours ago
+			} elseif (substr(wp_hash(($i - 1) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
 				$r = 2;
 			}
 			return $r;

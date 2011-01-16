@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AVH First Defense Against Spam Database Class
  *
@@ -15,7 +16,7 @@ class AVH_FDAS_DB
 	 */
 	public function __construct ()
 	{
-		register_shutdown_function( array (&$this, '__destruct' ) );
+		register_shutdown_function(array(&$this, '__destruct'));
 	}
 
 	/**
@@ -33,14 +34,12 @@ class AVH_FDAS_DB
 	 * @param $ip
 	 * @return ip Object (false if not found)
 	 */
-	public function getIP ( $ip )
+	public function getIP ($ip)
 	{
 		global $wpdb;
-
 		// Query database
-		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip ) );
-
-		if ( $result ) {
+		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip));
+		if ($result) {
 			return $result;
 		} else {
 			return false;
@@ -53,13 +52,14 @@ class AVH_FDAS_DB
 	 * @param $spam number
 	 * @return Object (false if not found)
 	 */
-	public function insertIP ( $ip, $spam )
+	public function insertIP ($ip, $spam)
 	{
 		global $wpdb;
-		$date = current_time( 'mysql' );
-		$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (INET_ATON(%s), %d, %s, %s)", $ip, $spam, $date, $date ) );
-
-		if ( $result ) {
+		$date = current_time('mysql');
+		$result = $wpdb->query(
+		$wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (INET_ATON(%s), %d, %s, %s)", $ip, 
+		$spam, $date, $date));
+		if ($result) {
 			return $result;
 		} else {
 			return false;
@@ -71,13 +71,12 @@ class AVH_FDAS_DB
 	 * @param $ip string
 	 * @return Object (false if not found)
 	 */
-	public function updateIP ( $ip )
+	public function updateIP ($ip)
 	{
 		global $wpdb;
-		$date = current_time( 'mysql' );
-		$result = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->avhfdasipcache SET lastseen=%s WHERE ip=INET_ATON(%s)", $date, $ip ) );
-
-		if ( $result ) {
+		$date = current_time('mysql');
+		$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET lastseen=%s WHERE ip=INET_ATON(%s)", $date, $ip));
+		if ($result) {
 			return $result;
 		} else {
 			return false;
@@ -88,12 +87,12 @@ class AVH_FDAS_DB
 	 * Mark an known IP as spam
 	 * @param $ip
 	 */
-	public function doMarkIPSpam ( $ip )
+	public function doMarkIPSpam ($ip)
 	{
 		global $wpdb;
-		$ip_info = $this->getIP( $ip );
-		if ( is_object( $ip_info ) ) {
-			$result = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=INET_ATON(%s)", $ip ) );
+		$ip_info = $this->getIP($ip);
+		if (is_object($ip_info)) {
+			$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=INET_ATON(%s)", $ip));
 		}
 	}
 }
