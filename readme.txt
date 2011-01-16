@@ -28,7 +28,6 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 * When an IP is blocked a message can be displayed to the visitor with the reason why access was blocked.
 * Report a spammer to Stop Forum Spam. A valid API key from Stop Forum Spam is necessary.
 * Add a spammer to the local blacklist by clicking a link in the received email.
-* Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.
 * IP Caching system.
 * Use a honey pot from Project Honey Pot
 
