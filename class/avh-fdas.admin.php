@@ -383,6 +383,7 @@ final class AVH_FDAS_Admin
 		global $screen_layout_columns;
 		$options_general[] = array('avhfdas[general][diewithmessage]', 'Show message', 'checkbox', 1, 'Show a message when the connection has been terminated.');
 		$options_general[] = array('avhfdas[general][emailsecuritycheck]', 'Email on failed security check:', 'checkbox', 1, 'Receive an email when a comment is posted and the security check failed.');
+		$options_general[] = array('avhfdas[general][commentnonce]', 'Use comment nonce:', 'checkbox', 1, 'Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.');
 		$options_cron[] = array('avhfdas[general][cron_nonces_email]', 'Email result of nonces clean up', 'checkbox', 1, 'Receive an email with the total number of nonces that are deleted. The nonces are used to secure the links found in the emails.');
 		$options_cron[] = array('avhfdas[general][cron_ipcache_email]', 'Email result of IP cache clean up', 'checkbox', 1, 'Receive an email with the total number of IP\'s that are deleted from the IP caching system.');
 		$options_blacklist[] = array('avhfdas[general][useblacklist]', 'Use internal blacklist', 'checkbox', 1, 'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.');
