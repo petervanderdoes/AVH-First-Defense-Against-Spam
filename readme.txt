@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.8
 Tested up to: 3.0.4
-Stable tag: 3.0.1
+Stable tag: 3.0.2-rc1
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -103,6 +103,10 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.0.2-rc1 =
+* The comment nonce can be activated on the General Options page in the administration section of the plugin.
+* Only show the last 12 months of spam statistics on the Overview page.
+
 = Version 3.0.1 =
 * Pages shown to blocked visitors will not be cached. This is compatible with caching plugins W3 Total cache and WP Super Cache. The caching caused to show the blocked page to legit visitors.
 * Removed comment nonce check due to reported problems.

@@ -253,7 +253,7 @@ final class AVH_FDAS_Admin
 	{
 		global $wpdb;
 		echo '<p class="sub">';
-		_e('Spam Statistics', 'avhfdas');
+		_e('Spam Statistics for the last 12 months', 'avhfdas');
 		echo '</p>';
 		echo '<div class="table">';
 		echo '<table>';
@@ -264,10 +264,13 @@ final class AVH_FDAS_Admin
 		krsort($spam_count);
 		$have_spam_count_data = false;
 		$output = '';
+		$counter = 0;
 		foreach ($spam_count as $key => $value) {
-			if ('190001' == $key) {
+
+			if ('190001' == $key || $counter >= 12) {
 				continue;
 			}
+
 			$have_spam_count_data = true;
 			$date = date_i18n('Y - F', mktime(0, 0, 0, substr($key, 4, 2), 1, substr($key, 0, 4)));
 			$output .= '<td class="first b">' . $value . '</td>';
@@ -275,6 +278,8 @@ final class AVH_FDAS_Admin
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
+
+			$counter ++;
 		}
 		if (! $have_spam_count_data) {
 			$output .= '<td class="first b">' . __('No statistics yet', 'avhfdas') . '</td>';
