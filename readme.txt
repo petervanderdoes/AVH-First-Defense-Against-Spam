@@ -29,7 +29,8 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 * Report a spammer to Stop Forum Spam. A valid API key from Stop Forum Spam is necessary.
 * Add a spammer to the local blacklist by clicking a link in the received email.
 * IP Caching system.
-* Use a honey pot from Project Honey Pot
+* Use a honey pot from Project Honey Pot.
+* Option to block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.
 
 Blocking a potential spammer before content is served has the following advantages:
 
