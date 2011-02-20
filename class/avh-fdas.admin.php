@@ -253,7 +253,7 @@ final class AVH_FDAS_Admin
 	{
 		global $wpdb;
 		echo '<p class="sub">';
-		_e('Spam Statistics', 'avhfdas');
+		_e('Spam Statistics for the last 12 months', 'avhfdas');
 		echo '</p>';
 		echo '<div class="table">';
 		echo '<table>';
@@ -264,10 +264,13 @@ final class AVH_FDAS_Admin
 		krsort($spam_count);
 		$have_spam_count_data = false;
 		$output = '';
+		$counter = 0;
 		foreach ($spam_count as $key => $value) {
-			if ('190001' == $key) {
+
+			if ('190001' == $key || $counter >= 12) {
 				continue;
 			}
+
 			$have_spam_count_data = true;
 			$date = date_i18n('Y - F', mktime(0, 0, 0, substr($key, 4, 2), 1, substr($key, 0, 4)));
 			$output .= '<td class="first b">' . $value . '</td>';
@@ -275,6 +278,8 @@ final class AVH_FDAS_Admin
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
+
+			$counter ++;
 		}
 		if (! $have_spam_count_data) {
 			$output .= '<td class="first b">' . __('No statistics yet', 'avhfdas') . '</td>';
@@ -383,6 +388,7 @@ final class AVH_FDAS_Admin
 		global $screen_layout_columns;
 		$options_general[] = array('avhfdas[general][diewithmessage]', 'Show message', 'checkbox', 1, 'Show a message when the connection has been terminated.');
 		$options_general[] = array('avhfdas[general][emailsecuritycheck]', 'Email on failed security check:', 'checkbox', 1, 'Receive an email when a comment is posted and the security check failed.');
+		$options_general[] = array('avhfdas[general][commentnonce]', 'Use comment nonce:', 'checkbox', 1, 'Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.');
 		$options_cron[] = array('avhfdas[general][cron_nonces_email]', 'Email result of nonces clean up', 'checkbox', 1, 'Receive an email with the total number of nonces that are deleted. The nonces are used to secure the links found in the emails.');
 		$options_cron[] = array('avhfdas[general][cron_ipcache_email]', 'Email result of IP cache clean up', 'checkbox', 1, 'Receive an email with the total number of IP\'s that are deleted from the IP caching system.');
 		$options_blacklist[] = array('avhfdas[general][useblacklist]', 'Use internal blacklist', 'checkbox', 1, 'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.');

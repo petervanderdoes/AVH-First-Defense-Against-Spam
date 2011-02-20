@@ -37,9 +37,12 @@ class AVH_FDAS_Public
 		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', TRUE);
 		$this->_core_options = $this->_core->get_options();
 		// Public actions and filters
-		//add_action('comment_form', array(&$this, 'actionAddNonceFieldToComment'));
+		if (1 == $this->_core_options['general']['commentnonce']) {
+			add_action('comment_form', array(&$this, 'actionAddNonceFieldToComment'));
+			add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
+		}
 		add_action('get_header', array(&$this, 'actionHandleMainAction'));
-		//add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
+
 		add_action('preprocess_comment', array(&$this, 'actionHandlePostingComment'), 1);
 		add_action('register_post', array(&$this, 'actionHandleRegistration'), 10, 3);
 		// Private actions for Cron
