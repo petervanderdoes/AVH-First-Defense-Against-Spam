@@ -104,6 +104,9 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.0.3 =
+* Bugfix: With PHP 5.3 and up there was a problem with getting the visitors IP.
+
 = Version 3.0.2 =
 * The comment nonce can be activated on the General Options page in the administration section of the plugin.
 * Only show the last 12 months of spam statistics on the Overview page.

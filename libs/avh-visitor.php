@@ -31,7 +31,7 @@ if (! class_exists('AVH_Visitor')) {
 			// In PHP 5.3 and up the function filter_var can be used, much quicker as the regular expression check
 			if (AVH_Common::isPHP('5.3')) {
 				foreach ($ip as $i) {
-					if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE)) {
+					if (filter_var($i, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE)) {
 						$return = $i;
 						break;
 					}
