@@ -66,14 +66,16 @@ class AVH_FDAS_SpamCheck
 	public function doIPCacheCheck ()
 	{
 		$this->ip_in_cache = FALSE;
-		$time_start = microtime(true);
-		$this->ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
-		$time_end = microtime(true);
-		$time = $time_end - $time_start;
-		if (! (FALSE === $this->ip_in_cache)) {
-			if ($this->ip_in_cache->spam === '1') {
-				$this->spaminfo['cache']['time'] = $time;
-				$this->spammer_detected = TRUE;
+		if (1 == $this->_core_options['general']['useipcache']) {
+			$time_start = microtime(true);
+			$this->ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
+			$time_end = microtime(true);
+			$time = $time_end - $time_start;
+			if (! (FALSE === $this->ip_in_cache)) {
+				if ($this->ip_in_cache->spam === '1') {
+					$this->spaminfo['cache']['time'] = $time;
+					$this->spammer_detected = TRUE;
+				}
 			}
 		}
 	}
