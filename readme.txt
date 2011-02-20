@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.8
 Tested up to: 3.0.4
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
