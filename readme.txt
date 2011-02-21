@@ -104,6 +104,10 @@ You will have to sign up on their site, http://www.projecthoneypot.org/create_ac
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.0.4 -
+* Bugfix: When the IP cache was disabled the cache would still be checked.
+* Bugfix: Under certain server configurations, when Project Honey Pot could not be reached the IP to be checked was incorrect.
+
 = Version 3.0.3 =
 * Bugfix: With PHP 5.3 and up there was a problem with getting the visitors IP.
 

@@ -83,7 +83,7 @@ class AVH_FDAS_SpamCheck
 	/**
 	 * Do Project Honey Pot with Visitor
 	 *
-	 * Sets the spaminfo['detected'] to true when a soammer is detected.
+	 * Sets the spaminfo['detected'] to true when a spammer is detected.
 	 *
 	 */
 	public function doProjectHoneyPotIPCheck ()
@@ -96,13 +96,18 @@ class AVH_FDAS_SpamCheck
 			// Check the IP against projecthoneypot.org
 			//
 			$time_start = microtime(true);
-			$lookup = $projecthoneypot_api_key . '.' . $reverse_ip . '.dnsbl.httpbl.org';
-			if ($lookup != gethostbyname($lookup)) {
+			$lookup = $projecthoneypot_api_key . '.' . $reverse_ip . '.dnsbl.httpbl.org.';
+			$info = explode('.', gethostbyname($lookup));
+
+			// The first octet needs to be 127.
+			// Quote from the HTTPBL Api documentation: If the first octet in the response is not 127 it means an error condition has occurred and your query may not have been formatted correctly.
+			// Reference :http://www.projecthoneypot.org/httpbl_api.php
+			if ('127' == $info[0]) {
 				$this->spammer_detected = TRUE;
 				$time_end = microtime(true);
 				$time = $time_end - $time_start;
 				$this->spaminfo['php']['time'] = $time;
-				$info = explode('.', gethostbyname($lookup));
+
 				$this->spaminfo['php']['days'] = $info[1];
 				$this->spaminfo['php']['type'] = $info[3];
 				if ('0' == $info[3]) {
