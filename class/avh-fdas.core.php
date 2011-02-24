@@ -75,16 +75,11 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->_default_options_general = array('version'=>AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion'=>$this->_db_version,
-												'use_sfs'=>1, 'use_php'=>0, 'useblacklist'=>1, 'usewhitelist'=>1,
-												'diewithmessage'=>1, 'emailsecuritycheck'=>0, 'useipcache'=>0, 'commentnonce' => 0,
-												'cron_nonces_email'=>0, 'cron_ipcache_email'=>0);
+		$this->_default_options_general = array('version'=>AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion'=>$this->_db_version, 'use_sfs'=>1, 'use_php'=>0, 'useblacklist'=>1, 'usewhitelist'=>1, 'diewithmessage'=>1, 'emailsecuritycheck'=>0, 'useipcache'=>0, 'commentnonce'=>0, 'cron_nonces_email'=>0, 'cron_ipcache_email'=>0);
 		$this->_default_options_spam = array('whentoemail'=>- 1, 'emailphp'=>0, 'whentodie'=>3, 'sfsapikey'=>'', 'error'=>0);
-		$this->_default_options_honey = array('whentoemailtype'=>- 1, 'whentoemail'=>- 1, 'whentodietype'=>4, 'whentodie'=>25,
-											'phpapikey'=>'', 'usehoneypot'=>0, 'honeypoturl'=>'');
+		$this->_default_options_honey = array('whentoemailtype'=>- 1, 'whentoemail'=>- 1, 'whentodietype'=>4, 'whentodie'=>25, 'phpapikey'=>'', 'usehoneypot'=>0, 'honeypoturl'=>'');
 		$this->_default_options_ipcache = array('email'=>0, 'daystokeep'=>7);
-		$this->_default_options = array('general'=>$this->_default_options_general, 'sfs'=>$this->_default_options_spam,
-										'php'=>$this->_default_options_honey, 'ipcache'=>$this->_default_options_ipcache);
+		$this->_default_options = array('general'=>$this->_default_options_general, 'sfs'=>$this->_default_options_spam, 'php'=>$this->_default_options_honey, 'ipcache'=>$this->_default_options_ipcache);
 		/**
 		 *
 		 * Default Data
@@ -105,8 +100,7 @@ class AVH_FDAS_Core
 		$this->load_data();
 		$this->_setTables();
 		// Check if we have to do upgrades
-		if ((! isset($this->_options['general']['dbversion'])) ||
-		 $this->get_optionElement('general', 'dbversion') < $this->_db_version) {
+		if ((! isset($this->_options['general']['dbversion'])) || $this->get_optionElement('general', 'dbversion') < $this->_db_version) {
 			$this->_doUpgrade();
 		}
 		$this->_settings->storeSetting('siteurl', get_option('siteurl'));
@@ -114,9 +108,7 @@ class AVH_FDAS_Core
 		$this->_settings->storeSetting('graphics_url', plugins_url('images', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('js_url', plugins_url('js', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('css_url', plugins_url('css', $this->_settings->plugin_basename));
-		$this->_settings->storeSetting('searchengines',
-		array('0'=>'Undocumented', '1'=>'AltaVista', '2'=>'Ask', '3'=>'Baidu', '4'=>'Excite', '5'=>'Google', '6'=>'Looksmart',
-			'7'=>'Lycos', '8'=>'MSN', '9'=>'Yahoo', '10'=>'Cuil', '11'=>'InfoSeek', '12'=>'Miscellaneous'));
+		$this->_settings->storeSetting('searchengines', array('0'=>'Undocumented', '1'=>'AltaVista', '2'=>'Ask', '3'=>'Baidu', '4'=>'Excite', '5'=>'Google', '6'=>'Looksmart', '7'=>'Lycos', '8'=>'MSN', '9'=>'Yahoo', '10'=>'Cuil', '11'=>'InfoSeek', '12'=>'Miscellaneous'));
 		$footer[] = '';
 		$footer[] = '--';
 		$footer[] = sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'), AVH_FDAS_Define::PLUGIN_VERSION);
@@ -276,8 +268,7 @@ class AVH_FDAS_Core
 		$url = AVH_FDAS_Define::STOPFORUMSPAM_ENDPOINT . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if (function_exists('wp_remote_request')) {
-			$response = wp_remote_request($url,
-			array('user-agent'=>'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url')));
+			$response = wp_remote_request($url, array('user-agent'=>'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url')));
 			if (! is_wp_error($response)) {
 				$return_array = unserialize($response['body']);
 			} else {

@@ -98,7 +98,7 @@ class AVH_FDAS_SpamCheck
 			$time_start = microtime(true);
 			$lookup = $projecthoneypot_api_key . '.' . $reverse_ip . '.dnsbl.httpbl.org.';
 			$info = explode('.', gethostbyname($lookup));
-
+			
 			// The first octet needs to be 127.
 			// Quote from the HTTPBL Api documentation: If the first octet in the response is not 127 it means an error condition has occurred and your query may not have been formatted correctly.
 			// Reference :http://www.projecthoneypot.org/httpbl_api.php
@@ -107,7 +107,7 @@ class AVH_FDAS_SpamCheck
 				$time_end = microtime(true);
 				$time = $time_end - $time_start;
 				$this->spaminfo['php']['time'] = $time;
-
+				
 				$this->spaminfo['php']['days'] = $info[1];
 				$this->spaminfo['php']['type'] = $info[3];
 				if ('0' == $info[3]) {
@@ -174,7 +174,7 @@ class AVH_FDAS_SpamCheck
 			if ($this->_core_options['sfs']['error']) {
 				$error = $this->_core->getHttpError($this->spaminfo['sfs']['Error']);
 				$to = get_option('admin_email');
-				$subject = sprintf(__('[%s] AVH First Defense Against Spam - Error detected', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+				$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error detected', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 				$message[] = __('An error has been detected', 'avhfdas');
 				$message[] = sprintf(__('Error:	%s', 'avhfdas'), $error);
 				$message[] = '';
@@ -294,7 +294,7 @@ class AVH_FDAS_SpamCheck
 		if ($sfs_email || $php_email) {
 			// General part of the email
 			$to = get_option('admin_email');
-			$subject = sprintf(__('[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
+			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
 			$message[] = sprintf(__('Spam IP:	%s', 'avhfdas'), $this->_visiting_ip);
 			$message[] = sprintf(__('Accessing:	%s', 'avhfdas'), $_SERVER['REQUEST_URI']);
 			$message[] = '';
@@ -387,7 +387,7 @@ class AVH_FDAS_SpamCheck
 		if ($sfs_die || $php_die || $blacklist_die) {
 			// Update the counter
 			$this->_updateSpamCounter();
-
+			
 			// Terminate the connection
 			$this->_doTerminateConnection();
 		}
@@ -403,7 +403,7 @@ class AVH_FDAS_SpamCheck
 		if ($this->_core_options['ipcache']['email']) {
 			// General part of the email
 			$to = get_option('admin_email');
-			$subject = sprintf(__('[%s] AVH First Defense Against Spam - Spammer detected [%s]', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
+			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
 			$message = array();
 			$message[] = sprintf(__('Spam IP:	%s', 'avhfdas'), $this->_visiting_ip);
 			$message[] = sprintf(__('Accessing:	%s', 'avhfdas'), $_SERVER['REQUEST_URI']);
@@ -418,7 +418,7 @@ class AVH_FDAS_SpamCheck
 		}
 		// Update the counter
 		$this->_updateSpamCounter();
-
+		
 		// Terminate the connection
 		$this->_doTerminateConnection();
 	}
@@ -451,18 +451,18 @@ class AVH_FDAS_SpamCheck
 		 * WP-Supercache
 		 */
 		define('DONOTCACHEPAGE', true);
-
+		
 		if (1 == $this->_core_options['general']['diewithmessage']) {
 			if (is_object($this->ip_in_cache)) {
-				$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] has been identified as spam</p>', 'avhfdas'), $this->_visiting_ip);
+				$m = sprintf('<h1>' . __('Access has been blocked.', 'avhfdas') . '</h1><p>' . _('Your IP [%s] has been identified as spam', 'avhfdas') . '</p>', $this->_visiting_ip);
 			} else {
 				if (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']) {
-					$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in our <em>Blacklisted</em> database.<BR /></p>', 'avhfdas'), $this->_visiting_ip);
+					$m = sprintf('<h1>' . __('Access has been blocked.', 'avhfdas') . '</h1><p>' . __('Your IP [%s] is registered in our <em>Blacklisted</em> database.', 'avhfdas') . '<BR /></p>', $this->_visiting_ip);
 				} else {
-					$m = sprintf(__('<h1>Access has been blocked.</h1><p>Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.<BR />If you feel this is incorrect please contact them</p>', 'avhfdas'), $this->_visiting_ip);
+					$m = sprintf('<h1>' . __('Access has been blocked.', 'avhfdas') . '</h1><p>' . __('Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.', 'avhfdas') . '<BR />' . __('If you feel this is incorrect please contact them', 'avhfdas') . '</p>', $this->_visiting_ip);
 				}
 			}
-			$m .= '<p>Protected by: AVH First Defense Against Spam</p>';
+			$m .= '<p>' . __('Protected by: ', 'avhfdas') . 'AVH First Defense Against Spam</p>';
 			if ($this->_core_options['php']['usehoneypot']) {
 				$m .= $this->getHtmlHoneyPotUrl();
 			}

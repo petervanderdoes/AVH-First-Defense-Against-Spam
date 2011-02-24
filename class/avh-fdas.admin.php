@@ -104,13 +104,13 @@ final class AVH_FDAS_Admin
 		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_GENERAL, array(&$this, 'doMenuGeneralOptions'));
 		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array(&$this, 'doMenu3rdPartyOptions'));
 		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_FAQ, array(&$this, 'doMenuFAQ'));
-
+		
 		// Add actions for menu pages
 		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array(&$this, 'actionLoadPageHook_Overview'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array(&$this, 'actionLoadPageHook_General'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array(&$this, 'actionLoadPageHook_3rd_party'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array(&$this, 'actionLoadPageHook_faq'));
-
+		
 		// Register Styles and Scripts
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '.dev' : '';
 		wp_register_script('avhfdas-admin-js', $this->_settings->js_url . '/avh-fdas.admin' . $suffix . '.js', array('jquery'), AVH_FDAS_Define::PLUGIN_VERSION, true);
@@ -153,8 +153,10 @@ final class AVH_FDAS_Admin
 				}
 				if ($prev_version[0] != AVH_FDAS_Define::PLUGIN_VERSION) {
 					echo '<div style="color: #f00; font-weight: bold;">';
-					echo '<br />The installed version, ' . AVH_FDAS_Define::PLUGIN_VERSION . ', is more than one version behind.<br />';
-					echo 'More changes have been made since the currently installed version, consider checking the changelog at the plugin\'s <a href="http://blog.avirtualhome.com/wordpress-plugins/avh-first-defense-against-spam/" target="_blank">homepage</a>';
+					echo '<br />';
+					echo sprintf(__('The installed version, %s, is more than one version behind.', 'avhfdas'), AVH_FDAS_Define::PLUGIN_VERSION);
+					echo '<br />';
+					echo __('More changes have been made since the currently installed version, consider checking the changelog.', 'avhfdas');
 					echo '</div><div style="clear: left;"></div>';
 				}
 				echo '</div>';
@@ -177,7 +179,7 @@ final class AVH_FDAS_Admin
 			$option->response[$this_plugin]->package = '';
 			//Add a notice message
 			if ($this->_add_disabled_notice == false) {
-				add_action("in_plugin_update_message-$this->plugin_name", create_function('', 'echo \'<br /><span style="color:red">You need to have PHP 5.2 or higher for the new version !!!</span>\';'));
+				add_action("in_plugin_update_message-$this->plugin_name", create_function('', 'echo \'<br /><span style="color:red">' . __('You need to have PHP 5.2 or higher for the new version !!!', 'avhfdas') . '</span>\';'));
 				$this->_add_disabled_notice = true;
 			}
 		}
@@ -266,11 +268,11 @@ final class AVH_FDAS_Admin
 		$output = '';
 		$counter = 0;
 		foreach ($spam_count as $key => $value) {
-
+			
 			if ('190001' == $key || $counter >= 12) {
 				continue;
 			}
-
+			
 			$have_spam_count_data = true;
 			$date = date_i18n('Y - F', mktime(0, 0, 0, substr($key, 4, 2), 1, substr($key, 0, 4)));
 			$output .= '<td class="first b">' . $value . '</td>';
@@ -278,7 +280,7 @@ final class AVH_FDAS_Admin
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
-
+			
 			$counter ++;
 		}
 		if (! $have_spam_count_data) {
@@ -334,20 +336,20 @@ final class AVH_FDAS_Admin
 			echo '<tbody>';
 			echo '<tr class="first">';
 			$output .= '<td class="first b">' . $count . '</td>';
-			$text = (1 == $count) ? 'IP' : 'IP\'s';
-			$output .= '<td class="t">Total of ' . $text . ' in the cache</td>';
+			$text = _n('IP', 'IP\'s', $count, 'avhfdas');
+			$output .= '<td class="t">' . sprintf(__('Total of %s in the cache', 'avhfdas'), $text) . ' </td>';
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
 			$output .= '<td class="first b">' . $count_clean . '</td>';
-			$text = (1 == $count_clean) ? 'IP' : 'IP\'s';
-			$output .= '<td class="t">Total of ' . $text . ' classified as clean</td>';
+			$text = _n('IP', 'IP\'s', $count_clean, 'avhfdas');
+			$output .= '<td class="t">' . sprintf(__('Total of %s classified as clean', 'avhfdas'), $text) . '</td>';
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
 			$output .= '<td class="first b">' . $count_spam . '</td>';
-			$text = (1 == $count_spam) ? 'IP' : 'IP\'s';
-			$output .= '<td class="t">Total of ' . $text . ' classified as spam</td>';
+			$text = _n('IP', 'IP\'s', $count_spam, 'avhfdas');
+			$output .= '<td class="t">' . sprintf(__('Total of %s classified as spam', 'avhfdas'), $text) . '</td>';
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
@@ -386,18 +388,18 @@ final class AVH_FDAS_Admin
 	public function doMenuGeneralOptions ()
 	{
 		global $screen_layout_columns;
-		$options_general[] = array('avhfdas[general][diewithmessage]', 'Show message', 'checkbox', 1, 'Show a message when the connection has been terminated.');
-		$options_general[] = array('avhfdas[general][emailsecuritycheck]', 'Email on failed security check:', 'checkbox', 1, 'Receive an email when a comment is posted and the security check failed.');
-		$options_general[] = array('avhfdas[general][commentnonce]', 'Use comment nonce:', 'checkbox', 1, 'Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.');
-		$options_cron[] = array('avhfdas[general][cron_nonces_email]', 'Email result of nonces clean up', 'checkbox', 1, 'Receive an email with the total number of nonces that are deleted. The nonces are used to secure the links found in the emails.');
-		$options_cron[] = array('avhfdas[general][cron_ipcache_email]', 'Email result of IP cache clean up', 'checkbox', 1, 'Receive an email with the total number of IP\'s that are deleted from the IP caching system.');
-		$options_blacklist[] = array('avhfdas[general][useblacklist]', 'Use internal blacklist', 'checkbox', 1, 'Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.');
-		$options_blacklist[] = array('avhfdas[lists][blacklist]', 'Blacklist IP\'s:', 'textarea', 15, 'Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 15);
-		$options_whitelist[] = array('avhfdas[general][usewhitelist]', 'Use internal whitelist', 'checkbox', 1, 'Check the internal whitelist first. If the IP is found don\t do any further checking.');
-		$options_whitelist[] = array('avhfdas[lists][whitelist]', 'Whitelist IP\'s', 'textarea', 15, 'Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 15);
-		$options_ipcache[] = array('avhfdas[general][useipcache]', 'Use IP Caching', 'checkbox', 1, 'Cache the IP\'s that meet the 3rd party termination threshold and the IP\'s that are not detected by the 3rd party. The connection will be terminated if an IP is found in the cache that was perviously determined to be a spammer');
-		$options_ipcache[] = array('avhfdas[ipcache][email]', 'Email ', 'checkbox', 1, 'Send an email when a connection is terminate based on the IP found in the cache');
-		$options_ipcache[] = array('avhfdas[ipcache][daystokeep]', 'Days to keep in cache', 'text', 3, 'Keep the IP in cache for the selected days.');
+		$options_general[] = array('avhfdas[general][diewithmessage]', __('Show message', 'avhfdas'), 'checkbox', 1, __('Show a message when the connection has been terminated.', 'avhfdas'));
+		$options_general[] = array('avhfdas[general][emailsecuritycheck]', __('Email on failed security check:', 'avhfdas'), 'checkbox', 1, __('Receive an email when a comment is posted and the security check failed.', 'avhfdas'));
+		$options_general[] = array('avhfdas[general][commentnonce]', __('Use comment nonce:', 'avhfdas'), 'checkbox', 1, __('Block spammers that access wp-comments-post.php directly by using a comment security check. An email can be send when the check fails.', 'avhfdas'));
+		$options_cron[] = array('avhfdas[general][cron_nonces_email]', __('Email result of nonces clean up', 'avhfdas'), 'checkbox', 1, __('Receive an email with the total number of nonces that are deleted. The nonces are used to secure the links found in the emails.', 'avhfdas'));
+		$options_cron[] = array('avhfdas[general][cron_ipcache_email]', __('Email result of IP cache clean up', 'avhfdas'), 'checkbox', 1, __('Receive an email with the total number of IP\'s that are deleted from the IP caching system.', 'avhfdas'));
+		$options_blacklist[] = array('avhfdas[general][useblacklist]', __('Use internal blacklist', 'avhfdas'), 'checkbox', 1, __('Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.', 'avhfdas'));
+		$options_blacklist[] = array('avhfdas[lists][blacklist]', __('Blacklist IP\'s:', 'avhfdas'), 'textarea', 15, __('Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 'avhfdas'), 15);
+		$options_whitelist[] = array('avhfdas[general][usewhitelist]', __('Use internal whitelist', 'avhfdas'), 'checkbox', 1, __('Check the internal whitelist first. If the IP is found don\t do any further checking.', 'avhfdas'));
+		$options_whitelist[] = array('avhfdas[lists][whitelist]', __('Whitelist IP\'s', 'avhfdas'), 'textarea', 15, __('Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 'avhfdas'), 15);
+		$options_ipcache[] = array('avhfdas[general][useipcache]', __('Use IP Caching', 'avhfdas'), 'checkbox', 1, __('Cache the IP\'s that meet the 3rd party termination threshold and the IP\'s that are not detected by the 3rd party. The connection will be terminated if an IP is found in the cache that was perviously determined to be a spammer', 'avhfdas'));
+		$options_ipcache[] = array('avhfdas[ipcache][email]', __('Email', 'avhfdas'), 'checkbox', 1, __('Send an email when a connection is terminate based on the IP found in the cache', 'avhfdas'));
+		$options_ipcache[] = array('avhfdas[ipcache][daystokeep]', __('Days to keep in cache', 'avhfdas'), 'text', 3, __('Keep the IP in cache for the selected days.', 'avhfdas'));
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_generaloptions');
 			$formoptions = $_POST['avhfdas'];
@@ -567,7 +569,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function metaboxIPCache ($data)
 	{
-		echo '<p>' . __('To use IP caching you must enable it below and set the options. IP\'s are stored in the database so if you have a high traffic website the database can grow quickly');
+		echo '<p>' . __('To use IP caching you must enable it below and set the options. IP\'s are stored in the database so if you have a high traffic website the database can grow quickly', 'avhfdas');
 		echo $this->_printOptions($data['options_ipcache'], $data['actual_options']);
 	}
 
@@ -578,7 +580,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function metaboxCron ($data)
 	{
-		echo '<p>' . __('Once a day cron jobs of this plugin run. You can select to receive an email with additional information about the jobs that ran.');
+		echo '<p>' . __('Once a day cron jobs of this plugin run. You can select to receive an email with additional information about the jobs that ran.', 'avhfdas');
 		echo $this->_printOptions($data['options_cron'], $data['actual_options']);
 	}
 
@@ -609,20 +611,20 @@ final class AVH_FDAS_Admin
 	public function doMenu3rdPartyOptions ()
 	{
 		global $screen_layout_columns;
-		$options_sfs[] = array('avhfdas[general][use_sfs]', 'Check with Stop Forum Spam', 'checkbox', 1, 'If checked, the visitor\'s IP will be checked with Stop Forum Spam');
-		$options_sfs[] = array('avhfdas[sfs][whentoemail]', 'Email threshold', 'text', 3, 'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.');
-		$options_sfs[] = array('avhfdas[sfs][emailphp]', 'Email Project Honey Pot Info', 'checkbox', 1, 'Always email Project Honey Pot info when Stop Forum Spam email threshold is reached, disregarding the email threshold set for Project Honey Pot. This only works when you select to check with Project Honey Pot as well.');
-		$options_sfs[] = array('avhfdas[sfs][whentodie]', 'Termination threshold', 'text', 3, 'When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>');
-		$options_sfs[] = array('avhfdas[sfs][sfsapikey]', 'API Key', 'text', 15, 'You need a Stop Forum Spam API key to report spam.');
-		$options_sfs[] = array('avhfdas[sfs][error]', 'Email error', 'checkbox', 1, 'Receive an email when the call to Stop Forum Spam Fails');
-		$options_php[] = array('avhfdas[general][use_php]', 'Check with Honey Pot Project', 'checkbox', 1, 'If checked, the visitor\'s IP will be checked with Honey Pot Project');
-		$options_php[] = array('avhfdas[php][phpapikey]', 'API Key:', 'text', 15, 'You need a Project Honey Pot API key to check the Honey Pot Project database.');
-		$options_php[] = array('avhfdas[php][whentoemailtype]', 'Email type threshold:', 'dropdown', '0/1/2/3/4/5/6/7', 'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', 'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />Both the type threshold and the score threshold have to be reached in order to receive an email.');
-		$options_php[] = array('avhfdas[php][whentoemail]', 'Email score threshold', 'text', 3, 'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.');
-		$options_php[] = array('avhfdas[php][whentodietype]', 'Termination type threshold', 'dropdown', '-1/0/1/2/3/4/5/6/7', 'Never/Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', 'When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<br />Both the type threshold and the score threshold have to be reached in order to termnate the connection. ');
-		$options_php[] = array('avhfdas[php][whentodie]', 'Termination score threshold', 'text', 3, 'When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>');
-		$options_php[] = array('avhfdas[php][usehoneypot]', 'Use Honey Pot', 'checkbox', 1, 'If you have set up a Honey Pot you can select to have the URL below to be added to the message when terminating the connection.<BR />You have to select <em>Show Message</em> in the General Options for this to work.');
-		$options_php[] = array('avhfdas[php][honeypoturl]', 'Honey Pot URL', 'text', 30, 'The link to the Honey Pot as suggested by Project Honey Pot.');
+		$options_sfs[] = array('avhfdas[general][use_sfs]', __('Check with Stop Forum Spam', 'avhfdas'), 'checkbox', 1, __('If checked, the visitor\'s IP will be checked with Stop Forum Spam', 'avhfdas'));
+		$options_sfs[] = array('avhfdas[sfs][whentoemail]', __('Email threshold', 'avhfdas'), 'text', 3, __('When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.', 'avhfdas'));
+		$options_sfs[] = array('avhfdas[sfs][emailphp]', __('Email Project Honey Pot Info', 'avhfdas'), 'checkbox', 1, __('Always email Project Honey Pot info when Stop Forum Spam email threshold is reached, disregarding the email threshold set for Project Honey Pot. This only works when you select to check with Project Honey Pot as well.', 'avhfdas'));
+		$options_sfs[] = array('avhfdas[sfs][whentodie]', __('Termination threshold', 'avhfdas'), 'text', 3, __('When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>', 'avhfdas'));
+		$options_sfs[] = array('avhfdas[sfs][sfsapikey]', __('API Key', 'avhfdas'), 'text', 15, __('You need a Stop Forum Spam API key to report spam.', 'avhfdas'));
+		$options_sfs[] = array('avhfdas[sfs][error]', __('Email error', 'avhfdas'), 'checkbox', 1, __('Receive an email when the call to Stop Forum Spam Fails', 'avhfdas'));
+		$options_php[] = array('avhfdas[general][use_php]', __('Check with Honey Pot Project', 'avhfdas'), 'checkbox', 1, __('If checked, the visitor\'s IP will be checked with Honey Pot Project', 'avhfdas'));
+		$options_php[] = array('avhfdas[php][phpapikey]', __('API Key:', 'avhfdas'), 'text', 15, __('You need a Project Honey Pot API key to check the Honey Pot Project database.', 'avhfdas'));
+		$options_php[] = array('avhfdas[php][whentoemailtype]', __('Email type threshold:', 'avhfdas'), 'dropdown', '0/1/2/3/4/5/6/7', 'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', __('When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />Both the type threshold and the score threshold have to be reached in order to receive an email.', 'avhfdas'));
+		$options_php[] = array('avhfdas[php][whentoemail]', __('Email score threshold', 'avhfdas'), 'text', 3, __('When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.', 'avhfdas'));
+		$options_php[] = array('avhfdas[php][whentodietype]', __('Termination type threshold', 'avhfdas'), 'dropdown', '-1/0/1/2/3/4/5/6/7', 'Never/Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', __('When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<br />Both the type threshold and the score threshold have to be reached in order to termnate the connection.', 'avhfdas'));
+		$options_php[] = array('avhfdas[php][whentodie]', __('Termination score threshold', 'avhfdas'), 'text', 3, __('When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>', 'avhfdas'));
+		$options_php[] = array('avhfdas[php][usehoneypot]', __('Use Honey Pot', 'avhfdas'), 'checkbox', 1, __('If you have set up a Honey Pot you can select to have the URL below to be added to the message when terminating the connection.<BR />You have to select <em>Show Message</em> in the General Options for this to work.', 'avhfdas'));
+		$options_php[] = array('avhfdas[php][honeypoturl]', __('Honey Pot URL', 'avhfdas'), 'text', 30, __('The link to the Honey Pot as suggested by Project Honey Pot.', 'avhfdas'));
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_options');
 			$formoptions = $_POST['avhfdas'];
@@ -702,9 +704,9 @@ final class AVH_FDAS_Admin
 	 */
 	public function metaboxMenu3rdParty_SFS ($data)
 	{
-		echo '<p>' . __('To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.');
+		echo '<p>' . __('To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.', 'avhfdas');
 		echo $this->_printOptions($data['options_sfs'], $data['actual_options']);
-
+	
 		//echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
 	//echo  __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
 	}
@@ -716,7 +718,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function metaboxMenu3rdParty_PHP ($data)
 	{
-		echo '<p>' . __('To check a visitor at Project Honey Pot you must enable it below, you must also have an API key. You can get an API key by signing up for free at the <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">Honey Pot Project</a>. Set the options to your own liking.');
+		echo '<p>' . __('To check a visitor at Project Honey Pot you must enable it below, you must also have an API key. You can get an API key by signing up for free at the <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">Honey Pot Project</a>. Set the options to your own liking.', 'avhfdas');
 		echo $this->_printOptions($data['options_php'], $data['actual_options']);
 	}
 
@@ -945,7 +947,7 @@ final class AVH_FDAS_Admin
 	{
 		if (('' != $this->_core->get_optionElement('sfs', 'sfsapikey')) && isset($comment->comment_approved) && 'spam' == $comment->comment_approved) {
 			$report_url = clean_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
-			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">Report & Delete</a>';
+			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">' . __('Report & Delete', 'avhfdas') . '</a>';
 		}
 		return $actions;
 	}
@@ -1153,7 +1155,7 @@ final class AVH_FDAS_Admin
 	{
 		echo '<div class="clear">';
 		echo '<p class="footer_avhfdas">';
-		printf(__('&copy; Copyright 2010 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam version %s', 'avhfdas'), AVH_FDAS_Define::PLUGIN_VERSION);
+		printf('&copy; Copyright 2010 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam version %s', AVH_FDAS_Define::PLUGIN_VERSION);
 		echo '</p>';
 	}
 

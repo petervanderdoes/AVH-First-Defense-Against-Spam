@@ -42,7 +42,7 @@ class AVH_FDAS_Public
 			add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
 		}
 		add_action('get_header', array(&$this, 'actionHandleMainAction'));
-
+		
 		add_action('preprocess_comment', array(&$this, 'actionHandlePostingComment'), 1);
 		add_action('register_post', array(&$this, 'actionHandleRegistration'), 10, 3);
 		// Private actions for Cron
@@ -90,8 +90,7 @@ class AVH_FDAS_Public
 		}
 		if ($options['general']['cron_nonces_email']) {
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean nonces', 'avhfdas'),
-			wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean nonces', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 			$message[] = sprintf(__('Deleted %d nonce\'s from the database', 'avhfdas'), $removed);
 			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 		}
@@ -109,12 +108,10 @@ class AVH_FDAS_Public
 		$options = $this->_core->get_options();
 		$date = current_time('mysql');
 		$days = $options['ipcache']['daystokeep'];
-		$result = $wpdb->query(
-		$wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(added))) > %d", $date, $days));
+		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(added))) > %d", $date, $days));
 		if ($options['general']['cron_ipcache_email']) {
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean IP cache', 'avhfdas'),
-			wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean IP cache', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 			$message[] = sprintf(__('Deleted %d IP\'s from the cache', 'avhfdas'), $result);
 			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 		}
@@ -141,8 +138,7 @@ class AVH_FDAS_Public
 						$ip = AVH_Visitor::getUserIP();
 						$sfs_apikey = $this->_core->get_optionElement('sfs', 'sfsapikey');
 						$commentdata['comment_author_email'] = empty($commentdata['comment_author_email']) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
-						$subject = sprintf(__('[%s] AVH First Defense Against Spam - Comment security check failed', 'avhfdas'),
-						wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+						$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Comment security check failed', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 						if (isset($_POST['_avh_first_defense_against_spam'])) {
 							$message[] = __('Reason:	The nonce check failed.', 'avhfdas');
 						} else {
@@ -168,8 +164,7 @@ class AVH_FDAS_Public
 							$message[] = sprintf(__('Report spammer: %s'), $report_url);
 						}
 						$message[] = sprintf(__('For more information: http://www.stopforumspam.com/search?q=%s'), $ip);
-						$blacklisturl = admin_url('admin.php?action=blacklist&i=') . $ip . '&_avhnonce=' .
-						 AVH_Security::createNonce($ip);
+						$blacklisturl = admin_url('admin.php?action=blacklist&i=') . $ip . '&_avhnonce=' . AVH_Security::createNonce($ip);
 						$message[] = sprintf(__('Add to the local blacklist: %s'), $blacklisturl);
 						AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 					}

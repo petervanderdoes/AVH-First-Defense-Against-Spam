@@ -56,9 +56,7 @@ class AVH_FDAS_DB
 	{
 		global $wpdb;
 		$date = current_time('mysql');
-		$result = $wpdb->query(
-		$wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (INET_ATON(%s), %d, %s, %s)", $ip, 
-		$spam, $date, $date));
+		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (INET_ATON(%s), %d, %s, %s)", $ip, $spam, $date, $date));
 		if ($result) {
 			return $result;
 		} else {
