@@ -90,8 +90,8 @@ class AVH_FDAS_Public
 		}
 		if ($options['general']['cron_nonces_email']) {
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean nonces', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
-			$message[] = sprintf(__('Deleted %d nonce\'s from the database', 'avhfdas'), $removed);
+			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean nonces', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+			$message[] = sprintf(__('Deleted %d nonce\'s from the database', 'avh-fdas'), $removed);
 			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 		}
 	}
@@ -111,8 +111,8 @@ class AVH_FDAS_Public
 		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(added))) > %d", $date, $days));
 		if ($options['general']['cron_ipcache_email']) {
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean IP cache', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
-			$message[] = sprintf(__('Deleted %d IP\'s from the cache', 'avhfdas'), $result);
+			$subject = sprintf('[%s] AVH First Defense Against Spam - Cron - ' . __('Clean IP cache', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+			$message[] = sprintf(__('Deleted %d IP\'s from the cache', 'avh-fdas'), $result);
 			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 		}
 	}
@@ -138,20 +138,20 @@ class AVH_FDAS_Public
 						$ip = AVH_Visitor::getUserIP();
 						$sfs_apikey = $this->_core->get_optionElement('sfs', 'sfsapikey');
 						$commentdata['comment_author_email'] = empty($commentdata['comment_author_email']) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
-						$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Comment security check failed', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+						$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Comment security check failed', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 						if (isset($_POST['_avh_first_defense_against_spam'])) {
-							$message[] = __('Reason:	The nonce check failed.', 'avhfdas');
+							$message[] = __('Reason:	The nonce check failed.', 'avh-fdas');
 						} else {
-							$message[] = __('Reason:	An attempt was made to directly access wp-comment-post.php', 'avhfdas');
+							$message[] = __('Reason:	An attempt was made to directly access wp-comment-post.php', 'avh-fdas');
 						}
-						$message[] = sprintf(__('Username:	%s', 'avhfdas'), $commentdata['comment_author']);
-						$message[] = sprintf(__('Email:		%s', 'avhfdas'), $commentdata['comment_author_email']);
-						$message[] = sprintf(__('IP:		%s', 'avhfdas'), $ip);
+						$message[] = sprintf(__('Username:	%s', 'avh-fdas'), $commentdata['comment_author']);
+						$message[] = sprintf(__('Email:		%s', 'avh-fdas'), $commentdata['comment_author_email']);
+						$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $ip);
 						$message[] = '';
-						$message[] = __('Comment trying to post:', 'avhfdas');
-						$message[] = __('--- START OF COMMENT ---', 'avhfdas');
+						$message[] = __('Comment trying to post:', 'avh-fdas');
+						$message[] = __('--- START OF COMMENT ---', 'avh-fdas');
 						$message[] = $commentdata['comment_content'];
-						$message[] = __('--- END OF COMMENT ---', 'avhfdas');
+						$message[] = __('--- END OF COMMENT ---', 'avh-fdas');
 						$message[] = '';
 						if ('' != $sfs_apikey) {
 							$q['action'] = 'emailreportspammer';
@@ -177,8 +177,8 @@ class AVH_FDAS_Public
 							update_option($this->_core->get_db_nonces(), $option);
 						}
 					}
-					$m = __('<p>Cheating huh</p>', 'avhfdas');
-					$m .= __('<p>Protected by: AVH First Defense Against Spam</p>', 'avhfdas');
+					$m = __('<p>Cheating huh</p>', 'avh-fdas');
+					$m .= __('<p>Protected by: AVH First Defense Against Spam</p>', 'avh-fdas');
 					if ($this->_core->get_optionElement('php', 'usehoneypot')) {
 						$m .= $this->_spamcheck->getHtmlHoneyPotUrl();
 					}

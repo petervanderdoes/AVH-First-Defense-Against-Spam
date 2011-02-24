@@ -174,13 +174,13 @@ class AVH_FDAS_SpamCheck
 			if ($this->_core_options['sfs']['error']) {
 				$error = $this->_core->getHttpError($this->spaminfo['sfs']['Error']);
 				$to = get_option('admin_email');
-				$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error detected', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
-				$message[] = __('An error has been detected', 'avhfdas');
-				$message[] = sprintf(__('Error:	%s', 'avhfdas'), $error);
+				$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error detected', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+				$message[] = __('An error has been detected', 'avh-fdas');
+				$message[] = sprintf(__('Error:	%s', 'avh-fdas'), $error);
 				$message[] = '';
-				$message[] = sprintf(__('IP:		%s', 'avhfdas'), $this->_visiting_ip);
-				$message[] = sprintf(__('Accessing:	%s', 'avhfdas'), $_SERVER['REQUEST_URI']);
-				$message[] = sprintf(__('Call took:	%s', 'avhfdas'), $time);
+				$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $this->_visiting_ip);
+				$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+				$message[] = sprintf(__('Call took:	%s', 'avh-fdas'), $time);
 				AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 			}
 			$this->spaminfo['sfs'] = NULL;
@@ -294,38 +294,38 @@ class AVH_FDAS_SpamCheck
 		if ($sfs_email || $php_email) {
 			// General part of the email
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
-			$message[] = sprintf(__('Spam IP:	%s', 'avhfdas'), $this->_visiting_ip);
-			$message[] = sprintf(__('Accessing:	%s', 'avhfdas'), $_SERVER['REQUEST_URI']);
+			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
+			$message[] = sprintf(__('Spam IP:	%s', 'avh-fdas'), $this->_visiting_ip);
+			$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
 			$message[] = '';
 			// Stop Forum Spam Mail Part
 			if ($sfs_email) {
 				if ($this->spaminfo['sfs']['appears']) {
-					$message[] = __('Checked at Stop Forum Spam', 'avhfdas');
-					$message[] = '	' . __('Information', 'avhfdas');
-					$message[] = '	' . sprintf(__('Last Seen:	%s', 'avhfdas'), $this->spaminfo['sfs']['lastseen']);
-					$message[] = '	' . sprintf(__('Frequency:	%s', 'avhfdas'), $this->spaminfo['sfs']['frequency']);
+					$message[] = __('Checked at Stop Forum Spam', 'avh-fdas');
+					$message[] = '	' . __('Information', 'avh-fdas');
+					$message[] = '	' . sprintf(__('Last Seen:	%s', 'avh-fdas'), $this->spaminfo['sfs']['lastseen']);
+					$message[] = '	' . sprintf(__('Frequency:	%s', 'avh-fdas'), $this->spaminfo['sfs']['frequency']);
 					$message[] = '	' . sprintf(__('Call took:	%s', 'avhafdas'), $this->spaminfo['sfs']['time']);
 					if ($this->spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentodie']) {
-						$message[] = '	' . sprintf(__('Threshold (%s) reached. Connection terminated', 'avhfdas'), $this->_core_options['sfs']['whentodie']);
+						$message[] = '	' . sprintf(__('Threshold (%s) reached. Connection terminated', 'avh-fdas'), $this->_core_options['sfs']['whentodie']);
 					}
 				} else {
-					$message[] = __('Stop Forum Spam has no information', 'avhfdas');
+					$message[] = __('Stop Forum Spam has no information', 'avh-fdas');
 				}
 				$message[] = '';
 				$message[] = sprintf(__('For more information: http://www.stopforumspam.com/search?q=%s'), $this->_visiting_ip);
 				$message[] = '';
 			}
 			if (isset($this->spaminfo['sfs']) && 'no' == $this->spaminfo['sfs']['appears']) {
-				$message[] = __('Stop Forum Spam has no information', 'avhfdas');
+				$message[] = __('Stop Forum Spam has no information', 'avh-fdas');
 				$message[] = '';
 			}
 			// Project Honey pot Mail Part
 			if ($php_email || $this->_core_options['sfs']['emailphp']) {
 				if ($this->spaminfo['php'] != null) {
-					$message[] = __('Checked at Project Honey Pot', 'avhfdas');
-					$message[] = '	' . __('Information', 'avhfdas');
-					$message[] = '	' . sprintf(__('Days since last activity:	%s', 'avhfdas'), $this->spaminfo['php']['days']);
+					$message[] = __('Checked at Project Honey Pot', 'avh-fdas');
+					$message[] = '	' . __('Information', 'avh-fdas');
+					$message[] = '	' . sprintf(__('Days since last activity:	%s', 'avh-fdas'), $this->spaminfo['php']['days']);
 					switch ($this->spaminfo['php']['type']) {
 						case "0":
 							$type = "Search Engine";
@@ -352,18 +352,18 @@ class AVH_FDAS_SpamCheck
 							$type = "Suspicious & Harvester & Comment Spammer";
 							break;
 					}
-					$message[] = '	' . sprintf(__('Type:				%s', 'avhfdas'), $type);
+					$message[] = '	' . sprintf(__('Type:				%s', 'avh-fdas'), $type);
 					if (0 == $this->spaminfo['php']['type']) {
-						$message[] = '	' . sprintf(__('Search Engine:	%s', 'avhfdas'), $this->spaminfo['php']['engine']);
+						$message[] = '	' . sprintf(__('Search Engine:	%s', 'avh-fdas'), $this->spaminfo['php']['engine']);
 					} else {
-						$message[] = '	' . sprintf(__('Score:				%s', 'avhfdas'), $this->spaminfo['php']['score']);
+						$message[] = '	' . sprintf(__('Score:				%s', 'avh-fdas'), $this->spaminfo['php']['score']);
 					}
 					$message[] = '	' . sprintf(__('Call took:			%s', 'avhafdas'), $this->spaminfo['php']['time']);
 					if ($this->spaminfo['php']['score'] >= $this->_core_options['php']['whentodie'] && $this->spaminfo['php']['type'] >= $this->_core_options['php']['whentodietype']) {
-						$message[] = '	' . sprintf(__('Threshold score (%s) and type (%s) reached. Connection terminated', 'avhfdas'), $this->_core_options['php']['whentodie'], $type);
+						$message[] = '	' . sprintf(__('Threshold score (%s) and type (%s) reached. Connection terminated', 'avh-fdas'), $this->_core_options['php']['whentodie'], $type);
 					}
 				} else {
-					$message[] = __('Project Honey Pot has no information', 'avhfdas');
+					$message[] = __('Project Honey Pot has no information', 'avh-fdas');
 				}
 				$message[] = '';
 			}
@@ -403,12 +403,12 @@ class AVH_FDAS_SpamCheck
 		if ($this->_core_options['ipcache']['email']) {
 			// General part of the email
 			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avhfdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
+			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
 			$message = array();
-			$message[] = sprintf(__('Spam IP:	%s', 'avhfdas'), $this->_visiting_ip);
-			$message[] = sprintf(__('Accessing:	%s', 'avhfdas'), $_SERVER['REQUEST_URI']);
+			$message[] = sprintf(__('Spam IP:	%s', 'avh-fdas'), $this->_visiting_ip);
+			$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
 			$message[] = '';
-			$message[] = __('IP exists in the cache', 'avhfdas');
+			$message[] = __('IP exists in the cache', 'avh-fdas');
 			$message[] = '	' . sprintf(__('Check took:			%s', 'avhafdas'), $this->spaminfo['cache']['time']);
 			$message[] = '';
 			// General End
@@ -454,15 +454,15 @@ class AVH_FDAS_SpamCheck
 		
 		if (1 == $this->_core_options['general']['diewithmessage']) {
 			if (is_object($this->ip_in_cache)) {
-				$m = sprintf('<h1>' . __('Access has been blocked.', 'avhfdas') . '</h1><p>' . _('Your IP [%s] has been identified as spam', 'avhfdas') . '</p>', $this->_visiting_ip);
+				$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . _('Your IP [%s] has been identified as spam', 'avh-fdas') . '</p>', $this->_visiting_ip);
 			} else {
 				if (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']) {
-					$m = sprintf('<h1>' . __('Access has been blocked.', 'avhfdas') . '</h1><p>' . __('Your IP [%s] is registered in our <em>Blacklisted</em> database.', 'avhfdas') . '<BR /></p>', $this->_visiting_ip);
+					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] is registered in our <em>Blacklisted</em> database.', 'avh-fdas') . '<BR /></p>', $this->_visiting_ip);
 				} else {
-					$m = sprintf('<h1>' . __('Access has been blocked.', 'avhfdas') . '</h1><p>' . __('Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.', 'avhfdas') . '<BR />' . __('If you feel this is incorrect please contact them', 'avhfdas') . '</p>', $this->_visiting_ip);
+					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.', 'avh-fdas') . '<BR />' . __('If you feel this is incorrect please contact them', 'avh-fdas') . '</p>', $this->_visiting_ip);
 				}
 			}
-			$m .= '<p>' . __('Protected by: ', 'avhfdas') . 'AVH First Defense Against Spam</p>';
+			$m .= '<p>' . __('Protected by: ', 'avh-fdas') . 'AVH First Defense Against Spam</p>';
 			if ($this->_core_options['php']['usehoneypot']) {
 				$m .= $this->getHtmlHoneyPotUrl();
 			}

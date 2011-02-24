@@ -68,6 +68,6 @@ function avh_fdas_remove_plugin ()
 		do_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE);
 	}
 	ob_end_clean();
-	wp_die(__('AVH First Defense Against Spam can\'t work with this WordPress version!', 'avhfdas'));
+	wp_die(__('AVH First Defense Against Spam can\'t work with this WordPress version!', 'avh-fdas'));
 }
 ?>
