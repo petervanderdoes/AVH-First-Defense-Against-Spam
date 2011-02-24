@@ -92,6 +92,14 @@ class AVH_FDAS_Core
 		 */
 		$this->_default_nonces_data = NULL;
 		$this->_default_nonces = array('default'=>$this->_default_nonces_data);
+
+		add_action('init', array(&$this,'handleInitializePlugin'),10);
+
+		return;
+	}
+
+	function handleInitializePlugin() {
+
 		/**
 		 * Set the options for the program
 		 *
@@ -104,17 +112,29 @@ class AVH_FDAS_Core
 			$this->_doUpgrade();
 		}
 		$this->_settings->storeSetting('siteurl', get_option('siteurl'));
-		$this->_settings->storeSetting('lang_dir', $this->_settings->plugin_working_dir . '/lang');
 		$this->_settings->storeSetting('graphics_url', plugins_url('images', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('js_url', plugins_url('js', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('css_url', plugins_url('css', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('searchengines', array('0'=>'Undocumented', '1'=>'AltaVista', '2'=>'Ask', '3'=>'Baidu', '4'=>'Excite', '5'=>'Google', '6'=>'Looksmart', '7'=>'Lycos', '8'=>'MSN', '9'=>'Yahoo', '10'=>'Cuil', '11'=>'InfoSeek', '12'=>'Miscellaneous'));
+
 		$footer[] = '';
 		$footer[] = '--';
 		$footer[] = sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'), AVH_FDAS_Define::PLUGIN_VERSION);
 		$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
 		$this->_settings->storeSetting('mail_footer', $footer);
-		return;
+
+		$this->handleTextdomain();
+	}
+	/**
+	 * Loads the i18n
+	 *
+	 * @return
+	 */
+	function handleTextdomain ()
+	{
+
+		load_plugin_textdomain( 'avh-fdas', false, $this->_settings->plugin_basename) ;
+
 	}
 
 	/**
