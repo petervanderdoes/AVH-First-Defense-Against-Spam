@@ -3,7 +3,7 @@ Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment
 Requires at least: 2.8
-Tested up to: 3.0.4
+Tested up to: 3.1
 Stable tag: 3.0.3
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
@@ -17,8 +17,8 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 = Features =
 * PHP 5 is required.
 * The visitor's IP can be checked at the following third parties:
-	* Stop Forum Spam. http://www.stopforumspam.com
-	* Project Honey Pot. http://www.projecthoneypot.org (An API key is needed to check the IP at this party. The key is free.)
+	* [Stop Forum Spam](http://www.stopforumspam.com). 
+	* [Project Honey Pot](http://www.projecthoneypot.org). An API key is needed to check the IP at this party. The key is free.
 * Spammers can be blocked based on the information supplied by the third party or by using a local blacklist.
 * Separate thresholds can be set for the following features:
 	* Send an email to the board administrator with information supplied by the third party about the spammer.
@@ -71,6 +71,9 @@ The AVH First Defense Against Spam plugin can be installed in 3 easy steps:
 1. Activate the plugin.
 
 == Frequently Asked Questions ==
+= How can I translate the plugin in my language? =
+I have set up a project in [Launchpad](https://translations.launchpad.net/avhfirstdefenseagainstspam) to help with translation. Unfortunately Launchpad can't inform me when some translation has been done, so please shoot me an email when you did some translating. 
+
 = Is this plugin enough to block all spam? =
 Unfortunately not.
 I don't believe there is one solution to block all spam. Personally I have great success with the plugin in combination with Akismet.
@@ -87,10 +90,10 @@ A network in CIDR format. i.e. 192.168.1.0/24
 You need to have an API key from Stop Forum Spam. If you do on the Edit Comments pages there is an extra option called, Report & Delete, in the messages identified as spam.
 
 = How do I get a Stop Forum Spam API key? =
-You will have to sign up on their site, http://www.stopforumspam.com/signup .
+You will have to sign up on their site, [http://www.stopforumspam.com/signup](http://www.stopforumspam.com/signup).
 
 = How do I get a Project Honey Pot API key? =
-You will have to sign up on their site, http://www.projecthoneypot.org/create_account.php .
+You will have to sign up on their site, [http://www.projecthoneypot.org/create_account.php](http://www.projecthoneypot.org/create_account.php) .
 
 == Screenshots ==
 
@@ -107,6 +110,8 @@ Starting with version 3.0 this plugin is for PHP5 only.
 = Version 3.0.4 -
 * Bugfix: When the IP cache was disabled the cache would still be checked.
 * Bugfix: Under certain server configurations, when Project Honey Pot could not be reached the IP to be checked was incorrect.
+* Use minified CSS and Javascript except when WordPress is set to debugging.
+* Adds option for localization. Translation are done through in [Launchpad](https://translations.launchpad.net/avhfirstdefenseagainstspam).
 
 = Version 3.0.3 =
 * Bugfix: With PHP 5.3 and up there was a problem with getting the visitors IP.
