@@ -650,7 +650,7 @@ final class AVH_FDAS_Admin
 				}
 			}
 			$note = '';
-			if (('' === trim($options['php']['phpapikey']))) {
+			if (('' === trim($options['php']['phpapikey'])) && 1 == $options['general']['use_php']) {
 				$options['general']['use_php'] = 0;
 				$note = '<br \><br \>' . __('You can not use Project Honey Pot without an API key. Use of Project Honey Pot has been disabled', 'avh-fdas');
 			}
