@@ -403,7 +403,7 @@ final class AVH_FDAS_Admin
 		$options_ipcache[] = array('avhfdas[ipcache][daystokeep]', __('Days to keep in cache', 'avh-fdas'), 'text', 3, __('Keep the IP in cache for the selected days.', 'avh-fdas'));
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_generaloptions');
-			$formoptions = $_POST['avh-fdas'];
+			$formoptions = $_POST['avhfdas'];
 			$options = $this->_core->get_options();
 			$data = $this->_core->get_data();
 			$all_data = array_merge($options_general, $options_blacklist, $options_whitelist, $options_ipcache, $options_cron);
@@ -628,7 +628,7 @@ final class AVH_FDAS_Admin
 		$options_php[] = array('avhfdas[php][honeypoturl]', __('Honey Pot URL', 'avh-fdas'), 'text', 30, __('The link to the Honey Pot as suggested by Project Honey Pot.', 'avh-fdas'));
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_options');
-			$formoptions = $_POST['avh-fdas'];
+			$formoptions = $_POST['avhfdas'];
 			$options = $this->_core->get_options();
 			$all_data = array_merge($options_sfs, $options_php);
 			foreach ($all_data as $option) {
