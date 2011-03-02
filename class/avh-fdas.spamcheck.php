@@ -184,6 +184,10 @@ class AVH_FDAS_SpamCheck
 				AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 			}
 			$this->spaminfo['sfs'] = NULL;
+		} else {
+			if (1 == $this->spaminfo['sfs']['appears']) {
+				$this->spammer_detected = TRUE;
+			}
 		}
 	}
 
