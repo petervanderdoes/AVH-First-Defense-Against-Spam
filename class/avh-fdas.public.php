@@ -43,6 +43,7 @@ class AVH_FDAS_Public
 		}
 		add_action('get_header', array(&$this, 'actionHandleMainAction'));
 		
+		add_action('pre_comment_on_post', array(&$this, 'actionHandlePostingComment'), 1);
 		add_action('preprocess_comment', array(&$this, 'actionHandlePostingComment'), 1);
 		add_action('register_post', array(&$this, 'actionHandleRegistration'), 10, 3);
 		// Private actions for Cron
