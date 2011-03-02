@@ -28,6 +28,7 @@ class AVH_FDAS_SpamCheck
 	private $_visiting_ip;
 	private $_core_options;
 	private $_core_data;
+	private $_accessing;
 	/**
 	 *
 	 * @var AVH_FDAS_DB
@@ -219,6 +220,14 @@ class AVH_FDAS_SpamCheck
 	 */
 	public function handleResults ()
 	{
+		global $post;
+		
+		if ('/wp-comments-post.php' == $_SERVER['REQUEST_URI']) {
+			// Trying to post a comment, lets determine which post they are trying to post at
+			$this->_accessing = sprintf(__('Commenting on:	%s', 'avh-fdas'), $post->post_title);
+		} else {
+			$this->_accessing = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+		}
 		if (TRUE === $this->spammer_detected) {
 			if (is_object($this->ip_in_cache)) {
 				$this->_handleSpammerCache();
@@ -400,7 +409,7 @@ class AVH_FDAS_SpamCheck
 			$to = get_option('admin_email');
 			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
 			$message[] = sprintf(__('Spam IP:	%s', 'avh-fdas'), $this->_visiting_ip);
-			$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+			$message[] = $this->_accessing;
 			$message[] = '';
 			// Stop Forum Spam Mail Part
 			if ($sfs_email) {
@@ -510,7 +519,7 @@ class AVH_FDAS_SpamCheck
 			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
 			$message = array();
 			$message[] = sprintf(__('Spam IP:	%s', 'avh-fdas'), $this->_visiting_ip);
-			$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+			$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $this->_accessing);
 			$message[] = '';
 			$message[] = __('IP exists in the cache', 'avh-fdas');
 			$message[] = '	' . sprintf(__('Check took:			%s', 'avhafdas'), $this->spaminfo['cache']['time']);
