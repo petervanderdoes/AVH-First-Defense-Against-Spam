@@ -41,11 +41,11 @@ class AVH_FDAS_Public
 			add_action('comment_form', array(&$this, 'actionAddNonceFieldToComment'));
 			add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
 		}
-		add_action('get_header', array(&$this, 'actionHandleMainAction'));
+		add_action('get_header', array(&$this, 'handleAction_get_header'));
 		
 		add_action('pre_comment_on_post', array(&$this, 'actionHandlePostingComment'), 1);
-		add_action('preprocess_comment', array(&$this, 'actionHandlePostingComment'), 1);
-		add_action('register_post', array(&$this, 'actionHandleRegistration'), 10, 3);
+		add_action('preprocess_comment', array(&$this, 'handleAction_preprocess_comment'), 1);
+		add_action('register_post', array(&$this, 'handleAction_register_post'), 10, 3);
 		// Private actions for Cron
 		add_action('avhfdas_clean_nonce', array(&$this, 'actionHandleCronCleanNonce'));
 		add_action('avhfdas_clean_ipcache', array(&$this, 'actionHandleCronCleanIPCache'));
@@ -209,74 +209,44 @@ class AVH_FDAS_Public
 	}
 
 	/**
-	 * Handle the main action.
+	 * Check during the action get_header
 	 *
-	 * Checks before content is served
-	 * Don't use SFS as it overloads their site.
-	 *
-	 * @uses PHP
-	 * @WordPress Action get_header
 	 */
-	public function actionHandleMainAction ()
+	public function handleAction_get_header ()
 	{
 		if (! (did_action('preprocess_comment'))) {
-			$this->_spamcheck->checkWhitelist();
-			if ($this->_spamcheck->ip_in_white_list === FALSE) {
-				$this->_spamcheck->checkBlacklist();
-				if ($this->_spamcheck->spammer_detected === FALSE) {
-					$this->_spamcheck->doIPCacheCheck();
-					if ($this->_spamcheck->ip_in_cache === FALSE) {
-						$this->_spamcheck->doProjectHoneyPotIPCheck();
-					}
-				}
-				$this->_spamcheck->handleResults();
-			}
+			$this->_spamcheck->doSpamcheckMain();
 		}
 	}
 
 	/**
-	 * Handle when posting a comment.
-	 * We only check for Stop Forum Spam, other checks are done during the action get_header
+	 * Handle before a new comment is added to the database.
+	 * This might be deprecated as we're checking earlier now.
 	 *
-	 * @WordPress Action preprocess_comment
 	 */
-	public function actionHandlePostingComment ($commentdata)
+	public function handleAction_preprocess_comment ($comment_data)
 	{
-		$this->_spamcheck->checkWhitelist();
-		if ($this->_spamcheck->ip_in_white_list === FALSE) {
-			$this->_spamcheck->checkBlacklist();
-			if ($this->_spamcheck->spammer_detected === FALSE) {
-				$this->_spamcheck->doIPCacheCheck();
-				if ($this->_spamcheck->ip_in_cache === FALSE) {
-					$this->_spamcheck->doStopForumSpamIPCheck();
-					$this->_spamcheck->doProjectHoneyPotIPCheck();
-				}
-			}
-			$this->_spamcheck->handleResults();
-		}
-		return ($commentdata);
+		$this->_spamcheck->doSpamcheckCommentPosted();
 	}
 
+	/**
+	 *
+	 * Handle before the comment is processed.
+	 *
+	 * @param int $comment_id
+	 */
+	public function handleAction_pre_comment_on_post ($comment_id)
+	{
+		$this->_spamcheck->doSpamcheckPreCommentPost();
+	}
+	
 	/**
 	 * Handle when a user registers
-	 * * We only check for Stop Forum Spam, other checks are done during the action get_header
 	 *
-	 * @WordPress Action register_post
 	 */
-	public function actionHandleRegistration ($sanitized_user_login, $user_email, $errors)
+	public function handleAction_register_post ($sanitized_user_login, $user_email, $errors)
 	{
-		$this->_spamcheck->checkWhitelist();
-		if ($this->_spamcheck->ip_in_white_list === FALSE) {
-			$this->_spamcheck->checkBlacklist();
-			if ($this->_spamcheck->spammer_detected === FALSE) {
-				$this->_spamcheck->doIPCacheCheck();
-				if ($this->_spamcheck->ip_in_cache === FALSE) {
-					$this->_spamcheck->doStopForumSpamIPCheck();
-					$this->_spamcheck->doProjectHoneyPotIPCheck();
-				}
-			}
-			$this->_spamcheck->handleResults();
-		}
+		$this->_spamcheck->doSpamcheckUserRegister();
 	}
 }
 ?>

@@ -60,6 +60,95 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
+	 *
+	 * Run all the checks for the main action.
+	 * We don't check with Stop Forum Spam as this overloads their site.
+	 *
+	 */
+	public function doSpamcheckMain ()
+	{
+		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
+			$this->checkWhitelist();
+			if ($this->ip_in_white_list === FALSE) {
+				$this->checkBlacklist();
+				if ($this->spammer_detected === FALSE) {
+					$this->doIPCacheCheck();
+					if ($this->ip_in_cache === FALSE) {
+						$this->doProjectHoneyPotIPCheck();
+					}
+				}
+				$this->handleResults();
+			}
+		}
+	}
+
+	/**
+	 * Run the checks for the action preprocess_comment.
+	 *
+	 */
+	public function doSpamcheckCommentPosted ()
+	{
+		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
+			$this->checkWhitelist();
+			if ($this->ip_in_white_list === FALSE) {
+				$this->checkBlacklist();
+				if ($this->spammer_detected === FALSE) {
+					$this->doIPCacheCheck();
+					if ($this->ip_in_cache === FALSE) {
+						$this->doStopForumSpamIPCheck();
+						$this->doProjectHoneyPotIPCheck();
+					}
+				}
+				$this->handleResults();
+			}
+		}
+	}
+
+	/**
+	 * Run the checks for the action pre_comment_on_post.
+	 *
+	 */
+	public function doSpamcheckPreCommentPost ()
+	{
+		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
+			$this->checkWhitelist();
+			if ($this->ip_in_white_list === FALSE) {
+				$this->checkBlacklist();
+				if ($this->spammer_detected === FALSE) {
+					$this->doIPCacheCheck();
+					if ($this->ip_in_cache === FALSE) {
+						$this->doStopForumSpamIPCheck();
+						$this->doProjectHoneyPotIPCheck();
+					}
+				}
+				$this->handleResults();
+			}
+		}
+	}
+
+	/**
+	 * Run the checks for the action register_post.
+	 *
+	 */
+	public function doSpamcheckUserRegister ()
+	{
+		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
+			$this->checkWhitelist();
+			if ($this->ip_in_white_list === FALSE) {
+				$this->checkBlacklist();
+				if ($this->spammer_detected === FALSE) {
+					$this->doIPCacheCheck();
+					if ($this->ip_in_cache === FALSE) {
+						$this->doStopForumSpamIPCheck();
+						$this->doProjectHoneyPotIPCheck();
+					}
+				}
+				$this->handleResults();
+			}
+		}
+	}
+
+	/**
 	 * Check the cache for the IP
 	 *
 	 */
@@ -91,35 +180,35 @@ class AVH_FDAS_SpamCheck
 	public function doProjectHoneyPotIPCheck ()
 	{
 		if ($this->_core_options['general']['use_php']) {
-			if ($this->_visiting_ip != '0.0.0.0') {
-				$reverse_ip = implode('.', array_reverse(explode('.', $this->_visiting_ip)));
-				$projecthoneypot_api_key = $this->_core_options['php']['phpapikey'];
-				$this->spaminfo['php'] = NULL;
-				//
-				// Check the IP against projecthoneypot.org
-				//
-				$time_start = microtime(true);
-				$lookup = $projecthoneypot_api_key . '.' . $reverse_ip . '.dnsbl.httpbl.org.';
-				$info = explode('.', gethostbyname($lookup));
+			
+			$reverse_ip = implode('.', array_reverse(explode('.', $this->_visiting_ip)));
+			$projecthoneypot_api_key = $this->_core_options['php']['phpapikey'];
+			$this->spaminfo['php'] = NULL;
+			//
+			// Check the IP against projecthoneypot.org
+			//
+			$time_start = microtime(true);
+			$lookup = $projecthoneypot_api_key . '.' . $reverse_ip . '.dnsbl.httpbl.org.';
+			$info = explode('.', gethostbyname($lookup));
+			
+			// The first octet needs to be 127.
+			// Quote from the HTTPBL Api documentation: If the first octet in the response is not 127 it means an error condition has occurred and your query may not have been formatted correctly.
+			// Reference :http://www.projecthoneypot.org/httpbl_api.php
+			if ('127' == $info[0]) {
+				$this->spammer_detected = TRUE;
+				$time_end = microtime(true);
+				$time = $time_end - $time_start;
+				$this->spaminfo['php']['time'] = $time;
 				
-				// The first octet needs to be 127.
-				// Quote from the HTTPBL Api documentation: If the first octet in the response is not 127 it means an error condition has occurred and your query may not have been formatted correctly.
-				// Reference :http://www.projecthoneypot.org/httpbl_api.php
-				if ('127' == $info[0]) {
-					$this->spammer_detected = TRUE;
-					$time_end = microtime(true);
-					$time = $time_end - $time_start;
-					$this->spaminfo['php']['time'] = $time;
-					
-					$this->spaminfo['php']['days'] = $info[1];
-					$this->spaminfo['php']['type'] = $info[3];
-					if ('0' == $info[3]) {
-						$this->spaminfo['php']['score'] = '0';
-						$this->spaminfo['php']['engine'] = $this->_settings->searchengines[$info[2]];
-					} else {
-						$this->spaminfo['php']['score'] = $info[2];
-					}
+				$this->spaminfo['php']['days'] = $info[1];
+				$this->spaminfo['php']['type'] = $info[3];
+				if ('0' == $info[3]) {
+					$this->spaminfo['php']['score'] = '0';
+					$this->spaminfo['php']['engine'] = $this->_settings->searchengines[$info[2]];
+				} else {
+					$this->spaminfo['php']['score'] = $info[2];
 				}
+			
 			}
 		}
 	}
@@ -169,32 +258,32 @@ class AVH_FDAS_SpamCheck
 	public function doStopForumSpamIPCheck ()
 	{
 		if ($this->_core_options['general']['use_sfs']) {
-			if ($this->_visiting_ip != '0.0.0.0') {
-				$time_start = microtime(true);
-				$result = $this->_core->handleRESTcall($this->_core->getRestIPLookup($this->_visiting_ip));
-				$time_end = microtime(true);
-				$this->spaminfo['sfs'] = $this->_convertStopForumSpamCall($result);
-				$time = $time_end - $time_start;
-				$this->spaminfo['sfs']['time'] = $time;
-				if (isset($this->spaminfo['sfs']['Error'])) {
-					if ($this->_core_options['sfs']['error']) {
-						$error = $this->_core->getHttpError($this->spaminfo['sfs']['Error']);
-						$to = get_option('admin_email');
-						$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error detected', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
-						$message[] = __('An error has been detected', 'avh-fdas');
-						$message[] = sprintf(__('Error:	%s', 'avh-fdas'), $error);
-						$message[] = '';
-						$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $this->_visiting_ip);
-						$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
-						$message[] = sprintf(__('Call took:	%s', 'avh-fdas'), $time);
-						AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
-					}
-					$this->spaminfo['sfs'] = NULL;
-				} else {
-					if (1 == $this->spaminfo['sfs']['appears']) {
-						$this->spammer_detected = TRUE;
-					}
+			
+			$time_start = microtime(true);
+			$result = $this->_core->handleRESTcall($this->_core->getRestIPLookup($this->_visiting_ip));
+			$time_end = microtime(true);
+			$this->spaminfo['sfs'] = $this->_convertStopForumSpamCall($result);
+			$time = $time_end - $time_start;
+			$this->spaminfo['sfs']['time'] = $time;
+			if (isset($this->spaminfo['sfs']['Error'])) {
+				if ($this->_core_options['sfs']['error']) {
+					$error = $this->_core->getHttpError($this->spaminfo['sfs']['Error']);
+					$to = get_option('admin_email');
+					$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error detected', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+					$message[] = __('An error has been detected', 'avh-fdas');
+					$message[] = sprintf(__('Error:	%s', 'avh-fdas'), $error);
+					$message[] = '';
+					$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $this->_visiting_ip);
+					$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+					$message[] = sprintf(__('Call took:	%s', 'avh-fdas'), $time);
+					AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 				}
+				$this->spaminfo['sfs'] = NULL;
+			} else {
+				if (1 == $this->spaminfo['sfs']['appears']) {
+					$this->spammer_detected = TRUE;
+				}
+			
 			}
 		}
 	}
@@ -207,12 +296,12 @@ class AVH_FDAS_SpamCheck
 	public function checkBlacklist ()
 	{
 		if ($this->_core_options['general']['useblacklist']) {
-			if ($this->_visiting_ip != '0.0.0.0') {
-				$found = $this->_checkList($this->_core->get_dataElement('lists', 'blacklist'));
-				if ($found) {
-					$this->spammer_detected = TRUE;
-					$this->spaminfo['blacklist']['time'] = 'Blacklisted';
-				}
+			
+			$found = $this->_checkList($this->_core->get_dataElement('lists', 'blacklist'));
+			if ($found) {
+				$this->spammer_detected = TRUE;
+				$this->spaminfo['blacklist']['time'] = 'Blacklisted';
+			
 			}
 		}
 	}
@@ -228,11 +317,10 @@ class AVH_FDAS_SpamCheck
 	public function checkWhitelist ()
 	{
 		if ($this->_core_options['general']['usewhitelist']) {
-			if ($this->_visiting_ip != '0.0.0.0') {
-				$found = $this->_checkList($this->_core->get_dataElement('lists', 'whitelist'));
-				if ($found) {
-					$this->ip_in_white_list = true;
-				}
+			$found = $this->_checkList($this->_core->get_dataElement('lists', 'whitelist'));
+			if ($found) {
+				$this->ip_in_white_list = true;
+			
 			}
 		}
 	}
