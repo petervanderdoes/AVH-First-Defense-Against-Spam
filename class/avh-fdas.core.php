@@ -93,7 +93,8 @@ class AVH_FDAS_Core
 		$this->_default_nonces_data = NULL;
 		$this->_default_nonces = array('default'=>$this->_default_nonces_data);
 
-		add_action('init', array(&$this,'handleInitializePlugin'),10);
+		//add_action('init', array(&$this,'handleInitializePlugin'),10);
+		$this->handleInitializePlugin();
 
 		return;
 	}
