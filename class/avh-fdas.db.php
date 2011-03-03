@@ -163,8 +163,15 @@ class AVH_FDAS_DB
 	public function countIPs ()
 	{
 		global $wpdb;
+		$key = md5( serialize( compact(array_keys($defaults)) )  );
+		$last_changed = wp_cache_get('last_changed', 'comment');
+		if ( !$last_changed ) {
+			$last_changed = time();
+			wp_cache_set('last_changed', $last_changed, 'comment');
+		}
+		$cache_key = "avhfdas-count-ips:$key:$last_changed";
 		
-		$count = wp_cache_get('avhfdas-count-ips', 'counts');
+		$count = wp_cache_get($cache_key, 'counts');
 		
 		if (false !== $count) {
 			return $count;
@@ -191,7 +198,7 @@ class AVH_FDAS_DB
 		}
 		
 		$stats = (object) $stats;
-		wp_cache_set('avhfdas-count-ips', $stats, 'counts');
+		wp_cache_set($cache_key, $stats, 'counts');
 		
 		return $stats;
 	}
