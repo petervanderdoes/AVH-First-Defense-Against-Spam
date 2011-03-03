@@ -903,7 +903,7 @@ final class AVH_FDAS_Admin
 		$pagenum = $this->_ip_cache_list->get_pagenum();
 		$action = $this->_ip_cache_list->current_action();
 		$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
-		$_SERVER['REQUEST_URI'] = remove_query_arg(array('error', 'deleted', 'activate', 'activate-multi', 'deactivate', 'deactivate-multi', '_error_nonce'), $_SERVER['REQUEST_URI']);
+		$_SERVER['REQUEST_URI'] = remove_query_arg(array('page','error', 'deleted', '_error_nonce'), $_SERVER['REQUEST_URI']);
 
 		switch ( $action ) {
 		
