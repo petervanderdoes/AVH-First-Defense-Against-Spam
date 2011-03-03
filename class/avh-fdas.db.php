@@ -162,6 +162,8 @@ class AVH_FDAS_DB
 
 	public function countIPs ()
 	{
+		global $wpdb;
+		
 		$count = wp_cache_get('avhfdas-count-ips', 'counts');
 		
 		if (false !== $count) {
