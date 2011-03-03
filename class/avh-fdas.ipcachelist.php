@@ -287,7 +287,8 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 	
 	function column_ip( $ip ) {
-		echo $ip->ip;
+		$ip_text =long2ip($ip->ip);
+		echo $ip_text;
 	}
 	
 	function column_spam ( $ip ) {
