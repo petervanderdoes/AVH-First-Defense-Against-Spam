@@ -968,6 +968,7 @@ final class AVH_FDAS_Admin
 
 		$this->_ip_cache_list->views();
 		echo '<form id="ipcachelist-form" action="" method="get">';
+		echo '<input type="hidden" name="page" value="' . AVH_FDAS_Define::MENU_SLUG_IP_CACHE . '"';
 		$this->_ip_cache_list->display();
 		echo '</form>';
 		
