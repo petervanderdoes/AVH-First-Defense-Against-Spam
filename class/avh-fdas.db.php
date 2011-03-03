@@ -52,7 +52,7 @@ class AVH_FDAS_DB
 	{
 		global $wpdb;
 		
-		$defaults = array('ip'=>'', 'added'=>'', 'lastseen'=>'', 'status'=>'all', 'search'=>'', 'offset'=>'', 'number'=>'', 'orderby'=>'', 'order'=>'ASC', 'count'=>FALSE);
+		$defaults = array('ip'=>'', 'added'=>'', 'lastseen'=>'', 'status'=>'all', 'search'=>'', 'offset'=>'', 'number'=>'', 'orderby'=>'', 'order'=>'DESC', 'count'=>FALSE);
 		$this->_query_vars = wp_parse_args($query_vars, $defaults);
 		extract($this->_query_vars, EXTR_SKIP);
 		
