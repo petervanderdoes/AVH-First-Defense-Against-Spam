@@ -165,7 +165,11 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 
 	function get_sortable_columns() {
-		return array();
+		return array(
+			'ip'   => 'ip',
+			'added' => 'added',
+			'lastseen' => 'lastseen'
+		);
 	}
 
 	function display_tablenav( $which ) {
