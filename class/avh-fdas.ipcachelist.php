@@ -237,96 +237,45 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		return parent::current_action();
 	}
 
-	function display_rows() {
-		global $status;
+	function display() {
+		extract( $this->_args );
 
-		$screen = get_current_screen();
+		wp_nonce_field( "fetch-list-" . get_class( $this ), '_ajax_fetch_list_nonce' );
 
-		foreach ( $this->items as $plugin_file => $plugin_data )
-			$this->single_row( $plugin_file, $plugin_data );
+		$this->display_tablenav( 'top' );
+
+
+		echo '<table class="'.implode( ' ', $this->get_table_classes() ).'" cellspacing="0">';
+		echo '<thead>';
+		echo '<tr>';
+		$this->print_column_headers();
+		echo '</tr>';
+		echo '</thead>';
+
+		echo '<tfoot>';
+		echo '<tr>';
+		$this->print_column_headers(false);
+		echo '</tr>';
+		echo '</tfoot>';
+
+		echo '<tbody id="the-ipcache-list">';
+		$this->display_rows_or_placeholder();
+		echo '</tbody>';
+
+		echo '<tbody id="the-extra-ipcache-list" style="display: none;">';
+		$this->items = $this->extra_items; $this->display_rows();
+		echo '</tbody>';
+		echo '</table>';
+
+		$this->display_tablenav( 'bottom' );
 	}
+	
+	function single_row( $a_ip ) {
+		$ip = $a_ip;
 
-	function single_row( $plugin_file, $plugin_data ) {
-		global $status, $page, $s;
-
-		$context = $status;
-
-		$screen = get_current_screen();
-
-		// preorder
-		$actions = array(
-			'network_deactivate' => '', 'deactivate' => '',
-			'network_only' => '', 'activate' => '',
-			'network_activate' => '',
-			'edit' => '',
-			'delete' => '',
-		);
-
-		$prefix = $screen->is_network ? 'network_admin_' : '';
-		$actions = apply_filters( $prefix . 'plugin_action_links', array_filter( $actions ), $plugin_file, $plugin_data, $context );
-		$actions = apply_filters( $prefix . "plugin_action_links_$plugin_file", $actions, $plugin_file, $plugin_data, $context );
-
-		$class = $is_active ? 'active' : 'inactive';
-		$checkbox_id =  "checkbox_" . md5($plugin_data['Name']);
-		$checkbox = in_array( $status, array( 'mustuse', 'dropins' ) ) ? '' : "<input type='checkbox' name='checked[]' value='" . esc_attr( $plugin_file ) . "' id='" . $checkbox_id . "' /><label class='screen-reader-text' for='" . $checkbox_id . "' >" . __('Select') . " " . $plugin_data['Name'] . "</label>";
-		if ( 'dropins' != $context ) {
-			$description = '<p>' . ( $plugin_data['Description'] ? $plugin_data['Description'] : '&nbsp;' ) . '</p>';
-			$plugin_name = $plugin_data['Name'];
-		}
-
-		$id = sanitize_title( $plugin_name );
-
-		echo "<tr id='$id' class='$class'>";
-
-		list( $columns, $hidden ) = $this->get_column_info();
-
-		foreach ( $columns as $column_name => $column_display_name ) {
-			$style = '';
-			if ( in_array( $column_name, $hidden ) )
-				$style = ' style="display:none;"';
-
-			switch ( $column_name ) {
-				case 'cb':
-					echo "<th scope='row' class='check-column'>$checkbox</th>";
-					break;
-				case 'name':
-					echo "<td class='plugin-title'$style><strong>$plugin_name</strong>";
-					echo $this->row_actions( $actions, true );
-					echo "</td>";
-					break;
-				case 'description':
-					echo "<td class='column-description desc'$style>
-						<div class='plugin-description'>$description</div>
-						<div class='$class second plugin-version-author-uri'>";
-
-					$plugin_meta = array();
-					if ( !empty( $plugin_data['Version'] ) )
-						$plugin_meta[] = sprintf( __( 'Version %s' ), $plugin_data['Version'] );
-					if ( !empty( $plugin_data['Author'] ) ) {
-						$author = $plugin_data['Author'];
-						if ( !empty( $plugin_data['AuthorURI'] ) )
-							$author = '<a href="' . $plugin_data['AuthorURI'] . '" title="' . esc_attr__( 'Visit author homepage' ) . '">' . $plugin_data['Author'] . '</a>';
-						$plugin_meta[] = sprintf( __( 'By %s' ), $author );
-					}
-					if ( ! empty( $plugin_data['PluginURI'] ) )
-						$plugin_meta[] = '<a href="' . $plugin_data['PluginURI'] . '" title="' . esc_attr__( 'Visit plugin site' ) . '">' . __( 'Visit plugin site' ) . '</a>';
-
-					$plugin_meta = apply_filters( 'plugin_row_meta', $plugin_meta, $plugin_file, $plugin_data, $status );
-					echo implode( ' | ', $plugin_meta );
-
-					echo "</div></td>";
-					break;
-				default:
-					echo "<td class='$column_name column-$column_name'$style>";
-					do_action( 'manage_plugins_custom_column', $column_name, $plugin_file, $plugin_data );
-					echo "</td>";
-			}
-		}
-
+		echo "<tr>";
+		echo $this->single_row_columns( $ip );
 		echo "</tr>";
-
-		do_action( 'after_plugin_row', $plugin_file, $plugin_data, $status );
-		do_action( "after_plugin_row_$plugin_file", $plugin_file, $plugin_data, $status );
 	}
 }
 
