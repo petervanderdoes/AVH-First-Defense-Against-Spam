@@ -118,7 +118,6 @@ final class AVH_FDAS_Admin
 		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array(&$this, 'actionLoadPageHook_faq'));
 
 		$this->_hooks['avhfdas_menu_ip_cache'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache', 'avh-fdas'), __('IP Cache', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array(&$this, 'doMenuIPcache'));
-		$this->_ip_cache_list =  $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
 		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache'], array(&$this, 'actionHandleIpCacheList'),5);
 		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache'], array(&$this, 'actionLoadPageHook_ip_cache'));
 		
@@ -902,6 +901,7 @@ final class AVH_FDAS_Admin
 	}
 
 	public function actionHandleIpCacheList() {
+		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
 		$pagenum = $this->_ip_cache_list->get_pagenum();
 		$doaction = $this->_ip_cache_list->current_action();
 		
