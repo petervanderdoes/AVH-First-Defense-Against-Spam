@@ -63,7 +63,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 
 		$ip_status = isset( $_REQUEST['ip_status'] ) ? $_REQUEST['ip_status'] : 'all';
 		if ( !in_array( $ip_status, array( 'all', 'ham', 'spam' ) ) ) {
-			$_status = 'all';
+			$ip_status = 'all';
 		}
 		
 		$search = ( isset( $_REQUEST['s'] ) ) ? $_REQUEST['s'] : '';
@@ -181,22 +181,23 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 
 	function get_views ()
 	{
-		global $totals, $status;
+		global $totals, $ip_status;
 		
 		$total_ips = $this->_ipcachedb->getIPs(array('count'=>true, 'offset'=>0, 'number'=>0));
 		$num_ips = $this->_ipcachedb->countIps();
 		$status_links = array();
-		$stati = array('all'=>_nx_noop('All', 'All', 'ip\'s'), // singular not used
-			'ham'=>_n_noop('Ham <span class="count">(<span class="ham-count">%s</span>)</span>', 'Ham <span class="count">(<span class="ham-count">%s</span>)</span>'),
-			'spam'=>_n_noop('Spam <span class="count">(<span class="spam-count">%s</span>)</span>', 'Spam <span class="count">(<span class="spam-count">%s</span>)</span>'));
+		$stati = array('all'=>_nx_noop('All', 'All', 'ips'), 'ham'=>_n_noop('Ham <span class="count">(<span class="ham-count">%s</span>)</span>', 'Ham <span class="count">(<span class="ham-count">%s</span>)</span>'), 'spam'=>_n_noop('Spam <span class="count">(<span class="spam-count">%s</span>)</span>', 'Spam <span class="count">(<span class="spam-count">%s</span>)</span>'));
+		
+		$link = 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_IP_CACHE;
 		
 		foreach ($stati as $status => $label) {
 			$class = ($status == $ip_status) ? ' class="current"' : '';
 			
-			if (! isset($num_ips->$status))
+			if (! isset($num_ips->$status)) {
 				$num_ips->$status = 10;
-			$link = add_query_arg('status', $status, $link);
-				/*
+			}
+			$link = add_query_arg('ip_status', $status, $link);
+			/*
 			// I toyed with this, but decided against it. Leaving it in here in case anyone thinks it is a good idea. ~ Mark
 			if ( !empty( $_REQUEST['s'] ) )
 				$link = add_query_arg( 's', esc_attr( stripslashes( $_REQUEST['s'] ) ), $link );
