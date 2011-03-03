@@ -44,7 +44,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$page = $this->get_pagenum();
 		
 		parent::WP_List_Table( array(
-			'plural' => 'ip\'s',
+			'plural' => 'ips',
 			'singular' => 'ip',
 			'ajax' => true,
 		) );
