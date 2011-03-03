@@ -307,11 +307,11 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 	
 	function column_lastseen ( $ip ){
-		$date = mysql2date('php', $ip->lastseen);
+		$date =  mysql2date(get_option('date_format'), $ip->lastseen) .' at '.mysql2date(get_option('time_format'), $ip->lastseen);
 		echo $date;
 	}
 	function column_added ( $ip ){
-		$date = mysql2date('php', $ip->added);
+		$date = mysql2date(get_option('date_format'), $ip->added) .' at '.mysql2date(get_option('time_format'), $ip->added);
 		echo $date;
 	}
 	
