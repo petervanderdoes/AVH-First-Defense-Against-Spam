@@ -8,6 +8,8 @@
  */
 class AVH_FDAS_DB
 {
+	
+	private $_query_vars;
 
 	/**
 	 * PHP5 Constructor
@@ -44,6 +46,70 @@ class AVH_FDAS_DB
 		} else {
 			return false;
 		}
+	}
+
+	public function getIPs ($query_vars)
+	{
+		global $wpdb;
+		
+		$defaults = array('ip'=>'', 'added'=>'', 'lastseen'=>'', 'status'=>'all', 'search'=>'', 'offset'=>'', 'number'=>'', 'orderby'=>'', 'order'=>'ASC', 'count'=>FALSE);
+		$this->_query_vars = wp_parse_args($query_vars, $defaults);
+		extract($this->_query_vars, EXTR_SKIP);
+		
+		$order = ('ASC' == strtoupper($order)) ? 'ASC' : 'DESC';
+		
+		if (! empty($orderby)) {
+			$ordersby = is_array($orderby) ? $orderby : preg_split('/[,\s]/', $orderby);
+			$ordersby = array_intersect($ordersby, array('ip', 'lastseen', 'added', 'spam'));
+			$orderby = empty($ordersby) ? 'added' : implode(', ', $ordersby);
+		} else {
+			$orderby = 'added, ip';
+		}
+		
+		$number = absint($number);
+		$offset = absint($offset);
+		
+		if (! empty($number)) {
+			if ($offset) {
+				$limits = 'LIMIT ' . $offset . ',' . $number;
+			} else {
+				$limits = 'LIMIT ' . $number;
+			}
+		} else {
+			$limits = '';
+		}
+		
+		if ($count) {
+			$fields = 'COUNT(*)';
+		} else {
+			$fields = '*';
+		}
+		
+		$join = '';
+		switch ($status) {
+			case 'ham':
+				$where = 'spam = 0';
+				break;
+			case 'spam':
+				$where = 'spam = 1';
+				break;
+			case 'all':
+			default:
+				$where = '1=1';
+		}
+		
+		if (! empty($ip)) {
+			$where .= $wpdb->prepare(' AND ip = INET_ATON(%d)', $ip);
+		}
+		
+		$query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
+		
+		if ($count) {
+			return $wpdb->get_var($query);
+		}
+		
+		$ips = $wpdb->get_results($query);
+		return $ips;
 	}
 
 	/**
@@ -92,6 +158,40 @@ class AVH_FDAS_DB
 		if (is_object($ip_info)) {
 			$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=INET_ATON(%s)", $ip));
 		}
+	}
+
+	public function countIPs ()
+	{
+		$count = wp_cache_get('avhfdas-count-ips', 'counts');
+		
+		if (false !== $count) {
+			return $count;
+		}
+		
+		$where = '';
+		
+		$count = $wpdb->get_results("SELECT spam, COUNT( * ) AS num_ips FROM {$wpdb->avhfdasipcache} GROUP BY spam", ARRAY_A);
+		
+		$total = 0;
+		$approved = array('0'=>'ham', '1'=>'spam');
+		$known_types = array_keys($approved);
+		foreach ((array) $count as $row) {
+			// Don't count post-trashed toward totals
+			$total += $row['num_ips'];
+			if (in_array($row['spam'], $known_types))
+				$stats[$approved[$row['spam']]] = $row['num_ips'];
+		}
+		
+		$stats['all'] = $total;
+		foreach ($approved as $key) {
+			if (empty($stats[$key]))
+				$stats[$key] = 0;
+		}
+		
+		$stats = (object) $stats;
+		wp_cache_set('avhfdas-count-ips', $stats, 'counts');
+		
+		return $stats;
 	}
 }
 ?>
