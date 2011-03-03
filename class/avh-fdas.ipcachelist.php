@@ -281,6 +281,39 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		echo $this->single_row_columns( $ip );
 		echo "</tr>";
 	}
+	
+	function column_cb( $ip ) {
+		echo "<input type='checkbox' name='delete_ips[]' value='$ip->ip' />";
+	}
+	
+	function column_ip( $ip ) {
+		echo $ip->ip;
+	}
+	
+	function column_spam ( $ip ) {
+		switch ($ip->spam){
+			case 0:
+				$text = 'Ham';
+				break;
+			case 1:
+				$text = 'Spam';
+				break;
+			default:
+				$text = 'Unknown';
+				break;
+		}
+		echo $text;
+	}
+	
+	function column_lastseen ( $ip ){
+		$date = mysql2date('php', $ip->lastseen);
+		echo $date;
+	}
+	function column_added ( $ip ){
+		$date = mysql2date('php', $ip->added);
+		echo $date;
+	}
+	
 }
 
 ?>
