@@ -886,6 +886,7 @@ final class AVH_FDAS_Admin
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
 		//add_meta_box('avhfdasBoxIpCache', __('IP Cache', 'avh-fdas'), array(&$this, 'metaboxMenuIPcache'), $this->_hooks['avhfdas_menu_ip_cache'], 'normal', 'core');
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
+		add_screen_option( 'per_page', array('label' => _x( 'IP\'s', 'ip\'s per page (screen options)' )) );
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -915,7 +916,7 @@ final class AVH_FDAS_Admin
 		exit;
 		}
 
-		add_screen_option( 'per_page', array('label' => _x( 'IP\'s', 'ip\'s per page (screen options)' )) );
+		
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
 		echo '<h2>' . __('AVH First Defense Against Spam IP Cache', 'avh-fdas') . '</h2>';

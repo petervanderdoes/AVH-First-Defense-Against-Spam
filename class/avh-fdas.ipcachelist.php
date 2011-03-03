@@ -138,8 +138,9 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 
 	function get_per_page( $ip_status = 'all' ) {
-		$ips_per_page = $this->get_items_per_page( 'edit_ips_per_page' );
-		$ips_per_page = apply_filters( 'ips_per_page', $ips_per_page, $ip_status );
+		$screen= 'avh_f_d_a_s_page_avh_first_defense_against_spam_ip_cache_';
+		$ips_per_page = $this->get_items_per_page( $screen.'per_page' );
+		$ips_per_page = apply_filters( $screen.'per_page', $ips_per_page, $ip_status );
 		return $ips_per_page;
 	}
 	
