@@ -181,7 +181,7 @@ class AVH_FDAS_DB
 			// Don't count post-trashed toward totals
 			$total += $row['num_ips'];
 			if (in_array($row['spam'], $known_types))
-				$stats[$approved[$row['spam']]] = $row['num_ips'];
+				$stats[$approved[$row['spam']]] = (int) $row['num_ips'];
 		}
 		
 		$stats['all'] = $total;

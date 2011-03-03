@@ -196,7 +196,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			if ( !empty( $_REQUEST['s'] ) )
 				$link = add_query_arg( 's', esc_attr( stripslashes( $_REQUEST['s'] ) ), $link );
 			*/
-			$status_links[$status] = "<a href='$link'$class>" . sprintf(translate_nooped_plural($label, $num_comments->$status), number_format_i18n($num_comments->$status)) . '</a>';
+			$status_links[$status] = "<a href='$link'$class>" . sprintf(translate_nooped_plural($label, $num_ips->$status), number_format_i18n($num_ips->$status)) . '</a>';
 		}
 		
 		return $status_links;
