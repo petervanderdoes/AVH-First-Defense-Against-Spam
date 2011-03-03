@@ -917,7 +917,7 @@ final class AVH_FDAS_Admin
 			
 			$deleted = 0;
 			
-			$redirect_to = remove_query_arg(array(), wp_get_referer());
+			$redirect_to = remove_query_arg(array('deleted'), wp_get_referer());
 			$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
 			
 			foreach ($ips as $ip) { // Check the permissions on each
@@ -952,7 +952,7 @@ final class AVH_FDAS_Admin
 		}
 		
 		$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
-		$_SERVER['REQUEST_URI'] = remove_query_arg(array('error', 'deleted', '_error_nonce'), $_SERVER['REQUEST_URI']);
+		
 	}
 	public function doMenuIPcache ()
 	{
@@ -960,6 +960,7 @@ final class AVH_FDAS_Admin
 		if (!empty($this->_ip_cache_list->messages)) {
 			echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n", $this->_ip_cache_list->messages) . '</p></div>';
 		}
+		$_SERVER['REQUEST_URI'] = remove_query_arg(array('error', 'deleted', '_error_nonce'), $_SERVER['REQUEST_URI']);
 		$this->_ip_cache_list->prepare_items();
 
 		$total_pages = $this->_ip_cache_list->get_pagination_arg( 'total_pages' );
