@@ -68,8 +68,8 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		
 		$search = ( isset( $_REQUEST['s'] ) ) ? $_REQUEST['s'] : '';
 		
-		$orderby = ( isset( $_REQUEST['orderby'] ) ) ? $_REQUEST['orderby'] : '';
-		$order = ( isset( $_REQUEST['order'] ) ) ? $_REQUEST['order'] : '';
+		$orderby = ( isset( $_REQUEST['orderby'] ) ) ? $_REQUEST['orderby'] : 'added';
+		$order = ( isset( $_REQUEST['order'] ) ) ? $_REQUEST['order'] : 'DESC';
 		
 		$ips_per_page = $this->get_per_page( $ip_status );
 				
