@@ -901,13 +901,58 @@ final class AVH_FDAS_Admin
 	{
 		global $screen_layout_columns;
 		$pagenum = $this->_ip_cache_list->get_pagenum();
-		$action = $this->_ip_cache_list->current_action();
+		$doaction = $this->_ip_cache_list->current_action();
+		
+		if ($doaction) {
+			check_admin_referer('bulk-ips');
+			
+			if (isset($_REQUEST['ids'])) {
+				$comment_ids = array_map('absint', explode(',', $_REQUEST['ids']));
+			} elseif (wp_get_referer()) {
+				wp_redirect(wp_get_referer());
+				exit();
+			}
+			
+			$deleted = 0;
+			
+			$redirect_to = remove_query_arg(array(), wp_get_referer());
+			$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
+			
+			foreach ($comment_ids as $comment_id) { // Check the permissions on each
+				
+				switch ($doaction) {
+					case 'delete':
+						wp_delete_comment($comment_id);
+						$deleted ++;
+						break;
+				}
+			}
+			
+			if ($deleted)
+				$redirect_to = add_query_arg('ids', join(',', $comment_ids), $redirect_to);
+
+			wp_redirect($redirect_to);
+			exit();
+		} elseif (! empty($_GET['_wp_http_referer'])) {
+			wp_redirect(remove_query_arg(array('_wp_http_referer', '_wpnonce'), stripslashes($_SERVER['REQUEST_URI'])));
+			exit();
+		}
+
+		if (isset($_REQUEST['deleted'])) {
+			$deleted = isset($_REQUEST['deleted']) ? (int) $_REQUEST['deleted'] : 0;
+			
+			if ($deleted > 0) {
+				if ($deleted > 0) {
+					$messages[] = sprintf(_n('%s IP permanently deleted', '%s IP\'s deleted', $deleted), $deleted);
+				}
+				echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n", $messages) . '</p></div>';
+			}
+		}
+		
 		$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
 		$_SERVER['REQUEST_URI'] = remove_query_arg(array('error', 'deleted', '_error_nonce'), $_SERVER['REQUEST_URI']);
 
-		switch ( $action ) {
-		
-		}
+
 		$this->_ip_cache_list->prepare_items();
 
 		$total_pages = $this->_ip_cache_list->get_pagination_arg( 'total_pages' );

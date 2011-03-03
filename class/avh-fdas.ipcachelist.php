@@ -145,12 +145,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 	
 	function no_items() {
-		global $plugins;
-
-		if ( !empty( $plugins['all'] ) )
-			_e( 'No plugins found.' );
-		else
-			_e( 'You do not appear to have any plugins available at this time.' );
+			_e( 'Nothing in the cache.' );
 	}
 
 	function get_columns() {
@@ -215,7 +210,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 
 		$screen = get_current_screen();
 
-		$actions['delete-selected'] = __( 'Delete' );
+		$actions['deleted'] = __( 'Delete' );
 		
 		return $actions;
 	}
@@ -316,7 +311,5 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$date = mysql2date(get_option('date_format'), $ip->added) .' at '.mysql2date(get_option('time_format'), $ip->added);
 		echo $date;
 	}
-	
 }
-
 ?>
