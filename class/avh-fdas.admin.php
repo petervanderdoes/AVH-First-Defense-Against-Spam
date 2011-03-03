@@ -908,8 +908,8 @@ final class AVH_FDAS_Admin
 		if ($doaction) {
 			check_admin_referer('bulk-ips');
 			
-			if (isset($_REQUEST['deleted_ip'])) {
-				$ips = array_map('absint', explode(',', $_REQUEST['deleted-ip']));
+			if (isset($_REQUEST['deleted_ips'])) {
+				$ips = $_REQUEST['deleted_ips'];
 			} elseif (wp_get_referer()) {
 				wp_redirect(wp_get_referer());
 				exit();
@@ -920,7 +920,7 @@ final class AVH_FDAS_Admin
 			$redirect_to = remove_query_arg(array(), wp_get_referer());
 			$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
 			
-			foreach ($_REQUEST['deleted-ips'] as $ip) { // Check the permissions on each
+			foreach ($ips as $ip) { // Check the permissions on each
 				
 				switch ($doaction) {
 					case 'delete':
