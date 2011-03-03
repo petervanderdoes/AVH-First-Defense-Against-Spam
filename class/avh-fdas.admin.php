@@ -908,7 +908,7 @@ final class AVH_FDAS_Admin
 		if ($doaction) {
 			check_admin_referer('bulk-ips');
 			
-			if (isset($_REQUEST['deleted-ips'])) {
+			if (isset($_REQUEST['deleted_ips'])) {
 				$ips = array_map('absint', explode(',', $_REQUEST['deleted-ips']));
 			} elseif (wp_get_referer()) {
 				wp_redirect(wp_get_referer());
