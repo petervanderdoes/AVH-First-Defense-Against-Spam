@@ -108,7 +108,6 @@ final class AVH_FDAS_Admin
 		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas'), __('Overview', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array(&$this, 'doMenuOverview'));
 		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_GENERAL, array(&$this, 'doMenuGeneralOptions'));
 		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array(&$this, 'doMenu3rdPartyOptions'));
-		
 		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_FAQ, array(&$this, 'doMenuFAQ'));
 
 		// Add actions for menu pages
@@ -117,9 +116,11 @@ final class AVH_FDAS_Admin
 		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array(&$this, 'actionLoadPageHook_3rd_party'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array(&$this, 'actionLoadPageHook_faq'));
 
-		$this->_hooks['avhfdas_menu_ip_cache'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache', 'avh-fdas'), __('IP Cache', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array(&$this, 'doMenuIPcache'));
-		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache'], array(&$this, 'actionHandleIpCacheList'),5);
-		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache'], array(&$this, 'actionLoadPageHook_ip_cache'));
+		if (AVH_Common::getWordpressVersion() >= 3.1) {
+			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array(&$this, 'doMenu_IP_Cache_Log'));
+			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'handle_PostGet_IP_Cache_Log'),5);
+			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'actionLoadPageHook_ip_cache'));
+		}
 		
 		// Register Styles and Scripts
 		$suffix_js = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.closure';
@@ -887,7 +888,7 @@ final class AVH_FDAS_Admin
 	public function actionLoadPageHook_ip_cache ()
 	{
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
-		//add_meta_box('avhfdasBoxIpCache', __('IP Cache', 'avh-fdas'), array(&$this, 'metaboxMenuIPcache'), $this->_hooks['avhfdas_menu_ip_cache'], 'normal', 'core');
+		//add_meta_box('avhfdasBoxIpCache', __('IP Cache', 'avh-fdas'), array(&$this, 'metaboxMenuIPcache'), $this->_hooks['avhfdas_menu_ip_cache_log'], 'normal', 'core');
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
 		add_screen_option( 'per_page', array('label' => _x( 'IP\'s', 'ip\'s per page (screen options)' )) );
 		// WordPress core Styles and Scripts
@@ -900,7 +901,12 @@ final class AVH_FDAS_Admin
 		wp_enqueue_style('avhfdas-admin-css');
 	}
 
-	public function actionHandleIpCacheList() {
+	/**
+	 *
+	 * Handles the Get and Post after a submit on the IP cache Log page
+	 * @WordPress Action load-$page_hook
+	 */
+	public function handle_PostGet_IP_Cache_Log() {
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
 		$pagenum = $this->_ip_cache_list->get_pagenum();
 		$doaction = $this->_ip_cache_list->current_action();
@@ -954,7 +960,12 @@ final class AVH_FDAS_Admin
 		$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
 		
 	}
-	public function doMenuIPcache ()
+	
+	/**
+	 *
+	 * Displays the IP cache Log
+	 */
+	public function doMenu_IP_Cache_Log ()
 	{
 		global $screen_layout_columns;
 		if (!empty($this->_ip_cache_list->messages)) {
@@ -985,9 +996,6 @@ final class AVH_FDAS_Admin
 		$this->_printAdminFooter();
 	}
 	
-	public function metaboxMenuIPcache() {
-		echo 1;
-	}
 	/**
 	 * Donation Metabox
 	 * @return unknown_type
@@ -1032,8 +1040,8 @@ final class AVH_FDAS_Admin
 			case $this->_hooks['avhfdas_menu_faq']:
 				$columns[$this->_hooks['avhfdas_menu_faq']] = 2;
 				break;
-			case $this->_hooks['avhfdas_menu_ip_cache']:
-				$columns[$this->_hooks['avhfdas_menu_ip_cache']] = 1;
+			case $this->_hooks['avhfdas_menu_ip_cache_log']:
+				$columns[$this->_hooks['avhfdas_menu_ip_cache_log']] = 1;
 				break;
 				
 		}
