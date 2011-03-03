@@ -1375,4 +1375,3 @@ final class AVH_FDAS_Admin
 		die();
 	}
 }
-?>

@@ -203,4 +203,3 @@ class AVH_FDAS_DB
 		return $stats;
 	}
 }
-?>

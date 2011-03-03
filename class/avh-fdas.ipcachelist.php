@@ -312,4 +312,3 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		echo $date;
 	}
 }
-?>

@@ -596,4 +596,3 @@ class AVH_FDAS_SpamCheck
 		return ('<p><div style="display: none;"><a href="' . $this->_core->get_optionElement('php', 'honeypoturl') . '">AVH Software</a></div></p>');
 	}
 }
-?>

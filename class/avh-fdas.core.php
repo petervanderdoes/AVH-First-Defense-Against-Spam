@@ -538,4 +538,3 @@ class AVH_FDAS_Core
 		return $this->_default_nonces;
 	}
 } //End Class AVH_FDAS_Core
-?>
