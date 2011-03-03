@@ -280,7 +280,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 	
 	function column_cb( $ip ) {
-		echo "<input type='checkbox' name='delete_ips[]' value='$ip->ip' />";
+		echo "<input type='checkbox' name='deleted_ips[]' value='$ip->ip' />";
 	}
 	
 	function column_ip( $ip ) {
