@@ -923,7 +923,7 @@ final class AVH_FDAS_Admin
 			foreach ($ips as $ip) { // Check the permissions on each
 				
 				switch ($doaction) {
-					case 'delete':
+					case 'deleted':
 						//$this->_db->deleteIP($ip);
 						$deleted ++;
 						break;
