@@ -115,6 +115,7 @@ final class AVH_FDAS_Admin
 		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array(&$this, 'actionLoadPageHook_Overview'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array(&$this, 'actionLoadPageHook_General'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array(&$this, 'actionLoadPageHook_3rd_party'));
+		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache'], array(&$this, 'actionHandleIpCacheList'),5);
 		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache'], array(&$this, 'actionLoadPageHook_ip_cache'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array(&$this, 'actionLoadPageHook_faq'));
 
@@ -896,10 +897,8 @@ final class AVH_FDAS_Admin
 		wp_enqueue_script('avhfdas-admin-js');
 		wp_enqueue_style('avhfdas-admin-css');
 	}
-	
-	public function doMenuIPcache ()
-	{
-		global $screen_layout_columns;
+
+	public function actionHandleIpCacheList() {
 		$pagenum = $this->_ip_cache_list->get_pagenum();
 		$doaction = $this->_ip_cache_list->current_action();
 		
@@ -918,11 +917,11 @@ final class AVH_FDAS_Admin
 			$redirect_to = remove_query_arg(array(), wp_get_referer());
 			$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
 			
-			foreach ($comment_ids as $comment_id) { // Check the permissions on each
+			foreach ($deleted-ips as $ip) { // Check the permissions on each
 				
 				switch ($doaction) {
 					case 'delete':
-						wp_delete_comment($comment_id);
+						$this->_db->deleteIP($ip);
 						$deleted ++;
 						break;
 				}
@@ -951,7 +950,10 @@ final class AVH_FDAS_Admin
 		
 		$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
 		$_SERVER['REQUEST_URI'] = remove_query_arg(array('error', 'deleted', '_error_nonce'), $_SERVER['REQUEST_URI']);
-
+	}
+	public function doMenuIPcache ()
+	{
+		global $screen_layout_columns;
 
 		$this->_ip_cache_list->prepare_items();
 
