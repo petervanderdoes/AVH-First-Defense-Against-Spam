@@ -958,7 +958,7 @@ final class AVH_FDAS_Admin
 	{
 		global $screen_layout_columns;
 		if (!empty($this->_ip_cache_list->messages)) {
-			echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n", $messages) . '</p></div>';
+			echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n", $this->_ip_cache_list->messages) . '</p></div>';
 		}
 		$this->_ip_cache_list->prepare_items();
 
