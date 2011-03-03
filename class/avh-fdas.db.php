@@ -163,7 +163,7 @@ class AVH_FDAS_DB
 	public function countIPs ()
 	{
 		global $wpdb;
-		$key = md5( serialize( compact(array_keys($defaults)) )  );
+		$key = md5( __CLASS__ . '::'.__FUNCTION__ ) ;
 		$last_changed = wp_cache_get('last_changed', 'comment');
 		if ( !$last_changed ) {
 			$last_changed = time();
