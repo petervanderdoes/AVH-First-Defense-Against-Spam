@@ -908,8 +908,8 @@ final class AVH_FDAS_Admin
 		if ($doaction) {
 			check_admin_referer('bulk-ips');
 			
-			if (isset($_REQUEST['deleted_ips'])) {
-				$ips = array_map('absint', explode(',', $_REQUEST['deleted-ips']));
+			if (isset($_REQUEST['deleted_ip'])) {
+				$ips = array_map('absint', explode(',', $_REQUEST['deleted-ip']));
 			} elseif (wp_get_referer()) {
 				wp_redirect(wp_get_referer());
 				exit();
@@ -920,18 +920,18 @@ final class AVH_FDAS_Admin
 			$redirect_to = remove_query_arg(array(), wp_get_referer());
 			$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
 			
-			foreach ($deleted-ips as $ip) { // Check the permissions on each
+			foreach ($_REQUEST['deleted-ips'] as $ip) { // Check the permissions on each
 				
 				switch ($doaction) {
 					case 'delete':
-						$this->_db->deleteIP($ip);
+						//$this->_db->deleteIP($ip);
 						$deleted ++;
 						break;
 				}
 			}
 			
 			if ($deleted)
-				$redirect_to = add_query_arg('ids', join(',', $comment_ids), $redirect_to);
+				$redirect_to = add_query_arg( 'deleted', $deleted, $redirect_to );
 
 			wp_redirect($redirect_to);
 			exit();
@@ -945,9 +945,9 @@ final class AVH_FDAS_Admin
 			
 			if ($deleted > 0) {
 				if ($deleted > 0) {
-					$messages[] = sprintf(_n('%s IP permanently deleted', '%s IP\'s deleted', $deleted), $deleted);
+					$this->_ip_cache_list->messages[] = sprintf(_n('%s IP permanently deleted', '%s IP\'s deleted', $deleted), $deleted);
 				}
-				echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n", $messages) . '</p></div>';
+				
 			}
 		}
 		
@@ -957,7 +957,9 @@ final class AVH_FDAS_Admin
 	public function doMenuIPcache ()
 	{
 		global $screen_layout_columns;
-
+		if (!empty($this->_ip_cache_list->messages)) {
+			echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n", $messages) . '</p></div>';
+		}
 		$this->_ip_cache_list->prepare_items();
 
 		$total_pages = $this->_ip_cache_list->get_pagination_arg( 'total_pages' );

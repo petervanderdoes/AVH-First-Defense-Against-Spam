@@ -22,6 +22,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	 */
 	private $_ipcachedb;
 	
+	public $messages;
 	
 	function __construct() {
 
