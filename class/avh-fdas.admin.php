@@ -983,10 +983,20 @@ final class AVH_FDAS_Admin
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
 		echo '<h2>' . __('AVH First Defense Against Spam IP Cache', 'avh-fdas') . '</h2>';
-
+		
 		$this->_ip_cache_list->views();
 		echo '<form id="ipcachelist-form" action="" method="get">';
 		echo '<input type="hidden" name="page" value="' . AVH_FDAS_Define::MENU_SLUG_IP_CACHE . '"';
+		echo '<input type="hidden" name="ip_status" value="' . esc_attr($ip_status) . '" />';
+		echo '<input type="hidden" name="pagegen_timestamp" value="' . esc_attr(current_time('mysql', 1)) . '" />';
+		
+		echo '<input type="hidden" name="_total" value="' . esc_attr($this->_ip_cache_list->get_pagination_arg('total_items')) . '" />';
+		echo '<input type="hidden" name="_per_page" value="' . esc_attr($this->_ip_cache_list->get_pagination_arg('per_page')) . '" />';
+		echo '<input type="hidden" name="_page" value="' . esc_attr($this->_ip_cache_list->get_pagination_arg('page')) . '" />';
+		
+		if (isset($_REQUEST['paged'])) {
+			echo '<input type="hidden" name="paged"	value="'. esc_attr(absint($_REQUEST['paged'])) . '" />';
+		}
 		$this->_ip_cache_list->display();
 		echo '</form>';
 		
