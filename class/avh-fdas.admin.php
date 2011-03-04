@@ -238,7 +238,7 @@ final class AVH_FDAS_Admin
 		}
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
-		echo '<h2>' . __('AVH First Defense Against Spam Overview', 'avh-fdas') . '</h2>';
+		echo '<h2>AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas') . '</h2>';
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
@@ -523,7 +523,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="wrap avhfdas-wrap">';
 		echo '<div class="wrap">';
 		echo $this->_displayIcon('options-general');
-		echo '<h2>' . __('General Options', 'avh-fdas') . '</h2>';
+		echo '<h2>AVH First Defense Against Spam: ' . __('General Options', 'avh-fdas') . '</h2>';
 		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" action="admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_GENERAL . '" accept-charset="utf-8" >';
 		wp_nonce_field('avh_fdas_generaloptions');
 		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
@@ -688,7 +688,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="wrap avhfdas-wrap">';
 		echo '<div class="wrap">';
 		echo $this->_displayIcon('options-general');
-		echo '<h2>' . __('3rd Party Options', 'avh-fdas') . '</h2>';
+		echo '<h2>AVH First Defense Against Spam: ' . __('3rd Party Options', 'avh-fdas') . '</h2>';
 		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_3RD_PARTY . '" accept-charset="utf-8" >';
 		wp_nonce_field('avh_fdas_options');
 		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
@@ -774,7 +774,7 @@ final class AVH_FDAS_Admin
 		}
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
-		echo '<h2>' . __('AVH First Defense Against Spam Overview', 'avh-fdas') . '</h2>';
+		echo '<h2>AVH First Defense Against Spam: ' . __('Spam Overview', 'avh-fdas') . '</h2>';
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
@@ -989,7 +989,7 @@ final class AVH_FDAS_Admin
 		
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
-		echo '<h2>AVH First Defense Against Spam ' . __('IP Cache Log', 'avh-fdas') . '</h2>';
+		echo '<h2>AVH First Defense Against Spam: ' . __('IP Cache Log', 'avh-fdas') . '</h2>';
 		
 		$this->_ip_cache_list->views();
 		echo '<form id="ipcachelist-form" action="" method="get">';
