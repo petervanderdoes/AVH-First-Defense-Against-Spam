@@ -75,6 +75,7 @@ final class AVH_FDAS_Admin
 		if (version_compare(PHP_VERSION, '5', '<')) {
 			add_filter('transient_update_plugins', array(&$this, 'filterDisableUpgrade'));
 		}
+		add_filter('set-screen-option', array(&$this, 'filterSet_Screen_Option'), 10, 3);
 		return;
 	}
 
@@ -889,7 +890,6 @@ final class AVH_FDAS_Admin
 	{
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
-		add_screen_option( 'per_page', array('label' => _x( 'IP\'s', 'ip\'s per page (screen options)' )) );
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -907,6 +907,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function handle_PostGet_IP_Cache_Log() {
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
+		add_screen_option( 'per_page', array('label' => _x( 'IP\'s', 'ip\'s per page (screen options)' ),'default' => 20, 'option'=>'ipcachelog_per_page' ));
 		$pagenum = $this->_ip_cache_list->get_pagenum();
 		$doaction = $this->_ip_cache_list->current_action();
 		
@@ -1089,6 +1090,32 @@ final class AVH_FDAS_Admin
 		return $actions;
 	}
 
+	/**
+	 * Used when we set our own screen options.
+	 *
+	 * The filter needs to be set during construct otherwise it's not regonized.
+	 *
+	 * @param unknown_type $default
+	 * @param unknown_type $option
+	 * @param unknown_type $value
+	 */
+	public function filterSet_Screen_Option($error_value, $option, $value){
+		$return = $error_value;
+		
+		switch ($option){
+			case 'ipcachelog_per_page':
+				$value = (int) $value;
+				$return = $value;
+				if ( $value < 1 || $value > 999 ) {
+					$return = $error_value;
+				}
+				break;
+			default:
+				$return = $error_value;
+				break;
+		}
+		return $return;
+	}
 	/**
 	 * Checks if the user clicked on the Report & Delete link.
 	 *

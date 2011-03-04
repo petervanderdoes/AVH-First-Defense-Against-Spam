@@ -23,6 +23,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	private $_ipcachedb;
 	
 	public $messages;
+	public $screen;
 	
 	function __construct() {
 
@@ -33,6 +34,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$this->_core = $this->_classes->load_class('Core', 'plugin', TRUE);
 		$this->_ipcachedb = $this->_classes->load_class('DB', 'plugin', TRUE);
 		
+		$this->screen= 'avh_f_d_a_s_page_avh_first_defense_against_spam_ip_cache_';
 		$default_status = get_user_option( 'avhfdas_ip_cache_list_last_view' );
 		if ( empty( $default_status ) )
 			$default_status = 'all';
@@ -126,9 +128,9 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 
 	function get_per_page( $ip_status = 'all' ) {
-		$screen= 'avh_f_d_a_s_page_avh_first_defense_against_spam_ip_cache_';
-		$ips_per_page = $this->get_items_per_page( $screen.'per_page' );
-		$ips_per_page = apply_filters( $screen.'per_page', $ips_per_page, $ip_status );
+		
+		$ips_per_page = $this->get_items_per_page( 'ipcachelog_per_page' );
+		$ips_per_page = apply_filters( 'ipcachelog_per_page', $ips_per_page, $ip_status );
 		return $ips_per_page;
 	}
 	
