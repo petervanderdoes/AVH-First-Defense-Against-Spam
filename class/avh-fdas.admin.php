@@ -358,7 +358,7 @@ final class AVH_FDAS_Admin
 			$output .= '</tr>';
 			$output .= '<td class="first b">' . $count_clean . '</td>';
 			$text = _n('IP', 'IP\'s', $count_clean, 'avh-fdas');
-			$output .= '<td class="t">' . sprintf(__('Total of %s classified as clean', 'avh-fdas'), $text) . '</td>';
+			$output .= '<td class="t">' . sprintf(__('Total of %s classified as ham', 'avh-fdas'), $text) . '</td>';
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
