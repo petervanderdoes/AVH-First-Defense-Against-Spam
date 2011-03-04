@@ -110,16 +110,16 @@ final class AVH_FDAS_Admin
 		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_GENERAL, array(&$this, 'doMenuGeneralOptions'));
 		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array(&$this, 'doMenu3rdPartyOptions'));
 		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_FAQ, array(&$this, 'doMenuFAQ'));
-
+		
 		// Add actions for menu pages
 		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array(&$this, 'actionLoadPageHook_Overview'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array(&$this, 'actionLoadPageHook_General'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array(&$this, 'actionLoadPageHook_3rd_party'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array(&$this, 'actionLoadPageHook_faq'));
-
+		
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
 			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array(&$this, 'doMenu_IP_Cache_Log'));
-			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'handle_PostGet_IP_Cache_Log'),5);
+			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'handle_PostGet_IP_Cache_Log'), 5);
 			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'actionLoadPageHook_ip_cache'));
 		}
 		
@@ -281,11 +281,11 @@ final class AVH_FDAS_Admin
 		$output = '';
 		$counter = 0;
 		foreach ($spam_count as $key => $value) {
-
+			
 			if ('190001' == $key || $counter >= 12) {
 				continue;
 			}
-
+			
 			$have_spam_count_data = true;
 			$date = date_i18n('Y - F', mktime(0, 0, 0, substr($key, 4, 2), 1, substr($key, 0, 4)));
 			$output .= '<td class="first b">' . $value . '</td>';
@@ -293,7 +293,7 @@ final class AVH_FDAS_Admin
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
-
+			
 			$counter ++;
 		}
 		if (! $have_spam_count_data) {
@@ -719,7 +719,7 @@ final class AVH_FDAS_Admin
 	{
 		echo '<p>' . __('To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.', 'avh-fdas');
 		echo $this->_printOptions($data['options_sfs'], $data['actual_options']);
-
+	
 		//echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
 	//echo  __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
 	}
@@ -905,9 +905,10 @@ final class AVH_FDAS_Admin
 	 * Handles the Get and Post after a submit on the IP cache Log page
 	 * @WordPress Action load-$page_hook
 	 */
-	public function handle_PostGet_IP_Cache_Log() {
+	public function handle_PostGet_IP_Cache_Log ()
+	{
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
-		add_screen_option( 'per_page', array('label' => _x( 'IP\'s', 'ip\'s per page (screen options)' ),'default' => 20, 'option'=>'ipcachelog_per_page' ));
+		add_screen_option('per_page', array('label'=>_x('IP\'s', 'ip\'s per page (screen options)'), 'default'=>20, 'option'=>'ipcachelog_per_page'));
 		$pagenum = $this->_ip_cache_list->get_pagenum();
 		$doaction = $this->_ip_cache_list->current_action();
 		
@@ -926,8 +927,8 @@ final class AVH_FDAS_Admin
 			$redirect_to = remove_query_arg(array('deleted'), wp_get_referer());
 			$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
 			
-			foreach ($ips as $ip) { // Check the permissions on each
-				
+			// Check the permissions on each
+			foreach ($ips as $ip) {
 				switch ($doaction) {
 					case 'deleted':
 						//$this->_db->deleteIP($ip);
@@ -936,16 +937,17 @@ final class AVH_FDAS_Admin
 				}
 			}
 			
-			if ($deleted)
-				$redirect_to = add_query_arg( 'deleted', $deleted, $redirect_to );
-
+			if ($deleted) {
+				$redirect_to = add_query_arg('deleted', $deleted, $redirect_to);
+			}
+			
 			wp_redirect($redirect_to);
 			exit();
 		} elseif (! empty($_GET['_wp_http_referer'])) {
 			wp_redirect(remove_query_arg(array('_wp_http_referer', '_wpnonce'), stripslashes($_SERVER['REQUEST_URI'])));
 			exit();
 		}
-
+		
 		if (isset($_REQUEST['deleted'])) {
 			$deleted = isset($_REQUEST['deleted']) ? (int) $_REQUEST['deleted'] : 0;
 			
@@ -953,11 +955,11 @@ final class AVH_FDAS_Admin
 				if ($deleted > 0) {
 					$this->_ip_cache_list->messages[] = sprintf(_n('%s IP permanently deleted', '%s IP\'s deleted', $deleted), $deleted);
 				}
-				
+			
 			}
 		}
 	}
-	
+
 	/**
 	 *
 	 * Displays the IP cache Log
@@ -965,18 +967,17 @@ final class AVH_FDAS_Admin
 	public function doMenu_IP_Cache_Log ()
 	{
 		global $screen_layout_columns, $ip_status;
-		if (!empty($this->_ip_cache_list->messages)) {
+		if (! empty($this->_ip_cache_list->messages)) {
 			echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n", $this->_ip_cache_list->messages) . '</p></div>';
 		}
 		$_SERVER['REQUEST_URI'] = remove_query_arg(array('error', 'deleted', '_error_nonce'), $_SERVER['REQUEST_URI']);
 		$this->_ip_cache_list->prepare_items();
-
-		$total_pages = $this->_ip_cache_list->get_pagination_arg( 'total_pages' );
-		if ( $pagenum > $total_pages && $total_pages > 0 ) {
-			wp_redirect( add_query_arg( 'paged', $total_pages ) );
-		exit;
+		
+		$total_pages = $this->_ip_cache_list->get_pagination_arg('total_pages');
+		if ($pagenum > $total_pages && $total_pages > 0) {
+			wp_redirect(add_query_arg('paged', $total_pages));
+			exit();
 		}
-
 		
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
@@ -993,7 +994,7 @@ final class AVH_FDAS_Admin
 		echo '<input type="hidden" name="_page" value="' . esc_attr($this->_ip_cache_list->get_pagination_arg('page')) . '" />';
 		
 		if (isset($_REQUEST['paged'])) {
-			echo '<input type="hidden" name="paged"	value="'. esc_attr(absint($_REQUEST['paged'])) . '" />';
+			echo '<input type="hidden" name="paged"	value="' . esc_attr(absint($_REQUEST['paged'])) . '" />';
 		}
 		$this->_ip_cache_list->display();
 		echo '</form>';
@@ -1002,7 +1003,7 @@ final class AVH_FDAS_Admin
 		echo '<div id="ajax-response"></div>';
 		$this->_printAdminFooter();
 	}
-	
+
 	/**
 	 * Donation Metabox
 	 * @return unknown_type
@@ -1050,7 +1051,7 @@ final class AVH_FDAS_Admin
 			case $this->_hooks['avhfdas_menu_ip_cache_log']:
 				$columns[$this->_hooks['avhfdas_menu_ip_cache_log']] = 1;
 				break;
-				
+		
 		}
 		return $columns;
 	}
@@ -1099,14 +1100,15 @@ final class AVH_FDAS_Admin
 	 * @param unknown_type $option
 	 * @param unknown_type $value
 	 */
-	public function filterSet_Screen_Option($error_value, $option, $value){
+	public function filterSet_Screen_Option ($error_value, $option, $value)
+	{
 		$return = $error_value;
 		
-		switch ($option){
+		switch ($option) {
 			case 'ipcachelog_per_page':
 				$value = (int) $value;
 				$return = $value;
-				if ( $value < 1 || $value > 999 ) {
+				if ($value < 1 || $value > 999) {
 					$return = $error_value;
 				}
 				break;
@@ -1116,6 +1118,7 @@ final class AVH_FDAS_Admin
 		}
 		return $return;
 	}
+
 	/**
 	 * Checks if the user clicked on the Report & Delete link.
 	 *
