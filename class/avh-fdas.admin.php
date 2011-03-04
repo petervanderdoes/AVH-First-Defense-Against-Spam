@@ -991,11 +991,13 @@ final class AVH_FDAS_Admin
 		
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
-		echo '<h2>AVH First Defense Against Spam: ' . __('IP Cache Log', 'avh-fdas') . '</h2>';
+		echo '<h2>AVH First Defense Against Spam: ' . __('IP Cache Log', 'avh-fdas');
 		
-		if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
+		if ( isset($_REQUEST['s']) && $_REQUEST['s'] ) {
 			printf( '<span class="subtitle">' . sprintf( __( 'Search results for &#8220;%s&#8221;' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ) . '</span>' );
-	
+		}
+		echo '</h2>';
+			
 		$this->_ip_cache_list->views();
 		echo '<form id="ipcachelist-form" action="" method="get">';
 		echo '<input type="hidden" name="page" value="' . AVH_FDAS_Define::MENU_SLUG_IP_CACHE . '"';
