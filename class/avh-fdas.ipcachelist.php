@@ -123,21 +123,6 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		return false;
 	}
 
-	function _order_callback( $plugin_a, $plugin_b ) {
-		global $orderby, $order;
-
-		$a = $plugin_a[$orderby];
-		$b = $plugin_b[$orderby];
-
-		if ( $a == $b )
-			return 0;
-
-		if ( 'DESC' == $order )
-			return ( $a < $b ) ? 1 : -1;
-		else
-			return ( $a < $b ) ? -1 : 1;
-	}
-
 	function get_per_page( $ip_status = 'all' ) {
 		$screen= 'avh_f_d_a_s_page_avh_first_defense_against_spam_ip_cache_';
 		$ips_per_page = $this->get_items_per_page( $screen.'per_page' );
