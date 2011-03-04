@@ -41,7 +41,7 @@ class AVH_FDAS_DB
 		global $wpdb;
 		$ip  = AVH_Common::getIp2long($ip);
 		// Query database
-		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %d", $ip));
+		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %s", $ip));
 		if ($result) {
 			return $result;
 		} else {
@@ -58,7 +58,7 @@ class AVH_FDAS_DB
 		global $wpdb;
 		$ip  = AVH_Common::getIp2long($ip);
 		// Query database
-		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ip = %d", $ip));
+		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ip = %s", $ip));
 		if ($result) {
 			return $result;
 		} else {
@@ -118,7 +118,7 @@ class AVH_FDAS_DB
 		
 		if (! empty($ip)) {
 			$ip  = AVH_Common::getIp2long($ip);
-			$where .= $wpdb->prepare(' AND ip = %d', $ip);
+			$where .= $wpdb->prepare(' AND ip = %s', $ip);
 		}
 		
 		$query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
@@ -142,7 +142,7 @@ class AVH_FDAS_DB
 		global $wpdb;
 		$ip  = AVH_Common::getIp2long($ip);
 		$date = current_time('mysql');
-		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%d, %d, %s, %s)", $ip, $spam, $date, $date));
+		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%s, %d, %s, %s)", $ip, $spam, $date, $date));
 		if ($result) {
 			return $result;
 		} else {
@@ -158,8 +158,9 @@ class AVH_FDAS_DB
 	public function updateIP ($ip)
 	{
 		global $wpdb;
+		$ip  = AVH_Common::getIp2long($ip);
 		$date = current_time('mysql');
-		$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET lastseen=%s WHERE ip=INET_ATON(%s)", $date, $ip));
+		$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET lastseen=%s WHERE ip=%s", $date, $ip));
 		if ($result) {
 			return $result;
 		} else {
@@ -174,9 +175,10 @@ class AVH_FDAS_DB
 	public function doMarkIPSpam ($ip)
 	{
 		global $wpdb;
+		$ip  = AVH_Common::getIp2long($ip);
 		$ip_info = $this->getIP($ip);
 		if (is_object($ip_info)) {
-			$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=INET_ATON(%s)", $ip));
+			$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=%s", $ip));
 		}
 	}
 
