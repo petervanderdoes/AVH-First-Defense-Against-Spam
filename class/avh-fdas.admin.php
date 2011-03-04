@@ -888,7 +888,6 @@ final class AVH_FDAS_Admin
 	public function actionLoadPageHook_ip_cache ()
 	{
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
-		//add_meta_box('avhfdasBoxIpCache', __('IP Cache', 'avh-fdas'), array(&$this, 'metaboxMenuIPcache'), $this->_hooks['avhfdas_menu_ip_cache_log'], 'normal', 'core');
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
 		add_screen_option( 'per_page', array('label' => _x( 'IP\'s', 'ip\'s per page (screen options)' )) );
 		// WordPress core Styles and Scripts
