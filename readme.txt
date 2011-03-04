@@ -108,9 +108,12 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.1-b2 =
+* New menu page: IP Cache Log. This gives the ability to manage the IP cache. This only works in WordPress 3.1 and higher.
+* Improvement on checking for spam when a comment is posted.
+* Reporting email will now say which post the spammer was trying to comment on.
 * Bugfix: When the visiting IP is not a public IP all the configured spam checks are performed. Private IP's can be assumed to be safe.
 * Bugfix: The check for Stop Forum Spam is always performed even if set not to check with Stop Forum Spam.
-* Improvement on checking for spam when a comment is posted.
+* Bugfix: The results of a call to Stop Forum Spam are not evaluated.
 
 = Version 3.0.5 =
 * Bugfix: When saving options the options would be erased.
