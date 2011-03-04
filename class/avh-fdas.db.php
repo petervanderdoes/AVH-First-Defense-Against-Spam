@@ -39,8 +39,9 @@ class AVH_FDAS_DB
 	public function getIP ($ip)
 	{
 		global $wpdb;
+		$ip  = AVH_Common::getIp2long($ip);
 		// Query database
-		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip));
+		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %d", $ip));
 		if ($result) {
 			return $result;
 		} else {
@@ -55,8 +56,9 @@ class AVH_FDAS_DB
 	public function deleteIP($ip)
 	{
 		global $wpdb;
+		$ip  = AVH_Common::getIp2long($ip);
 		// Query database
-		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip));
+		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ip = %d", $ip));
 		if ($result) {
 			return $result;
 		} else {
@@ -115,7 +117,8 @@ class AVH_FDAS_DB
 		}
 		
 		if (! empty($ip)) {
-			$where .= $wpdb->prepare(' AND ip = INET_ATON(%d)', $ip);
+			$ip  = AVH_Common::getIp2long($ip);
+			$where .= $wpdb->prepare(' AND ip = %d', $ip);
 		}
 		
 		$query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
@@ -137,8 +140,9 @@ class AVH_FDAS_DB
 	public function insertIP ($ip, $spam)
 	{
 		global $wpdb;
+		$ip  = AVH_Common::getIp2long($ip);
 		$date = current_time('mysql');
-		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (INET_ATON(%s), %d, %s, %s)", $ip, $spam, $date, $date));
+		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%d, %d, %s, %s)", $ip, $spam, $date, $date));
 		if ($result) {
 			return $result;
 		} else {

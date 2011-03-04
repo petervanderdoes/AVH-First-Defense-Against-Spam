@@ -71,5 +71,29 @@ if (! class_exists('AVH_Common')) {
 			$public_base = max($directory_array);
 			return $public_base;
 		}
+	
+		/**
+		 * This function will take an IP address or IP number in almost any format (that I can think of) and will return it's decimal unsigned equivalent, as a string.
+		 * Kind				=> Input				=>  Return		=>  long2ip(Return)
+		 * DottedQuadDec	=> 192.168.255.109		=>  3232300909	=>  192.168.255.109
+		 * PosIntStr		=> 3232300909			=>  3232300909	=>  192.168.255.109
+		 * NegIntStr		=> -1062666387			=>  3232300909	=>  192.168.255.109
+		 * PosInt			=> 3232300909			=>  3232300909	=>  192.168.255.109
+		 * NegInt			=> -1062666387			=>  3232300909	=>  192.168.255.109
+		 * DottedQuadHex	=> 0xc0.0xA8.0xFF.0x6D	=>           0	=>          0.0.0.0
+		 * DottedQuadOct	=> 0300.0250.0377.0155	=>           0	=>          0.0.0.0
+		 * HexIntStr		=> 0xC0A8FF6D			=>           0	=>          0.0.0.0
+		 * HexInt			=> 3232300909 			=>  3232300909	=>  192.168.255.109
+		 *
+		 * @param string/numeric $ip
+		 */
+		public static function getIp2long($ip){
+    		if (is_numeric($ip)){
+        		$return=sprintf("%u", floatval($ip));
+    		} else {
+        		$return=sprintf("%u", floatval(ip2long($ip)));
+    		}
+    		return $return;
+		}
 	}
 }
