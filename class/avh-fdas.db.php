@@ -120,6 +120,8 @@ class AVH_FDAS_DB
 			$ip  = AVH_Common::getIp2long($ip);
 			$where .= $wpdb->prepare(' AND ip = %s', $ip);
 		}
+		if ( '' !== $search )
+			$where .= $this->_getSearchSql( $search, array( 'ip' ) );
 		
 		$query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
 		
@@ -223,5 +225,22 @@ class AVH_FDAS_DB
 		wp_cache_set($cache_key, $stats, 'counts');
 		
 		return $stats;
+	}
+	
+	private function _getSearchSql( $string, $cols ) {
+		
+		if (in_array('ip', $cols)) {
+			$ip =  esc_sql(AVH_Common::getIp2long($string));
+		}
+		$string = esc_sql( like_escape( $string ) );
+		
+		$searches = array();
+		foreach ( $cols as $col ){
+			if ('ip' == $col) {
+				$searches[] = "$col = '$ip'";
+			}
+			$searches[] = "$col LIKE '%$string%'";
+		}
+		return ' AND (' . implode(' OR ', $searches) . ')';
 	}
 }
