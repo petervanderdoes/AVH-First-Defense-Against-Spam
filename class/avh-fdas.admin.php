@@ -931,7 +931,7 @@ final class AVH_FDAS_Admin
 			foreach ($ips as $ip) {
 				switch ($doaction) {
 					case 'deleted':
-						//$this->_db->deleteIP($ip);
+						$this->_db->deleteIP($ip);
 						$deleted ++;
 						break;
 				}
