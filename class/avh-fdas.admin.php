@@ -989,7 +989,7 @@ final class AVH_FDAS_Admin
 		
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
-		echo '<h2>' . __('AVH First Defense Against Spam IP Cache', 'avh-fdas') . '</h2>';
+		echo '<h2>AVH First Defense Against Spam ' . __('IP Cache Log', 'avh-fdas') . '</h2>';
 		
 		$this->_ip_cache_list->views();
 		echo '<form id="ipcachelist-form" action="" method="get">';
