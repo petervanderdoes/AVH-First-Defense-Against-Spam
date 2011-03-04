@@ -534,6 +534,9 @@ class AVH_FDAS_SpamCheck
 		// Update the counter
 		$this->_updateSpamCounter();
 		
+		// Update Last seen value
+		$this->_ipcachedb->updateIP($this->_visiting_ip);
+		
 		// Terminate the connection
 		$this->_doTerminateConnection();
 	}
