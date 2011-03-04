@@ -955,9 +955,6 @@ final class AVH_FDAS_Admin
 				
 			}
 		}
-		
-		$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
-		
 	}
 	
 	/**

@@ -113,6 +113,8 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			'per_page' => $ips_per_page,
 		) );
 		
+		$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
+		
 	}
 
 	function _search_callback( ) {
