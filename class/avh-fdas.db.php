@@ -47,6 +47,22 @@ class AVH_FDAS_DB
 			return false;
 		}
 	}
+	/**
+	 * Delete an IP from the DB
+	 * @param $ip
+	 * @return ip Object (false if not found)
+	 */
+	public function deleteIP($ip)
+	{
+		global $wpdb;
+		// Query database
+		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ip = INET_ATON(%s)", $ip));
+		if ($result) {
+			return $result;
+		} else {
+			return false;
+		}
+	}
 
 	public function getIPs ($query_vars)
 	{
