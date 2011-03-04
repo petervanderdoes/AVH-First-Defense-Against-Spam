@@ -958,6 +958,13 @@ final class AVH_FDAS_Admin
 			
 			}
 		}
+		$this->_ip_cache_list->prepare_items();
+
+		$total_pages = $this->_ip_cache_list->get_pagination_arg( 'total_pages' );
+		if ( $pagenum > $total_pages && $total_pages > 0 ) {
+			wp_redirect( add_query_arg( 'paged', $total_pages ) );
+			exit;
+		}
 	}
 
 	/**
