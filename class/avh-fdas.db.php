@@ -36,16 +36,27 @@ class AVH_FDAS_DB
 	 * @param $ip
 	 * @return ip Object (false if not found)
 	 */
-	public function getIP ($ip)
+	public function getIP ($_ip, $_output = OBJECT)
 	{
 		global $wpdb;
-		$ip  = AVH_Common::getIp2long($ip);
+		$_ip = AVH_Common::getIp2long($_ip);
+		
 		// Query database
-		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %s", $ip));
-		if ($result) {
-			return $result;
-		} else {
+		$_result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %s", $_ip));
+		
+		if (NULL === $_result) {
 			return false;
+		}
+		if ($_output == OBJECT) {
+			return $_ip;
+		} elseif ($_output == ARRAY_A) {
+			$__comment = get_object_vars($_ip);
+			return $__comment;
+		} elseif ($_output == ARRAY_N) {
+			$__comment = array_values(get_object_vars($_ip));
+			return $__comment;
+		} else {
+			return $_ip;
 		}
 	}
 	/**
@@ -163,7 +174,7 @@ class AVH_FDAS_DB
 		
 		$ip_cache_arr['ip']  = AVH_Common::getIp2long($ip_cache_arr['ip']);
 		
-		$_ip = $this->getIpCache($args['ip']);
+		$_ip = $this->getIpCache($args['ip'], ARRAY_A);
 		
 		$_ip = esc_sql($_ip);
 		
