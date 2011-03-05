@@ -67,7 +67,6 @@ class AVH_FDAS_SpamCheck
 	 */
 	public function doSpamcheckMain ()
 	{
-		$this->_ipcachedb->updateIpCache(array('ip'=>$this->_visiting_ip, 'lastseen'=>current_time('mysql')));
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			$this->checkWhitelist();
 			if ($this->ip_in_white_list === FALSE) {
