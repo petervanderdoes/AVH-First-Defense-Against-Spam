@@ -81,7 +81,7 @@ class AVH_FDAS_DB
 			$ordersby = array_intersect($ordersby, array('ip', 'lastseen', 'added', 'spam'));
 			$orderby = empty($ordersby) ? 'added' : implode(', ', $ordersby);
 		} else {
-			$orderby = 'added, ip';
+			$orderby = 'ip';
 		}
 		
 		$number = absint($number);
@@ -157,17 +157,24 @@ class AVH_FDAS_DB
 	 * @param $ip string
 	 * @return Object (false if not found)
 	 */
-	public function updateIp ($ip)
+	public function updateIpCache ($ip_cache_arr)
 	{
 		global $wpdb;
-		$ip  = AVH_Common::getIp2long($ip);
-		$date = current_time('mysql');
-		$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET lastseen=%s WHERE ip=%s", $date, $ip));
-		if ($result) {
-			return $result;
-		} else {
-			return false;
-		}
+		
+		$ip_cache_arr['ip']  = AVH_Common::getIp2long($ip_cache_arr['ip']);
+		
+		$_ip = $this->getIpCache($args['ip']);
+		
+		$_ip = esc_sql($_ip);
+		
+		$ip_cache_arr = array_merge($_ip,$ip_cache_arr);
+		
+		extract(stripslashes_deep($ip_cache_arr), EXTR_SKIP);
+
+		$data = compact('ip', 'spam', 'added', 'lastseen');
+		$return = $wpdb->update( $wpdb->avhfdasipcache, $data, compact( 'ip' ) );
+
+		return $return;
 	}
 
 	/**

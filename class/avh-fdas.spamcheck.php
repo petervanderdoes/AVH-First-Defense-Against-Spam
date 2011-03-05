@@ -237,7 +237,7 @@ class AVH_FDAS_SpamCheck
 			}
 		} else {
 			if (is_object($this->ip_in_cache)) {
-				$this->_ipcachedb->updateIp($this->_visiting_ip);
+				$this->_ipcachedb->updateIpCache(array('ip'=>$this->_visiting_ip, 'lastseen'=>current_time('mysql')));
 			} else {
 				$this->_ipcachedb->insertIp($this->_visiting_ip, 0);
 			}
@@ -534,7 +534,7 @@ class AVH_FDAS_SpamCheck
 		$this->_updateSpamCounter();
 		
 		// Update Last seen value
-		$this->_ipcachedb->updateIp($this->_visiting_ip);
+		$this->_ipcachedb->updateIpCache(array('ip'=>$this->_visiting_ip, 'lastseen'=>current_time('mysql')));
 		
 		// Terminate the connection
 		$this->_doTerminateConnection();
