@@ -182,7 +182,7 @@ class AVH_FDAS_DB
 		
 		extract(stripslashes_deep($ip_cache_arr), EXTR_SKIP);
 
-		$data = compact('ip', 'spam', 'added', 'lastseen');
+		$data = compact('spam', 'lastseen');
 		$return = $wpdb->update( $wpdb->avhfdasipcache, $data, compact( 'ip' ) );
 
 		return $return;
