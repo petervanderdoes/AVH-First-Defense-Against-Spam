@@ -48,15 +48,15 @@ class AVH_FDAS_DB
 			return false;
 		}
 		if ($_output == OBJECT) {
-			return $_ip;
+			return $_result;
 		} elseif ($_output == ARRAY_A) {
-			$__comment = get_object_vars($_ip);
-			return $__comment;
+			$__result = get_object_vars($_result);
+			return $__result;
 		} elseif ($_output == ARRAY_N) {
-			$__comment = array_values(get_object_vars($_ip));
-			return $__comment;
+			$__result = array_values(get_object_vars($_result));
+			return $__result;
 		} else {
-			return $_ip;
+			return $_result;
 		}
 	}
 	/**
@@ -77,7 +77,7 @@ class AVH_FDAS_DB
 		}
 	}
 
-	public function getIpCache ($query_vars)
+	public function getIpCache ($query_vars, $output=OBJECT)
 	{
 		global $wpdb;
 		
@@ -140,8 +140,18 @@ class AVH_FDAS_DB
 			return $wpdb->get_var($query);
 		}
 		
-		$ips = $wpdb->get_results($query);
-		return $ips;
+		$_ips = $wpdb->get_results($query);
+		if ($output == OBJECT) {
+			return $_ips;
+		} elseif ($output == ARRAY_A) {
+			$_ips_array = get_object_vars($_ips);
+			return $_ips_array;
+		} elseif ($output == ARRAY_N) {
+			$_ips_array = array_values(get_object_vars($_ips));
+			return $_ips_array;
+		} else {
+			return $_ips;
+		}
 	}
 
 	/**
@@ -174,7 +184,7 @@ class AVH_FDAS_DB
 		
 		$ip_cache_arr['ip']  = AVH_Common::getIp2long($ip_cache_arr['ip']);
 		
-		$_ip = $this->getIpCache(array('ip' => $ip_cache_arr['ip']), ARRAY_A);
+		$_ip = $this->getIp($ip_cache_arr['ip'], ARRAY_A);
 		
 		$_ip = esc_sql($_ip);
 		
