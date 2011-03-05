@@ -156,16 +156,14 @@ class AVH_FDAS_SpamCheck
 	{
 		$this->ip_in_cache = FALSE;
 		if (1 == $this->_core_options['general']['useipcache']) {
-			if ($this->_visiting_ip != '0.0.0.0') {
-				$time_start = microtime(true);
-				$this->ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
-				$time_end = microtime(true);
-				$time = $time_end - $time_start;
-				if (! (FALSE === $this->ip_in_cache)) {
-					if ($this->ip_in_cache->spam === '1') {
-						$this->spaminfo['cache']['time'] = $time;
-						$this->spammer_detected = TRUE;
-					}
+			$time_start = microtime(true);
+			$this->ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
+			$time_end = microtime(true);
+			$time = $time_end - $time_start;
+			if (! (FALSE === $this->ip_in_cache)) {
+				if ($this->ip_in_cache->spam === '1') {
+					$this->spaminfo['cache']['time'] = $time;
+					$this->spammer_detected = TRUE;
 				}
 			}
 		}
