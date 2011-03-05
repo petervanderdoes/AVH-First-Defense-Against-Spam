@@ -174,7 +174,7 @@ class AVH_FDAS_DB
 		
 		$ip_cache_arr['ip']  = AVH_Common::getIp2long($ip_cache_arr['ip']);
 		
-		$_ip = $this->getIpCache($args['ip'], ARRAY_A);
+		$_ip = $this->getIpCache($ip_cache_arr['ip'], ARRAY_A);
 		
 		$_ip = esc_sql($_ip);
 		
