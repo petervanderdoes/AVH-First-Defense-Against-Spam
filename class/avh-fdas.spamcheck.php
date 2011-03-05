@@ -569,7 +569,7 @@ class AVH_FDAS_SpamCheck
 		
 		if (1 == $this->_core_options['general']['diewithmessage']) {
 			if (is_object($this->ip_in_cache)) {
-				$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . _('Your IP [%s] has been identified as spam', 'avh-fdas') . '</p>', $this->_visiting_ip);
+				$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] has been identified as spam', 'avh-fdas') . '</p>', $this->_visiting_ip);
 			} else {
 				if (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']) {
 					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] is registered in our <em>Blacklisted</em> database.', 'avh-fdas') . '<BR /></p>', $this->_visiting_ip);
