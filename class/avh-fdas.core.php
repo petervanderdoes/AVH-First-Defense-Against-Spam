@@ -105,11 +105,11 @@ class AVH_FDAS_Core
 		 * Set the options for the program
 		 *
 		 */
-		$this->load_options();
-		$this->load_data();
+		$this->_loadOptions();
+		$this->_loadData();
 		$this->_setTables();
 		// Check if we have to do upgrades
-		if ((! isset($this->_options['general']['dbversion'])) || $this->get_optionElement('general', 'dbversion') < $this->_db_version) {
+		if ((! isset($this->_options['general']['dbversion'])) || $this->getOptionElement('general', 'dbversion') < $this->_db_version) {
 			$this->_doUpgrade();
 		}
 		$this->_settings->storeSetting('siteurl', get_option('siteurl'));
@@ -155,8 +155,8 @@ class AVH_FDAS_Core
 	 */
 	private function _doUpgrade ()
 	{
-		$options = $this->get_options();
-		$data = $this->get_data();
+		$options = $this->getOptions();
+		$data = $this->getData();
 		if (version_compare($options['general']['version'], '2.0-rc1', '<')) {
 			list ($options, $data) = $this->_doUpgrade20($options, $data);
 		}
@@ -193,8 +193,8 @@ class AVH_FDAS_Core
 		}
 		$options['general']['version'] = AVH_FDAS_Define::PLUGIN_VERSION;
 		$options['general']['dbversion'] = $this->_db_version;
-		$this->save_options($options);
-		$this->save_data($data);
+		$this->saveOptions($options);
+		$this->saveData($data);
 	}
 
 	/**
@@ -283,7 +283,7 @@ class AVH_FDAS_Core
 	 * @param array $query_array
 	 * @return array
 	 */
-	public function handleRESTcall ($query_array)
+	public function handleRestCall ($query_array)
 	{
 		$querystring = $this->BuildQuery($query_array);
 		$url = AVH_FDAS_Define::STOPFORUMSPAM_ENDPOINT . '?' . $querystring;
@@ -370,7 +370,7 @@ class AVH_FDAS_Core
 	/**
 	 * @param array $data
 	 */
-	public function set_options ($options)
+	private function _setOptions ($options)
 	{
 		$this->_options = $options;
 	}
@@ -378,7 +378,7 @@ class AVH_FDAS_Core
 	/**
 	 * return array
 	 */
-	public function get_options ()
+	public function getOptions ()
 	{
 		return ($this->_options);
 	}
@@ -387,11 +387,11 @@ class AVH_FDAS_Core
 	 * Save all current options and set the options
 	 *
 	 */
-	public function save_options ($options)
+	public function saveOptions ($options)
 	{
 		update_option($this->_db_options, $options);
 		wp_cache_flush(); // Delete cache
-		$this->set_options($options);
+		$this->_setOptions($options);
 	}
 
 	/**
@@ -400,13 +400,13 @@ class AVH_FDAS_Core
 	 *
 	 * @return none
 	 */
-	public function load_options ()
+	private function _loadOptions ()
 	{
 		$options = get_option($this->_db_options);
 		if (false === $options) { // New installation
-			$this->resetToDefault_options();
+			$this->_resetToDefaultOptions();
 		} else {
-			$this->set_options($options);
+			$this->_setOptions($options);
 		}
 	}
 
@@ -417,7 +417,7 @@ class AVH_FDAS_Core
 	 * @param string $option
 	 * @return mixed
 	 */
-	public function get_optionElement ($option, $key)
+	public function getOptionElement ($option, $key)
 	{
 		if (isset($this->_options[$option][$key])) {
 			$return = $this->_options[$option][$key]; // From Admin Page
@@ -431,10 +431,10 @@ class AVH_FDAS_Core
 	 * Reset to default options and save in DB
 	 *
 	 */
-	private function resetToDefault_options ()
+	private function _resetToDefaultOptions ()
 	{
 		$this->_options = $this->_default_options;
-		$this->save_options($this->_default_options);
+		$this->saveOptions($this->_default_options);
 	}
 
 	/******************************
@@ -445,7 +445,7 @@ class AVH_FDAS_Core
 	/**
 	 * @param array $data
 	 */
-	public function set_data ($data)
+	private function _setData ($data)
 	{
 		$this->_data = $data;
 	}
@@ -453,7 +453,7 @@ class AVH_FDAS_Core
 	/**
 	 * @return array
 	 */
-	public function get_data ()
+	public function getData ()
 	{
 		return ($this->_data);
 	}
@@ -463,11 +463,11 @@ class AVH_FDAS_Core
 	 * @param array $data
 	 *
 	 */
-	public function save_data ($data)
+	public function saveData ($data)
 	{
 		update_option($this->_db_data, $data);
 		wp_cache_flush(); // Delete cache
-		$this->set_data($data);
+		$this->_setData($data);
 	}
 
 	/**
@@ -475,13 +475,13 @@ class AVH_FDAS_Core
 	 *
 	 * @return array
 	 */
-	public function load_data ()
+	private function _loadData ()
 	{
 		$data = get_option($this->_db_data);
 		if (false === $data) { // New installation
-			$this->resetToDefault_data();
+			$this->_resetToDefaultData();
 		} else {
-			$this->set_data($data);
+			$this->_setData($data);
 		}
 		return;
 	}
@@ -494,7 +494,7 @@ class AVH_FDAS_Core
 	 * @return mixed
 	 * @since 0.1
 	 */
-	public function get_dataElement ($option, $key)
+	public function getDataElement ($option, $key)
 	{
 		if ($this->_data[$option][$key]) {
 			$return = $this->_data[$option][$key];
@@ -508,10 +508,10 @@ class AVH_FDAS_Core
 	 * Reset to default data and save in DB
 	 *
 	 */
-	private function resetToDefault_data ()
+	private function _resetToDefaultData ()
 	{
 		$this->_data = $this->_default_data;
-		$this->save_data($this->_default_data);
+		$this->saveData($this->_default_data);
 	}
 
 	/**
@@ -525,7 +525,7 @@ class AVH_FDAS_Core
 	/**
 	 * @return the $_db_nonces
 	 */
-	public function get_db_nonces ()
+	public function getDbNonces ()
 	{
 		return $this->_db_nonces;
 	}
@@ -533,7 +533,7 @@ class AVH_FDAS_Core
 	/**
 	 * @return the $_default_nonces
 	 */
-	public function get_default_nonces ()
+	public function getDefaultNonces ()
 	{
 		return $this->_default_nonces;
 	}

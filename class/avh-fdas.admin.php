@@ -75,7 +75,7 @@ final class AVH_FDAS_Admin
 		if (version_compare(PHP_VERSION, '5', '<')) {
 			add_filter('transient_update_plugins', array(&$this, 'filterDisableUpgrade'));
 		}
-		add_filter('set-screen-option', array(&$this, 'filterSet_Screen_Option'), 10, 3);
+		add_filter('set-screen-option', array(&$this, 'filterSetScreenOption'), 10, 3);
 		return;
 	}
 
@@ -105,24 +105,24 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionAdminMenu ()
 	{
-		add_menu_page('AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG, array(&$this, 'doMenuOverview'));
-		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas'), __('Overview', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array(&$this, 'doMenuOverview'));
-		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_GENERAL, array(&$this, 'doMenuGeneralOptions'));
-		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array(&$this, 'doMenu3rdPartyOptions'));
+		add_menu_page('AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG, array(&$this, 'menuOverview'));
+		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas'), __('Overview', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array(&$this, 'menuOverview'));
+		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_GENERAL, array(&$this, 'menuGeneralOptions'));
+		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array(&$this, 'menu3rdPartyOptions'));
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array(&$this, 'doMenu_IP_Cache_Log'));
+			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array(&$this, 'menuIpCacheLog'));
 		}
-		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_FAQ, array(&$this, 'doMenuFAQ'));
+		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_FAQ, array(&$this, 'menuFaq'));
 
 		// Add actions for menu pages
-		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array(&$this, 'actionLoadPageHook_Overview'));
-		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array(&$this, 'actionLoadPageHook_General'));
-		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array(&$this, 'actionLoadPageHook_3rd_party'));
-		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array(&$this, 'actionLoadPageHook_faq'));
+		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array(&$this, 'actionLoadPagehookOverview'));
+		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array(&$this, 'actionLoadPagehookGeneral'));
+		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array(&$this, 'actionLoadPagehook3rdParty'));
+		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array(&$this, 'actionLoadPagehookFaq'));
 		
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'handle_PostGet_IP_Cache_Log'), 5);
-			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'actionLoadPageHook_ip_cache'));
+			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'actionLoadPagehookHandlePostGetIpCacheLog'), 5);
+			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array(&$this, 'actionLoadPagehookIpCacheLog'));
 		}
 		
 		// Register Styles and Scripts
@@ -205,7 +205,7 @@ final class AVH_FDAS_Admin
 	 * Setup everything needed for the Overview page
 	 *
 	 */
-	public function actionLoadPageHook_Overview ()
+	public function actionLoadPagehookOverview ()
 	{
 		add_meta_box('avhfdasBoxStats', __('Statistics', 'avh-fdas'), array(&$this, 'metaboxMenuOverview'), $this->_hooks['avhfdas_menu_overview'], 'normal', 'core');
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
@@ -224,7 +224,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	public function doMenuOverview ()
+	public function menuOverview ()
 	{
 		global $screen_layout_columns;
 		// This box can't be unselectd in the the Screen Options
@@ -276,7 +276,7 @@ final class AVH_FDAS_Admin
 		echo '<table>';
 		echo '<tbody>';
 		echo '<tr class="first">';
-		$data = $this->_core->get_data();
+		$data = $this->_core->getData();
 		$spam_count = $data['counters'];
 		krsort($spam_count);
 		$have_spam_count_data = false;
@@ -309,8 +309,8 @@ final class AVH_FDAS_Admin
 		echo '</tbody></table></div>';
 		echo '<div class="versions">';
 		echo '<p>';
-		$use_sfs = $this->_core->get_optionElement('general', 'use_sfs');
-		$use_php = $this->_core->get_optionElement('general', 'use_php');
+		$use_sfs = $this->_core->getOptionElement('general', 'use_sfs');
+		$use_php = $this->_core->getOptionElement('general', 'use_php');
 		if ($use_sfs || $use_php) {
 			echo __('Checking with ', 'avh-fdas');
 			echo ($use_sfs ? '<span class="b">' . __('Stop Forum Spam', 'avh-fdas') . '</span>' : '');
@@ -327,7 +327,7 @@ final class AVH_FDAS_Admin
 		echo '<div class="versions">';
 		echo '<p>';
 		echo 'IP caching is ';
-		if (0 == $this->_core->get_optionElement('general', 'useipcache')) {
+		if (0 == $this->_core->getOptionElement('general', 'useipcache')) {
 			echo '<span class="b">disabled</span>';
 			echo '</p></div>';
 		} else {
@@ -377,7 +377,7 @@ final class AVH_FDAS_Admin
 	 * Setup the General page
 	 *
 	 */
-	public function actionLoadPageHook_General ()
+	public function actionLoadPagehookGeneral ()
 	{
 		add_meta_box('avhfdasBoxGeneral', 'General', array(&$this, 'metaboxGeneral'), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
 		add_meta_box('avhfdasBoxIPCache', 'IP Caching', array(&$this, 'metaboxIPCache'), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
@@ -400,7 +400,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	public function doMenuGeneralOptions ()
+	public function menuGeneralOptions ()
 	{
 		global $screen_layout_columns;
 		$options_general[] = array('avhfdas[general][diewithmessage]', __('Show message', 'avh-fdas'), 'checkbox', 1, __('Show a message when the connection has been terminated.', 'avh-fdas'));
@@ -418,8 +418,8 @@ final class AVH_FDAS_Admin
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_generaloptions');
 			$formoptions = $_POST['avhfdas'];
-			$options = $this->_core->get_options();
-			$data = $this->_core->get_data();
+			$options = $this->_core->getOptions();
+			$data = $this->_core->getData();
 			$all_data = array_merge($options_general, $options_blacklist, $options_whitelist, $options_ipcache, $options_cron);
 			foreach ($all_data as $option) {
 				$section = substr($option[0], strpos($option[0], '[') + 1);
@@ -468,8 +468,8 @@ final class AVH_FDAS_Admin
 					wp_clear_scheduled_hook('avhfdas_clean_ipcache');
 				}
 			}
-			$this->_core->save_options($options);
-			$this->_core->save_data($data);
+			$this->_core->saveOptions($options);
+			$this->_core->saveData($data);
 			$this->_message = __('Options saved', 'avh-fdas');
 			$this->_status = 'updated fade';
 		}
@@ -506,7 +506,7 @@ final class AVH_FDAS_Admin
 			}
 		}
 		$this->_displayMessage();
-		$actual_options = array_merge($this->_core->get_options(), $this->_core->get_data());
+		$actual_options = array_merge($this->_core->getOptions(), $this->_core->getData());
 		$hide2 = '';
 		switch ($screen_layout_columns) {
 			case 2:
@@ -603,7 +603,7 @@ final class AVH_FDAS_Admin
 	 * Setup everything needed for the 3rd party menu
 	 *
 	 */
-	public function actionLoadPageHook_3rd_party ()
+	public function actionLoadPagehook3rdParty ()
 	{
 		add_meta_box('avhfdasBoxSFS', 'Stop Forum Spam', array(&$this, 'metaboxMenu3rdParty_SFS'), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
 		add_meta_box('avhfdasBoxPHP', 'Project Honey Pot', array(&$this, 'metaboxMenu3rdParty_PHP'), $this->_hooks['avhfdas_menu_3rd_party'], 'side', 'core');
@@ -623,7 +623,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	public function doMenu3rdPartyOptions ()
+	public function menu3rdPartyOptions ()
 	{
 		global $screen_layout_columns;
 		$options_sfs[] = array('avhfdas[general][use_sfs]', __('Check with Stop Forum Spam', 'avh-fdas'), 'checkbox', 1, __('If checked, the visitor\'s IP will be checked with Stop Forum Spam', 'avh-fdas'));
@@ -643,7 +643,7 @@ final class AVH_FDAS_Admin
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_options');
 			$formoptions = $_POST['avhfdas'];
-			$options = $this->_core->get_options();
+			$options = $this->_core->getOptions();
 			$all_data = array_merge($options_sfs, $options_php);
 			foreach ($all_data as $option) {
 				$section = substr($option[0], strpos($option[0], '[') + 1);
@@ -668,13 +668,13 @@ final class AVH_FDAS_Admin
 				$options['general']['use_php'] = 0;
 				$note = '<br \><br \>' . __('You can not use Project Honey Pot without an API key. Use of Project Honey Pot has been disabled', 'avh-fdas');
 			}
-			$this->_core->save_options($options);
+			$this->_core->saveOptions($options);
 			$this->_message = __('Options saved', 'avh-fdas');
 			$this->_message .= $note;
 			$this->_status = 'updated fade';
 			$this->_displayMessage();
 		}
-		$actual_options = array_merge($this->_core->get_options(), $this->_core->get_data());
+		$actual_options = array_merge($this->_core->getOptions(), $this->_core->getData());
 		$hide2 = '';
 		switch ($screen_layout_columns) {
 			case 2:
@@ -741,7 +741,7 @@ final class AVH_FDAS_Admin
 	 * Setup everything needed for the FAQ page
 	 *
 	 */
-	public function actionLoadPageHook_faq ()
+	public function actionLoadPagehookFaq ()
 	{
 		add_meta_box('avhfdasBoxFAQ', __('F.A.Q.', 'avh-fdas'), array(&$this, 'metaboxFAQ'), $this->_hooks['avhfdas_menu_faq'], 'normal', 'core');
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
@@ -760,7 +760,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @return none
 	 */
-	public function doMenuFAQ ()
+	public function menuFaq ()
 	{
 		global $screen_layout_columns;
 		// This box can't be unselectd in the the Screen Options
@@ -888,7 +888,7 @@ final class AVH_FDAS_Admin
 	 * Setup everything needed for the IP Cache page
 	 *
 	 */
-	public function actionLoadPageHook_ip_cache ()
+	public function actionLoadPagehookIpCacheLog ()
 	{
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
@@ -907,7 +907,7 @@ final class AVH_FDAS_Admin
 	 * Handles the Get and Post after a submit on the IP cache Log page
 	 * @WordPress Action load-$page_hook
 	 */
-	public function handle_PostGet_IP_Cache_Log ()
+	public function actionLoadPagehookHandlePostGetIpCacheLog ()
 	{
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
 		add_screen_option('per_page', array('label'=>_x('IP\'s', 'ip\'s per page (screen options)'), 'default'=>20, 'option'=>'ipcachelog_per_page'));
@@ -933,7 +933,7 @@ final class AVH_FDAS_Admin
 			foreach ($ips as $ip) {
 				switch ($doaction) {
 					case 'deleted':
-						$this->_db->deleteIP($ip);
+						$this->_db->deleteIp($ip);
 						$deleted ++;
 						break;
 				}
@@ -973,7 +973,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * Displays the IP cache Log
 	 */
-	public function doMenu_IP_Cache_Log ()
+	public function menuIpCacheLog ()
 	{
 		global $screen_layout_columns, $ip_status;
 		if (! empty($this->_ip_cache_list->messages)) {
@@ -1100,7 +1100,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterCommentRowActions ($actions, $comment)
 	{
-		if (('' != $this->_core->get_optionElement('sfs', 'sfsapikey')) && isset($comment->comment_approved) && 'spam' == $comment->comment_approved) {
+		if (('' != $this->_core->getOptionElement('sfs', 'sfsapikey')) && isset($comment->comment_approved) && 'spam' == $comment->comment_approved) {
 			$report_url = clean_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
 			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">' . __('Report & Delete', 'avh-fdas') . '</a>';
 		}
@@ -1116,7 +1116,7 @@ final class AVH_FDAS_Admin
 	 * @param unknown_type $option
 	 * @param unknown_type $value
 	 */
-	public function filterSet_Screen_Option ($error_value, $option, $value)
+	public function filterSetScreenOption ($error_value, $option, $value)
 	{
 		$return = $error_value;
 		
@@ -1153,7 +1153,7 @@ final class AVH_FDAS_Admin
 			if (! current_user_can('edit_post', $comment->comment_post_ID)) {
 				$this->_comment_footer_die(__('You are not allowed to edit comments on this post.'));
 			}
-			$options = $this->_core->get_options();
+			$options = $this->_core->getOptions();
 			// If we use IP Cache and the Reported IP isn't spam, delete it from the IP cache.
 			if (1 == $options['general']['useipcache']) {
 				$ip_info = $this->_db->getIP($comment->comment_author_IP);
@@ -1185,7 +1185,7 @@ final class AVH_FDAS_Admin
 		$i = esc_html($_REQUEST['i']);
 		$extra = '&m=' . AVH_FDAS_Define::ERROR_INVALID_REQUEST . '&i=' . $i;
 		if (AVH_Security::verifyNonce($_REQUEST['_avhnonce'], $a . $e . $i)) {
-			$all = get_option($this->_core->get_db_nonces());
+			$all = get_option($this->_core->getDbNonces());
 			$extra = '&m=' . AVH_FDAS_Define::ERROR_NOT_REPORTED . '&i=' . $i;
 			if (isset($all[$_REQUEST['_avhnonce']])) {
 				$this->_handleReportSpammer($a, $e, $i);
@@ -1209,7 +1209,7 @@ final class AVH_FDAS_Admin
 	{
 		$email = empty($email) ? 'meseaffibia@gmail.com' : $email;
 		$url = 'http://www.stopforumspam.com/post.php';
-		wp_remote_post($url, array('body'=>array('username'=>$username, 'ip_addr'=>$ip_addr, 'email'=>$email, 'api_key'=>$this->_core->get_optionElement('sfs', 'sfsapikey'))));
+		wp_remote_post($url, array('body'=>array('username'=>$username, 'ip_addr'=>$ip_addr, 'email'=>$email, 'api_key'=>$this->_core->getOptionElement('sfs', 'sfsapikey'))));
 	}
 
 	/**
@@ -1225,7 +1225,7 @@ final class AVH_FDAS_Admin
 		}
 		$ip = $_REQUEST['i'];
 		if (AVH_Security::verifyNonce($_REQUEST['_avhnonce'], $ip)) {
-			$blacklist = $this->_core->get_dataElement('lists', 'blacklist');
+			$blacklist = $this->_core->getDataElement('lists', 'blacklist');
 			if (! empty($blacklist)) {
 				$b = explode("\r\n", $blacklist);
 			} else {
@@ -1250,11 +1250,11 @@ final class AVH_FDAS_Admin
 	 */
 	private function _setBlacklistOption ($blacklist)
 	{
-		$data = $this->_core->get_data();
+		$data = $this->_core->getData();
 		natsort($blacklist);
 		$blacklist_formatted = implode("\r\n", $blacklist);
 		$data['lists']['blacklist'] = $blacklist_formatted;
-		$this->_core->save_data($data);
+		$this->_core->saveData($data);
 	}
 
 	/**
@@ -1264,11 +1264,11 @@ final class AVH_FDAS_Admin
 	 */
 	private function _setWhitelistOption ($b)
 	{
-		$data = $this->_core->get_data();
+		$data = $this->_core->getData();
 		natsort($b);
 		$x = implode("\r\n", $b);
 		$data['lists']['whitelist'] = $x;
-		$this->_core->save_data($data);
+		$this->_core->saveData($data);
 	}
 
 	/**
@@ -1284,8 +1284,8 @@ final class AVH_FDAS_Admin
 			wp_schedule_event(time(), 'daily', 'avhfdas_clean_nonce');
 		}
 		// Setup nonces db in options
-		if (! (get_option($this->_core->get_db_nonces()))) {
-			update_option($this->_core->get_db_nonces(), $this->_core->get_default_nonces());
+		if (! (get_option($this->_core->getDbNonces()))) {
+			update_option($this->_core->getDbNonces(), $this->_core->getDefaultNonces());
 			wp_cache_flush(); // Delete cache
 		}
 		// Setup the DB Tables

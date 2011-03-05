@@ -24,7 +24,6 @@ class AVH_FDAS_SpamCheck
 	private $_useStopForumSpam;
 	private $_useProjectHoneyPot;
 	private $_useCache;
-	private $_MailMessage;
 	private $_visiting_ip;
 	private $_core_options;
 	private $_core_data;
@@ -51,9 +50,9 @@ class AVH_FDAS_SpamCheck
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class('Core', 'plugin', TRUE);
 		$this->_ipcachedb = $this->_classes->load_class('DB', 'plugin', TRUE);
-		$this->_visiting_ip = AVH_Visitor::getUserIP();
-		$this->_core_options = $this->_core->get_options();
-		$this->_core_data = $this->_core->get_data();
+		$this->_visiting_ip = AVH_Visitor::getUserIp();
+		$this->_core_options = $this->_core->getOptions();
+		$this->_core_data = $this->_core->getData();
 		$this->spaminfo = null;
 		$this->spammer_detected = FALSE;
 		$this->ip_in_white_list = FALSE;
@@ -73,9 +72,9 @@ class AVH_FDAS_SpamCheck
 			if ($this->ip_in_white_list === FALSE) {
 				$this->checkBlacklist();
 				if ($this->spammer_detected === FALSE) {
-					$this->doIPCacheCheck();
+					$this->doIpCacheCheck();
 					if ($this->ip_in_cache === FALSE) {
-						$this->doProjectHoneyPotIPCheck();
+						$this->doProjectHoneyPotIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -94,10 +93,10 @@ class AVH_FDAS_SpamCheck
 			if ($this->ip_in_white_list === FALSE) {
 				$this->checkBlacklist();
 				if ($this->spammer_detected === FALSE) {
-					$this->doIPCacheCheck();
+					$this->doIpCacheCheck();
 					if ($this->ip_in_cache === FALSE) {
-						$this->doStopForumSpamIPCheck();
-						$this->doProjectHoneyPotIPCheck();
+						$this->doStopForumSpamIpCheck();
+						$this->doProjectHoneyPotIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -116,10 +115,10 @@ class AVH_FDAS_SpamCheck
 			if ($this->ip_in_white_list === FALSE) {
 				$this->checkBlacklist();
 				if ($this->spammer_detected === FALSE) {
-					$this->doIPCacheCheck();
+					$this->doIpCacheCheck();
 					if ($this->ip_in_cache === FALSE) {
-						$this->doStopForumSpamIPCheck();
-						$this->doProjectHoneyPotIPCheck();
+						$this->doStopForumSpamIpCheck();
+						$this->doProjectHoneyPotIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -138,10 +137,10 @@ class AVH_FDAS_SpamCheck
 			if ($this->ip_in_white_list === FALSE) {
 				$this->checkBlacklist();
 				if ($this->spammer_detected === FALSE) {
-					$this->doIPCacheCheck();
+					$this->doIpCacheCheck();
 					if ($this->ip_in_cache === FALSE) {
-						$this->doStopForumSpamIPCheck();
-						$this->doProjectHoneyPotIPCheck();
+						$this->doStopForumSpamIpCheck();
+						$this->doProjectHoneyPotIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -153,7 +152,7 @@ class AVH_FDAS_SpamCheck
 	 * Check the cache for the IP
 	 *
 	 */
-	public function doIPCacheCheck ()
+	public function doIpCacheCheck ()
 	{
 		$this->ip_in_cache = FALSE;
 		if (1 == $this->_core_options['general']['useipcache']) {
@@ -178,7 +177,7 @@ class AVH_FDAS_SpamCheck
 	 * Sets the spaminfo['detected'] to true when a spammer is detected.
 	 *
 	 */
-	public function doProjectHoneyPotIPCheck ()
+	public function doProjectHoneyPotIpCheck ()
 	{
 		if ($this->_core_options['general']['use_php']) {
 			
@@ -238,9 +237,9 @@ class AVH_FDAS_SpamCheck
 			}
 		} else {
 			if (is_object($this->ip_in_cache)) {
-				$this->_ipcachedb->updateIP($this->_visiting_ip);
+				$this->_ipcachedb->updateIp($this->_visiting_ip);
 			} else {
-				$this->_ipcachedb->insertIP($this->_visiting_ip, 0);
+				$this->_ipcachedb->insertIp($this->_visiting_ip, 0);
 			}
 		}
 	}
@@ -266,12 +265,12 @@ class AVH_FDAS_SpamCheck
 	 * @param $ip Visitor's IP
 	 * @return $spaminfo Query result
 	 */
-	public function doStopForumSpamIPCheck ()
+	public function doStopForumSpamIpCheck ()
 	{
 		if ($this->_core_options['general']['use_sfs']) {
 			
 			$time_start = microtime(true);
-			$result = $this->_core->handleRESTcall($this->_core->getRestIPLookup($this->_visiting_ip));
+			$result = $this->_core->handleRestCall($this->_core->getRestIPLookup($this->_visiting_ip));
 			$time_end = microtime(true);
 			$this->spaminfo['sfs'] = $this->_convertStopForumSpamCall($result);
 			$time = $time_end - $time_start;
@@ -308,7 +307,7 @@ class AVH_FDAS_SpamCheck
 	{
 		if ($this->_core_options['general']['useblacklist']) {
 			
-			$found = $this->_checkList($this->_core->get_dataElement('lists', 'blacklist'));
+			$found = $this->_checkList($this->_core->getDataElement('lists', 'blacklist'));
 			if ($found) {
 				$this->spammer_detected = TRUE;
 				$this->spaminfo['blacklist']['time'] = 'Blacklisted';
@@ -328,7 +327,7 @@ class AVH_FDAS_SpamCheck
 	public function checkWhitelist ()
 	{
 		if ($this->_core_options['general']['usewhitelist']) {
-			$found = $this->_checkList($this->_core->get_dataElement('lists', 'whitelist'));
+			$found = $this->_checkList($this->_core->getDataElement('lists', 'whitelist'));
 			if ($found) {
 				$this->ip_in_white_list = true;
 			
@@ -496,7 +495,7 @@ class AVH_FDAS_SpamCheck
 		$blacklist_die = (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']);
 		if (1 == $this->_core_options['general']['useipcache']) {
 			if ($sfs_die || $php_die) {
-				$this->_ipcachedb->insertIP($this->_visiting_ip, 1);
+				$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
 			}
 		}
 		if ($sfs_die || $php_die || $blacklist_die) {
@@ -535,7 +534,7 @@ class AVH_FDAS_SpamCheck
 		$this->_updateSpamCounter();
 		
 		// Update Last seen value
-		$this->_ipcachedb->updateIP($this->_visiting_ip);
+		$this->_ipcachedb->updateIp($this->_visiting_ip);
 		
 		// Terminate the connection
 		$this->_doTerminateConnection();
@@ -554,7 +553,7 @@ class AVH_FDAS_SpamCheck
 		} else {
 			$this->_core_data['counters'][$period] = 1;
 		}
-		$this->_core->save_data($this->_core_data);
+		$this->_core->saveData($this->_core_data);
 	}
 
 	/**
@@ -596,6 +595,6 @@ class AVH_FDAS_SpamCheck
 	 */
 	public function getHtmlHoneyPotUrl ()
 	{
-		return ('<p><div style="display: none;"><a href="' . $this->_core->get_optionElement('php', 'honeypoturl') . '">AVH Software</a></div></p>');
+		return ('<p><div style="display: none;"><a href="' . $this->_core->getOptionElement('php', 'honeypoturl') . '">AVH Software</a></div></p>');
 	}
 }

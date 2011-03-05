@@ -11,7 +11,7 @@ if (! class_exists('AVH_Visitor')) {
 		 *
 		 * @return string
 		 */
-		public static function getUserIP ()
+		public static function getUserIp ()
 		{
 			$ip = array();
 			foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {

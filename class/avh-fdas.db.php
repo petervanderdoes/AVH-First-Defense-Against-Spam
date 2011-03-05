@@ -53,7 +53,7 @@ class AVH_FDAS_DB
 	 * @param $ip
 	 * @return ip Object (false if not found)
 	 */
-	public function deleteIP($ip)
+	public function deleteIp($ip)
 	{
 		global $wpdb;
 		$ip  = AVH_Common::getIp2long($ip);
@@ -66,7 +66,7 @@ class AVH_FDAS_DB
 		}
 	}
 
-	public function getIPs ($query_vars)
+	public function getIpCache ($query_vars)
 	{
 		global $wpdb;
 		
@@ -139,7 +139,7 @@ class AVH_FDAS_DB
 	 * @param $spam number
 	 * @return Object (false if not found)
 	 */
-	public function insertIP ($ip, $spam)
+	public function insertIp ($ip, $spam)
 	{
 		global $wpdb;
 		$ip  = AVH_Common::getIp2long($ip);
@@ -157,7 +157,7 @@ class AVH_FDAS_DB
 	 * @param $ip string
 	 * @return Object (false if not found)
 	 */
-	public function updateIP ($ip)
+	public function updateIp ($ip)
 	{
 		global $wpdb;
 		$ip  = AVH_Common::getIp2long($ip);
@@ -174,7 +174,7 @@ class AVH_FDAS_DB
 	 * Mark an known IP as spam
 	 * @param $ip
 	 */
-	public function doMarkIPSpam ($ip)
+	public function doMarkIpAsSpam ($ip)
 	{
 		global $wpdb;
 		$ip  = AVH_Common::getIp2long($ip);
@@ -184,7 +184,7 @@ class AVH_FDAS_DB
 		}
 	}
 
-	public function countIPs ()
+	public function countIps ()
 	{
 		global $wpdb;
 		$key = md5( __CLASS__ . '::'.__FUNCTION__ ) ;

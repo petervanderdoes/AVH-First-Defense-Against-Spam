@@ -35,20 +35,20 @@ class AVH_FDAS_Public
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class('Core', 'plugin', TRUE);
 		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', TRUE);
-		$this->_core_options = $this->_core->get_options();
+		$this->_core_options = $this->_core->getOptions();
 		// Public actions and filters
 		if (1 == $this->_core_options['general']['commentnonce']) {
 			add_action('comment_form', array(&$this, 'actionAddNonceFieldToComment'));
 			add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
 		}
-		add_action('get_header', array(&$this, 'handleAction_get_header'));
+		add_action('get_header', array(&$this, 'handleActionGetHeader'));
 		
-		add_action('pre_comment_on_post', array(&$this, 'handleAction_pre_comment_on_post'), 1);
-		add_action('preprocess_comment', array(&$this, 'handleAction_preprocess_comment'), 1);
-		add_action('register_post', array(&$this, 'handleAction_register_post'), 10, 3);
+		add_action('pre_comment_on_post', array(&$this, 'handleActionPreCommentOnPost'), 1);
+		add_action('preprocess_comment', array(&$this, 'handleActionPreprocessComment'), 1);
+		add_action('register_post', array(&$this, 'handleActionRegisterPost'), 10, 3);
 		// Private actions for Cron
 		add_action('avhfdas_clean_nonce', array(&$this, 'actionHandleCronCleanNonce'));
-		add_action('avhfdas_clean_ipcache', array(&$this, 'actionHandleCronCleanIPCache'));
+		add_action('avhfdas_clean_ipcache', array(&$this, 'actionHandleCronCleanIpCache'));
 	}
 
 	/**
@@ -78,8 +78,8 @@ class AVH_FDAS_Public
 	public function actionHandleCronCleanNonce ()
 	{
 		$removed = 0;
-		$options = $this->_core->get_options();
-		$all = get_option($this->_core->get_db_nonces());
+		$options = $this->_core->getOptions();
+		$all = get_option($this->_core->getDbNonces());
 		if (is_array($all)) {
 			foreach ($all as $key => $value) {
 				if (! AVH_Security::verifyNonce($key, $value)) {
@@ -87,7 +87,7 @@ class AVH_FDAS_Public
 					$removed ++;
 				}
 			}
-			update_option($this->_core->get_db_nonces(), $all);
+			update_option($this->_core->getDbNonces(), $all);
 		}
 		if ($options['general']['cron_nonces_email']) {
 			$to = get_option('admin_email');
@@ -103,10 +103,10 @@ class AVH_FDAS_Public
 	 * @WordPress: Action avhfdas_clean_ipcache
 	 *
 	 */
-	public function actionHandleCronCleanIPCache ()
+	public function actionHandleCronCleanIpCache ()
 	{
 		global $wpdb;
-		$options = $this->_core->get_options();
+		$options = $this->_core->getOptions();
 		$date = current_time('mysql');
 		$days = $options['ipcache']['daystokeep'];
 		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ((TO_DAYS(%s))-(TO_DAYS(added))) > %d", $date, $days));
@@ -134,10 +134,10 @@ class AVH_FDAS_Public
 			if (empty($commentdata['comment_type'])) { // If it's a trackback or pingback this has a value
 				$nonce = wp_create_nonce('avh-first-defense-against-spam_' . $commentdata['comment_post_ID']);
 				if ($nonce != $_POST['_avh_first_defense_against_spam']) {
-					if (1 == $this->_core->get_optionElement('general', 'emailsecuritycheck')) {
+					if (1 == $this->_core->getOptionElement('general', 'emailsecuritycheck')) {
 						$to = get_option('admin_email');
-						$ip = AVH_Visitor::getUserIP();
-						$sfs_apikey = $this->_core->get_optionElement('sfs', 'sfsapikey');
+						$ip = AVH_Visitor::getUserIp();
+						$sfs_apikey = $this->_core->getOptionElement('sfs', 'sfsapikey');
 						$commentdata['comment_author_email'] = empty($commentdata['comment_author_email']) ? 'meseaffibia@gmail.com' : $commentdata['comment_author_email'];
 						$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Comment security check failed', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
 						if (isset($_POST['_avh_first_defense_against_spam'])) {
@@ -172,15 +172,15 @@ class AVH_FDAS_Public
 					// Only keep track if we have the ability to report add Stop Forum Spam
 					if ('' != $sfs_apikey) {
 						// Prevent a spam attack to overflow the database.
-						if (! ($this->_checkDB_Nonces($q['_avhnonce']))) {
-							$option = get_option($this->_core->get_db_nonces());
+						if (! ($this->_checkDbNonces($q['_avhnonce']))) {
+							$option = get_option($this->_core->getDbNonces());
 							$option[$q['_avhnonce']] = $q['a'] . $q['e'] . $q['i'];
-							update_option($this->_core->get_db_nonces(), $option);
+							update_option($this->_core->getDbNonces(), $option);
 						}
 					}
 					$m = __('<p>Cheating huh</p>', 'avh-fdas');
 					$m .= __('<p>Protected by: AVH First Defense Against Spam</p>', 'avh-fdas');
-					if ($this->_core->get_optionElement('php', 'usehoneypot')) {
+					if ($this->_core->getOptionElement('php', 'usehoneypot')) {
 						$m .= $this->_spamcheck->getHtmlHoneyPotUrl();
 					}
 					wp_die($m);
@@ -196,10 +196,10 @@ class AVH_FDAS_Public
 	 * @param string $nonce
 	 * @return boolean
 	 */
-	private function _checkDB_Nonces ($nonce)
+	private function _checkDbNonces ($nonce)
 	{
 		$return = false;
-		$all = get_option($this->_core->get_db_nonces());
+		$all = get_option($this->_core->getDbNonces());
 		if (is_array($all)) {
 			if (array_key_exists($nonce, $all)) {
 				$return = true;
@@ -212,7 +212,7 @@ class AVH_FDAS_Public
 	 * Check during the action get_header
 	 *
 	 */
-	public function handleAction_get_header ()
+	public function handleActionGetHeader ()
 	{
 		if (! (did_action('preprocess_comment'))) {
 			$this->_spamcheck->doSpamcheckMain();
@@ -224,7 +224,7 @@ class AVH_FDAS_Public
 	 * This might be deprecated as we're checking earlier now.
 	 *
 	 */
-	public function handleAction_preprocess_comment ($comment_data)
+	public function handleActionPreprocessComment ($comment_data)
 	{
 		$this->_spamcheck->doSpamcheckCommentPosted();
 	}
@@ -235,7 +235,7 @@ class AVH_FDAS_Public
 	 *
 	 * @param int $comment_id
 	 */
-	public function handleAction_pre_comment_on_post ($comment_id)
+	public function handleActionPreCommentOnPost ($comment_id)
 	{
 		$this->_spamcheck->doSpamcheckPreCommentPost();
 	}
@@ -244,7 +244,7 @@ class AVH_FDAS_Public
 	 * Handle when a user registers
 	 *
 	 */
-	public function handleAction_register_post ($sanitized_user_login, $user_email, $errors)
+	public function handleActionRegisterPost ($sanitized_user_login, $user_email, $errors)
 	{
 		$this->_spamcheck->doSpamcheckUserRegister();
 	}
