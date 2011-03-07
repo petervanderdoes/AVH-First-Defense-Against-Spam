@@ -198,20 +198,6 @@ class AVH_FDAS_DB
 		return $return;
 	}
 
-	/**
-	 * Mark an known IP as spam
-	 * @param $ip
-	 */
-	public function doMarkIpAsSpam ($ip)
-	{
-		global $wpdb;
-		$ip  = AVH_Common::getIp2long($ip);
-		$ip_info = $this->getIP($ip);
-		if (is_object($ip_info)) {
-			$result = $wpdb->query($wpdb->prepare("UPDATE $wpdb->avhfdasipcache SET spam=1 WHERE ip=%s", $ip));
-		}
-	}
-
 	public function countIps ()
 	{
 		global $wpdb;

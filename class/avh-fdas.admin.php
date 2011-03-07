@@ -1156,9 +1156,10 @@ final class AVH_FDAS_Admin
 			$options = $this->_core->getOptions();
 			// If we use IP Cache and the Reported IP isn't spam, delete it from the IP cache.
 			if (1 == $options['general']['useipcache']) {
-				$ip_info = $this->_db->getIP($comment->comment_author_IP);
+				$ip_info = $this->_db->getIP($comment->comment_author_IP, OBJECT);
 				if (is_object($ip_info) && 0 == $ip_info->spam) {
-					$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ip=INET_ATON(%s)", $comment->comment_author_IP));
+					$comment_date = get_comment_date('Y-m-d H:i:s',$comment_id);
+					$result = $this->_db->updateIpCache(array('ip'=>$comment->comment_author_IP, 'spam'=>1 , 'lastseen'=>$comment_date));
 				}
 			}
 			$this->_handleReportSpammer($comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP);
