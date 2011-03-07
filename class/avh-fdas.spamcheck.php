@@ -219,15 +219,16 @@ class AVH_FDAS_SpamCheck
 	{
 		global $post;
 		
-		if ('/wp-comments-post.php' == $_SERVER['REQUEST_URI']) {
-			$title = isset($post->post_title) ? $post->post_title : '';
-			$id = isset($post->ID) ? $post->ID : 0;
-			// Trying to post a comment, lets determine which post they are trying to post at
-			$this->_accessing = sprintf(__('Commenting on:	"%s" ( %s )', 'avh-fdas'), apply_filters( 'the_title', $title, $id ), get_permalink($post->ID));
-		} else {
-			$this->_accessing = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
-		}
 		if (TRUE === $this->spammer_detected) {
+			if ('/wp-comments-post.php' == $_SERVER['REQUEST_URI']) {
+				$title = isset($post->post_title) ? $post->post_title : '';
+				$id = isset($post->ID) ? $post->ID : 0;
+				// Trying to post a comment, lets determine which post they are trying to post at
+				$this->_accessing = sprintf(__('Commenting on:	"%s" ( %s )', 'avh-fdas'), apply_filters('the_title', $title, $id), get_permalink($post->ID));
+			} else {
+				$this->_accessing = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+			}
+			
 			if (is_object($this->ip_in_cache)) {
 				$this->_handleSpammerCache();
 			} else {
