@@ -228,7 +228,12 @@ class AVH_FDAS_SpamCheck
 			} else {
 				$this->_accessing = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
 			}
-			
+			/*if (!empty($_POST)) {
+				$this->_accessing .= "\n".'$_POST data'."\n";
+				foreach ($_POST as $key => $value) {
+					$this->_accessing .= $key .' => '.$value."\n";
+				}
+			}*/
 			if (is_object($this->ip_in_cache)) {
 				$this->_handleSpammerCache();
 			} else {
