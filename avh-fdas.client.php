@@ -24,4 +24,3 @@ function avh_FDAS_init ()
 	$avhfdas_public = new AVH_FDAS_Public();
 } // End avh_FDAS__init()
 add_action('plugins_loaded', 'avh_FDAS_init');
-?>

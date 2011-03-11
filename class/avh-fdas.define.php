@@ -7,7 +7,7 @@ final class AVH_FDAS_Define
 	/**
 	 * General Constants
 	 */
-	const PLUGIN_VERSION = '3.0.3';
+	const PLUGIN_VERSION = '3.1.1';
 	const PLUGIN_README_URL = 'http://svn.wp-plugins.org/avh-first-defense-against-spam/trunk/readme.txt';
 	const PLUGIN_FILE = 'avh-first-defense-against-spam/avh-fdas.php';
 	/**
@@ -27,5 +27,6 @@ final class AVH_FDAS_Define
 	const MENU_SLUG_OVERVIEW = 'avh-first-defense-against-spam';
 	const MENU_SLUG_GENERAL = 'avh-first-defense-against-spam-general';
 	const MENU_SLUG_3RD_PARTY = 'avh-first-defense-against-3rd-party';
+	const MENU_SLUG_IP_CACHE = 'avh-first-defense-against-spam-ip-cache-log';
 	const MENU_SLUG_FAQ = 'avh-first-defense-against-spam-faq';
 }
