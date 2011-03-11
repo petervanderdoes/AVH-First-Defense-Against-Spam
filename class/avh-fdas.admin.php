@@ -1279,7 +1279,6 @@ final class AVH_FDAS_Admin
 	public function installPlugin ()
 	{
 		global $wpdb;
-		require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
 		// Add Cron Job, the action is added in the Public class.
 		if (! wp_next_scheduled('avhfdas_clean_nonce')) {
 			wp_schedule_event(time(), 'daily', 'avhfdas_clean_nonce');
