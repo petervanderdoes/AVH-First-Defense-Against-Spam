@@ -243,7 +243,9 @@ class AVH_FDAS_SpamCheck
 			if (is_object($this->ip_in_cache)) {
 				$this->_ipcachedb->updateIpCache(array('ip'=>$this->_visiting_ip, 'lastseen'=>current_time('mysql')));
 			} else {
-				$this->_ipcachedb->insertIp($this->_visiting_ip, 0);
+				if (1 == $this->_core_options['general']['useipcache']) {
+					$this->_ipcachedb->insertIp($this->_visiting_ip, 0);
+				}
 			}
 		}
 	}
@@ -499,7 +501,9 @@ class AVH_FDAS_SpamCheck
 		$blacklist_die = (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']);
 		if (1 == $this->_core_options['general']['useipcache']) {
 			if ($sfs_die || $php_die) {
-				$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
+			if (1 == $this->_core_options['general']['useipcache']) {
+					$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
+				}
 			}
 		}
 		if ($sfs_die || $php_die || $blacklist_die) {
