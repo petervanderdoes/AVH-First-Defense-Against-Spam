@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AVH First Defense Against Spam\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 09:38-0500\n"
+"POT-Creation-Date: 2011-03-15 07:48-0500\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Peter van der Does <peter@avirtualhome.com>\n"
 "Language-Team: \n"
@@ -433,6 +433,10 @@ msgstr ""
 
 #: ../class/avh-fdas.admin.php:1154
 msgid "You are not allowed to edit comments on this post."
+msgstr ""
+
+#: ../class/avh-fdas.admin.php:1216
+msgid "Error reporting spammer"
 msgstr ""
 
 #: ../class/avh-fdas.core.php:123

@@ -1209,8 +1209,18 @@ final class AVH_FDAS_Admin
 	private function _handleReportSpammer ($username, $email, $ip_addr)
 	{
 		$email = empty($email) ? 'meseaffibia@gmail.com' : $email;
-		$url = 'http://www.stopforumspam.com/post.php';
-		wp_remote_post($url, array('body'=>array('username'=>$username, 'ip_addr'=>$ip_addr, 'email'=>$email, 'api_key'=>$this->_core->getOptionElement('sfs', 'sfsapikey'))));
+		$url = 'http://www.stopforumspam.com/add.php';
+		$call = wp_remote_post($url, array('body'=>array('username'=>$username, 'ip_addr'=>$ip_addr, 'email'=>$email, 'api_key'=>$this->_core->getOptionElement('sfs', 'sfsapikey'))));
+		if (is_wp_error($call) || 200 != $call['response']['code']) {
+			$to = get_option('admin_email');
+			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error reporting spammer', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+			if (is_wp_error($call)) {
+				$message = $call->get_error_messages();
+			} else {
+				$message[] = $call['body'];
+			}
+			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
+		}
 	}
 
 	/**
