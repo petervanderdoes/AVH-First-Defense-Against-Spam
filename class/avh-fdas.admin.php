@@ -1101,7 +1101,11 @@ final class AVH_FDAS_Admin
 	public function filterCommentRowActions ($actions, $comment)
 	{
 		if (('' != $this->_core->getOptionElement('sfs', 'sfsapikey')) && isset($comment->comment_approved) && 'spam' == $comment->comment_approved) {
-			$report_url = clean_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
+			if (AVH_Common::getWordpressVersion() > 3.0) {
+				$report_url = esc_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
+			} else {
+				$report_url = clean_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
+			}
 			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">' . __('Report & Delete', 'avh-fdas') . '</a>';
 		}
 		return $actions;
