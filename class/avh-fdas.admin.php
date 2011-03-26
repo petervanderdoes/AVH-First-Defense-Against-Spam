@@ -1148,7 +1148,7 @@ final class AVH_FDAS_Admin
 	public function actionAjaxReportComment ()
 	{
 		global $wpdb;
-		if ('avh-fdas-reportcomment' == $_POST['action']) {
+		if ('avh-fdas-reportcomment' == $_REQUEST['action']) {
 			$comment_id = absint($_REQUEST['id']);
 			check_ajax_referer('report-comment_' . $comment_id);
 			if (! $comment = get_comment($comment_id)) {
