@@ -45,8 +45,8 @@ final class AVH_FDAS_Admin
 		// The Classes Registery
 		$this->_classes = AVH_FDAS_Classes::getInstance();
 		// Initialize the plugin
-		$this->_core = $this->_classes->load_class('Core', 'plugin', TRUE);
-		$this->_db = $this->_classes->load_class('DB', 'plugin', TRUE);
+		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
+		$this->_db = $this->_classes->load_class('DB', 'plugin', true);
 		// Admin URL and Pagination
 		$this->_core->admin_base_url = $this->_settings->siteurl . '/wp-admin/admin.php?page=';
 		if (isset($_GET['pagination'])) {
@@ -890,7 +890,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionLoadPagehookIpCacheLog ()
 	{
-		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
+		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', true);
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
@@ -909,7 +909,7 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionLoadPagehookHandlePostGetIpCacheLog ()
 	{
-		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', TRUE);
+		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', true);
 		add_screen_option('per_page', array('label'=>_x('IP\'s', 'ip\'s per page (screen options)'), 'default'=>20, 'option'=>'ipcachelog_per_page'));
 		$pagenum = $this->_ip_cache_list->get_pagenum();
 		$doaction = $this->_ip_cache_list->current_action();
@@ -1310,12 +1310,12 @@ final class AVH_FDAS_Admin
 			if (! empty($wpdb->collate))
 				$charset_collate .= ' COLLATE ' . $wpdb->collate;
 		}
-		if ($wpdb->get_var('show tables like \'' . $wpdb->avhfdasipcache . '\'') === NULL) {
+		if ($wpdb->get_var('show tables like \'' . $wpdb->avhfdasipcache . '\'') === null) {
 			$sql = 'CREATE TABLE `' . $wpdb->avhfdasipcache . '` (
-  					`ip` int(10) unsigned NOT NULL,
-  					`added` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-  					`lastseen` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-  					`spam` tinyint(1) NOT NULL,
+  					`ip` int(10) unsigned NOT null,
+  					`added` datetime NOT null DEFAULT \'0000-00-00 00:00:00\',
+  					`lastseen` datetime NOT null DEFAULT \'0000-00-00 00:00:00\',
+  					`spam` tinyint(1) NOT null,
   					PRIMARY KEY (`ip`),
   					KEY `added` (`added`),
   					KEY `lastseen` (`lastseen`)
@@ -1407,7 +1407,7 @@ final class AVH_FDAS_Admin
 			}
 			switch ($option[2]) {
 				case 'checkbox':
-					$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . esc_attr($option[3]) . '" ' . checked('1', $option_actual[$section][$option_key], FALSE) . ' />' . "\n";
+					$input_type = '<input type="checkbox" id="' . $option[0] . '" name="' . $option[0] . '" value="' . esc_attr($option[3]) . '" ' . checked('1', $option_actual[$section][$option_key], false) . ' />' . "\n";
 					$explanation = $option[4];
 					break;
 				case 'dropdown':
@@ -1415,7 +1415,7 @@ final class AVH_FDAS_Admin
 					$seltext = explode('/', $option[4]);
 					$seldata = '';
 					foreach ((array) $selvalue as $key => $sel) {
-						$seldata .= '<option value="' . $sel . '" ' . selected($sel, $option_actual[$section][$option_key], FALSE) . ' >' . ucfirst($seltext[$key]) . '</option>' . "\n";
+						$seldata .= '<option value="' . $sel . '" ' . selected($sel, $option_actual[$section][$option_key], false) . ' >' . ucfirst($seltext[$key]) . '</option>' . "\n";
 					}
 					$input_type = '<select id="' . $option[0] . '" name="' . $option[0] . '">' . $seldata . '</select>' . "\n";
 					$explanation = $option[5];

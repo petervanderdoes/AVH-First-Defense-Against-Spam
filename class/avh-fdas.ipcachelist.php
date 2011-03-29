@@ -31,8 +31,8 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 		$this->_classes = AVH_FDAS_Classes::getInstance();
 		// Initialize the plugin
-		$this->_core = $this->_classes->load_class('Core', 'plugin', TRUE);
-		$this->_ipcachedb = $this->_classes->load_class('DB', 'plugin', TRUE);
+		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
+		$this->_ipcachedb = $this->_classes->load_class('DB', 'plugin', true);
 		
 		$this->screen= 'avh_f_d_a_s_page_avh_first_defense_against_spam_ip_cache_';
 		$default_status = get_user_option( 'avhfdas_ip_cache_list_last_view' );
@@ -58,7 +58,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 
 	function ajax_user_can() {
-		return TRUE;
+		return true;
 	}
 
 	function prepare_items() {
@@ -121,7 +121,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 
 	function _search_callback( ) {
 		static $term;
-		if ( is_null( $term ) )
+		if ( null === $term )
 			$term = stripslashes( $_REQUEST['s'] );
 		// @todo Create search funtion for IP
 		return false;

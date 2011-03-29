@@ -90,7 +90,7 @@ class AVH_FDAS_Core
 		/**
 		 * Default Nonces
 		 */
-		$this->_default_nonces_data = NULL;
+		$this->_default_nonces_data = null;
 		$this->_default_nonces = array('default'=>$this->_default_nonces_data);
 
 		//add_action('init', array(&$this,'handleInitializePlugin'),10);
@@ -266,8 +266,8 @@ class AVH_FDAS_Core
 		$new_options = $old_options;
 		$new_data = $old_data;
 		$sql = 'ALTER TABLE `' . $wpdb->avhfdasipcache . '`
-				CHANGE COLUMN `date` `added` DATETIME  NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-				ADD COLUMN `lastseen` DATETIME  NOT NULL DEFAULT \'0000-00-00 00:00:00\' AFTER `added`,
+				CHANGE COLUMN `date` `added` DATETIME  NOT null DEFAULT \'0000-00-00 00:00:00\',
+				ADD COLUMN `lastseen` DATETIME  NOT null DEFAULT \'0000-00-00 00:00:00\' AFTER `added`,
 				DROP INDEX `date`,
 				ADD INDEX `added`(`added`),
 				ADD INDEX `lastseen`(`lastseen`);';
@@ -326,7 +326,7 @@ class AVH_FDAS_Core
 	 * @param string $convention
 	 * @return string
 	 */
-	public function BuildQuery ($array = NULL, $convention = '%s')
+	public function BuildQuery ($array = null, $convention = '%s')
 	{
 		if (count($array) == 0) {
 			return '';

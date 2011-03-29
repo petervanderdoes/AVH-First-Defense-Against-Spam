@@ -44,7 +44,7 @@ class AVH_FDAS_DB
 		// Query database
 		$_result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %s", $_ip));
 		
-		if (NULL === $_result) {
+		if (null === $_result) {
 			return false;
 		}
 		if ($_output == OBJECT) {
@@ -81,7 +81,7 @@ class AVH_FDAS_DB
 	{
 		global $wpdb;
 		
-		$defaults = array('ip'=>'', 'added'=>'', 'lastseen'=>'', 'status'=>'all', 'search'=>'', 'offset'=>'', 'number'=>'', 'orderby'=>'', 'order'=>'DESC', 'count'=>FALSE);
+		$defaults = array('ip'=>'', 'added'=>'', 'lastseen'=>'', 'status'=>'all', 'search'=>'', 'offset'=>'', 'number'=>'', 'orderby'=>'', 'order'=>'DESC', 'count'=>false);
 		$this->_query_vars = wp_parse_args($query_vars, $defaults);
 		extract($this->_query_vars, EXTR_SKIP);
 		

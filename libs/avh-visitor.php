@@ -26,7 +26,7 @@ if (! class_exists('AVH_Visitor')) {
 				return '0.0.0.0';
 			}
 			$ip = array_values(array_unique($ip));
-			$return = NULL;
+			$return = null;
 			// In PHP 5.3 and up the function filter_var can be used, much quicker as the regular expression check
 			if (AVH_Common::isPHP('5.3')) {
 				foreach ($ip as $i) {
@@ -50,7 +50,7 @@ if (! class_exists('AVH_Visitor')) {
 					}
 				}
 			}
-			if (NULL === $return) {
+			if (null === $return) {
 				$return = '0.0.0.0';
 			}
 			return $return;

@@ -33,8 +33,8 @@ class AVH_FDAS_Public
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 		$this->_classes = AVH_FDAS_Classes::getInstance();
 		// Initialize the plugin
-		$this->_core = $this->_classes->load_class('Core', 'plugin', TRUE);
-		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', TRUE);
+		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
+		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', true);
 		$this->_core_options = $this->_core->getOptions();
 		// Public actions and filters
 		if (1 == $this->_core_options['general']['commentnonce']) {

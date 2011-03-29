@@ -29,7 +29,7 @@ if (! class_exists('AVH_Common')) {
 		 */
 		public static function getWordpressVersion ()
 		{
-			static $_version = NULL;
+			static $_version = null;
 			if (! isset($_version)) {
 				// Include WordPress version
 				require (ABSPATH . WPINC . '/version.php');
@@ -46,10 +46,10 @@ if (! class_exists('AVH_Common')) {
 		 */
 		public static function isPHP ($version = '5.0.0')
 		{
-			static $_is_php = NULL;
+			static $_is_php = null;
 			$version = (string) $version;
 			if (! isset($_is_php[$version])) {
-				$_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
+				$_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? false : true;
 			}
 			return $_is_php[$version];
 		}

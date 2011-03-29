@@ -69,7 +69,7 @@ if (! class_exists('AVH_Class_Registry')) {
 		 * @param boolean $store Store the class in the registry
 		 * @return object
 		 */
-		public function load_class ($class, $type = 'system', $store = FALSE)
+		public function load_class ($class, $type = 'system', $store = false)
 		{
 			if (isset($this->_objects[$class])) {
 				return ($this->_objects[$class]);
