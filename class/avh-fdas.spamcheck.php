@@ -75,6 +75,7 @@ class AVH_FDAS_SpamCheck
 					$this->doIpCacheCheck();
 					if ($this->ip_in_cache === FALSE) {
 						$this->doProjectHoneyPotIpCheck();
+						$this->doSpamhausIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -97,6 +98,7 @@ class AVH_FDAS_SpamCheck
 					if ($this->ip_in_cache === FALSE) {
 						$this->doStopForumSpamIpCheck();
 						$this->doProjectHoneyPotIpCheck();
+						$this->doSpamhausIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -119,6 +121,7 @@ class AVH_FDAS_SpamCheck
 					if ($this->ip_in_cache === FALSE) {
 						$this->doStopForumSpamIpCheck();
 						$this->doProjectHoneyPotIpCheck();
+						$this->doSpamhausIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -141,6 +144,7 @@ class AVH_FDAS_SpamCheck
 					if ($this->ip_in_cache === FALSE) {
 						$this->doStopForumSpamIpCheck();
 						$this->doProjectHoneyPotIpCheck();
+						$this->doSpamhausIpCheck();
 					}
 				}
 				$this->handleResults();
@@ -212,7 +216,41 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
-	 * Function to handle everythign when a potential spammer is detected.
+	 * Do Project Honey Pot with Visitor
+	 *
+	 * Sets the spaminfo['detected'] to true when a spammer is detected.
+	 *
+	 */
+	public function doSpamhausIpCheck ()
+	{
+		if (TRUE) {
+			
+			$reverse_ip = implode('.', array_reverse(explode('.', $this->_visiting_ip)));
+			$this->spaminfo['sh'] = NULL;
+			//
+			// Check the IP against spamhaus.org
+			//
+			$time_start = microtime(true);
+			$lookup = $reverse_ip . '.zen.spamhaus.org.';
+			$info = explode('.', gethostbyname($lookup));
+			
+			if ('127' == $info[0] && (int) $info[3] < 10) {
+				$this->spammer_detected = TRUE;
+				$time_end = microtime(true);
+				$time = $time_end - $time_start;
+				$this->spaminfo['sh']['time'] = $time;
+				if ($info[3] == "2" || $info[3] == "3") {
+					$this->spaminfo['sh']['which'] = 'The Spamhaus Block List';
+				}
+				if ((int) $info[3] >= 4 && (int) $info[3] <= 7) {
+					$this->spaminfo['sh']['which'] = 'Exploits Block List';
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Function to handle everything when a potential spammer is detected.
 	 *
 	 */
 	public function handleResults ()
@@ -411,13 +449,16 @@ class AVH_FDAS_SpamCheck
 		// Email
 		$sfs_email = isset($this->spaminfo['sfs']) && (int) $this->_core_options['sfs']['whentoemail'] >= 0 && (int) $this->spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentoemail'];
 		$php_email = isset($this->spaminfo['php']) && (int) $this->_core_options['php']['whentoemail'] >= 0 && $this->spaminfo['php']['type'] >= $this->_core_options['php']['whentoemailtype'] && (int) $this->spaminfo['php']['score'] >= $this->_core_options['php']['whentoemail'];
-		if ($sfs_email || $php_email) {
+		$sh_email = isset($this->spaminfo['sh']);
+		
+		if ($sfs_email || $php_email || $sh_email) {
 			// General part of the email
 			$to = get_option('admin_email');
 			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
 			$message[] = sprintf(__('Spam IP:	%s', 'avh-fdas'), $this->_visiting_ip);
 			$message[] = $this->_accessing;
 			$message[] = '';
+			
 			// Stop Forum Spam Mail Part
 			if ($sfs_email) {
 				if ($this->spaminfo['sfs']['appears']) {
@@ -440,6 +481,7 @@ class AVH_FDAS_SpamCheck
 				$message[] = __('Stop Forum Spam has no information', 'avh-fdas');
 				$message[] = '';
 			}
+			
 			// Project Honey pot Mail Part
 			if ($php_email || $this->_core_options['sfs']['emailphp']) {
 				if ($this->spaminfo['php'] != null) {
@@ -487,6 +529,21 @@ class AVH_FDAS_SpamCheck
 				}
 				$message[] = '';
 			}
+			
+			// Spamhaus Mail part
+			if ($sh_email) {
+				if ($this->spaminfo['sh'] != NULL) {
+					$message[] = __('IP found at Spamhaus', 'avh-fdas');
+					$message[] = '	' . __('Information', 'avh-fdas');
+					$message[] = '	' . sprintf(__('IP classified in %s.', 'avh-fdas'), $this->spaminfo['sh']['which']);
+					$message[] = '	' . sprintf(__('Call took:			%s', 'avhafdas'), $this->spaminfo['sh']['time']);
+					$message[] = '	' . __('Connection terminated', 'avh-fdas');
+				} else {
+					$message[] = __('Spamhaus has no information', 'avh-fdas');
+				}
+				$message[] = '';
+			
+			}
 			// General End
 			if (! isset($this->spaminfo['blacklist'])) {
 				$blacklisturl = admin_url('admin.php?action=blacklist&i=') . $this->_visiting_ip . '&_avhnonce=' . AVH_Security::createNonce($this->_visiting_ip);
@@ -498,10 +555,11 @@ class AVH_FDAS_SpamCheck
 		// This should be the very last option.
 		$sfs_die = isset($this->spaminfo['sfs']) && $this->spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentodie'];
 		$php_die = isset($this->spaminfo['php']) && $this->spaminfo['php']['type'] >= $this->_core_options['php']['whentodietype'] && $this->spaminfo['php']['score'] >= $this->_core_options['php']['whentodie'];
+		$sh_die = isset($this->spaminfo['sh']);
 		$blacklist_die = (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']);
 		if (1 == $this->_core_options['general']['useipcache']) {
 			if ($sfs_die || $php_die) {
-			if (1 == $this->_core_options['general']['useipcache']) {
+				if (1 == $this->_core_options['general']['useipcache']) {
 					$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
 				}
 			}
@@ -584,7 +642,19 @@ class AVH_FDAS_SpamCheck
 				if (isset($this->spaminfo['blacklist']) && 'Blacklisted' == $this->spaminfo['blacklist']['time']) {
 					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] is registered in our <em>Blacklisted</em> database.', 'avh-fdas') . '<BR /></p>', $this->_visiting_ip);
 				} else {
-					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] is registered in the Stop Forum Spam or Project Honey Pot database.', 'avh-fdas') . '<BR />' . __('If you feel this is incorrect please contact them', 'avh-fdas') . '</p>', $this->_visiting_ip);
+					$where='';
+					if (isset($this->spaminfo['sfs'])) {
+						$where .= 'Stop Forum Spam ';
+					}
+					if (isset($this->spaminfo['php'])) {
+						$where .= ($where == ''?'':'and ');
+						$where .= 'Project Honey Pot ';
+					}
+					if (isset($this->spaminfo['sh'])) {
+						$where .= ($where == ''?'':'and ');
+						$where .= 'Spamhaus ';
+					}
+					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] is found at %s.', 'avh-fdas') . '<BR />' . __('If you feel this is incorrect please contact them.', 'avh-fdas') . '</p>', $this->_visiting_ip, $where);
 				}
 			}
 			$m .= '<p>' . __('Protected by: ', 'avh-fdas') . 'AVH First Defense Against Spam</p>';
