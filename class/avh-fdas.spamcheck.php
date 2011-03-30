@@ -521,13 +521,13 @@ class AVH_FDAS_SpamCheck
 		$sh_die = isset($this->_spaminfo['sh']);
 		$blacklist_die = (isset($this->_spaminfo['blacklist']) && 'Blacklisted' == $this->_spaminfo['blacklist']['time']);
 		if (1 == $this->_core_options['general']['useipcache']) {
-			if ($sfs_die || $php_die) {
+			if ($sfs_die || $php_die  || $sh_die) {
 				if (1 == $this->_core_options['general']['useipcache']) {
 					$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
 				}
 			}
 		}
-		if ($sfs_die || $php_die || $blacklist_die) {
+		if ($sfs_die || $php_die || $sh_die || $blacklist_die) {
 			// Update the counter
 			$this->_updateSpamCounter();
 			
