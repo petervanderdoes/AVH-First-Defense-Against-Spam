@@ -9,21 +9,24 @@ class AVH_FDAS_SpamCheck
 	 * @var AVH_FDAS_Core
 	 */
 	private $_core;
+	
 	/**
 	 * @var AVH_Settings_Registry
 	 */
 	private $_settings;
+	
 	/**
 	 * @var AVH_Class_registry
 	 */
 	private $_classes;
+	
 	/**
-	 * The $use_xx variables are used to determine if that specific 3rd party can used for that check.
-	 * For example: We can't use Stop Forum Spam to check every IP, only at comments and register.
+	 *
+	 * @var AVH_FDAS_DB
 	 */
-	private $_useStopForumSpam;
-	private $_useProjectHoneyPot;
-	private $_useCache;
+	private $_ipcachedb;
+	
+	
 	private $_visiting_ip;
 	private $_core_options;
 	private $_core_data;
@@ -33,12 +36,6 @@ class AVH_FDAS_SpamCheck
 	private $_ip_in_white_list;
 	private $_ip_in_cache;
 	private $_spaminfo;
-	
-	/**
-	 *
-	 * @var AVH_FDAS_DB
-	 */
-	private $_ipcachedb;
 	
 	/**
 	 * PHP5 Constructor
