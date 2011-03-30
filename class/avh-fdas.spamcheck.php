@@ -56,8 +56,8 @@ class AVH_FDAS_SpamCheck
 		$this->_spammer_detected = false;
 		$this->_ip_in_white_list = false;
 		$this->_ip_in_cache = false;
-		$this->_spamcheck_functions_array[00] = array($this, '_checkBlacklist()');
-		$this->_spamcheck_functions_array[01] = array($this, '_doIpCacheCheck()');
+		$this->_spamcheck_functions_array[00] = array($this, '_checkBlacklist');
+		$this->_spamcheck_functions_array[01] = array($this, '_doIpCacheCheck');
 		$this->_spamcheck_functions_array[05] = array($this, '_doIpCheckStopForumSpam');
 		$this->_spamcheck_functions_array[10] = array($this, '_doIpCheckProjectHoneyPot');
 		$this->_spamcheck_functions_array[11] = array($this, '_doIpCheckSpamhaus');
