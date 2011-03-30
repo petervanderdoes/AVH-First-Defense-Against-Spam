@@ -103,7 +103,6 @@ class AVH_FDAS_SpamCheck
 	 */
 	private function _doIpCacheCheck ()
 	{
-		$this->_ip_in_cache = false;
 		if (1 == $this->_core_options['general']['useipcache']) {
 			$time_start = microtime(true);
 			$this->_ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
