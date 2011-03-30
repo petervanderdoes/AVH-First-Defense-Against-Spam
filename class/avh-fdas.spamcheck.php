@@ -552,7 +552,7 @@ class AVH_FDAS_SpamCheck
 			$message[] = $this->_accessing;
 			$message[] = '';
 			$message[] = __('IP exists in the cache', 'avh-fdas');
-			$message[] = '	' . sprintf(__('Check took:			%s', 'avhafdas'), $this->_spaminfo['cache']['time']);
+			$message[] = '	' . sprintf(__('Check took:			%s', 'avh-fdas'), $this->_spaminfo['cache']['time']);
 			$message[] = '';
 			// General End
 			$blacklisturl = admin_url('admin.php?action=blacklist&i=') . $this->_visiting_ip . '&_avhnonce=' . AVH_Security::createNonce($this->_visiting_ip);
