@@ -999,7 +999,7 @@ final class AVH_FDAS_Admin
 		echo '</h2>';
 			
 		$this->_ip_cache_list->views();
-		echo '<form id="ipcachelist-form" action="" method="get">';
+		echo '<form id="ipcachelist-form" action="" method="post">';
 		echo '<input type="hidden" name="page" value="' . AVH_FDAS_Define::MENU_SLUG_IP_CACHE . '"';
 		echo '<input type="hidden" name="ip_status" value="' . esc_attr($ip_status) . '" />';
 		echo '<input type="hidden" name="pagegen_timestamp" value="' . esc_attr(current_time('mysql', 1)) . '" />';
