@@ -67,7 +67,7 @@ class AVH_FDAS_Core
 	public function __construct ()
 	{
 		$this->_settings = AVH_FDAS_Settings::getInstance();
-		$this->_db_version = 11;
+		$this->_db_version = 23;
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
 		$this->_db_options = 'avhfdas';
 		$this->_db_data = 'avhfdas_data';
@@ -167,6 +167,7 @@ class AVH_FDAS_Core
 		if ($options['general']['dbversion'] < 5) {
 			list ($options, $data) = $this->_doUpgrade22($options, $data);
 		}
+
 		// Add none existing sections and/or elements to the options
 		foreach ($this->_default_options as $section => $default_options) {
 			if (! array_key_exists($section, $options)) {
