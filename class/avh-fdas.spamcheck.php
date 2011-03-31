@@ -56,11 +56,11 @@ class AVH_FDAS_SpamCheck
 		$this->_spammer_detected = false;
 		$this->_ip_in_white_list = false;
 		$this->_ip_in_cache = false;
-		$this->_spamcheck_functions_array[00] = array($this, '_checkBlacklist');
-		$this->_spamcheck_functions_array[01] = array($this, '_doIpCacheCheck');
-		$this->_spamcheck_functions_array[05] = array($this, '_doIpCheckStopForumSpam');
-		$this->_spamcheck_functions_array[10] = array($this, '_doIpCheckProjectHoneyPot');
-		$this->_spamcheck_functions_array[11] = array($this, '_doIpCheckSpamhaus');
+		$this->_spamcheck_functions_array[00] = array('Blacklist');
+		$this->_spamcheck_functions_array[01] = array('IpCache');
+		$this->_spamcheck_functions_array[05] = array('StopForumSpam');
+		$this->_spamcheck_functions_array[10] = array('ProjectHoneyPot');
+		$this->_spamcheck_functions_array[11] = array('Spamhaus');
 	}
     /**
      *
@@ -73,6 +73,7 @@ class AVH_FDAS_SpamCheck
         if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
             unset($this->_spamcheck_functions_array[05]); // @TODO make this more flexible
             $this->_doSpamCheckFunctions();
+            $this->_spamcheck_functions_array[05] = array(&$this, '_doIpCheckStopForumSpam');
         }
     }
 
@@ -101,7 +102,7 @@ class AVH_FDAS_SpamCheck
 	 * Check the cache for the IP
 	 *
 	 */
-	private function _doIpCacheCheck ()
+	private function _doIpCheckCache ()
 	{
 		if (1 == $this->_core_options['general']['useipcache']) {
 			$time_start = microtime(true);
@@ -116,7 +117,6 @@ class AVH_FDAS_SpamCheck
 			}
 		}
 	}
-
     /**
      * Run through all the functions that will do spamchecking.
      *
@@ -127,8 +127,28 @@ class AVH_FDAS_SpamCheck
         ksort($this->_spamcheck_functions_array);
         $this->_checkWhitelist();
         if ($this->_ip_in_white_list === false) {
-            foreach ($this->_spamcheck_functions_array as $key => $method) {
-                call_user_func($method);
+            foreach ($this->_spamcheck_functions_array as $key => $spam_check) {
+                // Hardcode the built in Spam Check options as this is faster then using call_user_func.
+                switch ($spam_check) {
+                    case 'Blacklist':
+                        $this->_checkBlacklist();
+                        break;
+                    case 'IpCache':
+                        $this->_doIpCheckCache();
+                        break;
+                    case 'StopForumSpam':
+                        $this->_doIpCheckStopForumSpam();
+                        break;
+                    case 'ProjectHoneyPot':
+                        $this->__doIpCheckProjectHoneyPot();
+                        break;
+                    case 'Spamhaus':
+                        $this->_doIpCheckSpamhaus();
+                        break;
+                    default:
+                        call_user_func($spam_check);
+                        break;
+                }
                 if ($this->_spammer_detected || is_object($this->_ip_in_cache)) {
                     break;
                 }
