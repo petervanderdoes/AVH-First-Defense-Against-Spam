@@ -129,7 +129,7 @@ class AVH_FDAS_SpamCheck
         if ($this->_ip_in_white_list === false) {
             foreach ($this->_spamcheck_functions_array as $key => $method) {
                 call_user_func($method);
-                if ($this->_spammer_detected) {
+                if ($this->_spammer_detected || is_object($this->_ip_in_cache)) {
                     break;
                 }
             }

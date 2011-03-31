@@ -213,7 +213,7 @@ class AVH_FDAS_Public
 	 */
 	public function handleActionGetHeader ()
 	{
-		if (! (did_action('preprocess_comment'))) {
+		if (! (did_action('pre_comment_on_post'))) {
 			$this->_spamcheck->doSpamcheckMain();
 		}
 	}
