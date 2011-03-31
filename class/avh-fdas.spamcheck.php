@@ -284,6 +284,7 @@ class AVH_FDAS_SpamCheck
 		if (isset($data['ip'])) {
 			return ($data['ip']);
 		}
+		return(array('Error'=>array('Unknown Return'=>'Stop Forum Spam returned an unknow string: '.var_export($data,true))));
 	}
 
 	/**
