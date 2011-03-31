@@ -499,7 +499,7 @@ class AVH_FDAS_SpamCheck
 					$message[] = __('IP found at Spamhaus', 'avh-fdas');
 					$message[] = '	' . __('Information', 'avh-fdas');
 					$message[] = '	' . sprintf(__('Classification:		%s.', 'avh-fdas'), $this->_spaminfo['sh']['which']);
-					$message[] = '	' . sprintf(__('Call took:			%s', 'avhafdas'), $this->_spaminfo['sh']['time']);
+					$message[] = '	' . sprintf(__('Call took:		%s', 'avhafdas'), $this->_spaminfo['sh']['time']);
 					$message[] = '	' . __('Connection terminated', 'avh-fdas');
 				} else {
 					$message[] = __('Spamhaus has no information', 'avh-fdas');
