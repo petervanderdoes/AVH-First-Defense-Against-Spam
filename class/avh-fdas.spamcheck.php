@@ -140,7 +140,7 @@ class AVH_FDAS_SpamCheck
                         $this->_doIpCheckStopForumSpam();
                         break;
                     case 'ProjectHoneyPot':
-                        $this->__doIpCheckProjectHoneyPot();
+                        $this->_doIpCheckProjectHoneyPot();
                         break;
                     case 'Spamhaus':
                         $this->_doIpCheckSpamhaus();
