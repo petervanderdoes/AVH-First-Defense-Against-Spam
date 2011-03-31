@@ -57,8 +57,8 @@ class AVH_FDAS_SpamCheck
 		$this->_ip_in_white_list = false;
 		$this->_ip_in_cache = false;
 		$this->_spamcheck_functions_array[00] = 'Blacklist';
-		$this->_spamcheck_functions_array[01] = 'IpCache';
-		$this->_spamcheck_functions_array[05] = 'StopForumSpam';
+		$this->_spamcheck_functions_array[01] = 'StopForumSpam';
+		$this->_spamcheck_functions_array[02] = 'IpCache';
 		$this->_spamcheck_functions_array[10] = 'ProjectHoneyPot';
 		$this->_spamcheck_functions_array[11] = 'Spamhaus';
 	}
@@ -71,9 +71,9 @@ class AVH_FDAS_SpamCheck
     public function doSpamcheckMain ()
     {
         if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
-            unset($this->_spamcheck_functions_array[05]); // @TODO make this more flexible
+            unset($this->_spamcheck_functions_array[01]); // @TODO make this more flexible
             $this->_doSpamCheckFunctions();
-            $this->_spamcheck_functions_array[05] = array(&$this, '_doIpCheckStopForumSpam');
+            $this->_spamcheck_functions_array[01] = array(&$this, '_doIpCheckStopForumSpam');
         }
     }
 
