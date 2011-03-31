@@ -186,7 +186,7 @@ class AVH_FDAS_SpamCheck
 	 */
 	private function _doIpCheckSpamhaus ()
 	{
-		if (true) {
+	    if ($this->_core_options['general']['use_sh']) {
 			
 			$reverse_ip = implode('.', array_reverse(explode('.', $this->_visiting_ip)));
 			$this->_spaminfo['sh'] = null;

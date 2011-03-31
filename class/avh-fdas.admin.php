@@ -607,6 +607,7 @@ final class AVH_FDAS_Admin
 	{
 		add_meta_box('avhfdasBoxSFS', 'Stop Forum Spam', array(&$this, 'metaboxMenu3rdParty_SFS'), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
 		add_meta_box('avhfdasBoxPHP', 'Project Honey Pot', array(&$this, 'metaboxMenu3rdParty_PHP'), $this->_hooks['avhfdas_menu_3rd_party'], 'side', 'core');
+		add_meta_box('avhfdasBoxSH', 'Spamhaus', array(&$this, 'metaboxMenu3rdParty_SH'), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
 		add_filter('screen_layout_columns', array(&$this, 'filterScreenLayoutColumns'), 10, 2);
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
@@ -640,11 +641,13 @@ final class AVH_FDAS_Admin
 		$options_php[] = array('avhfdas[php][whentodie]', __('Termination score threshold', 'avh-fdas'), 'text', 3, __('When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>', 'avh-fdas'));
 		$options_php[] = array('avhfdas[php][usehoneypot]', __('Use Honey Pot', 'avh-fdas'), 'checkbox', 1, __('If you have set up a Honey Pot you can select to have the URL below to be added to the message when terminating the connection.<BR />You have to select <em>Show Message</em> in the General Options for this to work.', 'avh-fdas'));
 		$options_php[] = array('avhfdas[php][honeypoturl]', __('Honey Pot URL', 'avh-fdas'), 'text', 30, __('The link to the Honey Pot as suggested by Project Honey Pot.', 'avh-fdas'));
+		$options_sh[] = array('avhfdas[general][use_sh]', __('Check with Spamhaus', 'avh-fdas'), 'checkbox', 1, __('If checked, the visitor\'s IP will be checked at Spamhaus', 'avh-fdas'));
+		
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_options');
 			$formoptions = $_POST['avhfdas'];
 			$options = $this->_core->getOptions();
-			$all_data = array_merge($options_sfs, $options_php);
+			$all_data = array_merge($options_sfs, $options_php, $options_sh);
 			foreach ($all_data as $option) {
 				$section = substr($option[0], strpos($option[0], '[') + 1);
 				$section = substr($section, 0, strpos($section, ']['));
@@ -686,6 +689,7 @@ final class AVH_FDAS_Admin
 		}
 		$data['options_sfs'] = $options_sfs;
 		$data['options_php'] = $options_php;
+		$data['options_sh'] = $options_sh;
 		$data['actual_options'] = $actual_options;
 		echo '<div class="wrap avhfdas-wrap">';
 		echo '<div class="wrap">';
@@ -737,6 +741,17 @@ final class AVH_FDAS_Admin
 		echo $this->_printOptions($data['options_php'], $data['actual_options']);
 	}
 
+	/**
+	 * Metabox Display the 3rd Party Project Honey Pot Options
+	 * @param $data array The data is filled menu setup
+	 * @return none
+	 */
+	public function metaboxMenu3rdParty_SH ($data)
+	{
+		//echo '<p>' . __('To check a visitor at Spamhaus you must enable it below.', 'avh-fdas');
+		echo $this->_printOptions($data['options_sh'], $data['actual_options']);
+	}
+	
 	/**
 	 * Setup everything needed for the FAQ page
 	 *
