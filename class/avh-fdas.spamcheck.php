@@ -56,11 +56,11 @@ class AVH_FDAS_SpamCheck
 		$this->_spammer_detected = false;
 		$this->_ip_in_white_list = false;
 		$this->_ip_in_cache = false;
-		$this->_spamcheck_functions_array[00] = array('Blacklist');
-		$this->_spamcheck_functions_array[01] = array('IpCache');
-		$this->_spamcheck_functions_array[05] = array('StopForumSpam');
-		$this->_spamcheck_functions_array[10] = array('ProjectHoneyPot');
-		$this->_spamcheck_functions_array[11] = array('Spamhaus');
+		$this->_spamcheck_functions_array[00] = 'Blacklist';
+		$this->_spamcheck_functions_array[01] = 'IpCache';
+		$this->_spamcheck_functions_array[05] = 'StopForumSpam';
+		$this->_spamcheck_functions_array[10] = 'ProjectHoneyPot';
+		$this->_spamcheck_functions_array[11] = 'Spamhaus';
 	}
     /**
      *
