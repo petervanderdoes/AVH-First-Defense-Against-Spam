@@ -156,8 +156,10 @@ class AVH_FDAS_SpamCheck
 						call_user_func($spam_check);
 						break;
 				}
-				if ($this->_spammer_detected || ($_did_sfs && (is_object($this->_ip_in_cache) && $this->_ip_in_cache->spam == "0"))) {
-					break;
+				if ($this->_spammer_detected || ($_did_sfs && is_object($this->_ip_in_cache ))) {
+					if( is_object($this->_ip_in_cache ) || $this->_checkTerminateConnection()) {
+						break;
+					}
 				}
 			}
 			$this->_handleResults();
@@ -528,18 +530,13 @@ class AVH_FDAS_SpamCheck
 		}
 		// Check if we have to terminate the connection.
 		// This should be the very last option.
-		$sfs_die = isset($this->_spaminfo['sfs']) && $this->_spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentodie'];
-		$php_die = isset($this->_spaminfo['php']) && $this->_spaminfo['php']['type'] >= $this->_core_options['php']['whentodietype'] && $this->_spaminfo['php']['score'] >= $this->_core_options['php']['whentodie'];
-		$sh_die = isset($this->_spaminfo['sh']);
-		$blacklist_die = (isset($this->_spaminfo['blacklist']) && 'Blacklisted' == $this->_spaminfo['blacklist']['time']);
-		if (1 == $this->_core_options['general']['useipcache']) {
-			if ($sfs_die || $php_die || $sh_die) {
-				if (1 == $this->_core_options['general']['useipcache']) {
-					$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
-				}
+		$_die = $this->_checkTerminateConnection();
+		
+		if (_die) {
+			if (1 == $this->_core_options['general']['useipcache']) {
+				$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
 			}
-		}
-		if ($sfs_die || $php_die || $sh_die || $blacklist_die) {
+				
 			// Update the counter
 			$this->_updateSpamCounter();
 			// Terminate the connection
@@ -594,6 +591,14 @@ class AVH_FDAS_SpamCheck
 		$this->_core->saveData($this->_core_data);
 	}
 
+	private function _checkTerminateConnection(){
+		$sfs_die = isset($this->_spaminfo['sfs']) && $this->_spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentodie'];
+		$php_die = isset($this->_spaminfo['php']) && $this->_spaminfo['php']['type'] >= $this->_core_options['php']['whentodietype'] && $this->_spaminfo['php']['score'] >= $this->_core_options['php']['whentodie'];
+		$sh_die = isset($this->_spaminfo['sh']);
+		$blacklist_die = (isset($this->_spaminfo['blacklist']) && 'Blacklisted' == $this->_spaminfo['blacklist']['time']);
+		
+		return ($sfs_die || $php_die || $sh_die || $blacklist_die);
+	}
 	/**
 	 *
 	 * Terminates the connection.
