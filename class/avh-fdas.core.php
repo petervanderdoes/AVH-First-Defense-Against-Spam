@@ -76,7 +76,7 @@ class AVH_FDAS_Core
 		 * Default options - General Purpose
 		 */
 		$this->_default_options_general = array('version'=>AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion'=>$this->_db_version, 'use_sfs'=>1, 'use_php'=>0, 'use_sh' => 0, 'useblacklist'=>1, 'usewhitelist'=>1, 'diewithmessage'=>1, 'emailsecuritycheck'=>0, 'useipcache'=>0, 'commentnonce'=>0, 'cron_nonces_email'=>0, 'cron_ipcache_email'=>0);
-		$this->_default_options_spam = array('whentoemail'=>- 1, 'emailphp'=>0, 'whentodie'=>3, 'sfsapikey'=>'', 'error'=>0);
+		$this->_default_options_spam = array('whentoemail'=>- 1, 'whentodie'=>3, 'sfsapikey'=>'', 'error'=>0);
 		$this->_default_options_honey = array('whentoemailtype'=>- 1, 'whentoemail'=>- 1, 'whentodietype'=>4, 'whentodie'=>25, 'phpapikey'=>'', 'usehoneypot'=>0, 'honeypoturl'=>'');
 		$this->_default_options_ipcache = array('email'=>0, 'daystokeep'=>7);
 		$this->_default_options = array('general'=>$this->_default_options_general, 'sfs'=>$this->_default_options_spam, 'php'=>$this->_default_options_honey, 'ipcache'=>$this->_default_options_ipcache);
@@ -168,6 +168,10 @@ class AVH_FDAS_Core
 			list ($options, $data) = $this->_doUpgrade22($options, $data);
 		}
 
+		if ($options['general']['dbversion'] < 23) {
+			list ($options, $data) = $this->_doUpgrade23($options, $data);
+		}
+		
 		// Add none existing sections and/or elements to the options
 		foreach ($this->_default_options as $section => $default_options) {
 			if (! array_key_exists($section, $options)) {
@@ -278,6 +282,22 @@ class AVH_FDAS_Core
 		return array($new_options, $new_data);
 	}
 
+	/**
+	 * Upgrade DB 23
+	 *
+	 * Change: Remove option to email Project Honey Pot info when Stop Forum Spam threshold is reached
+	 * @param array $old_options
+	 * @param array $old_data
+	 * @return array
+	 *
+	 */
+	private function _doUpgrade23 ($old_options, $old_data)
+	{
+		$new_options = $old_options;
+		$new_data = $old_data;
+		unset ($new_options['general']['emailphp']);
+		return array($new_options, $new_data);
+	}
 	/**
 	 * Actual Rest Call
 	 *

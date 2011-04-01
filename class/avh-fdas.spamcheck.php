@@ -457,12 +457,9 @@ class AVH_FDAS_SpamCheck
 				$message[] = sprintf(__('For more information: http://www.stopforumspam.com/search?q=%s'), $this->_visiting_ip);
 				$message[] = '';
 			}
-			if (isset($this->_spaminfo['sfs']) && 'no' == $this->_spaminfo['sfs']['appears']) {
-				$message[] = __('Stop Forum Spam has no information', 'avh-fdas');
-				$message[] = '';
-			}
+
 			// Project Honey pot Mail Part
-			if ($php_email || $this->_core_options['sfs']['emailphp']) {
+			if ($php_email) {
 				if ($this->_spaminfo['php'] != null) {
 					$message[] = __('Checked at Project Honey Pot', 'avh-fdas');
 					$message[] = '	' . __('Information', 'avh-fdas');
