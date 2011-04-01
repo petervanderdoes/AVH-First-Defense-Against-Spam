@@ -629,7 +629,6 @@ final class AVH_FDAS_Admin
 		global $screen_layout_columns;
 		$options_sfs[] = array('avhfdas[general][use_sfs]', __('Check with Stop Forum Spam', 'avh-fdas'), 'checkbox', 1, __('If checked, the visitor\'s IP will be checked with Stop Forum Spam', 'avh-fdas'));
 		$options_sfs[] = array('avhfdas[sfs][whentoemail]', __('Email threshold', 'avh-fdas'), 'text', 3, __('When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.', 'avh-fdas'));
-		//$options_sfs[] = array('avhfdas[sfs][emailphp]', __('Email Project Honey Pot Info', 'avh-fdas'), 'checkbox', 1, __('Always email Project Honey Pot info when Stop Forum Spam email threshold is reached, disregarding the email threshold set for Project Honey Pot. This only works when you select to check with Project Honey Pot as well.', 'avh-fdas'));
 		$options_sfs[] = array('avhfdas[sfs][whentodie]', __('Termination threshold', 'avh-fdas'), 'text', 3, __('When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>', 'avh-fdas'));
 		$options_sfs[] = array('avhfdas[sfs][sfsapikey]', __('API Key', 'avh-fdas'), 'text', 15, __('You need a Stop Forum Spam API key to report spam.', 'avh-fdas'));
 		$options_sfs[] = array('avhfdas[sfs][error]', __('Email error', 'avh-fdas'), 'checkbox', 1, __('Receive an email when the call to Stop Forum Spam Fails', 'avh-fdas'));
@@ -642,6 +641,7 @@ final class AVH_FDAS_Admin
 		$options_php[] = array('avhfdas[php][usehoneypot]', __('Use Honey Pot', 'avh-fdas'), 'checkbox', 1, __('If you have set up a Honey Pot you can select to have the URL below to be added to the message when terminating the connection.<BR />You have to select <em>Show Message</em> in the General Options for this to work.', 'avh-fdas'));
 		$options_php[] = array('avhfdas[php][honeypoturl]', __('Honey Pot URL', 'avh-fdas'), 'text', 30, __('The link to the Honey Pot as suggested by Project Honey Pot.', 'avh-fdas'));
 		$options_sh[] = array('avhfdas[general][use_sh]', __('Check with Spamhaus', 'avh-fdas'), 'checkbox', 1, __('If checked, the visitor\'s IP will be checked at Spamhaus', 'avh-fdas'));
+		$options_sh[] = array('avhfdas[spamhaus][email]', __('Email', 'avh-fdas'), 'checkbox', 1, __('Send an email when a connection is terminate based on the IP found in the cache', 'avh-fdas'));
 		
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_options');

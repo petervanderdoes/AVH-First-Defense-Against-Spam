@@ -431,7 +431,7 @@ class AVH_FDAS_SpamCheck
 		// Email
 		$sfs_email = isset($this->_spaminfo['sfs']) && (int) $this->_core_options['sfs']['whentoemail'] >= 0 && (int) $this->_spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentoemail'];
 		$php_email = isset($this->_spaminfo['php']) && (int) $this->_core_options['php']['whentoemail'] >= 0 && $this->_spaminfo['php']['type'] >= $this->_core_options['php']['whentoemailtype'] && (int) $this->_spaminfo['php']['score'] >= $this->_core_options['php']['whentoemail'];
-		$sh_email = isset($this->_spaminfo['sh']);
+		$sh_email = isset($this->_spaminfo['sh']) && $this->_core_options['spamhaus']['email'];
 		if ($sfs_email || $php_email || $sh_email) {
 			// General part of the email
 			$to = get_option('admin_email');
@@ -505,6 +505,7 @@ class AVH_FDAS_SpamCheck
 				}
 				$message[] = '';
 			}
+			
 			// Spamhaus Mail part
 			if ($sh_email) {
 				if ($this->_spaminfo['sh'] != null) {

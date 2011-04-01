@@ -37,6 +37,7 @@ class AVH_FDAS_Core
 	private $_default_options_general;
 	private $_default_options_spam;
 	private $_default_options_honey;
+	private $_default_options_spamhaus;
 	private $_default_options_ipcache;
 	private $_options;
 	/**
@@ -78,8 +79,9 @@ class AVH_FDAS_Core
 		$this->_default_options_general = array('version'=>AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion'=>$this->_db_version, 'use_sfs'=>1, 'use_php'=>0, 'use_sh' => 0, 'useblacklist'=>1, 'usewhitelist'=>1, 'diewithmessage'=>1, 'emailsecuritycheck'=>0, 'useipcache'=>0, 'commentnonce'=>0, 'cron_nonces_email'=>0, 'cron_ipcache_email'=>0);
 		$this->_default_options_spam = array('whentoemail'=>- 1, 'whentodie'=>3, 'sfsapikey'=>'', 'error'=>0);
 		$this->_default_options_honey = array('whentoemailtype'=>- 1, 'whentoemail'=>- 1, 'whentodietype'=>4, 'whentodie'=>25, 'phpapikey'=>'', 'usehoneypot'=>0, 'honeypoturl'=>'');
+		$this->_default_options_spamhaus = array('email'=>0);
 		$this->_default_options_ipcache = array('email'=>0, 'daystokeep'=>7);
-		$this->_default_options = array('general'=>$this->_default_options_general, 'sfs'=>$this->_default_options_spam, 'php'=>$this->_default_options_honey, 'ipcache'=>$this->_default_options_ipcache);
+		$this->_default_options = array('general'=>$this->_default_options_general, 'sfs'=>$this->_default_options_spam, 'php'=>$this->_default_options_honey, 'ipcache'=>$this->_default_options_ipcache, 'spamhaus'=>$this->_default_options_spamhaus);
 		/**
 		 *
 		 * Default Data
