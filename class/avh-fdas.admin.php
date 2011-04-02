@@ -409,6 +409,7 @@ final class AVH_FDAS_Admin
 		$options_cron[] = array('avhfdas[general][cron_nonces_email]', __('Email result of nonces clean up', 'avh-fdas'), 'checkbox', 1, __('Receive an email with the total number of nonces that are deleted. The nonces are used to secure the links found in the emails.', 'avh-fdas'));
 		$options_cron[] = array('avhfdas[general][cron_ipcache_email]', __('Email result of IP cache clean up', 'avh-fdas'), 'checkbox', 1, __('Receive an email with the total number of IP\'s that are deleted from the IP caching system.', 'avh-fdas'));
 		$options_blacklist[] = array('avhfdas[general][useblacklist]', __('Use internal blacklist', 'avh-fdas'), 'checkbox', 1, __('Check the internal blacklist first. If the IP is found terminate the connection, even when the Termination threshold is a negative number.', 'avh-fdas'));
+		$options_blacklist[] = array('avhfdas[general][addblacklist]', __('Add to blacklist link', 'avh-fdas'), 'checkbox', 1, __('Adds ability to add IP\'s from comments marked as spam', 'avh-fdas'));
 		$options_blacklist[] = array('avhfdas[lists][blacklist]', __('Blacklist IP\'s:', 'avh-fdas'), 'textarea', 15, __('Each IP should be on a separate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 'avh-fdas'), 15);
 		$options_whitelist[] = array('avhfdas[general][usewhitelist]', __('Use internal whitelist', 'avh-fdas'), 'checkbox', 1, __('Check the internal whitelist first. If the IP is found don\t do any further checking.', 'avh-fdas'));
 		$options_whitelist[] = array('avhfdas[lists][whitelist]', __('Whitelist IP\'s', 'avh-fdas'), 'textarea', 15, __('Each IP should be on a seperate line<br />Ranges can be defines as well in the following two formats<br />IP to IP. i.e. 192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24', 'avh-fdas'), 15);
@@ -1115,13 +1116,20 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterCommentRowActions ($actions, $comment)
 	{
-		if (('' != $this->_core->getOptionElement('sfs', 'sfsapikey')) && isset($comment->comment_approved) && 'spam' == $comment->comment_approved) {
+		if ( isset($comment->comment_approved) && 'spam' == $comment->comment_approved) {
+			if ('' != $this->_core->getOptionElement('sfs', 'sfsapikey')) {
+				$link_text = __('Report','avhfdas');
+			}
+			if ( 1 == $this->_core->getOptionElement('general', 'addblacklist')) {
+				$link_text .= __(', Blacklist','avh-fdas');
+			}
+			$link_text .= __(' & Delete', 'avhfdas');
 			if (AVH_Common::getWordpressVersion() > 3.0) {
 				$report_url = esc_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
 			} else {
 				$report_url = clean_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
 			}
-			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">' . __('Report & Delete', 'avh-fdas') . '</a>';
+			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">' . $link_text . '</a>';
 		}
 		return $actions;
 	}
@@ -1177,11 +1185,25 @@ final class AVH_FDAS_Admin
 			if (1 == $options['general']['useipcache']) {
 				$ip_info = $this->_db->getIP($comment->comment_author_IP, OBJECT);
 				if (is_object($ip_info) && 0 == $ip_info->spam) {
-					$comment_date = get_comment_date('Y-m-d H:i:s',$comment_id);
-					$result = $this->_db->updateIpCache(array('ip'=>$comment->comment_author_IP, 'spam'=>1 , 'lastseen'=>$comment_date));
+					$comment_date = get_comment_date('Y-m-d H:i:s', $comment_id);
+					$result = $this->_db->updateIpCache(array('ip'=>$comment->comment_author_IP, 'spam'=>1, 'lastseen'=>$comment_date));
 				}
 			}
-			$this->_handleReportSpammer($comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP);
+			if ($options['sfs']['sfsapikey'] != '') {
+				$this->_handleReportSpammer($comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP);
+			}
+			if (1 == $options['general']['addblacklist']) {
+				$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+				if (! empty($blacklist)) {
+					$b = explode("\r\n", $blacklist);
+				} else {
+					$b = array();
+				}
+				if (! (in_array($comment->comment_author_IP, $b))) {
+					array_push($b, $comment->comment_author_IP);
+					$this->_setBlacklistOption($b);
+				}
+			}
 			// Delete the comment
 			$r = wp_delete_comment($comment->comment_ID);
 			die($r ? '1' : '0');
