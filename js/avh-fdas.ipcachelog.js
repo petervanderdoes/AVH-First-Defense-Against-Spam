@@ -52,45 +52,22 @@ setIpCacheLogList = function() {
 		settings.data._per_page = perPageInput.val() || 0;
 		settings.data._page = pageInput.val() || 0;
 		settings.data._url = document.location.href;
-		settings.data.comment_status = $('input[name=comment_status]', '#comments-form').val();
 
-		if ( cl.indexOf(':trash=1') != -1 )
-			action = 'trash';
-		else if ( cl.indexOf(':spam=1') != -1 )
-			action = 'spam';
+		if ( cl.indexOf(':a=hs') != -1 )
+			action = 'hamspam';
+		else if ( cl.indexOf(':a=bl') != -1 )
+			action = 'blacklist';
+		else if (cl.indexOf(':a=dl') != -1)
+			action = 'delete';
 
 		if ( action ) {
-			id = cl.replace(/.*?comment-([0-9]+).*/, '$1');
-			el = $('#comment-' + id);
-			note = $('#' + action + '-undo-holder').html();
+			id = cl.replace(/.*?ip-([0-9]+).*/, '$1');
+			el = $('#ip-' + id);
 
 			el.find('.check-column :checkbox').attr('checked', ''); // Uncheck the row so as not to be affected by Bulk Edits.
 
-			if ( el.siblings('#replyrow').length && commentReply.cid == id )
-				commentReply.close();
-
-			if ( el.is('tr') ) {
-				n = el.children(':visible').length;
-				author = $('.author strong', el).text();
-				h = $('<tr id="undo-' + id + '" class="undo un' + action + '" style="display:none;"><td colspan="' + n + '">' + note + '</td></tr>');
-			} else {
-				author = $('.comment-author', el).text();
-				h = $('<div id="undo-' + id + '" style="display:none;" class="undo un' + action + '">' + note + '</div>');
-			}
-
-			el.before(h);
-
-			$('strong', '#undo-' + id).text(author + ' ');
-			a = $('.undo a', '#undo-' + id);
-			a.attr('href', 'comment.php?action=un' + action + 'comment&c=' + id + '&_wpnonce=' + settings.data._ajax_nonce);
-			a.attr('className', 'delete:the-comment-list:comment-' + id + '::un' + action + '=1 vim-z vim-destructive');
-			$('.avatar', el).clone().prependTo('#undo-' + id + ' .' + action + '-undo-inside');
-
 			a.click(function(){
 				list.wpList.del(this);
-				$('#undo-' + id).css( {backgroundColor:'#ceb'} ).fadeOut(350, function(){
-					$(this).remove();
-					$('#comment-' + id).css('backgroundColor', '').fadeIn(300, function(){ $(this).show() });
 				});
 				return false;
 			});
