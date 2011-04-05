@@ -249,11 +249,11 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		echo '</tr>';
 		echo '</tfoot>';
 
-		echo '<tbody id="the-ipcache-list">';
+		echo '<tbody id="the-ipcache-list" class="list:ipcachelog">';
 		$this->display_rows_or_placeholder();
 		echo '</tbody>';
 
-		echo '<tbody id="the-extra-ipcache-list" style="display: none;">';
+		echo '<tbody id="the-extra-ipcache-list" class="list:ipcachelog" style="display: none;">';
 		$this->items = $this->extra_items; $this->display_rows();
 		echo '</tbody>';
 		echo '</table>';
@@ -262,9 +262,10 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 	
 	function single_row( $a_ip ) {
-		$ip = $a_ip;
 
-		echo "<tr>";
+		$ip = $a_ip;
+		$status = ($ip->spam == 0?'':'spammed');
+		echo '<tr id="ip-'.$ip->ip.'" class="'.$status.'">';
 		echo $this->single_row_columns( $ip );
 		echo "</tr>";
 	}
@@ -272,10 +273,49 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	function column_cb( $ip ) {
 		echo "<input type='checkbox' name='deleted_ips[]' value='$ip->ip' />";
 	}
-	
-	function column_ip( $ip ) {
-		$ip_text =long2ip($ip->ip);
+
+	function column_ip ($ip)
+	{
+		global $ip_status;
+		
+		$ip_text = long2ip($ip->ip);
 		echo $ip_text;
+		
+		echo '<div id="inline-'.$ip->ip.'" class="hidden">';
+		echo '<div class="ip_status">'.$ip->spam.'</div>';
+		echo '</div>';
+		
+		$del_nonce = esc_html('_wpnonce=' . wp_create_nonce("delete-ip_$ip->ip"));
+		$hamspam_nonce = esc_html('_wpnonce=' . wp_create_nonce("hamspam-ip_$ip->ip"));
+		
+		#$url = "comment.php?c=$comment->comment_ID";
+		
+		$ham_url = esc_url($url . "&action=hamip&$hamspam_nonce");
+		$spam_url = esc_url($url . "&action=spamip&hamspam_nonce");
+		$delete_url = esc_url($url . "&action=deleteip&$del_nonce");
+		
+		$actions = array('ham'=>'', 'spam'=>'', 'blacklist'=>'', 'delete'=>'');
+		
+		if ( $ip_status && 'all' != $ip_status ) { // not looking at all comments
+			$class_ham='delete:the-ipcache-list:'.$ip->ip.':ham:e7e7d3:e7e7d3:new=spam vim-u';
+			$class_spam='delete:the-ipcache-list:'.$ip->ip.':spam:e7e7d3:e7e7d3:new=ham vim-a';
+		} else {
+			$actions['spam'] = "<a href='#' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new=avhfdas_is_ham vim-a' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
+			$actions['ham'] = "<a href='#' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new=avhfdas_is_spam vim-u' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
+		};
+				
+		$actions['blacklist'] = "<a href='#' class='' title='" . esc_attr__('Blacklist this IP', 'avh-fdas') . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
+		$actions['delete'] = "<a href='#' class='' title='" . esc_attr__('Delete this IP', 'avh-fdas') . "'>" . __('Delete', 'avh-fdas') . '</a>';
+		$i = 0;
+		
+		echo '<div class="row-actions">';
+		foreach ($actions as $action => $link) {
+			++ $i;
+			((('ham' == $action || 'spam' == $action) && 2 === $i) || 1 === $i) ? $sep = '' : $sep = ' | ';
+			
+			echo "<span class='avhfdas_is_$action'>$sep$link</span>";
+		}
+		echo '</div>';
 	}
 	
 	function column_spam ( $ip ) {

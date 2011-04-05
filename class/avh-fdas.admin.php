@@ -128,6 +128,7 @@ final class AVH_FDAS_Admin
 		// Register Styles and Scripts
 		$suffix_js = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.closure';
 		$suffix_css = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		wp_register_script('avhfdas-ipcachelog-js', $this->_settings->js_url . '/avh-fdas.ipcachelog' . $suffix_js . '.js', array('jquery'), AVH_FDAS_Define::PLUGIN_VERSION, true);
 		wp_register_script('avhfdas-admin-js', $this->_settings->js_url . '/avh-fdas.admin' . $suffix_js . '.js', array('jquery'), AVH_FDAS_Define::PLUGIN_VERSION, true);
 		wp_register_style('avhfdas-admin-css', $this->_settings->css_url . '/avh-fdas.admin' . $suffix_css . '.css', array(), AVH_FDAS_Define::PLUGIN_VERSION, 'screen');
 	}
@@ -915,6 +916,8 @@ final class AVH_FDAS_Admin
 		wp_admin_css('css/dashboard');
 		// Plugin Style and Scripts
 		wp_enqueue_script('avhfdas-admin-js');
+		wp_enqueue_script('avhfdas-ipcachelog-js');
+		
 		wp_enqueue_style('avhfdas-admin-css');
 	}
 
