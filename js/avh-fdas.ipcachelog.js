@@ -291,46 +291,6 @@ $(document).ready(function(){
 	setIpCacheLogList();
 	$(document).delegate('span.avhfdas_is_delete a.avhfdas_is_delete', 'click', function(){return false;});
 
-	if ( typeof $.table_hotkeys != 'undefined' ) {
-		make_hotkeys_redirect = function(which) {
-			return function() {
-				var first_last, l;
-
-				first_last = 'next' == which? 'first' : 'last';
-				l = $('.tablenav-pages .'+which+'-page:not(.disabled)');
-				if (l.length)
-					window.location = l[0].href.replace(/\&hotkeys_highlight_(first|last)=1/g, '')+'&hotkeys_highlight_'+first_last+'=1';
-			}
-		};
-
-		edit_comment = function(event, current_row) {
-			window.location = $('span.edit a', current_row).attr('href');
-		};
-
-		toggle_all = function() {
-			toggleWithKeyboard = true;
-			$('input:checkbox', '#cb').click().attr('checked', '');
-			toggleWithKeyboard = false;
-		};
-
-		make_bulk = function(value) {
-			return function() {
-				var scope = $('select[name="action"]');
-				$('option[value='+value+']', scope).attr('selected', 'selected');
-				$('#doaction').click();
-			}
-		};
-
-		$.table_hotkeys(
-			$('table.widefat'),
-			['a', 'u', 's', 'd', 'r', 'q', 'z', ['e', edit_comment], ['shift+x', toggle_all],
-			['shift+a', make_bulk('approve')], ['shift+s', make_bulk('spam')],
-			['shift+d', make_bulk('delete')], ['shift+t', make_bulk('trash')],
-			['shift+z', make_bulk('untrash')], ['shift+u', make_bulk('unapprove')]],
-			{ highlight_first: adminCommentsL10n.hotkeys_highlight_first, highlight_last: adminCommentsL10n.hotkeys_highlight_last,
-			prev_page_link_cb: make_hotkeys_redirect('prev'), next_page_link_cb: make_hotkeys_redirect('next') }
-		);
-	}
 });
 
 })(jQuery);
