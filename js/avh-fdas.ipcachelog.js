@@ -24,7 +24,7 @@ setIpCacheLogList = function() {
 			n = a.html().replace(/[^0-9]+/g, '');
 			n = parseInt(n,10);
 			if ( isNaN(n) ) return;
-			dif = $('#' + settings.element).is('.' + settings.dimClass) ? 1 : -1;
+			dif = $('#' + settings.element).is('.' + settings.dimClass) ? -1 : 1;
 			n = n + dif;
 			if ( n < 0 ) { n = 0; }
 			a.closest('#awaiting-mod')[ 0 == n ? 'addClass' : 'removeClass' ]('count-0');
@@ -35,7 +35,7 @@ setIpCacheLogList = function() {
 			n = a.html().replace(/[^0-9]+/g, '');
 			n = parseInt(n,10);
 			if ( isNaN(n) ) return;
-			dif = $('#' + settings.element).is('.' + settings.dimClass) ? -1 : 1;
+			dif = $('#' + settings.element).is('.' + settings.dimClass) ? 1 : -1;
 			n = n + dif;
 			if ( n < 0 ) { n = 0; }
 			a.closest('#awaiting-mod')[ 0 == n ? 'addClass' : 'removeClass' ]('count-0');
