@@ -59,6 +59,8 @@ final class AVH_FDAS_Admin
 		add_action('admin_menu', array(&$this, 'actionAdminMenu'));
 		// Add the ajax action
 		add_action('wp_ajax_avh-fdas-reportcomment', array(&$this, 'actionAjaxReportComment'));
+		add_action('wp_ajax_dim-ipcachelog', array(&$this, 'actionAjaxIpcacheLog'));
+		
 		/**
 		 * Admin actions
 		 */
@@ -1039,6 +1041,9 @@ final class AVH_FDAS_Admin
 		$this->_printAdminFooter();
 	}
 
+	public function actionAjaxIpcacheLog(){
+		die( (string) time() );
+	}
 	/**
 	 * Donation Metabox
 	 * @return unknown_type
