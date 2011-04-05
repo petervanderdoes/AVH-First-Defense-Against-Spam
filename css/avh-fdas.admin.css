@@ -159,14 +159,14 @@ table.avhfdas-options {
 }
 
 /* IP Cache Log List */
-.avhfdas_is_ham {
+.set_ham {
 	display: none;
 }
 
-.spammed .avhfdas_is_ham {
+.spammed .set_ham {
 	display: inline;
 }
 
-.spammed .avhfdas_is_spam {
+.spammed .set_spam {
 	display: none;
 }

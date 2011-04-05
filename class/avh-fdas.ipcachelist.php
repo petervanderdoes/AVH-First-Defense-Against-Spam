@@ -300,8 +300,8 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			$class_ham='delete:the-ipcache-list:'.$ip->ip.':ham:e7e7d3:e7e7d3:new=spam vim-u';
 			$class_spam='delete:the-ipcache-list:'.$ip->ip.':spam:e7e7d3:e7e7d3:new=ham vim-a';
 		} else {
-			$actions['spam'] = "<a href='#?$hamspam_nonce' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=0&act=pop vim-a' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
-			$actions['ham'] = "<a href='#?$hamspam_nonce' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=1&act=pap vim-u' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
+			$actions['spam'] = "<a href='#?$hamspam_nonce' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=1 vim-a' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
+			$actions['ham'] = "<a href='#?$hamspam_nonce' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=0 vim-u' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
 		};
 				
 		$actions['blacklist'] = "<a href='#' class='' title='" . esc_attr__('Blacklist this IP', 'avh-fdas') . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
@@ -313,7 +313,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			++ $i;
 			((('ham' == $action || 'spam' == $action) && 2 === $i) || 1 === $i) ? $sep = '' : $sep = ' | ';
 			
-			echo "<span class='avhfdas_is_$action'>$sep$link</span>";
+			echo "<span class='set_$action'>$sep$link</span>";
 		}
 		echo '</div>';
 	}

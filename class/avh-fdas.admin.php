@@ -1041,8 +1041,24 @@ final class AVH_FDAS_Admin
 		$this->_printAdminFooter();
 	}
 
-	public function actionAjaxIpcacheLog(){
-		die( (string) time() );
+	public function actionAjaxIpcacheLog ()
+	{
+		$id = isset($_POST['id'])? $_POST['id'] : 0;
+		switch ($action = $_POST['action']) {
+			case 'dim-ipcachelog':
+				check_ajax_referer( 'hamspam-ip_'.$id );
+				$status = isset($_POST['new_status'])? $_POST['new_status'] : false;
+				if (false === $status) {
+					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter'))));
+					$x->send();
+				}
+				$result = $this->_db->updateIpCache(array('ip'=>$id,'spam'=>$status));
+				if (false === $result) {
+					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.'))));
+					$x->send();
+				}
+				die((string) time());
+		}
 	}
 	/**
 	 * Donation Metabox
