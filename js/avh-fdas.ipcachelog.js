@@ -14,10 +14,13 @@ setIpCacheLogList = function() {
 	dimAfter = function( r, settings ) {
 		var c = $('#' + settings.element);
 
-		if ( c.is('.spammed') )
-			c.find('div.ip_status').html('1')
-		else
-			c.find('div.ip_status').html('0')
+		if ( c.is('.spammed') ) {
+			c.find('div.ip_status').html('1');
+			c.find('td.spam').html('Spam');
+		} else{
+			c.find('div.ip_status').html('0');
+			c.find('td.spam').html('Ham');
+		}
 
 		$('span.ham-count').each( function() {
 			var a = $(this), n, dif;
@@ -27,7 +30,6 @@ setIpCacheLogList = function() {
 			dif = $('#' + settings.element).is('.' + settings.dimClass) ? -1 : 1;
 			n = n + dif;
 			if ( n < 0 ) { n = 0; }
-			a.closest('#awaiting-mod')[ 0 == n ? 'addClass' : 'removeClass' ]('count-0');
 			updateCount(a, n);
 		});
 		$('span.spam-count').each( function() {
@@ -38,7 +40,6 @@ setIpCacheLogList = function() {
 			dif = $('#' + settings.element).is('.' + settings.dimClass) ? 1 : -1;
 			n = n + dif;
 			if ( n < 0 ) { n = 0; }
-			a.closest('#awaiting-mod')[ 0 == n ? 'addClass' : 'removeClass' ]('count-0');
 			updateCount(a, n);
 		});
 	};
