@@ -69,8 +69,6 @@ setIpCacheLogList = function() {
 			a.click(function(){
 				list.wpList.del(this);
 				});
-				return false;
-			});
 		}
 
 		return settings;

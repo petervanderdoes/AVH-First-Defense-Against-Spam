@@ -291,14 +291,9 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$url = "http://blog.grandprix.int/wp-admin/admin.php?page=avh-first-defense-against-spam-ip-cache-log";
 		
 		$ham_url = esc_url($url."&action=hamip&$hamspam_nonce");
-		$spam_url = esc_url($url."&action=spamip&hamspam_nonce");
+		$spam_url = esc_url($url."&action=spamip&$hamspam_nonce");
 		$blacklist_url = esc_url($url."&action=blacklistip&$del_nonce");
 		$delete_url = esc_url($url."&action=deleteip&$del_nonce");
-		
-		$ham_url = "#&action=hamip&$hamspam_nonce";
-		$spam_url = "#&action=spamip&hamspam_nonce";
-		$blacklist_url = "#&action=blacklistip&$del_nonce";
-		$delete_url = "#&action=deleteip&$del_nonce";
 		
 		$actions = array('ham'=>'', 'spam'=>'', 'blacklist'=>'', 'delete'=>'');
 		
