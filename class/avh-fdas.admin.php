@@ -1165,12 +1165,15 @@ final class AVH_FDAS_Admin
 	 */
 	public function filterCommentRowActions ($actions, $comment)
 	{
-		if ( isset($comment->comment_approved) && 'spam' == $comment->comment_approved) {
-			if ('' != $this->_core->getOptionElement('sfs', 'sfsapikey')) {
-				$link_text = __('Report','avhfdas');
+		$apikey = $this->_core->getOptionElement('sfs', 'sfsapikey');
+		$add_to_blacklist = $this->_core->getOptionElement('general', 'addblacklist');
+		
+		if ((isset($comment->comment_approved) && 'spam' == $comment->comment_approved) && ('' != $apikey || 1 == $add_to_blacklist)) {
+			if ('' != $apikey) {
+				$link_text = __('Report', 'avhfdas');
 			}
-			if ( 1 == $this->_core->getOptionElement('general', 'addblacklist')) {
-				$link_text .= __(', Blacklist','avh-fdas');
+			if (1 == $add_to_blacklist) {
+				$link_text .= __(', Blacklist', 'avh-fdas');
 			}
 			$link_text .= __(' & Delete', 'avhfdas');
 			if (AVH_Common::getWordpressVersion() > 3.0) {
