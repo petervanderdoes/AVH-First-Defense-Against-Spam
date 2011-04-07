@@ -21,20 +21,14 @@ setIpCacheLogList = function() {
 
 		$('span.ham-count').each( function() {
 			var a = $(this), n, dif;
-			n = getCount(a);
-			if ( isNaN(n) ) return;
 			dif = $('#' + settings.element).is('.' + settings.dimClass) ? -1 : 1;
-			n = n + dif;
-			if ( n < 0 ) { n = 0; }
+			n = getCount(a) + dif;
 			updateCount(a, n);
 		});
 		$('span.spam-count').each( function() {
 			var a = $(this), n, dif;
-			n = getCount(a);
-			if ( isNaN(n) ) return;
 			dif = $('#' + settings.element).is('.' + settings.dimClass) ? 1 : -1;
-			n = n + dif;
-			if ( n < 0 ) { n = 0; }
+			n = getCount(a) + dif;
 			updateCount(a, n);
 		});
 	};
