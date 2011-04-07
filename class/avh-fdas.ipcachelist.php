@@ -299,15 +299,15 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$actions = array('ham'=>'', 'spam'=>'', 'blacklist'=>'', 'delete'=>'');
 		
 		if ( $ip_status && 'all' != $ip_status ) { // not looking at all comments
-			$actions['spam']="<a href='$spam_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=hs&ns=1' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
-			$actions['ham'] = "<a href='$ham_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=hs&ns=0' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
+			$actions['spam']="<a href='$spam_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:action=dim-comment&amp;a=hs&amp;ns=1' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
+			$actions['ham'] = "<a href='$ham_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:action=dim-comment&amp;a=hs&amp;ns=0' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
 		} else {
 			$actions['spam'] = "<a href='$spam_url' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=1' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
 			$actions['ham'] = "<a href='$ham_url' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=0' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
 		};
 				
-		$actions['blacklist'] = "<a href='$blacklist_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=bl' title='" . esc_attr__('Blacklist this IP', 'avh-fdas') . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
-		$actions['delete'] = "<a href='$delete_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=dl' title='" . esc_attr__('Delete this IP', 'avh-fdas') . "'>" . __('Delete', 'avh-fdas') . '</a>';
+		$actions['blacklist'] = "<a href='$blacklist_url' class='delete:the-ipcache-list:ip-$ip->ip::a=bl delete' title='" . esc_attr__('Blacklist this IP', 'avh-fdas') . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
+		$actions['delete'] = "<a href='$delete_url' class='delete:the-ipcache-list::a=dl delete' title='" . esc_attr__('Delete this IP', 'avh-fdas') . "'>" . __('Delete', 'avh-fdas') . '</a>';
 		$i = 0;
 		
 		echo '<div class="row-actions">';
