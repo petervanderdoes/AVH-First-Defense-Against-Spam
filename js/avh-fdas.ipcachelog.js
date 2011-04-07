@@ -94,7 +94,7 @@ setIpCacheLogList = function() {
 
 	// In admin-ajax.php, we send back the unix time stamp instead of 1 on success
 	delAfter = function( r, settings ) {
-		var total, pageLinks, N, unspam = $(settings.target).parent().is('span.spammed'), unham = $(settings.target).parent().is('span.hammed'), spam, ham, blacklist, del;
+		var total, pageLinks, N, unspam = $(settings.target).parent().is('span.set_ham'), unham = $(settings.target).parent().is('span.set_spam'), spam, ham, blacklist, del;
 
 		function getUpdate(s) {
 			if ( $(settings.target).parent().is('span.' + s) )
