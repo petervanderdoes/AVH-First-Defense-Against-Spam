@@ -306,8 +306,8 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			$actions['ham'] = "<a href='$ham_url' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=0' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
 		};
 				
-		$actions['blacklist'] = "<a href='$blacklist_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=bl'" . esc_attr__('Blacklist this IP', 'avh-fdas') . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
-		$actions['delete'] = "<a href='$delete_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=dl'" . esc_attr__('Delete this IP', 'avh-fdas') . "'>" . __('Delete', 'avh-fdas') . '</a>';
+		$actions['blacklist'] = "<a href='$blacklist_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=bl' title='" . esc_attr__('Blacklist this IP', 'avh-fdas') . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
+		$actions['delete'] = "<a href='$delete_url' class='delete:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:a=dl' title='" . esc_attr__('Delete this IP', 'avh-fdas') . "'>" . __('Delete', 'avh-fdas') . '</a>';
 		$i = 0;
 		
 		echo '<div class="row-actions">';
