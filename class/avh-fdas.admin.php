@@ -1045,7 +1045,7 @@ final class AVH_FDAS_Admin
 	public function actionAjaxIpcacheLog ()
 	{
 		$id = isset($_POST['id']) ? $_POST['id'] : 0;
-		switch ($action = $_POST['action']) {
+		switch ($_POST['action']) {
 			case 'dim-ipcachelog':
 				check_ajax_referer('hamspam-ip_' . $id);
 				$status = isset($_POST['new_status']) ? $_POST['new_status'] : false;
@@ -1060,7 +1060,7 @@ final class AVH_FDAS_Admin
 				}
 				die((string) time());
 			case 'delete-ipcachelog':
-				switch ($x = $_POST['a']) {
+				switch ($_POST['f']) {
 					case 'hs':
 						check_ajax_referer('hamspam-ip_' . $id);
 						$status = isset($_POST['ns']) ? $_POST['ns'] : false;
@@ -1077,6 +1077,8 @@ final class AVH_FDAS_Admin
 					
 					case 'bl':
 						check_ajax_referer('blacklist-ip_' . $id);
+						$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'position'=>- 1, 'id'=>$id, 'data'=>__('IP %s added to blacklist')));
+						$x->send();
 						die((string) time());
 					
 					case 'dl':
@@ -1084,6 +1086,8 @@ final class AVH_FDAS_Admin
 						die((string) time());
 				}
 		}
+		$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'position'=>- 1, 'id'=>new WP_Error('invalid_call', __('Invalid AJAX call'))));
+		$x->send();
 	}
 	/**
 	 * Donation Metabox
