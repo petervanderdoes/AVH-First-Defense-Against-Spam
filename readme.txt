@@ -110,10 +110,10 @@ Starting with version 3.0 this plugin is for PHP5 only.
 = Version 3.2-dev3 =
 * AJAX'fied the IP Cache Log. You can spam/ham, blacklist or delete an IP. 
 * Adds the ability to check with Spamhaus.org
-* When a spam check results in a termination of the connection no more checks will be performed. This removes the option to receive Project Honey Pot information even when Stop Forum Spam determined the connection can be terminated.
+* When a spam check results in a termination of the connection, no more checks will be performed. This removes the option to receive Project Honey Pot information even when Stop Forum Spam determined the connection can be terminated.
 * RFC: Option to add IP's to blacklist from the comments page.
 * Bugfix: Report&Delete doesn't work on certain server configurations.
-* Bugfix: Admin javascript does not load.
+* Bugfix: Admin javascript does not load, causing the inability to close the metaboxes.
 
 = Version 3.1.2 =
 * An email is send when the report to Stop Forum Spam fails.
