@@ -52,6 +52,7 @@ setIpCacheLogList = function() {
 		settings.data._per_page = perPageInput.val() || 0;
 		settings.data._page = pageInput.val() || 0;
 		settings.data._url = document.location.href;
+		settings.data.ip_status = $('input[name=ip_status]', '#ipcachelist-form').val();
 
 		if ( cl.indexOf(':a=hs') != -1 )
 			action = 'hamspam';
@@ -68,6 +69,7 @@ setIpCacheLogList = function() {
 
 			a.click(function(){
 				list.wpList.del(this);
+				return false;
 				});
 		}
 
@@ -87,24 +89,6 @@ setIpCacheLogList = function() {
 			updateCount( $(this), total );
 		});
 	};
-
-	function dashboardTotals(n) {
-		var dash = $('#dashboard_right_now'), total, appr, totalN, apprN;
-
-		n = n || 0;
-		if ( isNaN(n) || !dash.length )
-			return;
-
-		total = $('span.total-count', dash);
-		appr = $('span.approved-count', dash);
-		totalN = getCount(total);
-
-		totalN = totalN + n;
-		apprN = totalN - getCount( $('span.pending-count', dash) ) - getCount( $('span.spam-count', dash) );
-		updateCount(total, totalN);
-		updateCount(appr, apprN);
-
-	}
 
 	function getCount(el) {
 		var n = parseInt( el.html().replace(/[^0-9]+/g, ''), 10 );
@@ -130,7 +114,7 @@ setIpCacheLogList = function() {
 
 	// In admin-ajax.php, we send back the unix time stamp instead of 1 on success
 	delAfter = function( r, settings ) {
-		var total, pageLinks, N, untrash = $(settings.target).parent().is('span.untrash'), unspam = $(settings.target).parent().is('span.unspam'), spam, trash;
+		var total, pageLinks, N, unspam = $(settings.target).parent().is('span.spammed'), unham = $(settings.target).parent().is('span.hammed'), spam, ham, blacklist, del;
 
 		function getUpdate(s) {
 			if ( $(settings.target).parent().is('span.' + s) )
@@ -140,58 +124,50 @@ setIpCacheLogList = function() {
 
 			return 0;
 		}
-		spam = getUpdate('spam');
-		trash = getUpdate('trash');
+		spam = getUpdate('set_ham');
+		ham = getUpdate('set_spam');
+		blacklist = getUpdate('set_blacklist');
+		del = getUpdate('set_delete');
 
-		if ( untrash )
-			trash = -1;
-		if ( unspam )
+		if ( unspam ) {
 			spam = -1;
+			ham = 1;
+		}
+		if ( unham ) {
+			ham = -1;
+			spam = 1;
+		}
 
-		$('span.pending-count').each( function() {
-			var a = $(this), n = getCount(a), unapproved = $('#' + settings.element).is('.unapproved');
-
-			if ( $(settings.target).parent().is('span.unapprove') || ( ( untrash || unspam ) && unapproved ) ) { // we "deleted" an approved comment from the approved list by clicking "Unapprove"
-				n = n + 1;
-			} else if ( unapproved ) { // we deleted a formerly unapproved comment
-				n = n - 1;
-			}
-			if ( n < 0 ) { n = 0; }
-			a.closest('#awaiting-mod')[ 0 == n ? 'addClass' : 'removeClass' ]('count-0');
-			updateCount(a, n);
-			dashboardTotals();
-		});
-
+		if (blacklist || del ) {
+			ham = -1;
+			spam = -1;
+		}
 		$('span.spam-count').each( function() {
 			var a = $(this), n = getCount(a) + spam;
 			updateCount(a, n);
 		});
 
-		$('span.trash-count').each( function() {
-			var a = $(this), n = getCount(a) + trash;
+		$('span.ham-count').each( function() {
+			var a = $(this), n = getCount(a) + ham;
 			updateCount(a, n);
 		});
 
-		if ( $('#dashboard_right_now').length ) {
-			N = trash ? -1 * trash : 0;
-			dashboardTotals(N);
-		} else {
-			total = totalInput.val() ? parseInt( totalInput.val(), 10 ) : 0;
-			total = total - spam - trash;
-			if ( total < 0 )
-				total = 0;
 
-			if ( ( 'object' == typeof r ) && lastConfidentTime < settings.parsed.responses[0].supplemental.time ) {
-				total_items_i18n = settings.parsed.responses[0].supplemental.total_items_i18n || '';
-				if ( total_items_i18n ) {
-					$('.displaying-num').text( total_items_i18n );
-					$('.total-pages').text( settings.parsed.responses[0].supplemental.total_pages_i18n );
-					$('.tablenav-pages').find('.next-page, .last-page').toggleClass('disabled', settings.parsed.responses[0].supplemental.total_pages == $('.current-page').val());
-				}
-				updateTotalCount( total, settings.parsed.responses[0].supplemental.time, true );
-			} else {
-				updateTotalCount( total, r, false );
+		total = totalInput.val() ? parseInt( totalInput.val(), 10 ) : 0;
+		total = total - spam - trash;
+		if ( total < 0 )
+			total = 0;
+
+		if ( ( 'object' == typeof r ) && lastConfidentTime < settings.parsed.responses[0].supplemental.time ) {
+			total_items_i18n = settings.parsed.responses[0].supplemental.total_items_i18n || '';
+			if ( total_items_i18n ) {
+				$('.displaying-num').text( total_items_i18n );
+				$('.total-pages').text( settings.parsed.responses[0].supplemental.total_pages_i18n );
+				$('.tablenav-pages').find('.next-page, .last-page').toggleClass('disabled', settings.parsed.responses[0].supplemental.total_pages == $('.current-page').val());
 			}
+			//updateTotalCount( total, settings.parsed.responses[0].supplemental.time, true );
+		} else {
+			//updateTotalCount( total, r, false );
 		}
 
 

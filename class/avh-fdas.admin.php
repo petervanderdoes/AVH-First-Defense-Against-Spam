@@ -60,6 +60,7 @@ final class AVH_FDAS_Admin
 		// Add the ajax action
 		add_action('wp_ajax_avh-fdas-reportcomment', array(&$this, 'actionAjaxReportComment'));
 		add_action('wp_ajax_dim-ipcachelog', array(&$this, 'actionAjaxIpcacheLog'));
+		add_action('wp_ajax_delete-ipcachelog', array(&$this, 'actionAjaxIpcacheLog'));
 		
 		/**
 		 * Admin actions
@@ -1043,21 +1044,45 @@ final class AVH_FDAS_Admin
 
 	public function actionAjaxIpcacheLog ()
 	{
-		$id = isset($_POST['id'])? $_POST['id'] : 0;
+		$id = isset($_POST['id']) ? $_POST['id'] : 0;
 		switch ($action = $_POST['action']) {
 			case 'dim-ipcachelog':
-				check_ajax_referer( 'hamspam-ip_'.$id );
-				$status = isset($_POST['new_status'])? $_POST['new_status'] : false;
+				check_ajax_referer('hamspam-ip_' . $id);
+				$status = isset($_POST['new_status']) ? $_POST['new_status'] : false;
 				if (false === $status) {
 					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter'))));
 					$x->send();
 				}
-				$result = $this->_db->updateIpCache(array('ip'=>$id,'spam'=>$status));
+				$result = $this->_db->updateIpCache(array('ip'=>$id, 'spam'=>$status));
 				if (false === $result) {
 					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.'))));
 					$x->send();
 				}
 				die((string) time());
+			case 'delete-ipcachelog':
+				switch ($x = $_POST['a']) {
+					case 'hs':
+						check_ajax_referer('hamspam-ip_' . $id);
+						$status = isset($_POST['ns']) ? $_POST['ns'] : false;
+						if (false === $status) {
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter'))));
+							$x->send();
+						}
+						$result = $this->_db->updateIpCache(array('ip'=>$id, 'spam'=>$status));
+						if (false === $result) {
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.'))));
+							$x->send();
+						}
+						die((string) time());
+					
+					case 'bl':
+						check_ajax_referer('blacklist-ip_' . $id);
+						die((string) time());
+					
+					case 'dl':
+						check_ajax_referer('delete-ip_' . $id);
+						die((string) time());
+				}
 		}
 	}
 	/**
