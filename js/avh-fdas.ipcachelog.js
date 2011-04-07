@@ -122,6 +122,7 @@ setIpCacheLogList = function() {
 			ham = -1;
 			spam = -1;
 		}
+
 		$('span.spam-count').each( function() {
 			var a = $(this), n = getCount(a) + spam;
 			updateCount(a, n);
@@ -134,7 +135,7 @@ setIpCacheLogList = function() {
 
 
 		total = totalInput.val() ? parseInt( totalInput.val(), 10 ) : 0;
-		total = total - spam - trash;
+		total = total - spam - ham;
 		if ( total < 0 )
 			total = 0;
 
