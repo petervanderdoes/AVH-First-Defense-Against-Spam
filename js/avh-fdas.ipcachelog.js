@@ -1,7 +1,4 @@
-/**
- * 
- */
-var theList, theExtraList, toggleWithKeyboard = false;
+var theList, theExtraList;
 (function($) {
 
 setIpCacheLogList = function() {
@@ -24,8 +21,7 @@ setIpCacheLogList = function() {
 
 		$('span.ham-count').each( function() {
 			var a = $(this), n, dif;
-			n = a.html().replace(/[^0-9]+/g, '');
-			n = parseInt(n,10);
+			n = getCount(a);
 			if ( isNaN(n) ) return;
 			dif = $('#' + settings.element).is('.' + settings.dimClass) ? -1 : 1;
 			n = n + dif;
@@ -34,8 +30,7 @@ setIpCacheLogList = function() {
 		});
 		$('span.spam-count').each( function() {
 			var a = $(this), n, dif;
-			n = a.html().replace(/[^0-9]+/g, '');
-			n = parseInt(n,10);
+			n = getCount(a);
 			if ( isNaN(n) ) return;
 			dif = $('#' + settings.element).is('.' + settings.dimClass) ? 1 : -1;
 			n = n + dif;
@@ -212,8 +207,6 @@ setIpCacheLogList = function() {
 
 
 $(document).ready(function(){
-	var make_hotkeys_redirect, edit_comment, toggle_all, make_bulk;
-
 	setIpCacheLogList();
 	$(document).delegate('span.avhfdas_is_delete a.avhfdas_is_delete', 'click', function(){return false;});
 
