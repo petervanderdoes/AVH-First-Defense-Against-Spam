@@ -46,32 +46,12 @@ setIpCacheLogList = function() {
 
 	// Send current total, page, per_page and url
 	delBefore = function( settings, list ) {
-		var cl = $(settings.target).attr('className'), id, el, n, h, a, author, action = false;
 
 		settings.data._total = totalInput.val() || 0;
 		settings.data._per_page = perPageInput.val() || 0;
 		settings.data._page = pageInput.val() || 0;
 		settings.data._url = document.location.href;
 		settings.data.ip_status = $('input[name=ip_status]', '#ipcachelist-form').val();
-
-		if ( cl.indexOf(':a=hs') != -1 )
-			action = 'hamspam';
-		else if ( cl.indexOf(':a=bl') != -1 )
-			action = 'blacklist';
-		else if (cl.indexOf(':a=dl') != -1)
-			action = 'delete';
-
-		if ( action ) {
-			id = cl.replace(/.*?ip-([0-9]+).*/, '$1');
-			el = $('#ip-' + id);
-
-			el.find('.check-column :checkbox').attr('checked', ''); // Uncheck the row so as not to be affected by Bulk Edits.
-
-			a.click(function(){
-				list.wpList.del(this);
-				return false;
-				});
-		}
 
 		return settings;
 	};
@@ -225,13 +205,7 @@ setIpCacheLogList = function() {
 	};
 
 	theExtraList = $('#the-extra-ipcache-list').wpList( { alt: '', delColor: 'none', addColor: 'none' } );
-	theList = $('#the-ipcache-list').wpList( { alt: '', delBefore: delBefore, dimAfter: dimAfter, delAfter: delAfter, addColor: 'none' } )
-		.bind('wpListDelEnd', function(e, s){
-			var id = s.element.replace(/[^0-9]+/g, '');
-
-			if ( s.target.className.indexOf(':spam=1') != -1 )
-				$('#undo-' + id).fadeIn(300, function(){ $(this).show() });
-		});
+	theList = $('#the-ipcache-list').wpList( { alt: '', delBefore: delBefore, dimAfter: dimAfter, delAfter: delAfter, addColor: 'none' } );
 	// $(listTable).bind('changePage', refillTheExtraList);
 };
 
