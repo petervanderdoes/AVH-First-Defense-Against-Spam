@@ -1050,12 +1050,12 @@ final class AVH_FDAS_Admin
 				check_ajax_referer('hamspam-ip_' . $id);
 				$status = isset($_POST['new_status']) ? $_POST['new_status'] : false;
 				if (false === $status) {
-					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter'))));
+					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter','avh-fdas'))));
 					$x->send();
 				}
 				$result = $this->_db->updateIpCache(array('ip'=>$id, 'spam'=>$status));
 				if (false === $result) {
-					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.'))));
+					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.','avh-fdas'))));
 					$x->send();
 				}
 				die((string) time());
@@ -1065,23 +1065,38 @@ final class AVH_FDAS_Admin
 						check_ajax_referer('hamspam-ip_' . $id);
 						$status = isset($_POST['ns']) ? $_POST['ns'] : false;
 						if (false === $status) {
-							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter'))));
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter','avh-fdas'))));
 							$x->send();
 						}
 						$result = $this->_db->updateIpCache(array('ip'=>$id, 'spam'=>$status));
 						if (false === $result) {
-							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.'))));
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.','avh-fdas'))));
 							$x->send();
 						}
 						die((string) time());
 					
 					case 'bl':
 						check_ajax_referer('blacklist-ip_' . $id);
-						
+						$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+						if (! empty($blacklist)) {
+							$b = explode("\r\n", $blacklist);
+						} else {
+							$b = array();
+						}
+						$ip = long2ip($id);
+						if (! (in_array($ip, $b))) {
+							array_push($b, $ip);
+							$this->_setBlacklistOption($b);
+						}
 						die((string) time());
 					
 					case 'dl':
 						check_ajax_referer('delete-ip_' . $id);
+						$result = $this->_db->deleteIp($id);
+						if (false === $result ){
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_deleting', __('Error deleting the IP from the databse table.'))));
+							$x->send();
+						}
 						die((string) time());
 				}
 		}
