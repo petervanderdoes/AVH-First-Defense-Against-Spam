@@ -1050,12 +1050,12 @@ final class AVH_FDAS_Admin
 				check_ajax_referer('hamspam-ip_' . $id);
 				$status = isset($_POST['new_status']) ? $_POST['new_status'] : false;
 				if (false === $status) {
-					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter','avh-fdas'))));
+					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter', 'avh-fdas'))));
 					$x->send();
 				}
 				$result = $this->_db->updateIpCache(array('ip'=>$id, 'spam'=>$status));
 				if (false === $result) {
-					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.','avh-fdas'))));
+					$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.', 'avh-fdas'))));
 					$x->send();
 				}
 				die((string) time());
@@ -1065,12 +1065,12 @@ final class AVH_FDAS_Admin
 						check_ajax_referer('hamspam-ip_' . $id);
 						$status = isset($_POST['ns']) ? $_POST['ns'] : false;
 						if (false === $status) {
-							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter','avh-fdas'))));
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('invalid_status', __('Unknown status parameter', 'avh-fdas'))));
 							$x->send();
 						}
 						$result = $this->_db->updateIpCache(array('ip'=>$id, 'spam'=>$status));
 						if (false === $result) {
-							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.','avh-fdas'))));
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_updating', __('Error updating the ipcache database table.', 'avh-fdas'))));
 							$x->send();
 						}
 						die((string) time());
@@ -1087,13 +1087,21 @@ final class AVH_FDAS_Admin
 						if (! (in_array($ip, $b))) {
 							array_push($b, $ip);
 							$this->_setBlacklistOption($b);
+							$result = $this->_db->deleteIp($id);
+							if (false === $result) {
+								$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_deleting', __('Error deleting the IP from the databse table.'))));
+								$x->send();
+							}
+						} else {
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('exists_blacklist', sprintf(__('IP %s allready exists in the blacklist.'),$ip))));
+							$x->send();
 						}
 						die((string) time());
 					
 					case 'dl': // Delete the IP from the Database.
 						check_ajax_referer('delete-ip_' . $id);
 						$result = $this->_db->deleteIp($id);
-						if (false === $result ){
+						if (false === $result) {
 							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_deleting', __('Error deleting the IP from the databse table.'))));
 							$x->send();
 						}
