@@ -1089,11 +1089,11 @@ final class AVH_FDAS_Admin
 							$this->_setBlacklistOption($b);
 							$result = $this->_db->deleteIp($id);
 							if (false === $result) {
-								$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('error_deleting', __('Error deleting the IP from the databse table.'))));
+								$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'position' => -1, 'id'=>new WP_Error('error_deleting', __('Error deleting the IP from the databse table.'))));
 								$x->send();
 							}
 						} else {
-							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'id'=>new WP_Error('exists_blacklist', sprintf(__('IP %s allready exists in the blacklist.'),$ip))));
+							$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'position' => -1, 'id'=>new WP_Error('exists_blacklist', sprintf(__('IP %s already exists in the blacklist.'),$ip))));
 							$x->send();
 						}
 						die((string) time());
