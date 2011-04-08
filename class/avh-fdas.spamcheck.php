@@ -119,6 +119,17 @@ class AVH_FDAS_SpamCheck
 	/**
 	 * Run through all the functions that will do spamchecking.
 	 *
+	 * Explanation for the use of $_did_sfs:
+	 * When a visitor comes to the main page and the IP is checked with either
+	 * Project Honey Pot or Spamhaus the result could be that the visiting IP
+	 * is marked as ham. This doesn't mean that that IP isn't registed with
+	 * Stop Forum Spam. Therefor when we have the IP in cache and it's ham we will
+	 * check it with Stop Forum Spam.
+	 *
+	 * In the next release I might add an extra field the the IP cache DB indicating
+	 * which check declared it ham and if all of them declared it ham we can safely
+	 * consider it ham.
+	 *
 	 */
 	private function _doSpamCheckFunctions ()
 	{
