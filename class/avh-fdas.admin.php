@@ -1061,7 +1061,7 @@ final class AVH_FDAS_Admin
 				die((string) time());
 			case 'delete-ipcachelog':
 				switch ($_POST['f']) {
-					case 'hs':
+					case 'hs': // Marking the IP as ham or spam
 						check_ajax_referer('hamspam-ip_' . $id);
 						$status = isset($_POST['ns']) ? $_POST['ns'] : false;
 						if (false === $status) {
@@ -1075,7 +1075,7 @@ final class AVH_FDAS_Admin
 						}
 						die((string) time());
 					
-					case 'bl':
+					case 'bl': // Adding the IP to the local Blacklist
 						check_ajax_referer('blacklist-ip_' . $id);
 						$blacklist = $this->_core->getDataElement('lists', 'blacklist');
 						if (! empty($blacklist)) {
@@ -1090,7 +1090,7 @@ final class AVH_FDAS_Admin
 						}
 						die((string) time());
 					
-					case 'dl':
+					case 'dl': // Delete the IP from the Database.
 						check_ajax_referer('delete-ip_' . $id);
 						$result = $this->_db->deleteIp($id);
 						if (false === $result ){
