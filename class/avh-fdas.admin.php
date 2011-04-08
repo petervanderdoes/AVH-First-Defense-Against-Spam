@@ -1077,8 +1077,7 @@ final class AVH_FDAS_Admin
 					
 					case 'bl':
 						check_ajax_referer('blacklist-ip_' . $id);
-						$x = new WP_Ajax_Response(array('what'=>'ipcachelog', 'position'=>- 1, 'id'=>$id, 'data'=>__('IP %s added to blacklist')));
-						$x->send();
+						
 						die((string) time());
 					
 					case 'dl':
