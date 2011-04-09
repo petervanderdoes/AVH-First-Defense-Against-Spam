@@ -275,10 +275,10 @@ class AVH_FDAS_SpamCheck
 				$this->_handleSpammer();
 			}
 		} else {
-			if (is_object($this->_ip_in_cache)) {
-				$this->_ipcachedb->updateIpCache(array('ip'=>$this->_visiting_ip, 'lastseen'=>current_time('mysql')));
-			} else {
-				if (1 == $this->_core_options['general']['useipcache']) {
+			if (1 == $this->_core_options['general']['useipcache']) {
+				if (is_object($this->_ip_in_cache)) {
+					$this->_ipcachedb->updateIpCache(array('ip'=>$this->_visiting_ip, 'lastseen'=>current_time('mysql')));
+				} else {
 					$this->_ipcachedb->insertIp($this->_visiting_ip, 0);
 				}
 			}
