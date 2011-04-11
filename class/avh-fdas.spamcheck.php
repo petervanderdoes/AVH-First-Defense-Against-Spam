@@ -261,7 +261,7 @@ class AVH_FDAS_SpamCheck
 	private function _handleResults ()
 	{
 		global $post;
-		if (true === $this->_spammer_detected ) {
+		if (true === $this->_spammer_detected) {
 			if ('/wp-comments-post.php' == $_SERVER['REQUEST_URI']) {
 				$title = isset($post->post_title) ? $post->post_title : '';
 				$id = isset($post->ID) ? $post->ID : 0;
@@ -276,7 +276,7 @@ class AVH_FDAS_SpamCheck
 					$this->_accessing .= $key .' => '.$value."\n";
 				}
 			}*/
-			if (is_object($this->_ip_in_cache)) {
+			if (is_object($this->_ip_in_cache) && 1 == $this->_ip_in_cache->spam) {
 				$this->_handleSpammerCache();
 			} else {
 				$this->_handleSpammer();
@@ -554,7 +554,15 @@ class AVH_FDAS_SpamCheck
 		
 		if (_die) {
 			if (1 == $this->_core_options['general']['useipcache']) {
-				$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
+				if (is_object($this->_ip_in_cache)) {
+					$this->_ipcachedb->updateIpCache(array (
+															'ip' => $this->_visiting_ip,
+															'spam' => 1,
+															'lastseen' => current_time('mysql')));
+				
+				} else {
+					$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
+				}
 			}
 			
 			// Update the counter
