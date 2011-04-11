@@ -81,50 +81,51 @@ setIpCacheLogList = function() {
 		el.html(n);
 	}
 
-	// In admin-ajax.php, we send back the unix time stamp instead of 1 on success
+	// In admin-ajax.php, we send back the Unix time stamp instead of 1 on success
 	delAfter = function( r, settings ) {
-		var total, pageLinks, N, spam, ham, blacklist, del, removed =  false;
+		var total, pageLinks, deltaSpam, deltaHam, removed =  false;
 		var unspam = $(settings.target).parent().is('span.set_ham');
 		var unham = $(settings.target).parent().is('span.set_spam');
 		var blacklist = $(settings.target).parent().is('span.set_blacklist');
 		var del = $(settings.target).parent().is('span.set_delete');
+		var rowData = $('#inline-'+settings.data.id);
 		
 		function getUpdate(s) {
-			if ( $(settings.target).parent().is('span.' + s) )
+			var a=$('div.ip_hamspam', rowData).text();
+			if ( a == s ) {
 				return 1;
-			else if ( $('#' + settings.element).is('.' + s) )
-				return -1;
-
+			}
 			return 0;
 		}
 		
 		if ( unspam ) {
-			spam = -1;
-			ham = 1;
+			deltaSpam = -1;
+			deltaHam = 1;
 		}
 		if ( unham ) {
-			ham = -1;
-			spam = 1;
+			deltaHam = -1;
+			deltaSpam = 1;
 		}
 
 		if (blacklist || del ) {
-			ham = -1;
-			spam = -1;
+			t=$('div.ip_hamspam', $('#inline-'+settings.data.id)).text();
+			deltaHam = ( t == 'ham') ? -1 : 0;
+			deltaSpam = (t == 'spam') ? -1 : 0;
 		}
 
 		$('span.spam-count').each( function() {
-			var a = $(this), n = getCount(a) + spam;
+			var a = $(this), n = getCount(a) + deltaSpam;
 			updateCount(a, n);
 		});
 
 		$('span.ham-count').each( function() {
-			var a = $(this), n = getCount(a) + ham;
+			var a = $(this), n = getCount(a) + deltaHam;
 			updateCount(a, n);
 		});
 
 
 		total = totalInput.val() ? parseInt( totalInput.val(), 10 ) : 0;
-		total = total - spam - ham;
+		total = total  + deltaHam + deltaSpam;
 		if ( total < 0 )
 			total = 0;
 
@@ -135,9 +136,9 @@ setIpCacheLogList = function() {
 				$('.total-pages').text( settings.parsed.responses[0].supplemental.total_pages_i18n );
 				$('.tablenav-pages').find('.next-page, .last-page').toggleClass('disabled', settings.parsed.responses[0].supplemental.total_pages == $('.current-page').val());
 			}
-			//updateTotalCount( total, settings.parsed.responses[0].supplemental.time, true );
+			updateTotalCount( total, settings.parsed.responses[0].supplemental.time, true );
 		} else {
-			//updateTotalCount( total, r, false );
+			updateTotalCount( total, r, false );
 		}
 
 

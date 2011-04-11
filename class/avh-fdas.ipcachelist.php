@@ -282,7 +282,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		echo $ip_text;
 		
 		echo '<div id="inline-'.$ip->ip.'" class="hidden">';
-		echo '<div class="ip_status">'.$ip->spam.'</div>';
+		echo '<div class="ip_hamspam">'.($ip->spam==0?'ham':'spam').'</div>';
 		echo '</div>';
 		
 		$del_nonce = esc_html('_wpnonce=' . wp_create_nonce("delete-ip_$ip->ip"));
