@@ -82,7 +82,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			$number = (int) $_REQUEST['number'];
 		}
 		else {
-			$number = $ips_per_page + min( 8, $ips_per_page ); // Grab a few extra
+			$number = $ips_per_page + min( 8, $ips_per_page ); // Grab a few extra, when changing the 8 changes are need in avh-fdas.ipcachelist.js
 		}
 		
 		$page = $this->get_pagenum();

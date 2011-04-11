@@ -153,7 +153,7 @@ setIpCacheLogList = function() {
 
 	var refillTheExtraList = function(ev) {
 		// var args = $.query.get(), total_pages = listTable.get_total_pages(), per_page = $('input[name=_per_page]', '#comments-form').val(), r;
-		var args = $.query.get(), total_pages = $('.total-pages').text(), per_page = $('input[name=_per_page]', '#comments-form').val(), r;
+		var args = $.query.get(), total_pages = $('.total-pages').text(), per_page = $('input[name=_per_page]', '#ipcachelist-form').val(), r;
 
 		if (! args.paged)
 			args.paged = 1;
@@ -164,7 +164,7 @@ setIpCacheLogList = function() {
 
 		if (ev) {
 			theExtraList.empty();
-			args.number = Math.min(8, per_page); // see WP_Comments_List_Table::prepare_items() @ class-wp-comments-list-table.php
+			args.number = Math.min(8, per_page); // see AVH_FDAS_IPCacheList::prepare_items() @ avh-fdas.ipcachelist.php
 		} else {
 			args.number = 1;
 			args.offset = Math.min(8, per_page) - 1; // fetch only the next item on the extra list
