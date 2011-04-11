@@ -83,7 +83,7 @@ setIpCacheLogList = function() {
 
 	// In admin-ajax.php, we send back the Unix time stamp instead of 1 on success
 	delAfter = function( r, settings ) {
-		var total, pageLinks, deltaSpam, deltaHam, removed =  false;
+		var total, pageLinks, deltaSpam, deltaHam;
 		var unspam = $(settings.target).parent().is('span.set_ham');
 		var unham = $(settings.target).parent().is('span.set_spam');
 		var blacklist = $(settings.target).parent().is('span.set_blacklist');
@@ -142,7 +142,7 @@ setIpCacheLogList = function() {
 		}
 
 
-		if ( ! theExtraList || theExtraList.size() == 0 || theExtraList.children().size() == 0 || !removed ) {
+		if ( ! theExtraList || theExtraList.size() == 0 || theExtraList.children().size() == 0 ) {
 			return;
 		}
 
