@@ -18,6 +18,7 @@ class AVH_FDAS_DB
 	 */
 	public function __construct ()
 	{
+		wp_cache_add_global_groups('avhfdas');
 		register_shutdown_function(array(&$this, '__destruct'));
 	}
 
@@ -201,42 +202,28 @@ class AVH_FDAS_DB
 	public function countIps ()
 	{
 		global $wpdb;
-		$key = md5( __CLASS__ . '::'.__FUNCTION__ ) ;
-		$last_changed = wp_cache_get('last_changed', 'comment');
-		if ( !$last_changed ) {
-			$last_changed = time();
-			wp_cache_set('last_changed', $last_changed, 'comment');
-		}
-		$cache_key = "avhfdas-count-ips:$key:$last_changed";
-		
-		$count = wp_cache_get($cache_key, 'counts');
-		
-		if (false !== $count) {
-			return $count;
-		}
-		
+
 		$where = '';
 		
 		$count = $wpdb->get_results("SELECT spam, COUNT( * ) AS num_ips FROM {$wpdb->avhfdasipcache} GROUP BY spam", ARRAY_A);
 		
 		$total = 0;
-		$approved = array('0'=>'ham', '1'=>'spam');
-		$known_types = array_keys($approved);
+		$status = array('0'=>'ham', '1'=>'spam');
+		$known_types = array_keys($status);
 		foreach ((array) $count as $row) {
 			// Don't count post-trashed toward totals
 			$total += $row['num_ips'];
 			if (in_array($row['spam'], $known_types))
-				$stats[$approved[$row['spam']]] = (int) $row['num_ips'];
+				$stats[$status[$row['spam']]] = (int) $row['num_ips'];
 		}
 		
 		$stats['all'] = $total;
-		foreach ($approved as $key) {
+		foreach ($status as $key) {
 			if (empty($stats[$key]))
 				$stats[$key] = 0;
 		}
 		
 		$stats = (object) $stats;
-		wp_cache_set($cache_key, $stats, 'counts');
 		
 		return $stats;
 	}
