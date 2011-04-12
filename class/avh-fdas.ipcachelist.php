@@ -194,12 +194,16 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	}
 
 	function get_bulk_actions() {
-		global $status;
+		global $ip_status;
 
 		$actions = array();
 
-		$screen = get_current_screen();
-
+		if ( in_array( $ip_status, array( 'all', 'ham' ) ) ) {
+			$actions['spam'] = __( 'Mark as spam' );
+		}
+		if ( in_array( $ip_status, array( 'all', 'spam' ) ) ) {
+			$actions['ham'] = __( 'Mark as ham' );
+		}
 		$actions['delete'] = __( 'Delete' );
 		$actions['blacklist'] = __( 'Blacklist' );
 		

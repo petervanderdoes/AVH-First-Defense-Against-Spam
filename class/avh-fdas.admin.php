@@ -379,7 +379,7 @@ final class AVH_FDAS_Admin
 			echo ($use_sfs ? '<span class="b">Stop Forum Spam</span>' : '');
 			if ($use_php) {
 				if ($use_sfs) {
-					echo ($use_sh ? ', ' : __(' and ','avh-fdas'));
+					echo ($use_sh ? ', ' : __(' and ', 'avh-fdas'));
 				}
 				echo '<span class="b">Project Honey Pot</span>';
 			}
@@ -1204,14 +1204,12 @@ final class AVH_FDAS_Admin
 						wp_redirect(wp_get_referer());
 						exit();
 					}
-					
+					$redirect_to = remove_query_arg(array (
+															$doaction), wp_get_referer());
+					$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
 					switch ($doaction) {
 						case 'delete':
 							$deleted = 0;
-							$redirect_to = remove_query_arg(array (
-																	'delete'), wp_get_referer());
-							$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
-							
 							foreach ($ips as $ip) {
 								$this->_db->deleteIp($ip);
 								$deleted ++;
@@ -1226,9 +1224,6 @@ final class AVH_FDAS_Admin
 							break;
 						case 'blacklist':
 							$blacklisted = 0;
-							$redirect_to = remove_query_arg(array (
-																	'blacklist'), wp_get_referer());
-							$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
 							$blacklist = $this->_core->getDataElement('lists', 'blacklist');
 							if (! empty($blacklist)) {
 								$b = explode("\r\n", $blacklist);
@@ -1252,7 +1247,27 @@ final class AVH_FDAS_Admin
 							wp_redirect($redirect_to);
 							exit();
 							break;
+						case 'ham':
+						case 'spam':
+							$hamspammed = 0;
+							$new_status = ($doaction == 'ham' ? 0 : 1);
+							foreach ($ips as $ip) {
+								
+								$result = $this->_db->updateIpCache(array (
+																			'ip' => $ip,
+																			'spam' => $new_status));
+								$hamspammed ++;
 							
+							}
+							if ($hamspammed) {
+								$arg = ($doaction == 'ham' ? 'hammed' : 'spammed');
+								$redirect_to = add_query_arg($arg, $deleted, $redirect_to);
+							}
+							
+							wp_redirect($redirect_to);
+							exit();
+							break;
+					
 					}
 			
 			}
@@ -1263,18 +1278,28 @@ final class AVH_FDAS_Admin
 			exit();
 		}
 		
-		if (isset($_REQUEST['deleted']) || isset($_REQUEST['blacklisted'])) {
+		if (isset($_REQUEST['deleted']) || isset($_REQUEST['blacklisted']) || isset($_REQUEST['hammed']) || isset($_REQUEST['spammed'])) {
 			$deleted = isset($_REQUEST['deleted']) ? (int) $_REQUEST['deleted'] : 0;
 			$blacklisted = isset($_REQUEST['blacklisted']) ? (int) $_REQUEST['blacklisted'] : 0;
+			$hammed = isset($_REQUEST['hammed']) ? (int) $_REQUEST['hammed'] : 0;
+			$spammed = isset($_REQUEST['spammed']) ? (int) $_REQUEST['spammed'] : 0;
 			
-				if ($deleted > 0) {
-					$this->_ip_cache_list->messages[] = sprintf(_n('%s IP permanently deleted', '%s IP\'s deleted', $deleted), $deleted);
-				}
+			if ($deleted > 0) {
+				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP permanently deleted', '%s IP\'s deleted', $deleted), $deleted);
+			}
 			
-				if ($blacklisted > 0) {
-					$this->_ip_cache_list->messages[] = sprintf(_n('%s IP added to the blacklist', '%s IP\'s added to the blacklist', $blacklisted), $blacklisted);
-				}
+			if ($blacklisted > 0) {
+				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP added to the blacklist', '%s IP\'s added to the blacklist', $blacklisted), $blacklisted);
+			}
 			
+			if ($hammed > 0) {
+				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP marked as ham', '%s IP\'s marked as ham', $hammed), $hammed);
+			}
+			
+			if ($spammed > 0) {
+				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP marked as spam', '%s IP\'s marked as spam', $spammed), $spammed);
+			}
+		
 		}
 		$this->_ip_cache_list->prepare_items();
 		
