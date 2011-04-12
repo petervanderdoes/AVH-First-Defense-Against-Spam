@@ -1190,37 +1190,72 @@ final class AVH_FDAS_Admin
 		$doaction = $this->_ip_cache_list->current_action();
 		
 		if ($doaction) {
-			check_admin_referer('bulk-ips');
+			switch ($doaction) {
+				case 'delete':
+				case 'blacklist':
+				case 'ham':
+				case 'spam':
+					// These are the BULK actions
+					check_admin_referer('bulk-ips');
+					
+					if (isset($_REQUEST['delete_ips'])) {
+						$ips = $_REQUEST['delete_ips'];
+					} elseif (wp_get_referer()) {
+						wp_redirect(wp_get_referer());
+						exit();
+					}
+					
+					switch ($doaction) {
+						case 'delete':
+							$deleted = 0;
+							$redirect_to = remove_query_arg(array (
+																	'delete'), wp_get_referer());
+							$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
+							
+							foreach ($ips as $ip) {
+								$this->_db->deleteIp($ip);
+								$deleted ++;
+							}
+							
+							if ($deleted) {
+								$redirect_to = add_query_arg('deleted', $deleted, $redirect_to);
+							}
+							
+							wp_redirect($redirect_to);
+							exit();
+							break;
+						case 'blacklist':
+							$blacklisted = 0;
+							$redirect_to = remove_query_arg(array (
+																	'blacklist'), wp_get_referer());
+							$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
+							$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+							if (! empty($blacklist)) {
+								$b = explode("\r\n", $blacklist);
+							} else {
+								$b = array ();
+							}
+							foreach ($ips as $ip) {
+								
+								$ip = long2ip($ip);
+								if (! (in_array($ip, $b))) {
+									array_push($b, $ip);
+									$this->_db->deleteIp($ip);
+									$blacklisted ++;
+								}
+							}
+							if ($blacklisted) {
+								$this->_setBlacklistOption($b);
+								$redirect_to = add_query_arg('blacklisted', $deleted, $redirect_to);
+							}
+							
+							wp_redirect($redirect_to);
+							exit();
+							break;
+							
+					}
 			
-			if (isset($_REQUEST['deleted_ips'])) {
-				$ips = $_REQUEST['deleted_ips'];
-			} elseif (wp_get_referer()) {
-				wp_redirect(wp_get_referer());
-				exit();
 			}
-			
-			$deleted = 0;
-			
-			$redirect_to = remove_query_arg(array (
-													'deleted'), wp_get_referer());
-			$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
-			
-			// Check the permissions on each
-			foreach ($ips as $ip) {
-				switch ($doaction) {
-					case 'deleted':
-						$this->_db->deleteIp($ip);
-						$deleted ++;
-						break;
-				}
-			}
-			
-			if ($deleted) {
-				$redirect_to = add_query_arg('deleted', $deleted, $redirect_to);
-			}
-			
-			wp_redirect($redirect_to);
-			exit();
 		} elseif (! empty($_GET['_wp_http_referer'])) {
 			wp_redirect(remove_query_arg(array (
 												'_wp_http_referer',
@@ -1228,15 +1263,18 @@ final class AVH_FDAS_Admin
 			exit();
 		}
 		
-		if (isset($_REQUEST['deleted'])) {
+		if (isset($_REQUEST['deleted']) || isset($_REQUEST['blacklisted'])) {
 			$deleted = isset($_REQUEST['deleted']) ? (int) $_REQUEST['deleted'] : 0;
+			$blacklisted = isset($_REQUEST['blacklisted']) ? (int) $_REQUEST['blacklisted'] : 0;
 			
-			if ($deleted > 0) {
 				if ($deleted > 0) {
 					$this->_ip_cache_list->messages[] = sprintf(_n('%s IP permanently deleted', '%s IP\'s deleted', $deleted), $deleted);
 				}
 			
-			}
+				if ($blacklisted > 0) {
+					$this->_ip_cache_list->messages[] = sprintf(_n('%s IP added to the blacklist', '%s IP\'s added to the blacklist', $blacklisted), $blacklisted);
+				}
+			
 		}
 		$this->_ip_cache_list->prepare_items();
 		
