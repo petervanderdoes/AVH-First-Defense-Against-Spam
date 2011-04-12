@@ -289,7 +289,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$blacklist_nonce = esc_html('_wpnonce=' . wp_create_nonce("blacklist-ip_$ip->ip"));
 		$hamspam_nonce = esc_html('_wpnonce=' . wp_create_nonce("hamspam-ip_$ip->ip"));
 		
-		$url = "http://blog.grandprix.int/wp-admin/admin.php?page=avh-first-defense-against-spam-ip-cache-log";
+		$url = "admin.php?page=avh-first-defense-against-spam-ip-cache-log?i=$ip->ip";
 		
 		$ham_url = esc_url($url."&action=hamip&$hamspam_nonce");
 		$spam_url = esc_url($url."&action=spamip&$hamspam_nonce");
