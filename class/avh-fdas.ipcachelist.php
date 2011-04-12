@@ -53,10 +53,6 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		) );
 	}
 	
-	function get_table_classes() {
-		return array( 'widefat', $this->_args['plural'] );
-	}
-
 	function ajax_user_can() {
 		return true;
 	}
