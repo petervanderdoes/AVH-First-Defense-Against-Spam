@@ -372,13 +372,26 @@ final class AVH_FDAS_Admin
 		echo '<p>';
 		$use_sfs = $this->_core->getOptionElement('general', 'use_sfs');
 		$use_php = $this->_core->getOptionElement('general', 'use_php');
-		if ($use_sfs || $use_php) {
+		$use_sh = $this->_core->getOptionElement('general', 'use_sh');
+		if ($use_sfs || $use_php || $use_sh) {
 			echo __('Checking with ', 'avh-fdas');
-			echo ($use_sfs ? '<span class="b">' . __('Stop Forum Spam', 'avh-fdas') . '</span>' : '');
+			$x = 0;
+			echo ($use_sfs ? '<span class="b">Stop Forum Spam</span>' : '');
 			if ($use_php) {
-				echo ($use_sfs ? __(' and ', 'avh-fdas') : ' ');
-				echo '<span class="b">' . __('Project Honey Pot', 'avh-fdas') . '</span>';
+				if ($use_sfs) {
+					echo ($use_sh ? ', ' : __(' and ','avh-fdas'));
+				}
+				echo '<span class="b">Project Honey Pot</span>';
 			}
+			if ($use_sh) {
+				if ($use_php || $use_sfs) {
+					echo __(' and ', 'avh-fdas');
+				} else {
+					echo ' ';
+				}
+				echo '<span class="b">Spamhaus</span>';
+			}
+		
 		}
 		echo '</p></div>';
 		echo '<p class="sub">';
