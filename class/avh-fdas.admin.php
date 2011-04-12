@@ -1066,6 +1066,14 @@ final class AVH_FDAS_Admin
 	public function metaboxFAQ ()
 	{
 		echo '<p>';
+		echo '<span class="b">Usage terms of the 3rd Parties</span><br />';
+		echo 'Please read the usage terms of the 3rd party you are activating.<br />';
+		echo '<ul>';
+		echo '<li><a href="http://www.stopforumspam.com/apis" target="_blank">Stop Forum Spam.</a>';
+		echo '<li><a href="http://www.projecthoneypot.org/terms_of_service_use.php" target="_blank">Project Honey Pot.</a>';
+		echo '<li><a href="http://www.spamhaus.org/organization/dnsblusage.html" target="_blank">Spamhaus.</a>';
+		echo '</ul>';
+		echo '<p>';
 		echo '<span class="b">Why is there an IP caching system?</span><br />';
 		echo 'Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it iset at 5000 calls a day.<br />';
 		echo 'This means that if you don\'t use the Blacklist and/or Whitelist you are limited to 5000 visits/day on your site. To overcome this possible problem I wrote an IP caching system.<br />';
