@@ -210,12 +210,6 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		return $actions;
 	}
 
-	function bulk_actions( $which ) {
-		global $status;
-
-		parent::bulk_actions( $which );
-	}
-
 	function extra_tablenav( $which ) {
 		global $status;
 
