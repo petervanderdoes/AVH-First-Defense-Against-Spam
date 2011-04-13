@@ -116,7 +116,8 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.2-dev4 =
-* AJAX'fied the IP Cache Log. You can spam/ham, blacklist or delete an IP. 
+* Added Immediate Actions (on-hover links) (Ham, Spam, Blacklist and Delete) to the IP Cache Log list below the IP. 
+* Added bulk actions Ham, Spam and Blacklist to the IP Cache Log list. 
 * Adds the ability to check with Spamhaus.org
 * When a spam check results in a termination of the connection, no more checks will be performed. This removes the option to receive Project Honey Pot information even when Stop Forum Spam determined the connection can be terminated.
 * When Project Honey Pot determines the visiting IP is a known search engine no further checking is done.
