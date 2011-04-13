@@ -1191,6 +1191,7 @@ final class AVH_FDAS_Admin
 		
 		if ($doaction) {
 			switch ($doaction) {
+				
 				case 'delete':
 				case 'blacklist':
 				case 'ham':
@@ -1269,6 +1270,49 @@ final class AVH_FDAS_Admin
 							break;
 					
 					}
+					break;
+				
+				case 'spamip':
+				case 'hamip':
+				case 'blacklistip':
+				case 'deleteip':
+					// These are the ROW actions
+					$redirect_to = remove_query_arg(array (
+																				$doaction), wp_get_referer());
+					$redirect_to = add_query_arg('paged', $pagenum, $redirect_to);
+					$ip = absint($_GET['i']);
+					switch ($doaction) {
+						case 'spamip':
+						case 'hamip':
+							check_admin_referer('hamspam-ip_' . $ip);
+							$new_status = ($doaction == 'hamip' ? 0 : 1);
+							$result = $this->_db->updateIpCache(array (
+																		'ip' => $ip,
+																		'spam' => $new_status));
+							wp_redirect($redirect_to);
+							exit();
+							break;
+						case 'blacklistip':
+							$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+							if (! empty($blacklist)) {
+								$b = explode("\r\n", $blacklist);
+							} else {
+								$b = array ();
+							}
+							$ip_human = long2ip($ip);
+							if (! (in_array($ip_human, $b))) {
+								array_push($b, $ip_human);
+								$this->_db->deleteIp($ip);
+								$this->_setBlacklistOption($b);
+							}
+							wp_redirect($redirect_to);
+							exit();
+							break;
+						case 'deleteip':
+							$this->_db->deleteIp($ip);
+							
+					}
+					break;
 			
 			}
 		} elseif (! empty($_GET['_wp_http_referer'])) {
