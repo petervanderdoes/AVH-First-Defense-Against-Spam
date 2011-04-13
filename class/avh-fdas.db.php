@@ -63,7 +63,7 @@ class AVH_FDAS_DB
 	/**
 	 * Delete an IP from the DB
 	 * @param $ip
-	 * @return ip Object (false if not found)
+	 * @return int|false Number of rows affected/selected or false on error
 	 */
 	public function deleteIp($ip)
 	{
@@ -177,7 +177,7 @@ class AVH_FDAS_DB
 	/**
 	 * Insert the IP into the DB
 	 * @param $ip string
-	 * @return Object (false if not found)
+	 * @return int|false The number of rows updated, or false on error.
 	 */
 	public function updateIpCache ($ip_cache_arr)
 	{
