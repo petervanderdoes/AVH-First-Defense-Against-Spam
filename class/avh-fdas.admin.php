@@ -1392,10 +1392,6 @@ final class AVH_FDAS_Admin
 			case $this->_hooks['avhfdas_menu_faq']:
 				$columns[$this->_hooks['avhfdas_menu_faq']] = 2;
 				break;
-			case $this->_hooks['avhfdas_menu_ip_cache_log']:
-				$columns[$this->_hooks['avhfdas_menu_ip_cache_log']] = 1;
-				break;
-		
 		}
 		return $columns;
 	}
