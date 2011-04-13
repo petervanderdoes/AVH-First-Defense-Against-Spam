@@ -160,36 +160,41 @@ table.avhfdas-options {
 
 /* IP Cache Log List */
 #the-ipcache-list td {
-    vertical-align: top;
+	vertical-align: top;
 }
 
 #ipcachelist-form .fixed .column-ip {
-    width: 10%;
+	width: 10%;
 }
+
 /*#ipcachelist-form .fixed .column-spam {
     width: 10%;
 }
 */
 #ipcachelist-form .fixed .column-lastseen {
-    width: 30%;
+	width: 30%;
 }
+
 #ipcachelist-form .fixed .column-added {
-    width: 30%;
+	width: 30%;
 }
 
 #the-ipcache-list .set_delete a {
-    color: #BC0B0B;
+	color: #BC0B0B;
 }
+
 #the-ipcache-list .ip a:hover {
-    color: #D54E21;
+	color: #D54E21;
 }
 
 #the-ipcache-list .set_spam a {
-    color: #D98500;
+	color: #D98500;
 }
+
 #the-ipcache-list .set_ham a {
-    color: #006505;
+	color: #006505;
 }
+
 .set_ham {
 	display: none;
 }

@@ -71,7 +71,7 @@ if (! class_exists('AVH_Common')) {
 			$public_base = max($directory_array);
 			return $public_base;
 		}
-	
+
 		/**
 		 * This function will take an IP address or IP number in almost any format (that I can think of) and will return it's decimal unsigned equivalent, as a string.
 		 * Kind				=> Input				=>  Return		=>  long2ip(Return)
@@ -87,13 +87,14 @@ if (! class_exists('AVH_Common')) {
 		 *
 		 * @param string/numeric $ip
 		 */
-		public static function getIp2long($ip){
-    		if (is_numeric($ip)){
-        		$return=sprintf("%u", floatval($ip));
-    		} else {
-        		$return=sprintf("%u", floatval(ip2long($ip)));
-    		}
-    		return $return;
+		public static function getIp2long ($ip)
+		{
+			if (is_numeric($ip)) {
+				$return = sprintf("%u", floatval($ip));
+			} else {
+				$return = sprintf("%u", floatval(ip2long($ip)));
+			}
+			return $return;
 		}
 	}
 }

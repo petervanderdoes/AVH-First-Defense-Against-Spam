@@ -19,7 +19,7 @@ class AVH_FDAS_DB
 	public function __construct ()
 	{
 		wp_cache_add_global_groups('avhfdas');
-		register_shutdown_function(array(&$this, '__destruct'));
+		register_shutdown_function(array ( &$this, '__destruct' ));
 	}
 
 	/**
@@ -60,15 +60,16 @@ class AVH_FDAS_DB
 			return $_result;
 		}
 	}
+
 	/**
 	 * Delete an IP from the DB
 	 * @param $ip
 	 * @return int|false Number of rows affected/selected or false on error
 	 */
-	public function deleteIp($ip)
+	public function deleteIp ($ip)
 	{
 		global $wpdb;
-		$ip  = AVH_Common::getIp2long($ip);
+		$ip = AVH_Common::getIp2long($ip);
 		// Query database
 		$result = $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->avhfdasipcache WHERE ip = %s", $ip));
 		if ($result) {
@@ -78,11 +79,12 @@ class AVH_FDAS_DB
 		}
 	}
 
-	public function getIpCache ($query_vars, $output=OBJECT)
+	public function getIpCache ($query_vars, $output = OBJECT)
 	{
 		global $wpdb;
 		
-		$defaults = array('ip'=>'', 'added'=>'', 'lastseen'=>'', 'status'=>'all', 'search'=>'', 'offset'=>'', 'number'=>'', 'orderby'=>'', 'order'=>'DESC', 'count'=>false);
+		$defaults = array ( 'ip' => '', 'added' => '', 'lastseen' => '', 'status' => 'all', 'search' => '', 'offset' => '', 
+							'number' => '', 'orderby' => '', 'order' => 'DESC', 'count' => false );
 		$this->_query_vars = wp_parse_args($query_vars, $defaults);
 		extract($this->_query_vars, EXTR_SKIP);
 		
@@ -90,7 +92,7 @@ class AVH_FDAS_DB
 		
 		if (! empty($orderby)) {
 			$ordersby = is_array($orderby) ? $orderby : preg_split('/[,\s]/', $orderby);
-			$ordersby = array_intersect($ordersby, array('ip', 'lastseen', 'added', 'spam'));
+			$ordersby = array_intersect($ordersby, array ( 'ip', 'lastseen', 'added', 'spam' ));
 			$orderby = empty($ordersby) ? 'added' : implode(', ', $ordersby);
 		} else {
 			$orderby = 'ip';
@@ -129,11 +131,11 @@ class AVH_FDAS_DB
 		}
 		
 		if (! empty($ip)) {
-			$ip  = AVH_Common::getIp2long($ip);
+			$ip = AVH_Common::getIp2long($ip);
 			$where .= $wpdb->prepare(' AND ip = %s', $ip);
 		}
-		if ( '' !== $search )
-			$where .= $this->_getSearchSql( $search, array( 'ip' ) );
+		if ('' !== $search)
+			$where .= $this->_getSearchSql($search, array ( 'ip' ));
 		
 		$query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
 		
@@ -164,7 +166,7 @@ class AVH_FDAS_DB
 	public function insertIp ($ip, $spam)
 	{
 		global $wpdb;
-		$ip  = AVH_Common::getIp2long($ip);
+		$ip = AVH_Common::getIp2long($ip);
 		$date = current_time('mysql');
 		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%s, %d, %s, %s)", $ip, $spam, $date, $date));
 		if ($result) {
@@ -183,32 +185,32 @@ class AVH_FDAS_DB
 	{
 		global $wpdb;
 		
-		$ip_cache_arr['ip']  = AVH_Common::getIp2long($ip_cache_arr['ip']);
+		$ip_cache_arr['ip'] = AVH_Common::getIp2long($ip_cache_arr['ip']);
 		
 		$_ip = $this->getIp($ip_cache_arr['ip'], ARRAY_A);
 		
 		$_ip = esc_sql($_ip);
 		
-		$ip_cache_arr = array_merge($_ip,$ip_cache_arr);
+		$ip_cache_arr = array_merge($_ip, $ip_cache_arr);
 		
 		extract(stripslashes_deep($ip_cache_arr), EXTR_SKIP);
-
+		
 		$data = compact('spam', 'lastseen');
-		$return = $wpdb->update( $wpdb->avhfdasipcache, $data, compact( 'ip' ) );
-
+		$return = $wpdb->update($wpdb->avhfdasipcache, $data, compact('ip'));
+		
 		return $return;
 	}
 
 	public function countIps ()
 	{
 		global $wpdb;
-
+		
 		$where = '';
 		
 		$count = $wpdb->get_results("SELECT spam, COUNT( * ) AS num_ips FROM {$wpdb->avhfdasipcache} GROUP BY spam", ARRAY_A);
 		
 		$total = 0;
-		$status = array('0'=>'ham', '1'=>'spam');
+		$status = array ( '0' => 'ham', '1' => 'spam' );
 		$known_types = array_keys($status);
 		foreach ((array) $count as $row) {
 			// Don't count post-trashed toward totals
@@ -227,16 +229,17 @@ class AVH_FDAS_DB
 		
 		return $stats;
 	}
-	
-	private function _getSearchSql( $string, $cols ) {
+
+	private function _getSearchSql ($string, $cols)
+	{
 		
 		if (in_array('ip', $cols)) {
-			$ip =  esc_sql(AVH_Common::getIp2long($string));
+			$ip = esc_sql(AVH_Common::getIp2long($string));
 		}
-		$string = esc_sql( like_escape( $string ) );
+		$string = esc_sql(like_escape($string));
 		
-		$searches = array();
-		foreach ( $cols as $col ){
+		$searches = array ();
+		foreach ($cols as $col) {
 			if ('ip' == $col) {
 				$searches[] = "$col = '$ip'";
 			}

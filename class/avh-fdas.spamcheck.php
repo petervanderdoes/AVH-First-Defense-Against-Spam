@@ -70,9 +70,7 @@ class AVH_FDAS_SpamCheck
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			unset($this->_spamcheck_functions_array[05]); // @TODO make this more flexible
 			$this->_doSpamCheckFunctions();
-			$this->_spamcheck_functions_array[05] = array (
-															&$this,
-															'_doIpCheckStopForumSpam');
+			$this->_spamcheck_functions_array[05] = array ( &$this, '_doIpCheckStopForumSpam' );
 		}
 	}
 
@@ -284,9 +282,7 @@ class AVH_FDAS_SpamCheck
 		} else {
 			if (1 == $this->_core_options['general']['useipcache']) {
 				if (is_object($this->_ip_in_cache)) {
-					$this->_ipcachedb->updateIpCache(array (
-															'ip' => $this->_visiting_ip,
-															'lastseen' => current_time('mysql')));
+					$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'lastseen' => current_time('mysql') ));
 				} else {
 					$this->_ipcachedb->insertIp($this->_visiting_ip, 0);
 				}
@@ -307,9 +303,9 @@ class AVH_FDAS_SpamCheck
 		if (isset($data['ip'])) {
 			return ($data['ip']);
 		}
-		return (array (
-						'Error' => array (
-										'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($data, true))));
+		return (array ( 
+						'Error' => array ( 
+										'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($data, true) ) ));
 	}
 
 	/**
@@ -555,10 +551,8 @@ class AVH_FDAS_SpamCheck
 		if (_die) {
 			if (1 == $this->_core_options['general']['useipcache']) {
 				if (is_object($this->_ip_in_cache)) {
-					$this->_ipcachedb->updateIpCache(array (
-															'ip' => $this->_visiting_ip,
-															'spam' => 1,
-															'lastseen' => current_time('mysql')));
+					$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'spam' => 1, 
+															'lastseen' => current_time('mysql') ));
 				
 				} else {
 					$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
@@ -598,9 +592,7 @@ class AVH_FDAS_SpamCheck
 		// Update the counter
 		$this->_updateSpamCounter();
 		// Update Last seen value
-		$this->_ipcachedb->updateIpCache(array (
-														'ip' => $this->_visiting_ip,
-														'lastseen' => current_time('mysql')));
+		$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'lastseen' => current_time('mysql') ));
 		// Terminate the connection
 		$this->_doTerminateConnection();
 	}

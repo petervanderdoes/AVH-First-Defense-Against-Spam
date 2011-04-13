@@ -16,9 +16,9 @@ function avh_FDAS_init ()
 		require_once ($_settings->plugin_working_dir . '/class/avh-fdas.admin.php');
 		$avhfdas_admin = new AVH_FDAS_Admin();
 		// Activation Hook
-		register_activation_hook(__FILE__, array(&$avhfdas_admin, 'installPlugin'));
+		register_activation_hook(__FILE__, array ( &$avhfdas_admin, 'installPlugin' ));
 		// Deactivation Hook
-		register_deactivation_hook(__FILE__, array(&$avhfdas_admin, 'deactivatePlugin'));
+		register_deactivation_hook(__FILE__, array ( &$avhfdas_admin, 'deactivatePlugin' ));
 	}
 	require_once ($_settings->plugin_working_dir . '/class/avh-fdas.public.php');
 	$avhfdas_public = new AVH_FDAS_Public();
