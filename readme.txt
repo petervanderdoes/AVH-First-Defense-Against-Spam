@@ -3,8 +3,8 @@ Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
-Tested up to: 3.1
-Stable tag: 3.2-dev4
+Tested up to: 3.1.3
+Stable tag: 3.2
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -115,7 +115,7 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
-= Version 3.2-dev4 =
+= Version 3.2 =
 * Adds Immediate Actions (on-hover links) (Ham, Spam, Blacklist and Delete) to the IP Cache Log list below the IP. 
 * Adds bulk actions Ham, Spam and Blacklist to the IP Cache Log list. 
 * Adds the ability to check with Spamhaus.org
