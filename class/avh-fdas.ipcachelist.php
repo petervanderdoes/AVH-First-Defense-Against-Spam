@@ -50,7 +50,12 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 		
 		$page = $this->get_pagenum();
 		
-		parent::WP_List_Table(array ( 'plural' => 'ips', 'singular' => 'ip', 'ajax' => true ));
+		if (AVH_Common::getWordpressVersion() >= 3.2) {
+			parent::__construct(array ( 'plural' => 'ips', 'singular' => 'ip', 'ajax' => true ));
+		} else {
+			parent::WP_List_Table(array ( 'plural' => 'ips', 'singular' => 'ip', 'ajax' => true ));
+		}
+		
 	}
 
 	function ajax_user_can ()
