@@ -37,6 +37,7 @@ class AVH_FDAS_Core
 	private $_default_options_general;
 	private $_default_options_spam;
 	private $_default_options_honey;
+	private $_default_options_spamhaus;
 	private $_default_options_ipcache;
 	private $_options;
 	/**
@@ -67,7 +68,7 @@ class AVH_FDAS_Core
 	public function __construct ()
 	{
 		$this->_settings = AVH_FDAS_Settings::getInstance();
-		$this->_db_version = 9;
+		$this->_db_version = 24;
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
 		$this->_db_options = 'avhfdas';
 		$this->_db_data = 'avhfdas_data';
@@ -75,32 +76,41 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->_default_options_general = array('version'=>AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion'=>$this->_db_version, 'use_sfs'=>1, 'use_php'=>0, 'useblacklist'=>1, 'usewhitelist'=>1, 'diewithmessage'=>1, 'emailsecuritycheck'=>0, 'useipcache'=>0, 'commentnonce'=>0, 'cron_nonces_email'=>0, 'cron_ipcache_email'=>0);
-		$this->_default_options_spam = array('whentoemail'=>- 1, 'emailphp'=>0, 'whentodie'=>3, 'sfsapikey'=>'', 'error'=>0);
-		$this->_default_options_honey = array('whentoemailtype'=>- 1, 'whentoemail'=>- 1, 'whentodietype'=>4, 'whentodie'=>25, 'phpapikey'=>'', 'usehoneypot'=>0, 'honeypoturl'=>'');
-		$this->_default_options_ipcache = array('email'=>0, 'daystokeep'=>7);
-		$this->_default_options = array('general'=>$this->_default_options_general, 'sfs'=>$this->_default_options_spam, 'php'=>$this->_default_options_honey, 'ipcache'=>$this->_default_options_ipcache);
+		$this->_default_options_general = array ( 'version' => AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion' => $this->_db_version, 
+												'use_sfs' => 1, 'use_php' => 0, 'use_sh' => 0, 'useblacklist' => 1, 
+												'addblacklist' => 0, 'usewhitelist' => 1, 'diewithmessage' => 1, 
+												'emailsecuritycheck' => 0, 'useipcache' => 0, 'commentnonce' => 0, 
+												'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
+		$this->_default_options_spam = array ( 'whentoemail' => - 1, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
+		$this->_default_options_honey = array ( 'whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 
+												'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
+		$this->_default_options_spamhaus = array ( 'email' => 0 );
+		$this->_default_options_ipcache = array ( 'email' => 0, 'daystokeep' => 7 );
+		$this->_default_options = array ( 'general' => $this->_default_options_general, 'sfs' => $this->_default_options_spam, 
+										'php' => $this->_default_options_honey, 'ipcache' => $this->_default_options_ipcache, 
+										'spamhaus' => $this->_default_options_spamhaus );
 		/**
 		 *
 		 * Default Data
 		 */
-		$this->_default_data_spam = array('190001'=>0);
-		$this->_default_data_lists = array('blacklist'=>'', 'whitelist'=>'');
-		$this->_default_data = array('counters'=>$this->_default_data_spam, 'lists'=>$this->_default_data_lists);
+		$this->_default_data_spam = array ( '190001' => 0 );
+		$this->_default_data_lists = array ( 'blacklist' => '', 'whitelist' => '' );
+		$this->_default_data = array ( 'counters' => $this->_default_data_spam, 'lists' => $this->_default_data_lists );
 		/**
 		 * Default Nonces
 		 */
-		$this->_default_nonces_data = NULL;
-		$this->_default_nonces = array('default'=>$this->_default_nonces_data);
-
+		$this->_default_nonces_data = null;
+		$this->_default_nonces = array ( 'default' => $this->_default_nonces_data );
+		
 		//add_action('init', array(&$this,'handleInitializePlugin'),10);
 		$this->handleInitializePlugin();
-
+		
 		return;
 	}
 
-	function handleInitializePlugin() {
-
+	function handleInitializePlugin ()
+	{
+		
 		/**
 		 * Set the options for the program
 		 *
@@ -116,16 +126,20 @@ class AVH_FDAS_Core
 		$this->_settings->storeSetting('graphics_url', plugins_url('images', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('js_url', plugins_url('js', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('css_url', plugins_url('css', $this->_settings->plugin_basename));
-		$this->_settings->storeSetting('searchengines', array('0'=>'Undocumented', '1'=>'AltaVista', '2'=>'Ask', '3'=>'Baidu', '4'=>'Excite', '5'=>'Google', '6'=>'Looksmart', '7'=>'Lycos', '8'=>'MSN', '9'=>'Yahoo', '10'=>'Cuil', '11'=>'InfoSeek', '12'=>'Miscellaneous'));
-
+		$this->_settings->storeSetting('searchengines', array ( '0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', 
+																'3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', 
+																'7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', 
+																'11' => 'InfoSeek', '12' => 'Miscellaneous' ));
+		
 		$footer[] = '';
 		$footer[] = '--';
 		$footer[] = sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'), AVH_FDAS_Define::PLUGIN_VERSION);
 		$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
 		$this->_settings->storeSetting('mail_footer', $footer);
-
+		
 		$this->handleTextdomain();
 	}
+
 	/**
 	 * Loads the i18n
 	 *
@@ -133,9 +147,9 @@ class AVH_FDAS_Core
 	 */
 	function handleTextdomain ()
 	{
-
-		load_plugin_textdomain( 'avh-fdas', false, $this->_settings->plugin_basename) ;
-
+		
+		load_plugin_textdomain('avh-fdas', false, $this->_settings->plugin_basename);
+	
 	}
 
 	/**
@@ -167,6 +181,11 @@ class AVH_FDAS_Core
 		if ($options['general']['dbversion'] < 5) {
 			list ($options, $data) = $this->_doUpgrade22($options, $data);
 		}
+		
+		if ($options['general']['dbversion'] < 23) {
+			list ($options, $data) = $this->_doUpgrade23($options, $data);
+		}
+		
 		// Add none existing sections and/or elements to the options
 		foreach ($this->_default_options as $section => $default_options) {
 			if (! array_key_exists($section, $options)) {
@@ -210,13 +229,13 @@ class AVH_FDAS_Core
 		$new_options = $old_options;
 		$new_data = $old_data;
 		// Move elements from one section to another
-		$keys = array('diewithmessage', 'useblacklist', 'usewhitelist', 'emailsecuritycheck');
+		$keys = array ( 'diewithmessage', 'useblacklist', 'usewhitelist', 'emailsecuritycheck' );
 		foreach ($keys as $value) {
 			$new_options['general'][$value] = $old_options['spam'][$value];
 			unset($new_options['spam'][$value]);
 		}
 		// Move elements from options to data
-		$keys = array('blacklist', 'whitelist');
+		$keys = array ( 'blacklist', 'whitelist' );
 		foreach ($keys as $value) {
 			$new_data['lists'][$value] = $old_options['spam'][$value];
 			unset($new_options['spam'][$value]);
@@ -226,7 +245,7 @@ class AVH_FDAS_Core
 		unset($new_options['spam']);
 		// New counter system
 		unset($new_data['spam']['counter']);
-		return array($new_options, $new_data);
+		return array ( $new_options, $new_data );
 	}
 
 	/**
@@ -251,7 +270,7 @@ class AVH_FDAS_Core
 			$role->remove_cap('admin_avh_fdas');
 			$role->add_cap('role_admin_avh_fdas');
 		}
-		return array($new_options, $new_data);
+		return array ( $new_options, $new_data );
 	}
 
 	/**
@@ -266,15 +285,32 @@ class AVH_FDAS_Core
 		$new_options = $old_options;
 		$new_data = $old_data;
 		$sql = 'ALTER TABLE `' . $wpdb->avhfdasipcache . '`
-				CHANGE COLUMN `date` `added` DATETIME  NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-				ADD COLUMN `lastseen` DATETIME  NOT NULL DEFAULT \'0000-00-00 00:00:00\' AFTER `added`,
+				CHANGE COLUMN `date` `added` DATETIME  NOT null DEFAULT \'0000-00-00 00:00:00\',
+				ADD COLUMN `lastseen` DATETIME  NOT null DEFAULT \'0000-00-00 00:00:00\' AFTER `added`,
 				DROP INDEX `date`,
 				ADD INDEX `added`(`added`),
 				ADD INDEX `lastseen`(`lastseen`);';
 		$result = $wpdb->query($sql);
 		$sql = 'UPDATE ' . $wpdb->avhfdasipcache . ' SET `lastseen` = `added`;';
 		$result = $wpdb->query($sql);
-		return array($new_options, $new_data);
+		return array ( $new_options, $new_data );
+	}
+
+	/**
+	 * Upgrade DB 23
+	 *
+	 * Change: Remove option to email Project Honey Pot info when Stop Forum Spam threshold is reached
+	 * @param array $old_options
+	 * @param array $old_data
+	 * @return array
+	 *
+	 */
+	private function _doUpgrade23 ($old_options, $old_data)
+	{
+		$new_options = $old_options;
+		$new_data = $old_data;
+		unset($new_options['general']['emailphp']);
+		return array ( $new_options, $new_data );
 	}
 
 	/**
@@ -289,11 +325,12 @@ class AVH_FDAS_Core
 		$url = AVH_FDAS_Define::STOPFORUMSPAM_ENDPOINT . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if (function_exists('wp_remote_request')) {
-			$response = wp_remote_request($url, array('user-agent'=>'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url')));
+			$response = wp_remote_request($url, array ( 
+														'user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url') ));
 			if (! is_wp_error($response)) {
 				$return_array = unserialize($response['body']);
 			} else {
-				$return_array = array('Error'=>$response->errors);
+				$return_array = array ( 'Error' => $response->errors );
 			}
 		}
 		return ($return_array);
@@ -326,7 +363,7 @@ class AVH_FDAS_Core
 	 * @param string $convention
 	 * @return string
 	 */
-	public function BuildQuery ($array = NULL, $convention = '%s')
+	public function BuildQuery ($array = null, $convention = '%s')
 	{
 		if (count($array) == 0) {
 			return '';
@@ -358,7 +395,7 @@ class AVH_FDAS_Core
 	 */
 	public function getRestIPLookup ($ip)
 	{
-		$iplookup = array('ip'=>$ip, 'f'=>'serial');
+		$iplookup = array ( 'ip' => $ip, 'f' => 'serial' );
 		return $iplookup;
 	}
 

@@ -9,7 +9,7 @@ if (! class_exists('AVH_Settings_Registry')) {
 		 * Our array of settings
 		 * @access protected
 		 */
-		private $_settings = array();
+		private $_settings = array ();
 
 		/**
 		 * Stores settings in the registry
@@ -56,7 +56,7 @@ if (! class_exists('AVH_Class_Registry')) {
 		 * @access protected
 		 * @var array
 		 */
-		private $_objects = array();
+		private $_objects = array ();
 		private $_dir;
 		private $_class_file_prefix;
 		private $_class_name_prefix;
@@ -69,7 +69,7 @@ if (! class_exists('AVH_Class_Registry')) {
 		 * @param boolean $store Store the class in the registry
 		 * @return object
 		 */
-		public function load_class ($class, $type = 'system', $store = FALSE)
+		public function load_class ($class, $type = 'system', $store = false)
 		{
 			if (isset($this->_objects[$class])) {
 				return ($this->_objects[$class]);
@@ -138,7 +138,7 @@ if (! class_exists('AVH_Class_Registry')) {
 
 		public function setClassProperties ($properties)
 		{
-			$default_properties = array('type'=>'system', 'store'=>false);
+			$default_properties = array ( 'type' => 'system', 'store' => false );
 		}
 	}
 }

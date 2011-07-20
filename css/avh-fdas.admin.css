@@ -157,3 +157,52 @@ table.avhfdas-options {
 #avhfdasBoxFAQ td.first,#avhfdasBoxFAQ td.last {
 	width: 1px;
 }
+
+/* IP Cache Log List */
+#the-ipcache-list td {
+	vertical-align: top;
+}
+
+#ipcachelist-form .fixed .column-ip {
+	width: 10%;
+}
+
+/*#ipcachelist-form .fixed .column-spam {
+    width: 10%;
+}
+*/
+#ipcachelist-form .fixed .column-lastseen {
+	width: 30%;
+}
+
+#ipcachelist-form .fixed .column-added {
+	width: 30%;
+}
+
+#the-ipcache-list .set_delete a {
+	color: #BC0B0B;
+}
+
+#the-ipcache-list .ip a:hover {
+	color: #D54E21;
+}
+
+#the-ipcache-list .set_spam a {
+	color: #D98500;
+}
+
+#the-ipcache-list .set_ham a {
+	color: #006505;
+}
+
+.set_ham {
+	display: none;
+}
+
+.spammed .set_ham {
+	display: inline;
+}
+
+.spammed .set_spam {
+	display: none;
+}

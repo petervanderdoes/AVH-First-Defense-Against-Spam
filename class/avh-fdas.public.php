@@ -33,22 +33,21 @@ class AVH_FDAS_Public
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 		$this->_classes = AVH_FDAS_Classes::getInstance();
 		// Initialize the plugin
-		$this->_core = $this->_classes->load_class('Core', 'plugin', TRUE);
-		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', TRUE);
+		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
+		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', true);
 		$this->_core_options = $this->_core->getOptions();
 		// Public actions and filters
 		if (1 == $this->_core_options['general']['commentnonce']) {
-			add_action('comment_form', array(&$this, 'actionAddNonceFieldToComment'));
-			add_filter('preprocess_comment', array(&$this, 'filterCheckNonceFieldToComment'), 1);
+			add_action('comment_form', array ( &$this, 'actionAddNonceFieldToComment' ));
+			add_filter('preprocess_comment', array ( &$this, 'filterCheckNonceFieldToComment' ), 1);
 		}
-		add_action('get_header', array(&$this, 'handleActionGetHeader'));
+		add_action('get_header', array ( &$this, 'handleActionGetHeader' ));
 		
-		add_action('pre_comment_on_post', array(&$this, 'handleActionPreCommentOnPost'), 1);
-		//add_action('preprocess_comment', array(&$this, 'handleActionPreprocessComment'), 1);
-		add_action('register_post', array(&$this, 'handleActionRegisterPost'), 10, 3);
+		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
+		add_action('register_post', array ( &$this, 'handleActionRegisterPost' ), 10, 3);
 		// Private actions for Cron
-		add_action('avhfdas_clean_nonce', array(&$this, 'actionHandleCronCleanNonce'));
-		add_action('avhfdas_clean_ipcache', array(&$this, 'actionHandleCronCleanIpCache'));
+		add_action('avhfdas_clean_nonce', array ( &$this, 'actionHandleCronCleanNonce' ));
+		add_action('avhfdas_clean_ipcache', array ( &$this, 'actionHandleCronCleanIpCache' ));
 	}
 
 	/**
@@ -214,20 +213,9 @@ class AVH_FDAS_Public
 	 */
 	public function handleActionGetHeader ()
 	{
-		if (! (did_action('preprocess_comment'))) {
+		if (! (did_action('pre_comment_on_post'))) {
 			$this->_spamcheck->doSpamcheckMain();
 		}
-	}
-
-	/**
-	 * Handle before a new comment is added to the database.
-	 * This might be deprecated as we're checking earlier now.
-	 *
-	 */
-	public function handleActionPreprocessComment ($comment_data)
-	{
-		$this->_spamcheck->doSpamcheckCommentPosted();
-		return $comment_data;
 	}
 
 	/**
@@ -240,7 +228,7 @@ class AVH_FDAS_Public
 	{
 		$this->_spamcheck->doSpamcheckPreCommentPost();
 	}
-	
+
 	/**
 	 * Handle when a user registers
 	 *

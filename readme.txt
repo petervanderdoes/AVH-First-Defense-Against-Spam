@@ -3,8 +3,8 @@ Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
-Tested up to: 3.1
-Stable tag: 3.1.2
+Tested up to: 3.2.1
+Stable tag: 3.2.1
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -19,6 +19,7 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 * The visitor's IP can be checked at the following third parties:
 	* [Stop Forum Spam](http://www.stopforumspam.com). 
 	* [Project Honey Pot](http://www.projecthoneypot.org). An API key is needed to check the IP at this party. The key is free.
+	* [Spamhaus](http://www.spamhaus.org). IP's are checked with the lists SBL and XBL.
 * Spammers can be blocked based on the information supplied by the third party or by using a local blacklist.
 * Separate thresholds can be set for the following features:
 	* Send an email to the board administrator with information supplied by the third party about the spammer.
@@ -38,15 +39,20 @@ Blocking a potential spammer before content is served has the following advantag
 1. It saves CPU cycles. The spammer is actually checked and blocked before WordPress starts building the page.
 1. If you keep track of how many visitors your site has, either by using Google's Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives. 
 
+= Usage terms of the 3rd Parties =
+Please read the usage terms of the 3rd party you are activating.
+	* [Stop Forum Spam](http://www.stopforumspam.com/apis). 
+	* [Project Honey Pot](http://www.projecthoneypot.org/terms_of_service_use.php).
+	* [Spamhaus](http://www.spamhaus.org/organization/dnsblusage.html).
 
 = The IP Caching system. =
-Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it is set at 5000 calls a day.
-This means that if you don't use the Blacklist and/or Whitelist you are limited to 5000 visits/day on your site. To overcome this possible problem I wrote an IP caching system.
-If you use the caching system you still have a limit with Stop Forum Spam , but the limit is set to 5000 unique visits/day.
+Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it is set at 20,000 calls a day.
+This means that if you don't use the Blacklist and/or Whitelist you are limited to 20,000 visits/day on your site. To overcome this possible problem I wrote an IP caching system.
+If you use the caching system you still have a limit with Stop Forum Spam , but the limit is set to 20,000 unique visits/day.
 
 The following IP's are cached locally:
 
-1. Every IP identified as spam and triggering the terminate-the-connection threshold. Either identified by Stop Forum Spam or Project Honey Pot.
+1. Every IP identified by a 3rd party as spam and triggering the terminate-the-connection threshold.
 1. Every clean IP.
 
 Only returning IP's that were previously identified as spammer and who's connection was terminated will update their last seen date in the caching system. 
@@ -56,10 +62,12 @@ You can check the statistics to see how many IP's are in the database. If you ha
 = Checking Order and Actions =
 The plugin checks the visiting IP in the following order, only if that feature is enabled of course.
 
-1. Whitelist - If found skip the rest of the checks.
-1. Blacklist - If found terminate the connection.
-1. IP Caching - If found and spam terminate connection, if found and clean skip the rest of the checks.
-1. 3rd Parties - If found determine action based on result.
+1. Whitelist - If found in the list skip the rest of the checks.
+1. Blacklist - If found in the list terminate the connection.
+1. IP Caching - If found in the list and it's spam terminate connection otherwise if it's clean skip the rest of the checks except when posting a comment then a Stop Forum Spam check will be done.
+1. Stop Forum Spam - Only when the visiting IP is posting a comment. If found and it's spam terminate connection.
+1. Project Honey Pot - If found and it's spam terminate connection, if found and it's set to be a search enigine no further checks will be performed.
+1. Spamhaus- If found and it's spam terminate connection.
 
 To my knowledge this plugin is fully compatible with other anti-spam plugins, I have tested it with WP-Spamfree and Akismet.
 
@@ -107,6 +115,21 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.2.1 =
+* Bugfix: Fixes undefined method after WordPress 3.2 upgrade.
+
+= Version 3.2 =
+* Adds Immediate Actions (on-hover links) (Ham, Spam, Blacklist and Delete) to the IP Cache Log list below the IP. 
+* Adds bulk actions Ham, Spam and Blacklist to the IP Cache Log list. 
+* Adds the ability to check with Spamhaus.org
+* When a spam check results in a termination of the connection, no more checks will be performed. This removes the option to receive Project Honey Pot information even when Stop Forum Spam determined the connection can be terminated.
+* When Project Honey Pot determines the visiting IP is a known search engine no further checking is done.
+* Removes the Screen layout option on the IP Cache Log page
+* RFC: Option to add IP's to blacklist from the comments page.
+* Bugfix: Report&Delete doesn't work on certain server configurations.
+* Bugfix: Admin javascript does not load, causing the inability to close the metaboxes.
+
+
 = Version 3.1.2 =
 * An email is send when the report to Stop Forum Spam fails.
 * Bugfix: IP is added to the cache even when the use of the IP cache is disabled.

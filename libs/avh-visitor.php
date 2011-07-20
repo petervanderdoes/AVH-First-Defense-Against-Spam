@@ -13,8 +13,9 @@ if (! class_exists('AVH_Visitor')) {
 		 */
 		public static function getUserIp ()
 		{
-			$ip = array();
-			foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+			$ip = array ();
+			foreach (array ( 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 
+							'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR' ) as $key) {
 				if (array_key_exists($key, $_SERVER) === true) {
 					foreach (explode(',', $_SERVER[$key]) as $visitors_ip) {
 						$ip[] = str_replace(' ', '', $visitors_ip);
@@ -26,7 +27,7 @@ if (! class_exists('AVH_Visitor')) {
 				return '0.0.0.0';
 			}
 			$ip = array_values(array_unique($ip));
-			$return = NULL;
+			$return = null;
 			// In PHP 5.3 and up the function filter_var can be used, much quicker as the regular expression check
 			if (AVH_Common::isPHP('5.3')) {
 				foreach ($ip as $i) {
@@ -38,7 +39,7 @@ if (! class_exists('AVH_Visitor')) {
 			} else {
 				$dec_octet = '(?:\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])';
 				$ip4_address = $dec_octet . '.' . $dec_octet . '.' . $dec_octet . '.' . $dec_octet;
-				$match = array();
+				$match = array ();
 				foreach ($ip as $i) {
 					if (preg_match('/^' . $ip4_address . '$/', $i, $match)) {
 						if (preg_match('/^(127\.|10\.|192\.168\.|172\.((1[6-9])|(2[0-9])|(3[0-1]))\.)/', $i)) {
@@ -50,7 +51,7 @@ if (! class_exists('AVH_Visitor')) {
 					}
 				}
 			}
-			if (NULL === $return) {
+			if (null === $return) {
 				$return = '0.0.0.0';
 			}
 			return $return;
