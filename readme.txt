@@ -116,7 +116,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.2.2 =
-* Bugfix: Get the correct visiting IP when using CloudFare 
+* Bugfix: Get the correct visiting IP when using CloudFlare 
 
 = Version 3.2.1 =
 * Bugfix: Fixes undefined method after WordPress 3.2 upgrade.
