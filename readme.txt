@@ -41,7 +41,7 @@ Blocking a potential spammer before content is served has the following advantag
 
 = Usage terms of the 3rd Parties =
 Please read the usage terms of the 3rd party you are activating.
-	* [Stop Forum Spam](http://www.stopforumspam.com/apis). 
+	* [Stop Forum Spam](http://www.stopforumspam.com/license). 
 	* [Project Honey Pot](http://www.projecthoneypot.org/terms_of_service_use.php).
 	* [Spamhaus](http://www.spamhaus.org/organization/dnsblusage.html).
 

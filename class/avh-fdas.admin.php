@@ -892,7 +892,7 @@ final class AVH_FDAS_Admin
 		echo '<span class="b">Usage terms of the 3rd Parties</span><br />';
 		echo 'Please read the usage terms of the 3rd party you are activating.<br />';
 		echo '<ul>';
-		echo '<li><a href="http://www.stopforumspam.com/apis" target="_blank">Stop Forum Spam.</a>';
+		echo '<li><a href="http://www.stopforumspam.com/license" target="_blank">Stop Forum Spam.</a>';
 		echo '<li><a href="http://www.projecthoneypot.org/terms_of_service_use.php" target="_blank">Project Honey Pot.</a>';
 		echo '<li><a href="http://www.spamhaus.org/organization/dnsblusage.html" target="_blank">Spamhaus.</a>';
 		echo '</ul>';
