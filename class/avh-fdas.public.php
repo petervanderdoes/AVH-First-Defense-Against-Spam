@@ -81,7 +81,7 @@ class AVH_FDAS_Public
 		$all = get_option($this->_core->getDbNonces());
 		if (is_array($all)) {
 			foreach ($all as $key => $value) {
-				if (! AVH_Security::verifyNonce($key, $value)) {
+				if (! (false === AVH_Security::verifyNonce($key, $value))) {
 					unset($all[$key]);
 					$removed ++;
 				}
