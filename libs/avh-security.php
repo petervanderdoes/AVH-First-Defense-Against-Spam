@@ -16,7 +16,7 @@ if (! class_exists('AVH_Security')) {
 		 */
 		public static function createNonce ($action = -1)
 		{
-			$i = wp_nonce_tick();
+			$i = self::_nonce_tick();
 			return substr(wp_hash($i . $action, 'nonce'), - 12, 10);
 		}
 
@@ -33,15 +33,26 @@ if (! class_exists('AVH_Security')) {
 		 */
 		public static function verifyNonce ($nonce, $action = -1)
 		{
-			$r = false;
-			$i = wp_nonce_tick();
+			
+			$i = self::_nonce_tick();
 			// Nonce generated 0-12 hours ago
 			if (substr(wp_hash($i . $action, 'nonce'), - 12, 10) == $nonce) {
-				$r = 1;
-			} elseif (substr(wp_hash(($i - 1) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
-				$r = 2;
+				return 1;
 			}
-			return $r;
+			if (substr(wp_hash(($i - 1) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
+				return 2;
+			}
+			if (substr(wp_hash(($i - 2) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
+				return 3;
+			}
+			
+			return false;
 		}
+
+		private static function _nonce_tick ()
+		{
+			return ceil(time() / 43200);
+		}
+	
 	}
 }
