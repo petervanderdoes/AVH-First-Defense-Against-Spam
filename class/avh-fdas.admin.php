@@ -258,6 +258,10 @@ final class AVH_FDAS_Admin
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
 		echo '<h2>AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas') . '</h2>';
+		echo '<form method="get" action="">';
+		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
+		wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
+		echo '</form>';
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
@@ -267,16 +271,10 @@ final class AVH_FDAS_Admin
 		do_meta_boxes($this->_hooks['avhfdas_menu_overview'], 'side', '');
 		echo '			</div>';
 		echo '		</div>';
-		echo '<form style="display: none" method="get" action="">';
-		echo '<p>';
-		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
-		wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
-		echo '</p>';
-		echo '</form>';
-		echo '<br class="clear"/>';
-		echo '	</div>'; //dashboard-widgets-wrap
-		echo '</div>'; // wrap
+		echo '</div>';
 		$this->_printAdminFooter();
+		echo '</div>';
+
 	}
 
 	/**
@@ -307,6 +305,7 @@ final class AVH_FDAS_Admin
 			
 			$have_spam_count_data = true;
 			$date = date_i18n('Y - F', mktime(0, 0, 0, substr($key, 4, 2), 1, substr($key, 0, 4)));
+			$output .= '<tr>';
 			$output .= '<td class="first b">' . $value . '</td>';
 			$output .= '<td class="t">' . sprintf(__('Spam stopped in %s', 'avh-fdas'), $date) . '</td>';
 			$output .= '<td class="b"></td>';
@@ -316,6 +315,7 @@ final class AVH_FDAS_Admin
 			$counter ++;
 		}
 		if (! $have_spam_count_data) {
+			$output .= '<tr>';
 			$output .= '<td class="first b">' . __('No statistics yet', 'avh-fdas') . '</td>';
 			$output .= '<td class="t"></td>';
 			$output .= '<td class="b"></td>';
@@ -398,9 +398,9 @@ final class AVH_FDAS_Admin
 			$output .= '<td class="b"></td>';
 			$output .= '<td class="last"></td>';
 			$output .= '</tr>';
+			$output .= '</tbody></table></div>';
 			echo $output;
 		}
-		echo '</tbody></table></div>';
 	}
 
 	/**
@@ -590,10 +590,11 @@ final class AVH_FDAS_Admin
 		echo '		</div>';
 		echo '<br class="clear"/>';
 		echo '	</div>'; //dashboard-widgets-wrap
-		echo '</div>'; // wrap
 		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __('Save Changes', 'avh-fdas') . '" /></p>';
 		echo '</form>';
+				echo '</div>';
 		$this->_printAdminFooter();
+		echo '</div>';
 	}
 
 	/**
@@ -759,8 +760,8 @@ final class AVH_FDAS_Admin
 		$data['options_php'] = $options_php;
 		$data['options_sh'] = $options_sh;
 		$data['actual_options'] = $actual_options;
+		
 		echo '<div class="wrap avhfdas-wrap">';
-		echo '<div class="wrap">';
 		echo $this->_displayIcon('options-general');
 		echo '<h2>AVH First Defense Against Spam: ' . __('3rd Party Options', 'avh-fdas') . '</h2>';
 		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_3RD_PARTY . '" accept-charset="utf-8" >';
@@ -776,12 +777,11 @@ final class AVH_FDAS_Admin
 		do_meta_boxes($this->_hooks['avhfdas_menu_3rd_party'], 'side', $data);
 		echo '			</div>';
 		echo '		</div>';
-		echo '<br class="clear"/>';
 		echo '	</div>'; //dashboard-widgets-wrap
-		echo '</div>'; // wrap
 		echo '<p class="submit"><input class="button-primary" type="submit" name="updateoptions" value="' . __('Save Changes', 'avh-fdas') . '" /></p>';
 		echo '</form>';
 		$this->_printAdminFooter();
+		echo '</div>';
 	}
 
 	/**
@@ -860,6 +860,10 @@ final class AVH_FDAS_Admin
 		echo '<div class="wrap avhfdas-wrap">';
 		echo $this->_displayIcon('index');
 		echo '<h2>AVH First Defense Against Spam: ' . __('Spam Overview', 'avh-fdas') . '</h2>';
+		echo '<form method="get" action="">';
+		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
+		wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
+				echo '</form>';
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
@@ -869,16 +873,10 @@ final class AVH_FDAS_Admin
 		do_meta_boxes($this->_hooks['avhfdas_menu_faq'], 'side', '');
 		echo '			</div>';
 		echo '		</div>';
-		echo '<form style="display: none" method="get" action="">';
-		echo '<p>';
-		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
-		wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
-		echo '</p>';
-		echo '</form>';
-		echo '<br class="clear"/>';
-		echo '	</div>'; //dashboard-widgets-wrap
-		echo '</div>'; // wrap
+		echo ' </div>'; //dashboard-widgets-wrap
+
 		$this->_printAdminFooter();
+		echo '</div>';
 	}
 
 	/**
@@ -1225,9 +1223,9 @@ final class AVH_FDAS_Admin
 		$this->_ip_cache_list->display();
 		echo '</form>';
 		
-		echo '</div>'; // wrap
 		echo '<div id="ajax-response"></div>';
 		$this->_printAdminFooter();
+		echo '</div>';
 	}
 
 	public function actionAjaxIpcacheLog ()
@@ -1701,10 +1699,11 @@ final class AVH_FDAS_Admin
 	 */
 	private function _printAdminFooter ()
 	{
-		echo '<div class="clear">';
+		echo '<br class="clear" />';
 		echo '<p class="footer_avhfdas">';
 		printf('&copy; Copyright 2010 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam version %s', AVH_FDAS_Define::PLUGIN_VERSION);
 		echo '</p>';
+		echo '<br class="clear" />';
 	}
 
 	/**
