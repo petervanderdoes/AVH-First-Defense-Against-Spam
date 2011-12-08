@@ -90,11 +90,8 @@ final class AVH_FDAS_Admin
 	public function actionInitRoles ()
 	{
 		$role = get_role('administrator');
-		if ($role != null && ! $role->has_cap('role_avh_fdas')) {
-			$role->add_cap('role_avh_fdas');
-		}
-		if ($role != null && ! $role->has_cap('role_admin_avh_fdas')) {
-			$role->add_cap('role_admin_avh_fdas');
+		if ($role != null && ! $role->has_cap('avh_fdas_admin')) {
+			$role->add_cap('avh_fdas_admin');
 		}
 		// Clean var
 		unset($role);
@@ -108,22 +105,22 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionAdminMenu ()
 	{
-		add_menu_page('AVH F.D.A.S', 'AVH F.D.A.S', 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG, array ( &$this, 'menuOverview' ));
-		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas'), __('Overview', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array ( 
+		add_menu_page('AVH F.D.A.S', 'AVH F.D.A.S', 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG, array ( &$this, 'menuOverview' ));
+		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas'), __('Overview', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array ( 
 																																																														&$this, 
 																																																														'menuOverview' ));
-		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_GENERAL, array ( 
+		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_GENERAL, array ( 
 																																																																	&$this, 
 																																																																	'menuGeneralOptions' ));
-		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array ( 
+		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array ( 
 																																																																			&$this, 
 																																																																			'menu3rdPartyOptions' ));
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array ( 
+			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array ( 
 																																																																		&$this, 
 																																																																		'menuIpCacheLog' ));
 		}
-		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'role_avh_fdas', AVH_FDAS_Define::MENU_SLUG_FAQ, array ( 
+		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_FAQ, array ( 
 																																																										&$this, 
 																																																										'menuFaq' ));
 		
@@ -1681,11 +1678,8 @@ final class AVH_FDAS_Admin
 	{
 		// Remove the administrative capilities
 		$role = get_role('administrator');
-		if ($role != null && $role->has_cap('role_avh_fdas')) {
-			$role->remove_cap('role_avh_fdas');
-		}
-		if ($role != null && $role->has_cap('role_admin_avh_fdas')) {
-			$role->remove_cap('role_admin_avh_fdas');
+		if ($role != null && $role->has_cap('avh_fdas_admin')) {
+			$role->remove_cap('avh_fdas_admin');
 		}
 		// Deactivate the cron action as the the plugin is deactivated.
 		wp_clear_scheduled_hook('avhfdas_clean_nonce');
