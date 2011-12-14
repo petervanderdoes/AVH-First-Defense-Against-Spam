@@ -117,6 +117,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 == Changelog ==
 = Version 3.2.5-beta1 =
 * Bugfix: HTML changes in the admin section to fit in with WordPress 3.3
+* Bugfix: The columns in the admin section don't save, making certain columns disappear.
 * Change the name of the Role and removed one Role.
 
 = Version 3.2.4 =

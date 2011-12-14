@@ -222,7 +222,11 @@ final class AVH_FDAS_Admin
 	public function actionLoadPagehookOverview ()
 	{
 		add_meta_box('avhfdasBoxStats', __('Statistics', 'avh-fdas'), array ( &$this, 'metaboxMenuOverview' ), $this->_hooks['avhfdas_menu_overview'], 'normal', 'core');
-		add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		if (AVH_Common::getWordpressVersion() >= 3.1 ) {
+			add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
+		} else {
+			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -411,7 +415,11 @@ final class AVH_FDAS_Admin
 		add_meta_box('avhfdasBoxCron', 'Cron', array ( &$this, 'metaboxCron' ), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
 		add_meta_box('avhfdasBoxBlackList', 'Blacklist', array ( &$this, 'metaboxBlackList' ), $this->_hooks['avhfdas_menu_general'], 'side', 'core');
 		add_meta_box('avhfdasBoxWhiteList', 'Whitelist', array ( &$this, 'metaboxWhiteList' ), $this->_hooks['avhfdas_menu_general'], 'side', 'core');
-		add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		if (AVH_Common::getWordpressVersion() >= 3.1 ) {
+			add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
+		} else {
+			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -655,7 +663,11 @@ final class AVH_FDAS_Admin
 		add_meta_box('avhfdasBoxSFS', 'Stop Forum Spam', array ( &$this, 'metaboxMenu3rdParty_SFS' ), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
 		add_meta_box('avhfdasBoxPHP', 'Project Honey Pot', array ( &$this, 'metaboxMenu3rdParty_PHP' ), $this->_hooks['avhfdas_menu_3rd_party'], 'side', 'core');
 		add_meta_box('avhfdasBoxSH', 'Spamhaus', array ( &$this, 'metaboxMenu3rdParty_SH' ), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
-		add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		if (AVH_Common::getWordpressVersion() >= 3.1 ) {
+			add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
+		} else {
+			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -824,7 +836,11 @@ final class AVH_FDAS_Admin
 	public function actionLoadPagehookFaq ()
 	{
 		add_meta_box('avhfdasBoxFAQ', __('F.A.Q.', 'avh-fdas'), array ( &$this, 'metaboxFAQ' ), $this->_hooks['avhfdas_menu_faq'], 'normal', 'core');
-		add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		if (AVH_Common::getWordpressVersion() >= 3.1 ) {
+			add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
+		} else {
+			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
