@@ -68,7 +68,7 @@ class AVH_FDAS_Core
 	public function __construct ()
 	{
 		$this->_settings = AVH_FDAS_Settings::getInstance();
-		$this->_db_version = 24;
+		$this->_db_version = 26;
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
 		$this->_db_options = 'avhfdas';
 		$this->_db_data = 'avhfdas_data';
@@ -185,6 +185,9 @@ class AVH_FDAS_Core
 		if ($options['general']['dbversion'] < 23) {
 			list ($options, $data) = $this->_doUpgrade23($options, $data);
 		}
+		if ($options['general']['dbversion'] < 26) {
+			list ($options, $data) = $this->_doUpgrade26($options, $data);
+		}
 		
 		// Add none existing sections and/or elements to the options
 		foreach ($this->_default_options as $section => $default_options) {
@@ -264,11 +267,11 @@ class AVH_FDAS_Core
 		$role = get_role('administrator');
 		if ($role != null && $role->has_cap('avh_fdas')) {
 			$role->remove_cap('avh_fdas');
-			$role->add_cap('role_avh_fdas');
+			$role->add_cap('avh_fdas_user_fdas');
 		}
 		if ($role != null && $role->has_cap('admin_avh_fdas')) {
 			$role->remove_cap('admin_avh_fdas');
-			$role->add_cap('role_admin_avh_fdas');
+			$role->add_cap('avh_fdas_admin');
 		}
 		return array ( $new_options, $new_data );
 	}
@@ -310,6 +313,27 @@ class AVH_FDAS_Core
 		$new_options = $old_options;
 		$new_data = $old_data;
 		unset($new_options['general']['emailphp']);
+		return array ( $new_options, $new_data );
+	}
+
+	private function _doUpgrade26 ($old_options, $old_data)
+	{
+		global $wp_roles;
+		$new_options = $old_options;
+		$new_data = $old_data;
+		if (! isset($wp_roles))
+			$wp_roles = new WP_Roles();
+		
+		foreach ($wp_roles->roles as $role => $info) {
+			$_role = get_role($role);
+			if ($_role != null && $_role->has_cap('role_admin_avh_fdas')) {
+				$_role->remove_cap('role_admin_avh_fdas');
+			}
+			if ($_role != null && $_role->has_cap('role_avh_fdas')) {
+				$_role->remove_cap('role_avh_fdas');
+				$_role->add_cap('avh_fdas_admin');
+			}
+		}
 		return array ( $new_options, $new_data );
 	}
 
