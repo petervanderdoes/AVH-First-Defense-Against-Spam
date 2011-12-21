@@ -300,12 +300,23 @@ class AVH_FDAS_SpamCheck
 		if (isset($data['Error'])) {
 			return ($data);
 		}
+		$_return['ip']['appears'] = false;
+		$_return['email']['appears'] = false;
+		$_return['username']['appears'] = false;
 		if (isset($data['ip'])) {
-			return ($data['ip']);
+			$_return['ip'] = $data['ip'];
 		}
-		return (array ( 
-						'Error' => array ( 
-										'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($data, true) ) ));
+		if (isset($data['email'])) {
+			$_return['email'] = $data['email'];
+		}
+		if (isset($data['username'])) {
+			$_return['username'] = $data['username'];
+		}
+		
+		if ($_return === '') {
+			return (array ( 'Error' => array ( 'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($data, true) ) ));
+		}
+		return $_return;
 	}
 
 	/**
@@ -317,8 +328,10 @@ class AVH_FDAS_SpamCheck
 	private function _doIpCheckStopForumSpam ()
 	{
 		if ($this->_core_options['general']['use_sfs']) {
+			$_email = isset($_POST['email']) ? $_POST['email'] : '';
+			$_author = isset($_POST['author']) ? $_POST['author'] : '';
 			$time_start = microtime(true);
-			$result = $this->_core->handleRestCall($this->_core->getRestIPLookup($this->_visiting_ip));
+			$result = $this->_core->handleRestCall($this->_core->getRestIPLookup($this->_visiting_ip, $_email, $_author));
 			$time_end = microtime(true);
 			$this->_spaminfo['sfs'] = $this->_convertStopForumSpamCall($result);
 			$time = $time_end - $time_start;
@@ -338,7 +351,11 @@ class AVH_FDAS_SpamCheck
 				}
 				$this->_spaminfo['sfs'] = null;
 			} else {
-				if (1 == $this->_spaminfo['sfs']['appears']) {
+				$this->_spaminfo['sfs']['appears'] = false;
+				if ($this->_spaminfo['sfs']['ip']['appears'] || $this->_spaminfo['sfs']['email']['appears'] || $this->_spaminfo['sfs']['username']['appears']) {
+					$this->_spaminfo['sfs']['appears'] = true;
+				}
+				if (true === $this->_spaminfo['sfs']['appears']) {
 					$this->_spammer_detected = true;
 				}
 			}
@@ -454,16 +471,24 @@ class AVH_FDAS_SpamCheck
 			// General part of the email
 			$to = get_option('admin_email');
 			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Spammer detected [%s]', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
-			$message[] = sprintf(__('Spam IP:	%s', 'avh-fdas'), $this->_visiting_ip);
+			
 			$message[] = $this->_accessing;
 			$message[] = '';
-			// Stop Forum Spam Mail Part
+			
+		// Stop Forum Spam Mail Part
 			if ($sfs_email) {
 				if ($this->_spaminfo['sfs']['appears']) {
 					$message[] = __('Checked at Stop Forum Spam', 'avh-fdas');
 					$message[] = '	' . __('Information', 'avh-fdas');
-					$message[] = '	' . sprintf(__('Last Seen:	%s', 'avh-fdas'), $this->_spaminfo['sfs']['lastseen']);
-					$message[] = '	' . sprintf(__('Frequency:	%s', 'avh-fdas'), $this->_spaminfo['sfs']['frequency']);
+					$_checks = array ( 'ip' => 'IP', 'email' => 'E-Mail', 'username' => 'Username' );
+					foreach ($_checks as $key => $value) {
+						if ($this->_spaminfo['sfs'][$key]['appears']) {
+							$message[] = '	' . sprintf(__('%s information', 'avh-fdas'), $value);
+							$message[] = '	' . sprintf(__('Last Seen:	%s', 'avh-fdas'), $this->_spaminfo['sfs'][$key]['lastseen']);
+							$message[] = '	' . sprintf(__('Frequency:	%s', 'avh-fdas'), $this->_spaminfo['sfs'][$key]['frequency']);
+							$message[] = '';
+						}
+					}
 					$message[] = '	' . sprintf(__('Call took:	%s', 'avhafdas'), $this->_spaminfo['sfs']['time']);
 					if ($this->_spaminfo['sfs']['frequency'] >= $this->_core_options['sfs']['whentodie']) {
 						$message[] = '	' . sprintf(__('Threshold (%s) reached. Connection terminated', 'avh-fdas'), $this->_core_options['sfs']['whentodie']);

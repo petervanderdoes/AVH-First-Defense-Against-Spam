@@ -417,9 +417,15 @@ class AVH_FDAS_Core
 	 * @param string $ip
 	 * @return array
 	 */
-	public function getRestIPLookup ($ip)
+	public function getRestIPLookup ($ip, $email = '', $username = '')
 	{
 		$iplookup = array ( 'ip' => $ip, 'f' => 'serial' );
+		if (! empty($email)) {
+			$iplookup['email'] = $email;
+		}
+		if (! empty($username)) {
+			$iplookup['username'] = $username;
+		}
 		return $iplookup;
 	}
 
