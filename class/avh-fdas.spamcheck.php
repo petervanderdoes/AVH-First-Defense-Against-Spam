@@ -302,15 +302,11 @@ class AVH_FDAS_SpamCheck
 		}
 		$_return['ip']['appears'] = false;
 		$_return['email']['appears'] = false;
-		$_return['username']['appears'] = false;
 		if (isset($data['ip'])) {
 			$_return['ip'] = $data['ip'];
 		}
 		if (isset($data['email'])) {
 			$_return['email'] = $data['email'];
-		}
-		if (isset($data['username'])) {
-			$_return['username'] = $data['username'];
 		}
 		
 		if ($_return === '') {
@@ -329,9 +325,8 @@ class AVH_FDAS_SpamCheck
 	{
 		if ($this->_core_options['general']['use_sfs']) {
 			$_email = isset($_POST['email']) ? $_POST['email'] : '';
-			$_author = isset($_POST['author']) ? $_POST['author'] : '';
 			$time_start = microtime(true);
-			$result = $this->_core->handleRestCall($this->_core->getRestIPLookup($this->_visiting_ip, $_email, $_author));
+			$result = $this->_core->handleRestCall($this->_core->getRestIPLookup($this->_visiting_ip, $_email));
 			$time_end = microtime(true);
 			$this->_spaminfo['sfs'] = $this->_convertStopForumSpamCall($result);
 			$time = $time_end - $time_start;
@@ -352,7 +347,7 @@ class AVH_FDAS_SpamCheck
 				$this->_spaminfo['sfs'] = null;
 			} else {
 				$this->_spaminfo['sfs']['appears'] = false;
-				if ($this->_spaminfo['sfs']['ip']['appears'] || $this->_spaminfo['sfs']['email']['appears'] || $this->_spaminfo['sfs']['username']['appears']) {
+				if ($this->_spaminfo['sfs']['ip']['appears'] || $this->_spaminfo['sfs']['email']['appears'] ) {
 					$this->_spaminfo['sfs']['appears'] = true;
 				}
 				if (true === $this->_spaminfo['sfs']['appears']) {
@@ -480,7 +475,7 @@ class AVH_FDAS_SpamCheck
 				if ($this->_spaminfo['sfs']['appears']) {
 					$message[] = __('Checked at Stop Forum Spam', 'avh-fdas');
 					$message[] = '	' . __('Information', 'avh-fdas');
-					$_checks = array ( 'ip' => 'IP', 'email' => 'E-Mail', 'username' => 'Username' );
+					$_checks = array ( 'ip' => 'IP', 'email' => 'E-Mail' );
 					foreach ($_checks as $key => $value) {
 						if ($this->_spaminfo['sfs'][$key]['appears']) {
 							$message[] = '	' . sprintf(__('%s information', 'avh-fdas'), $value);
