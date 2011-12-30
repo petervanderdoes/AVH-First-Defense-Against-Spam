@@ -126,6 +126,7 @@ class AVH_FDAS_Core
 		$this->_settings->storeSetting('graphics_url', plugins_url('images', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('js_url', plugins_url('js', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('css_url', plugins_url('css', $this->_settings->plugin_basename));
+		$this->_settings->storeSetting('lang_dir', AVH_FDAS_Define::PLUGIN_PATH.'/lang/');
 		$this->_settings->storeSetting('searchengines', array ( '0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', 
 																'3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', 
 																'7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', 
@@ -148,7 +149,7 @@ class AVH_FDAS_Core
 	function handleTextdomain ()
 	{
 		
-		load_plugin_textdomain('avh-fdas', false, $this->_settings->plugin_basename);
+		load_plugin_textdomain('avh-fdas', false, $this->_settings->lang_dir);
 	
 	}
 
