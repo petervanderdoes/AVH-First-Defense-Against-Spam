@@ -76,19 +76,12 @@ class AVH_FDAS_Core
 		/**
 		 * Default options - General Purpose
 		 */
-		$this->_default_options_general = array ( 'version' => AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion' => $this->_db_version, 
-												'use_sfs' => 1, 'use_php' => 0, 'use_sh' => 0, 'useblacklist' => 1, 
-												'addblacklist' => 0, 'usewhitelist' => 1, 'diewithmessage' => 1, 
-												'emailsecuritycheck' => 0, 'useipcache' => 0, 'commentnonce' => 0, 
-												'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
+		$this->_default_options_general = array ( 'version' => AVH_FDAS_Define::PLUGIN_VERSION, 'dbversion' => $this->_db_version, 'use_sfs' => 1, 'use_php' => 0, 'use_sh' => 0, 'useblacklist' => 1, 'addblacklist' => 0, 'usewhitelist' => 1, 'diewithmessage' => 1, 'emailsecuritycheck' => 0, 'useipcache' => 0, 'commentnonce' => 0, 'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
 		$this->_default_options_spam = array ( 'whentoemail' => - 1, 'whentodie' => 3, 'whentodie_email' => 15, 'sfsapikey' => '', 'error' => 0 );
-		$this->_default_options_honey = array ( 'whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 
-												'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
+		$this->_default_options_honey = array ( 'whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
 		$this->_default_options_spamhaus = array ( 'email' => 0 );
 		$this->_default_options_ipcache = array ( 'email' => 0, 'daystokeep' => 7 );
-		$this->_default_options = array ( 'general' => $this->_default_options_general, 'sfs' => $this->_default_options_spam, 
-										'php' => $this->_default_options_honey, 'ipcache' => $this->_default_options_ipcache, 
-										'spamhaus' => $this->_default_options_spamhaus );
+		$this->_default_options = array ( 'general' => $this->_default_options_general, 'sfs' => $this->_default_options_spam, 'php' => $this->_default_options_honey, 'ipcache' => $this->_default_options_ipcache, 'spamhaus' => $this->_default_options_spamhaus );
 		/**
 		 *
 		 * Default Data
@@ -101,16 +94,16 @@ class AVH_FDAS_Core
 		 */
 		$this->_default_nonces_data = null;
 		$this->_default_nonces = array ( 'default' => $this->_default_nonces_data );
-		
+
 		//add_action('init', array(&$this,'handleInitializePlugin'),10);
 		$this->handleInitializePlugin();
-		
+
 		return;
 	}
 
 	function handleInitializePlugin ()
 	{
-		
+
 		/**
 		 * Set the options for the program
 		 *
@@ -126,18 +119,15 @@ class AVH_FDAS_Core
 		$this->_settings->storeSetting('graphics_url', plugins_url('images', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('js_url', plugins_url('js', $this->_settings->plugin_basename));
 		$this->_settings->storeSetting('css_url', plugins_url('css', $this->_settings->plugin_basename));
-		$this->_settings->storeSetting('lang_dir', AVH_FDAS_Define::PLUGIN_PATH.'/lang/');
-		$this->_settings->storeSetting('searchengines', array ( '0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', 
-																'3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', 
-																'7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', 
-																'11' => 'InfoSeek', '12' => 'Miscellaneous' ));
-		
+		$this->_settings->storeSetting('lang_dir', AVH_FDAS_Define::PLUGIN_PATH . '/lang/');
+		$this->_settings->storeSetting('searchengines', array ( '0' => 'Undocumented', '1' => 'AltaVista', '2' => 'Ask', '3' => 'Baidu', '4' => 'Excite', '5' => 'Google', '6' => 'Looksmart', '7' => 'Lycos', '8' => 'MSN', '9' => 'Yahoo', '10' => 'Cuil', '11' => 'InfoSeek', '12' => 'Miscellaneous' ));
+
 		$footer[] = '';
 		$footer[] = '--';
 		$footer[] = sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'), AVH_FDAS_Define::PLUGIN_VERSION);
 		$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
 		$this->_settings->storeSetting('mail_footer', $footer);
-		
+
 		$this->handleTextdomain();
 	}
 
@@ -148,9 +138,9 @@ class AVH_FDAS_Core
 	 */
 	function handleTextdomain ()
 	{
-		
+
 		load_plugin_textdomain('avh-fdas', false, $this->_settings->lang_dir);
-	
+
 	}
 
 	/**
@@ -182,14 +172,14 @@ class AVH_FDAS_Core
 		if ($options['general']['dbversion'] < 5) {
 			list ($options, $data) = $this->_doUpgrade22($options, $data);
 		}
-		
+
 		if ($options['general']['dbversion'] < 23) {
 			list ($options, $data) = $this->_doUpgrade23($options, $data);
 		}
 		if ($options['general']['dbversion'] < 26) {
 			list ($options, $data) = $this->_doUpgrade26($options, $data);
 		}
-		
+
 		// Add none existing sections and/or elements to the options
 		foreach ($this->_default_options as $section => $default_options) {
 			if (! array_key_exists($section, $options)) {
@@ -324,7 +314,7 @@ class AVH_FDAS_Core
 		$new_data = $old_data;
 		if (! isset($wp_roles))
 			$wp_roles = new WP_Roles();
-		
+
 		foreach ($wp_roles->roles as $role => $info) {
 			$_role = get_role($role);
 			if ($_role != null && $_role->has_cap('role_admin_avh_fdas')) {
@@ -350,8 +340,7 @@ class AVH_FDAS_Core
 		$url = AVH_FDAS_Define::STOPFORUMSPAM_ENDPOINT . '?' . $querystring;
 		// Starting with WordPress 2.7 we'll use the HTTP class.
 		if (function_exists('wp_remote_request')) {
-			$response = wp_remote_request($url, array ( 
-														'user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url') ));
+			$response = wp_remote_request($url, array ( 'user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url') ));
 			if (! is_wp_error($response)) {
 				$return_array = unserialize($response['body']);
 			} else {

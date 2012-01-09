@@ -33,7 +33,7 @@ if (! class_exists('AVH_Security')) {
 		 */
 		public static function verifyNonce ($nonce, $action = -1)
 		{
-			
+
 			$i = self::_nonce_tick();
 			// Nonce generated 0-12 hours ago
 			if (substr(wp_hash($i . $action, 'nonce'), - 12, 10) == $nonce) {
@@ -45,7 +45,7 @@ if (! class_exists('AVH_Security')) {
 			if (substr(wp_hash(($i - 2) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
 				return 3;
 			}
-			
+
 			return false;
 		}
 
@@ -53,6 +53,6 @@ if (! class_exists('AVH_Security')) {
 		{
 			return ceil(time() / 43200);
 		}
-	
+
 	}
 }

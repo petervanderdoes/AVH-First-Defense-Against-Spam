@@ -41,7 +41,7 @@ if (AVH_Common::getWordpressVersion() >= 2.8) {
 	$_classes->setClassFilePrefix('avh-fdas.');
 	$_classes->setClassNamePrefix('AVH_FDAS_');
 	unset($_classes);
-	
+
 	$_settings = AVH_FDAS_Settings::getInstance();
 	$_settings->storeSetting('plugin_dir', $_dir);
 	$_settings->storeSetting('plugin_basename', $_basename);
@@ -53,11 +53,11 @@ if (AVH_Common::getWordpressVersion() >= 2.8) {
 function avh_fdas_remove_plugin ()
 {
 	$active_plugins = (array) get_option('active_plugins');
-	
+
 	// workaround for WPMU deactivation bug
 	remove_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE, 'deactivate_sitewide_plugin');
 	$key = array_search(AVH_FDAS_Define::PLUGIN_FILE, $active_plugins);
-	
+
 	if ($key !== false) {
 		do_action('deactivate_plugin', AVH_FDAS_Define::PLUGIN_FILE);
 		array_splice($active_plugins, $key, 1);

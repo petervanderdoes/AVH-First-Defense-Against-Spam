@@ -12,7 +12,7 @@ function avh_FDAS_init ()
 	$_settings = AVH_FDAS_Settings::getInstance();
 	$_settings->storeSetting('plugin_working_dir', pathinfo(__FILE__, PATHINFO_DIRNAME));
 	// Admin
-	if (is_admin() ) {
+	if (is_admin()) {
 		require_once ($_settings->plugin_working_dir . '/class/avh-fdas.admin.php');
 		$avhfdas_admin = new AVH_FDAS_Admin();
 		// Activation Hook

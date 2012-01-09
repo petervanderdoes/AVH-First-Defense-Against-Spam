@@ -42,7 +42,7 @@ class AVH_FDAS_Public
 			add_filter('preprocess_comment', array ( &$this, 'filterCheckNonceFieldToComment' ), 1);
 		}
 		add_action('get_header', array ( &$this, 'handleActionGetHeader' ));
-		
+
 		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
 		add_action('register_post', array ( &$this, 'handleActionRegisterPost' ), 10, 3);
 		// Private actions for Cron
