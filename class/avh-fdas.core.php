@@ -68,7 +68,7 @@ class AVH_FDAS_Core
 	public function __construct ()
 	{
 		$this->_settings = AVH_FDAS_Settings::getInstance();
-		$this->_db_version = 26;
+		$this->_db_version = 27;
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
 		$this->_db_options = 'avhfdas';
 		$this->_db_data = 'avhfdas_data';
@@ -81,7 +81,7 @@ class AVH_FDAS_Core
 												'addblacklist' => 0, 'usewhitelist' => 1, 'diewithmessage' => 1, 
 												'emailsecuritycheck' => 0, 'useipcache' => 0, 'commentnonce' => 0, 
 												'cron_nonces_email' => 0, 'cron_ipcache_email' => 0 );
-		$this->_default_options_spam = array ( 'whentoemail' => - 1, 'whentodie' => 3, 'sfsapikey' => '', 'error' => 0 );
+		$this->_default_options_spam = array ( 'whentoemail' => - 1, 'whentodie' => 3, 'whentodie_email' => 15, 'sfsapikey' => '', 'error' => 0 );
 		$this->_default_options_honey = array ( 'whentoemailtype' => - 1, 'whentoemail' => - 1, 'whentodietype' => 4, 
 												'whentodie' => 25, 'phpapikey' => '', 'usehoneypot' => 0, 'honeypoturl' => '' );
 		$this->_default_options_spamhaus = array ( 'email' => 0 );

@@ -689,9 +689,11 @@ final class AVH_FDAS_Admin
 		$options_sfs[] = array ( 'avhfdas[general][use_sfs]', __('Check with Stop Forum Spam', 'avh-fdas'), 'checkbox', 1, 
 								__('If checked, the visitor\'s IP will be checked with Stop Forum Spam', 'avh-fdas') );
 		$options_sfs[] = array ( 'avhfdas[sfs][whentoemail]', __('Email threshold', 'avh-fdas'), 'text', 3, 
-								__('When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.', 'avh-fdas') );
-		$options_sfs[] = array ( 'avhfdas[sfs][whentodie]', __('Termination threshold', 'avh-fdas'), 'text', 3, 
-								__('When the frequency of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>', 'avh-fdas') );
+								__('When the frequency of the IP address of the spammer in the stopforumspam database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.', 'avh-fdas') );
+		$options_sfs[] = array ( 'avhfdas[sfs][whentodie]', __('IP termination threshold', 'avh-fdas'), 'text', 3, 
+								__('When the frequency of the IP address of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.', 'avh-fdas') );
+		$options_sfs[] = array ( 'avhfdas[sfs][whentodie_email]', __('E-Mail termination threshold', 'avh-fdas'), 'text', 3, 
+								__('When the frequency of the e-mail address of the spammer in the stopforumspam database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.', 'avh-fdas') );
 		$options_sfs[] = array ( 'avhfdas[sfs][sfsapikey]', __('API Key', 'avh-fdas'), 'text', 15, 
 								__('You need a Stop Forum Spam API key to report spam.', 'avh-fdas') );
 		$options_sfs[] = array ( 'avhfdas[sfs][error]', __('Email error', 'avh-fdas'), 'checkbox', 1, 
@@ -734,7 +736,7 @@ final class AVH_FDAS_Admin
 				$current_value = $options[$section][$option_key];
 				// Every field in a form is set except unchecked checkboxes. Set an unchecked checkbox to 0.
 				$newval = (isset($formoptions[$section][$option_key]) ? $formoptions[$section][$option_key] : 0);
-				if ('sfs' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key)) {
+				if ('sfs' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key || 'whentodie_email' == $option_key)) {
 					$newval = (int) $newval;
 				}
 				if ('php' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key)) {
