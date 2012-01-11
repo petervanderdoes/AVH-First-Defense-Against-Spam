@@ -237,7 +237,7 @@ final class AVH_FDAS_Admin
 	{
 		global $screen_layout_columns;
 		// This box can't be unselectd in the the Screen Options
-		add_meta_box('avhfdasBoxDonations', __('Donations', 'avh-fdas'), array ( &$this, 'metaboxDonations' ), $this->_hooks['avhfdas_menu_overview'], 'normal', 'core');
+		add_meta_box('avhfdasBoxDonations', __('Donations', 'avh-fdas'), array ( &$this, 'metaboxDonations' ), $this->_hooks['avhfdas_menu_overview'], 'side', 'core');
 		$hide2 = '';
 		switch ($screen_layout_columns) {
 			case 2:
