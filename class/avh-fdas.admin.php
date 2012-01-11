@@ -39,6 +39,12 @@ final class AVH_FDAS_Admin
 	 */
 	public function __construct ()
 	{
+
+		add_action('init', array ( &$this, 'handleActionInit' ));
+
+	}
+
+	public function handleActionInit() {
 		// The Settings Registery
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 		// The Classes Registery
@@ -53,7 +59,8 @@ final class AVH_FDAS_Admin
 		}
 		$this->installPlugin();
 		// Admin Capabilities
-		add_action('init', array ( &$this, 'actionInitRoles' ));
+		$this->actionInitRoles;
+
 		// Admin menu
 		add_action('admin_menu', array ( &$this, 'actionAdminMenu' ));
 		// Add the ajax action
@@ -78,9 +85,7 @@ final class AVH_FDAS_Admin
 			add_filter('transient_update_plugins', array ( &$this, 'filterDisableUpgrade' ));
 		}
 		add_filter('set-screen-option', array ( &$this, 'filterSetScreenOption' ), 10, 3);
-		return;
 	}
-
 	/**
 	 * Setup Roles
 	 *
@@ -217,7 +222,7 @@ final class AVH_FDAS_Admin
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script('postbox');
-		wp_admin_css('css/dashboard');
+		wp_enqueue_style('css/dashboard');
 		// Plugin Style and Scripts
 		wp_enqueue_script('avhfdas-admin-js');
 		wp_enqueue_style('avhfdas-admin-css');
@@ -410,7 +415,7 @@ final class AVH_FDAS_Admin
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script('postbox');
-		wp_admin_css('css/dashboard');
+		wp_enqueue_style('css/dashboard');
 		// Plugin Style and Scripts
 		wp_enqueue_script('avhfdas-admin-js');
 		wp_enqueue_style('avhfdas-admin-css');
@@ -640,7 +645,7 @@ final class AVH_FDAS_Admin
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script('postbox');
-		wp_admin_css('css/dashboard');
+		wp_enqueue_style('css/dashboard');
 		// Plugin Style and Scripts
 		wp_enqueue_script('avhfdas-admin-js');
 		wp_enqueue_style('avhfdas-admin-css');
@@ -683,7 +688,7 @@ final class AVH_FDAS_Admin
 				$option_key = substr($option_key, strpos($option_key, '][') + 2);
 				$current_value = $options[$section][$option_key];
 				// Every field in a form is set except unchecked checkboxes. Set an unchecked checkbox to 0.
-				$newval = (isset($formoptions[$section][$option_key]) ? $formoptions[$section][$option_key] : 0);
+				$newval = (isset($formoptions[$section][$option_key]) ? esc_attr($formoptions[$section][$option_key]) : 0);
 				if ('sfs' == $section && ('whentoemail' == $option_key || 'whentodie' == $option_key || 'whentodie_email' == $option_key)) {
 					$newval = (int) $newval;
 				}
@@ -795,7 +800,7 @@ final class AVH_FDAS_Admin
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script('postbox');
-		wp_admin_css('css/dashboard');
+		wp_enqueue_style('css/dashboard');
 		// Plugin Style and Scripts
 		wp_enqueue_script('avhfdas-admin-js');
 		wp_enqueue_style('avhfdas-admin-css');
@@ -951,7 +956,7 @@ final class AVH_FDAS_Admin
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script('postbox');
-		wp_admin_css('css/dashboard');
+		wp_enqueue_style('css/dashboard');
 		// Plugin Style and Scripts
 		wp_enqueue_script('avhfdas-admin-js');
 		wp_enqueue_script('avhfdas-ipcachelog-js');

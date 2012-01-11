@@ -68,7 +68,7 @@ class AVH_FDAS_Core
 	public function __construct ()
 	{
 		$this->_settings = AVH_FDAS_Settings::getInstance();
-		$this->_db_version = 27;
+		$this->_db_version = 26;
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
 		$this->_db_options = 'avhfdas';
 		$this->_db_data = 'avhfdas_data';
@@ -95,15 +95,6 @@ class AVH_FDAS_Core
 		$this->_default_nonces_data = null;
 		$this->_default_nonces = array ( 'default' => $this->_default_nonces_data );
 
-		//add_action('init', array(&$this,'handleInitializePlugin'),10);
-		$this->handleInitializePlugin();
-
-		return;
-	}
-
-	function handleInitializePlugin ()
-	{
-
 		/**
 		 * Set the options for the program
 		 *
@@ -128,19 +119,9 @@ class AVH_FDAS_Core
 		$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
 		$this->_settings->storeSetting('mail_footer', $footer);
 
-		$this->handleTextdomain();
-	}
-
-	/**
-	 * Loads the i18n
-	 *
-	 * @return
-	 */
-	function handleTextdomain ()
-	{
-
 		load_plugin_textdomain('avh-fdas', false, $this->_settings->lang_dir);
 
+		return;
 	}
 
 	/**
