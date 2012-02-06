@@ -149,7 +149,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 	{
 		global $totals, $ip_status;
 
-		$total_ips = $this->_ipcachedb->getIpCache(array ( 'count' => true, 'offset' => 0, 'number' => 0 ));
+		//$total_ips = $this->_ipcachedb->getIpCache(array ( 'count' => true, 'offset' => 0, 'number' => 0 ));
 		$num_ips = $this->_ipcachedb->countIps();
 		$status_links = array ();
 		$stati = array ( 'all' => _nx_noop('All', 'All', 'ips'), 'ham' => _n_noop('Ham <span class="count">(<span class="ham-count">%s</span>)</span>', 'Ham <span class="count">(<span class="ham-count">%s</span>)</span>'), 'spam' => _n_noop('Spam <span class="count">(<span class="spam-count">%s</span>)</span>', 'Spam <span class="count">(<span class="spam-count">%s</span>)</span>') );
