@@ -115,7 +115,7 @@ class AVH_FDAS_Core
 
 		$footer[] = '';
 		$footer[] = '--';
-		$footer[] = sprintf(__('Your blog is protected by AVH First Defense Against Spam v%s'), AVH_FDAS_Define::PLUGIN_VERSION);
+		$footer[] = sprintf('Your blog is protected by AVH First Defense Against Spam v%s', AVH_FDAS_Define::PLUGIN_VERSION);
 		$footer[] = 'http://blog.avirtualhome.com/wordpress-plugins';
 		$this->_settings->storeSetting('mail_footer', $footer);
 

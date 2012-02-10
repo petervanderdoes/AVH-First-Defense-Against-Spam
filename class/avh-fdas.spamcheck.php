@@ -280,7 +280,7 @@ class AVH_FDAS_SpamCheck
 				$this->_handleSpammer();
 			}
 		} else {
-			if (1 == $this->_core_options['general']['useipcache'] && (!isset($this->_spaminfo['blacklist']))) {
+			if (1 == $this->_core_options['general']['useipcache'] && (! isset($this->_spaminfo['blacklist']))) {
 				if (is_object($this->_ip_in_cache)) {
 					$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'lastseen' => current_time('mysql') ));
 				} else {
@@ -475,7 +475,7 @@ class AVH_FDAS_SpamCheck
 			// Stop Forum Spam Mail Part
 			if ($sfs_email) {
 				if ($this->_spaminfo['sfs']['appears']) {
-					$message[] = __('Checked at Stop Forum Spam', 'avh-fdas');
+					$message[] = __('Checked at', 'avh-fdas') . ' Stop Forum Spam';
 					$message[] = '	' . __('Information', 'avh-fdas');
 					$_checks = array ( 'ip' => 'IP', 'email' => 'E-Mail' );
 					foreach ($_checks as $key => $value) {
@@ -495,17 +495,17 @@ class AVH_FDAS_SpamCheck
 					}
 
 				} else {
-					$message[] = __('Stop Forum Spam has no information', 'avh-fdas');
+					$message[] = 'Stop Forum Spam ' . __('has no information', 'avh-fdas');
 				}
 				$message[] = '';
-				$message[] = sprintf(__('For more information: http://www.stopforumspam.com/search?q=%s'), $this->_visiting_ip);
+				$message[] = sprintf(__('For more information:', 'avhfdas') . ' http://www.stopforumspam.com/search?q=%s', $this->_visiting_ip);
 				$message[] = '';
 			}
 
 			// Project Honey pot Mail Part
 			if ($php_email) {
 				if ($this->_spaminfo['php'] != null) {
-					$message[] = __('Checked at Project Honey Pot', 'avh-fdas');
+					$message[] = __('Checked at', 'avh-fdas') . ' Project Honey Pot';
 					$message[] = '	' . __('Information', 'avh-fdas');
 					$message[] = '	' . sprintf(__('Days since last activity:	%s', 'avh-fdas'), $this->_spaminfo['php']['days']);
 					switch ($this->_spaminfo['php']['type']) {
@@ -545,7 +545,7 @@ class AVH_FDAS_SpamCheck
 						$message[] = '	' . sprintf(__('Threshold score (%s) and type (%s) reached. Connection terminated', 'avh-fdas'), $this->_core_options['php']['whentodie'], $type);
 					}
 				} else {
-					$message[] = __('Project Honey Pot has no information', 'avh-fdas');
+					$message[] = 'Project Honey Pot ' . __('has no information', 'avh-fdas');
 				}
 				$message[] = '';
 			}
@@ -553,13 +553,13 @@ class AVH_FDAS_SpamCheck
 			// Spamhaus Mail part
 			if ($sh_email) {
 				if ($this->_spaminfo['sh'] != null) {
-					$message[] = __('IP found at Spamhaus', 'avh-fdas');
+					$message[] = __('IP found at', 'avh-fdas') . ' Spamhaus';
 					$message[] = '	' . __('Information', 'avh-fdas');
 					$message[] = '	' . sprintf(__('Classification:		%s.', 'avh-fdas'), $this->_spaminfo['sh']['which']);
 					$message[] = '	' . sprintf(__('Call took:		%s', 'avhafdas'), $this->_spaminfo['sh']['time']);
 					$message[] = '	' . __('Connection terminated', 'avh-fdas');
 				} else {
-					$message[] = __('Spamhaus has no information', 'avh-fdas');
+					$message[] = 'Spamhaus ' . __('has no information', 'avh-fdas');
 				}
 				$message[] = '';
 			}
