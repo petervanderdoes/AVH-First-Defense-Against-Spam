@@ -29,22 +29,30 @@ class AVH_FDAS_Public
 	 */
 	public function __construct ()
 	{
+		add_action('init', array ( &$this, 'handleInitializePlugin' ), 10);
+	}
+
+	public function handleInitializePlugin ()
+	{
 		// Get The Registry
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 		$this->_classes = AVH_FDAS_Classes::getInstance();
+
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
 		$this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', true);
 		$this->_core_options = $this->_core->getOptions();
+
 		// Public actions and filters
 		if (1 == $this->_core_options['general']['commentnonce']) {
 			add_action('comment_form', array ( &$this, 'actionAddNonceFieldToComment' ));
 			add_filter('preprocess_comment', array ( &$this, 'filterCheckNonceFieldToComment' ), 1);
 		}
 		add_action('get_header', array ( &$this, 'handleActionGetHeader' ));
-		
+
 		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
 		add_action('register_post', array ( &$this, 'handleActionRegisterPost' ), 10, 3);
+
 		// Private actions for Cron
 		add_action('avhfdas_clean_nonce', array ( &$this, 'actionHandleCronCleanNonce' ));
 		add_action('avhfdas_clean_ipcache', array ( &$this, 'actionHandleCronCleanIpCache' ));

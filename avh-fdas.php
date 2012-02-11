@@ -3,7 +3,7 @@
 Plugin Name: AVH First Defense Against Spam
 Plugin URI: http://blog.avirtualhome.com/wordpress-plugins
 Description: This plugin gives you the ability to block spammers before content is served.
-Version:3.2.6
+Version:3.3
 Author: Peter van der Does
 Author URI: http://blog.avirtualhome.com/
 
@@ -41,7 +41,7 @@ if (AVH_Common::getWordpressVersion() >= 2.8) {
 	$_classes->setClassFilePrefix('avh-fdas.');
 	$_classes->setClassNamePrefix('AVH_FDAS_');
 	unset($_classes);
-	
+
 	$_settings = AVH_FDAS_Settings::getInstance();
 	$_settings->storeSetting('plugin_dir', $_dir);
 	$_settings->storeSetting('plugin_basename', $_basename);
@@ -53,11 +53,11 @@ if (AVH_Common::getWordpressVersion() >= 2.8) {
 function avh_fdas_remove_plugin ()
 {
 	$active_plugins = (array) get_option('active_plugins');
-	
+
 	// workaround for WPMU deactivation bug
 	remove_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE, 'deactivate_sitewide_plugin');
 	$key = array_search(AVH_FDAS_Define::PLUGIN_FILE, $active_plugins);
-	
+
 	if ($key !== false) {
 		do_action('deactivate_plugin', AVH_FDAS_Define::PLUGIN_FILE);
 		array_splice($active_plugins, $key, 1);
@@ -68,5 +68,5 @@ function avh_fdas_remove_plugin ()
 		do_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE);
 	}
 	ob_end_clean();
-	wp_die(__('AVH First Defense Against Spam can\'t work with this WordPress version!', 'avh-fdas'));
+	wp_die('AVH First Defense Against Spam ' . __('can\'t work with this WordPress version!', 'avh-fdas'));
 }

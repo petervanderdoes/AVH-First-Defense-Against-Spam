@@ -14,8 +14,7 @@ if (! class_exists('AVH_Visitor')) {
 		public static function getUserIp ()
 		{
 			$ip = array ();
-			foreach (array ( 'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 
-							'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR' ) as $key) {
+			foreach (array ( 'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR' ) as $key) {
 				if (array_key_exists($key, $_SERVER) === true) {
 					foreach (explode(',', $_SERVER[$key]) as $visitors_ip) {
 						$ip[] = str_replace(' ', '', $visitors_ip);

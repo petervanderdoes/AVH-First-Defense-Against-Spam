@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Create seperate Settings Registry for the plugin.
  * @author pdoes
