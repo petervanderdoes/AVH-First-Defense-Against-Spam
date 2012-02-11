@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
 Tested up to: 3.3
-Stable tag: 3.2.6
+Stable tag: 3.3
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -17,7 +17,7 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 = Features =
 * PHP 5 is required.
 * The visitor's IP can be checked at the following third parties:
-	* [Stop Forum Spam](http://www.stopforumspam.com). 
+	* [Stop Forum Spam](http://www.stopforumspam.com).
 	* [Project Honey Pot](http://www.projecthoneypot.org). An API key is needed to check the IP at this party. The key is free.
 	* [Spamhaus](http://www.spamhaus.org). IP's are checked with the lists SBL and XBL.
 * Spammers can be blocked based on the information supplied by the third party or by using a local blacklist.
@@ -37,11 +37,11 @@ Blocking a potential spammer before content is served has the following advantag
 
 1. It saves bandwidth.
 1. It saves CPU cycles. The spammer is actually checked and blocked before WordPress starts building the page.
-1. If you keep track of how many visitors your site has, either by using Google's Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives. 
+1. If you keep track of how many visitors your site has, either by using Google's Analytics, WP-Stats or any other one, it will give you a cleaner statistic of visits your site receives.
 
 = Usage terms of the 3rd Parties =
 Please read the usage terms of the 3rd party you are activating.
-	* [Stop Forum Spam](http://www.stopforumspam.com/license). 
+	* [Stop Forum Spam](http://www.stopforumspam.com/license).
 	* [Project Honey Pot](http://www.projecthoneypot.org/terms_of_service_use.php).
 	* [Spamhaus](http://www.spamhaus.org/organization/dnsblusage.html).
 
@@ -55,7 +55,7 @@ The following IP's are cached locally:
 1. Every IP identified by a 3rd party as spam and triggering the terminate-the-connection threshold.
 1. Every clean IP.
 
-Only returning IP's that were previously identified as spammer and who's connection was terminated will update their last seen date in the caching system. 
+Only returning IP's that were previously identified as spammer and who's connection was terminated will update their last seen date in the caching system.
 Every day, once a day, a routine runs to remove the IP's who's last seen date is X amount of days older than the date the routine runs. You can set the days in the administration section of the plugin.
 You can check the statistics to see how many IP's are in the database. If you have a busy site, with a lot of unique visitors, you might have to play with the "Days to keep in cache" setting to keep the size under control.
 
@@ -80,7 +80,7 @@ The AVH First Defense Against Spam plugin can be installed in 3 easy steps:
 
 == Frequently Asked Questions ==
 = How can I translate the plugin in my language? =
-I have set up a project in [Launchpad](https://translations.launchpad.net/avhfirstdefenseagainstspam) to help with translation. Unfortunately Launchpad can't inform me when some translation has been done, so please shoot me an email when you did some translating. 
+I'm in the process of setting up a new site for translating all my plugins. Please keep an eye on my website for news on when it goes live.
 
 = Is this plugin enough to block all spam? =
 Unfortunately not.
@@ -105,7 +105,7 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 
 == Screenshots ==
 
-1. This message is shown when you select the option to show a message and the visitors IP is found in the Stop Forum Spam database. 
+1. This message is shown when you select the option to show a message and the visitors IP is found in the Stop Forum Spam database.
 
 2. This message is shown when you select the option to show a message and the visitors IP is blacklisted.
 
@@ -115,6 +115,11 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.3 =
+* RFC: Add abillity to also check on email.
+* Bugfix: Enqueue certain CSS files instead of loading them directly.
+* Updated the language file.
+
 = Version 3.2.6 =
 * Bugfix: Correctly load the text domain file.
 
@@ -124,20 +129,20 @@ Starting with version 3.0 this plugin is for PHP5 only.
 * Change the name of the Role and removed one Role.
 
 = Version 3.2.4 =
-* Bugfix: The nonce function used by WordPress is sometime valid for less than 24 hours causing a problem with adding IP's to the blacklist. 
+* Bugfix: The nonce function used by WordPress is sometime valid for less than 24 hours causing a problem with adding IP's to the blacklist.
 
 = Version 3.2.3 =
 * Bugfix: Adding IP's to the blacklist by clicking on the link in the email fails.
 
 = Version 3.2.2 =
-* Bugfix: Get the correct visiting IP when using CloudFlare 
+* Bugfix: Get the correct visiting IP when using CloudFlare
 
 = Version 3.2.1 =
 * Bugfix: Fixes undefined method after WordPress 3.2 upgrade.
 
 = Version 3.2 =
-* Adds Immediate Actions (on-hover links) (Ham, Spam, Blacklist and Delete) to the IP Cache Log list below the IP. 
-* Adds bulk actions Ham, Spam and Blacklist to the IP Cache Log list. 
+* Adds Immediate Actions (on-hover links) (Ham, Spam, Blacklist and Delete) to the IP Cache Log list below the IP.
+* Adds bulk actions Ham, Spam and Blacklist to the IP Cache Log list.
 * Adds the ability to check with Spamhaus.org
 * When a spam check results in a termination of the connection, no more checks will be performed. This removes the option to receive Project Honey Pot information even when Stop Forum Spam determined the connection can be terminated.
 * When Project Honey Pot determines the visiting IP is a known search engine no further checking is done.
@@ -209,7 +214,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 = Version 2.2 =
 * Changed initial settings for email to not send E-Mail. This is better for busy sites.
 * Option for using a honey pot page by Project Honey Pot.
-* Change in IP caching system. Added the field lastseen. This field will be updated if an IP returns which was previously identified as spam. The daily cleaning of the IP cache database will use this field to determine if the record will be deleted. 
+* Change in IP caching system. Added the field lastseen. This field will be updated if an IP returns which was previously identified as spam. The daily cleaning of the IP cache database will use this field to determine if the record will be deleted.
 * Bugfix: Database version was never saved.
 * Bugfix: When HTP connection failed, IP was added as no-spam in cache when cache is active.
 * Bugfix: Uninstall didn't work.
@@ -240,23 +245,23 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 = Version 1.3 =
 * Updated determination of users IP. Now also detects right IP if the server is running Apache with nginx proxy.
-	
+
 = Version 1.2.3 =
 * Bugfix: HTTP Error messages didn't work properly
 * Refactoring of some of the code.
-	
+
 = Version 1.2.2 =
 * Bugfix: Trackback and Pingback comments were blocked as well
-	
+
 = Version 1.2.1 =
 * Better implementation for getting the remote IP.
-	
+
 = Version 1.2 =
  * Added security to protect against spammers directly posting comments by accessing wp-comments-post.php.
  * An email can be received of a spammer trying posting directly. The email holds a link to report the spammer at Stop Forum Spam ( an API key is required).
  * The black and white list can now hold ranges besides single IP addresses.
  * Some small improvements and bug fixes.
- 
+
 = Version 1.1 =
 * Ability to report a spammer to Stop Forum Spam if you sign up on their website and get an API key (it's free).
 * Added a link in the emails to add an IP to the local blacklist.
