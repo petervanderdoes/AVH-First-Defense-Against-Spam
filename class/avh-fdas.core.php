@@ -68,7 +68,7 @@ class AVH_FDAS_Core
 	public function __construct ()
 	{
 		$this->_settings = AVH_FDAS_Settings::getInstance();
-		$this->_db_version = 26;
+		$this->_db_version = 28;
 		$this->_comment = '<!-- AVH First Defense Against Spam version ' . AVH_FDAS_Define::PLUGIN_VERSION;
 		$this->_db_options = 'avhfdas';
 		$this->_db_data = 'avhfdas_data';
