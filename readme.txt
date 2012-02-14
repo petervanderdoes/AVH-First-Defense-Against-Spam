@@ -115,6 +115,9 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.3.1 =
+* Bugfix: Problem with accessing the options pages.
+
 = Version 3.3 =
 * RFC: Add abillity to also check on email.
 * Bugfix: Enqueue certain CSS files instead of loading them directly.
