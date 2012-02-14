@@ -59,7 +59,7 @@ final class AVH_FDAS_Admin
 		}
 		$this->installPlugin();
 		// Admin Capabilities
-		$this->actionInitRoles;
+		$this->actionInitRoles();
 
 		// Admin menu
 		add_action('admin_menu', array ( &$this, 'actionAdminMenu' ));
