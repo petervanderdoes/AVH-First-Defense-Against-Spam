@@ -1,9 +1,9 @@
 <?php
+
 final class AVH_FDAS_Admin
 {
 	/**
 	 * Message management
-	 *
 	 */
 	private $_message = '';
 	private $_status = '';
@@ -13,14 +13,17 @@ final class AVH_FDAS_Admin
 	 */
 	private $_core;
 	/**
+	 *
 	 * @var AVH_FDAS_Settings
 	 */
 	private $_settings;
 	/**
+	 *
 	 * @var AVH_FDAS_Classes
 	 */
 	private $_classes;
 	/**
+	 *
 	 * @var AVH_FDAS_DB
 	 */
 	private $_db;
@@ -28,6 +31,7 @@ final class AVH_FDAS_Admin
 	private $_hooks = array ();
 
 	/**
+	 *
 	 * @var AVH_FDAS_IpcacheList
 	 */
 	private $_ip_cache_list;
@@ -39,16 +43,16 @@ final class AVH_FDAS_Admin
 	 */
 	public function __construct ()
 	{
-
-		add_action('init', array ( &$this, 'handleActionInit' ));
-
-	}
-
-	public function handleActionInit() {
 		// The Settings Registery
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 		// The Classes Registery
 		$this->_classes = AVH_FDAS_Classes::getInstance();
+		add_action('init', array ( &$this, 'handleActionInit' ));
+
+	}
+
+	public function handleActionInit ()
+	{
 		// Initialize the plugin
 		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
 		$this->_db = $this->_classes->load_class('DB', 'plugin', true);
@@ -76,7 +80,6 @@ final class AVH_FDAS_Admin
 		add_action('in_plugin_update_message-' . AVH_FDAS_Define::PLUGIN_FILE, array ( &$this, 'actionInPluginUpdateMessage' ));
 		/**
 		 * Admin Filters
-		 *
 		 */
 		add_filter('comment_row_actions', array ( &$this, 'filterCommentRowActions' ), 10, 2);
 		add_filter('plugin_action_links_' . AVH_FDAS_Define::PLUGIN_FILE, array ( &$this, 'filterPluginActions' ), 10, 2);
@@ -86,6 +89,7 @@ final class AVH_FDAS_Admin
 		}
 		add_filter('set-screen-option', array ( &$this, 'filterSetScreenOption' ), 10, 3);
 	}
+
 	/**
 	 * Setup Roles
 	 *
@@ -105,7 +109,6 @@ final class AVH_FDAS_Admin
 	 * Add the Tools and Options to the Management and Options page repectively
 	 *
 	 * @WordPress Action admin_menu
-	 *
 	 */
 	public function actionAdminMenu ()
 	{
@@ -186,7 +189,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * This function allows the upgrade notice not to appear
-	 * @param $option
+	 *
+	 * @param
+	 *       	 $option
 	 */
 	public function filterDisableUpgrade ($option)
 	{
@@ -195,9 +200,9 @@ final class AVH_FDAS_Admin
 		if (version_compare($option->response[$this_plugin]->new_version, '2', '>='))
 			return $option;
 		if (isset($option->response[$this_plugin])) {
-			//Clear its download link:
+			// Clear its download link:
 			$option->response[$this_plugin]->package = '';
-			//Add a notice message
+			// Add a notice message
 			if ($this->_add_disabled_notice == false) {
 				add_action("in_plugin_update_message-$this->plugin_name", create_function('', 'echo \'<br /><span style="color:red">' . __('You need to have PHP 5.2 or higher for the new version !!!', 'avh-fdas') . '</span>\';'));
 				$this->_add_disabled_notice = true;
@@ -208,7 +213,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Setup everything needed for the Overview page
-	 *
 	 */
 	public function actionLoadPagehookOverview ()
 	{
@@ -271,7 +275,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Overview of settings
-	 *
 	 */
 	public function metaboxMenuOverview ()
 	{
@@ -397,7 +400,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Setup the General page
-	 *
 	 */
 	public function actionLoadPagehookGeneral ()
 	{
@@ -465,7 +467,7 @@ final class AVH_FDAS_Admin
 				// Every field in a form is set except unchecked checkboxes. Set an unchecked checkbox to 0.
 				$newval = (isset($formoptions[$section][$option_key]) ? esc_attr($formoptions[$section][$option_key]) : 0);
 				if ($newval != $current_value) { // Only process changed fields.
-					// Sort the lists
+				                                 // Sort the lists
 					if ('blacklist' == $option_key || 'whitelist' == $option_key) {
 						$b = explode("\r\n", $newval);
 						natsort($b);
@@ -567,7 +569,7 @@ final class AVH_FDAS_Admin
 		echo '			</div>';
 		echo '		</div>';
 		echo '<br class="clear"/>';
-		echo '	</div>'; //dashboard-widgets-wrap
+		echo '	</div>'; // dashboard-widgets-wrap
 		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' . __('Save Changes', 'avh-fdas') . '" /></p>';
 		echo '</form>';
 		echo '</div>';
@@ -577,7 +579,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the General Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxGeneral ($data)
@@ -587,7 +591,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the Blacklist Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxBlackList ($data)
@@ -597,7 +603,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the Whitelist Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxWhiteList ($data)
@@ -607,7 +615,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the IP cache Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxIPCache ($data)
@@ -618,7 +628,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the cron Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxCron ($data)
@@ -629,7 +641,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Setup everything needed for the 3rd party menu
-	 *
 	 */
 	public function actionLoadPagehook3rdParty ()
 	{
@@ -741,7 +752,7 @@ final class AVH_FDAS_Admin
 		do_meta_boxes($this->_hooks['avhfdas_menu_3rd_party'], 'side', $data);
 		echo '			</div>';
 		echo '		</div>';
-		echo '	</div>'; //dashboard-widgets-wrap
+		echo '	</div>'; // dashboard-widgets-wrap
 		echo '<p class="submit"><input class="button-primary" type="submit" name="updateoptions" value="' . __('Save Changes', 'avh-fdas') . '" /></p>';
 		echo '</form>';
 		$this->_printAdminFooter();
@@ -750,7 +761,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the 3rd Party Stop Forum Spam Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxMenu3rdParty_SFS ($data)
@@ -758,13 +771,15 @@ final class AVH_FDAS_Admin
 		echo '<p>' . __('To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.', 'avh-fdas');
 		echo $this->_printOptions($data['options_sfs'], $data['actual_options']);
 
-		//echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
-	//echo  __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
+		// echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
+		// echo __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
 	}
 
 	/**
 	 * Metabox Display the 3rd Party Project Honey Pot Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxMenu3rdParty_PHP ($data)
@@ -775,18 +790,19 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the 3rd Party Project Honey Pot Options
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxMenu3rdParty_SH ($data)
 	{
-		//echo '<p>' . __('To check a visitor at Spamhaus you must enable it below.', 'avh-fdas');
+		// echo '<p>' . __('To check a visitor at Spamhaus you must enable it below.', 'avh-fdas');
 		echo $this->_printOptions($data['options_sh'], $data['actual_options']);
 	}
 
 	/**
 	 * Setup everything needed for the FAQ page
-	 *
 	 */
 	public function actionLoadPagehookFaq ()
 	{
@@ -841,8 +857,7 @@ final class AVH_FDAS_Admin
 		do_meta_boxes($this->_hooks['avhfdas_menu_faq'], 'side', '');
 		echo '			</div>';
 		echo '		</div>';
-		echo ' </div>'; //dashboard-widgets-wrap
-
+		echo ' </div>'; // dashboard-widgets-wrap
 
 		$this->_printAdminFooter();
 		echo '</div>';
@@ -850,7 +865,9 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Metabox Display the FAQ
-	 * @param $data array The data is filled menu setup
+	 *
+	 * @param $data array
+	 *       	 The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxFAQ ()
@@ -944,7 +961,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Setup everything needed for the IP Cache page
-	 *
 	 */
 	public function actionLoadPagehookIpCacheLog ()
 	{
@@ -968,7 +984,6 @@ final class AVH_FDAS_Admin
 	}
 
 	/**
-	 *
 	 * Handles the Get and Post after a submit on the IP cache Log page
 	 * @WordPress Action load-$page_hook
 	 */
@@ -1146,7 +1161,6 @@ final class AVH_FDAS_Admin
 	}
 
 	/**
-	 *
 	 * Displays the IP cache Log
 	 */
 	public function menuIpCacheLog ()
@@ -1277,7 +1291,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * Contrary to normal success AJAX response ("1"), die with time() on success.
 	 *
-	 * @param int $comment_id
+	 * @param $comment_id int
 	 * @return die
 	 */
 	private function _AjaxIpcacheLogResponse ($ip, $delta = -1)
@@ -1296,13 +1310,13 @@ final class AVH_FDAS_Admin
 
 		$time = time(); // The time since the last comment count
 
-
 		$x = new WP_Ajax_Response(array ( 'what' => 'ipcachelog', 'id' => $ip, 'supplemental' => array ( 'total_items_i18n' => sprintf(_n('1 item', '%s items', $total), number_format_i18n($total)), 'total_pages' => ceil($total / $per_page), 'total_pages_i18n' => number_format_i18n(ceil($total / $per_page)), 'total' => $total, 'time' => $time ) ));
 		$x->send();
 	}
 
 	/**
 	 * Donation Metabox
+	 *
 	 * @return unknown_type
 	 */
 	public function metaboxDonations ()
@@ -1327,7 +1341,9 @@ final class AVH_FDAS_Admin
 	 * Sets the amount of columns wanted for a particuler screen
 	 *
 	 * @WordPress filter screen_meta_screen
-	 * @param $screen
+	 *
+	 * @param
+	 *       	 $screen
 	 * @return strings
 	 */
 	public function filterScreenLayoutColumns ($columns, $screen)
@@ -1353,7 +1369,8 @@ final class AVH_FDAS_Admin
 	 * Adds Settings next to the plugin actions
 	 *
 	 * @WordPress Filter plugin_action_links_avh-first-defense-against-spam/avh-fdas.php
-	 * @param array $links
+	 *
+	 * @param $links array
 	 * @return array
 	 *
 	 * @since 1.0
@@ -1370,8 +1387,9 @@ final class AVH_FDAS_Admin
 	 * Adds an extra option on the comment row
 	 *
 	 * @WordPress Filter comment_row_actions
-	 * @param array $actions
-	 * @param class $comment
+	 *
+	 * @param $actions array
+	 * @param $comment class
 	 * @return array
 	 * @since 1.0
 	 */
@@ -1403,9 +1421,9 @@ final class AVH_FDAS_Admin
 	 *
 	 * The filter needs to be set during construct otherwise it's not regonized.
 	 *
-	 * @param unknown_type $default
-	 * @param unknown_type $option
-	 * @param unknown_type $value
+	 * @param $default unknown_type
+	 * @param $option unknown_type
+	 * @param $value unknown_type
 	 */
 	public function filterSetScreenOption ($error_value, $option, $value)
 	{
@@ -1430,7 +1448,6 @@ final class AVH_FDAS_Admin
 	 * Checks if the user clicked on the Report & Delete link.
 	 *
 	 * @WordPress Action wp_ajax_avh-fdas-reportcomment
-	 *
 	 */
 	public function actionAjaxReportComment ()
 	{
@@ -1478,6 +1495,7 @@ final class AVH_FDAS_Admin
 	 * Handles the admin_action emailreportspammer call.
 	 *
 	 * @WordPress Action admin_action_emailreportspammer
+	 *
 	 * @since 1.2
 	 *
 	 */
@@ -1507,9 +1525,9 @@ final class AVH_FDAS_Admin
 	/**
 	 * Do the HTTP call to and report the spammer
 	 *
-	 * @param unknown_type $username
-	 * @param unknown_type $email
-	 * @param unknown_type $ip_addr
+	 * @param $username unknown_type
+	 * @param $email unknown_type
+	 * @param $ip_addr unknown_type
 	 */
 	private function _handleReportSpammer ($username, $email, $ip_addr)
 	{
@@ -1532,7 +1550,6 @@ final class AVH_FDAS_Admin
 	 * Handles the admin_action_blacklist call
 	 *
 	 * @WordPress Action admin_action_blacklist
-	 *
 	 */
 	public function actionHandleBlacklistUrl ()
 	{
@@ -1562,7 +1579,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Update the blacklist in the proper format
 	 *
-	 * @param array $b
+	 * @param $b array
 	 */
 	private function _setBlacklistOption ($blacklist)
 	{
@@ -1576,7 +1593,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Update the whitelist in the proper format
 	 *
-	 * @param array $b
+	 * @param $b array
 	 */
 	private function _setWhitelistOption ($b)
 	{
@@ -1589,7 +1606,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Called on activation of the plugin.
-	 *
 	 */
 	public function installPlugin ()
 	{
@@ -1627,7 +1643,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Called on deactivation of the plugin.
-	 *
 	 */
 	public function deactivatePlugin ()
 	{
@@ -1641,10 +1656,9 @@ final class AVH_FDAS_Admin
 		wp_clear_scheduled_hook('avhfdas_clean_ipcache');
 	}
 
-	############## Admin WP Helper ##############
+	// ############ Admin WP Helper ##############
 	/**
 	 * Display plugin Copyright
-	 *
 	 */
 	private function _printAdminFooter ()
 	{
@@ -1657,7 +1671,6 @@ final class AVH_FDAS_Admin
 
 	/**
 	 * Display WP alert
-	 *
 	 */
 	private function _displayMessage ()
 	{
@@ -1674,7 +1687,9 @@ final class AVH_FDAS_Admin
 	}
 
 	/**
-	 * Displays the icon needed. Using this instead of core in case we ever want to show our own icons
+	 * Displays the icon needed.
+	 * Using this instead of core in case we ever want to show our own icons
+	 *
 	 * @param $icon strings
 	 * @return string
 	 */
@@ -1686,7 +1701,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Ouput formatted options
 	 *
-	 * @param array $option_data
+	 * @param $option_data array
 	 * @return string
 	 */
 	private function _printOptions ($option_data, $option_actual)
@@ -1748,7 +1763,8 @@ final class AVH_FDAS_Admin
 	/**
 	 * Display error message at bottom of comments.
 	 *
-	 * @param string $msg Error Message. Assumed to contain HTML and be sanitized.
+	 * @param $msg string
+	 *       	 Error Message. Assumed to contain HTML and be sanitized.
 	 */
 	private function _comment_footer_die ($msg)
 	{
