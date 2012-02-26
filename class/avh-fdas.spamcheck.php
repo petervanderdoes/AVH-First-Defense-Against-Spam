@@ -82,10 +82,11 @@ class AVH_FDAS_SpamCheck
 	{
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			$this->_doSpamCheckFunctions();
+			$this->_checkHttpReferer();
 		}
 	}
 
-	public function _checkHttpReferer ()
+	private function _checkHttpReferer ()
 	{
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			$_die = false;
@@ -97,32 +98,43 @@ class AVH_FDAS_SpamCheck
 				$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
 				AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 				$_die = true;
-			} else {
-				$_url = parse_url($url);
-				if ($_url['host'] != $_SERVER['HOST']) {
-					$to = get_option('admin_email');
-					$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Wrong Referer in Comment', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
-					$message[] = __('Somebody tries to comment with a wrong Referer.', 'avh-fdas');
-					$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $this->_visiting_ip);
-					$message[] = sprintf(__('Referer:	%s', 'avh-fdas'), $_SERVER['HTTP_REFERER']);
-					$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
-					AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
-					$_die = true;
-				}
+				// } else {
+				// $_url = parse_url($_SERVER['HTTP_REFERER']);
+				// if ($_url['host'] != $_SERVER['HOST']) {
+				// $to = get_option('admin_email');
+				// $subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Wrong Referer in Comment', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+				// $message[] = __('Somebody tries to comment with a wrong Referer.', 'avh-fdas');
+				// $message[] = sprintf(__('IP: %s', 'avh-fdas'), $this->_visiting_ip);
+				// $message[] = sprintf(__('Referer: %s', 'avh-fdas'), $_SERVER['HTTP_REFERER']);
+				// $message[] = sprintf(__('Accessing: %s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+				// AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
+				// $_die = true;
+				// }
 			}
+
 			if ($_die) {
+				if (1 == $this->_core_options['general']['useipcache']) {
+					if (is_object($this->_ip_in_cache)) {
+						$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql') ));
+
+					} else {
+						$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
+					}
+				}
+				// Update the counter
+				$this->_updateSpamCounter();
 				define('DONOTCACHEPAGE', true);
 				if (1 == $this->_core_options['general']['diewithmessage']) {
 					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('You are trying to beat the system.', 'avh-fdas') . '<BR />');
+					$m .= '<p>' . __('Protected by: ', 'avh-fdas') . 'AVH First Defense Against Spam</p>';
+					if ($this->_core_options['php']['usehoneypot']) {
+						$m .= $this->getHtmlHoneyPotUrl();
+					}
+					wp_die($m);
+				} else {
+					die();
 				}
 			}
-			$m .= '<p>' . __('Protected by: ', 'avh-fdas') . 'AVH First Defense Against Spam</p>';
-			if ($this->_core_options['php']['usehoneypot']) {
-				$m .= $this->getHtmlHoneyPotUrl();
-			}
-			wp_die($m);
-		} else {
-			die();
 		}
 	}
 
