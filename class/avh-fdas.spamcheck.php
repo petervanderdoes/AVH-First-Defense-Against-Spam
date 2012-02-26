@@ -85,6 +85,47 @@ class AVH_FDAS_SpamCheck
 		}
 	}
 
+	public function _checkHttpReferer ()
+	{
+		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
+			$_die = false;
+			if (! isset($_SERVER['HTTP_REFERER'])) {
+				$to = get_option('admin_email');
+				$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('No Referer in Comment', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+				$message[] = __('Somebody tries to comment directly.', 'avh-fdas');
+				$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $this->_visiting_ip);
+				$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+				AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
+				$_die = true;
+			} else {
+				$_url = parse_url($url);
+				if ($_url['host'] != $_SERVER['HOST']) {
+					$to = get_option('admin_email');
+					$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Wrong Referer in Comment', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+					$message[] = __('Somebody tries to comment with a wrong Referer.', 'avh-fdas');
+					$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $this->_visiting_ip);
+					$message[] = sprintf(__('Referer:	%s', 'avh-fdas'), $_SERVER['HTTP_REFERER']);
+					$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+					AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
+					$_die = true;
+				}
+			}
+			if ($_die) {
+				define('DONOTCACHEPAGE', true);
+				if (1 == $this->_core_options['general']['diewithmessage']) {
+					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('You are trying to beat the system.', 'avh-fdas') . '<BR />');
+				}
+			}
+			$m .= '<p>' . __('Protected by: ', 'avh-fdas') . 'AVH First Defense Against Spam</p>';
+			if ($this->_core_options['php']['usehoneypot']) {
+				$m .= $this->getHtmlHoneyPotUrl();
+			}
+			wp_die($m);
+		} else {
+			die();
+		}
+	}
+
 	/**
 	 * Run the checks for the action register_post.
 	 *

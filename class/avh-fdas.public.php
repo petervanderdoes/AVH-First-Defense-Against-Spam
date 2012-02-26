@@ -234,6 +234,7 @@ class AVH_FDAS_Public
 	 */
 	public function handleActionPreCommentOnPost ($comment_id)
 	{
+		$this->_spamcheck->_checkHttpReferer();
 		$this->_spamcheck->doSpamcheckPreCommentPost();
 	}
 
