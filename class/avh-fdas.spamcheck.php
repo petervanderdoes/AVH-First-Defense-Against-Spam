@@ -81,8 +81,8 @@ class AVH_FDAS_SpamCheck
 	public function doSpamcheckPreCommentPost ()
 	{
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
-			$this->_doSpamCheckFunctions();
 			$this->_checkHttpReferer();
+			$this->_doSpamCheckFunctions();
 		}
 	}
 
@@ -91,11 +91,43 @@ class AVH_FDAS_SpamCheck
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			$_die = false;
 			if (! isset($_SERVER['HTTP_REFERER'])) {
+				$sfs_apikey = $this->_core->getOptionElement('sfs', 'sfsapikey');
+
 				$to = get_option('admin_email');
-				$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('No Referer in Comment', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+				$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('No Referer in Comment [%s]', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES), $this->_visiting_ip);
+				$comment_author       = ( isset($_POST['author']) )  ? trim(strip_tags($_POST['author'])) : null;
+				$comment_author_email = ( isset($_POST['email']) )   ? trim($_POST['email']) : 'meseaffibia@gmail.com';
+				$comment_author_url   = ( isset($_POST['url']) )     ? trim($_POST['url']) : null;
+				$comment_content      = ( isset($_POST['comment']) ) ? trim($_POST['comment']) : null;
+
 				$message[] = __('Somebody tries to comment directly.', 'avh-fdas');
 				$message[] = sprintf(__('IP:		%s', 'avh-fdas'), $this->_visiting_ip);
-				$message[] = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
+				$message[] = sprintf(__('Username:	%s', 'avh-fdas'), $comment_author);
+				$message[] = sprintf(__('Email:		%s', 'avh-fdas'), $comment_author_email);
+
+				$message[] = '';
+				$message[] = __('Comment trying to post:', 'avh-fdas');
+				$message[] = __('--- START OF COMMENT ---', 'avh-fdas');
+				$message[] = $comment_content;
+				$message[] = __('--- END OF COMMENT ---', 'avh-fdas');
+				$message[] = '';
+				if ('' != $sfs_apikey) {
+					$q['action'] = 'emailreportspammer';
+					$q['a'] = $comment_author;
+					$q['e'] = $comment_author_email;
+					$q['i'] = $this->_visiting_ip;
+					$q['_avhnonce'] = AVH_Security::createNonce($q['a'] . $q['e'] . $q['i']);
+					$query = $this->_core->BuildQuery($q);
+					$report_url = admin_url('admin.php?' . $query);
+					$message[] = sprintf(__('Report spammer: %s'), $report_url);
+				}
+				$message[] = sprintf(__('For more information: http://www.stopforumspam.com/search?q=%s'), $this->_visiting_ip);
+				$blacklisturl = admin_url('admin.php?action=blacklist&i=') . $this->_visiting_ip . '&_avhnonce=' . AVH_Security::createNonce($this->_visiting_ip);
+				$message[] = sprintf(__('Add to the local blacklist: %s'), $blacklisturl);
+// 				$message[] = '';
+// 				$message[] = var_export($_SERVER,TRUE);
+// 				$message[] = '';
+// 				$message[] = var_export($_REQUEST,TRUE);
 				AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 				$_die = true;
 				// } else {
@@ -114,9 +146,9 @@ class AVH_FDAS_SpamCheck
 
 			if ($_die) {
 				if (1 == $this->_core_options['general']['useipcache']) {
+					$this->_ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
 					if (is_object($this->_ip_in_cache)) {
 						$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql') ));
-
 					} else {
 						$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
 					}
