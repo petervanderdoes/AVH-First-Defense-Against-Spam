@@ -123,6 +123,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 == Changelog ==
 = Verion 3.4-rc1 =
 * Stop comments made without a referrer.
+* When using the plugin Hyper Cache, pages shown to blocked visitors will not be cached. The caching caused to show the blocked page to legit visitors.
 
 = Version 3.3.1 =
 * Bugfix: Problem with accessing the options pages.

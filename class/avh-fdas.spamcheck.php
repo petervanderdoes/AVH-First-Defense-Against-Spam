@@ -745,6 +745,13 @@ class AVH_FDAS_SpamCheck
 		 * WP-Supercache
 		 */
 		define('DONOTCACHEPAGE', true);
+
+		/**
+		 * The following two line tells the plugin Hyper Cache not to cache this page.
+		 */
+		global $hyper_cache_stop;
+		$hyper_cache_stop = true;
+
 		if (1 == $this->_core_options['general']['diewithmessage']) {
 			if (is_object($this->_ip_in_cache)) {
 				$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] has been identified as spam', 'avh-fdas') . '</p>', $this->_visiting_ip);
