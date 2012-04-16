@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
 Tested up to: 3.3
-Stable tag: 3.3.1
+Stable tag: 3.4-rc2
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -21,6 +21,7 @@ Visitors trying to post a comment are checked at stopforumspam.com. Stop Forum S
 	* [Project Honey Pot](http://www.projecthoneypot.org). An API key is needed to check the IP at this party. The key is free.
 	* [Spamhaus](http://www.spamhaus.org). IP's are checked with the lists SBL and XBL.
 * Spammers can be blocked based on the information supplied by the third party or by using a local blacklist.
+* Comments made without a HTTP referrer can be blocked.
 * Separate thresholds can be set for the following features:
 	* Send an email to the board administrator with information supplied by the third party about the spammer.
 	* Block the spammer before content is served.
@@ -66,7 +67,7 @@ The plugin checks the visiting IP in the following order, only if that feature i
 1. Blacklist - If found in the list terminate the connection.
 1. IP Caching - If found in the list and it's spam terminate connection otherwise if it's clean skip the rest of the checks except when posting a comment then a Stop Forum Spam check will be done.
 1. Stop Forum Spam - Only when the visiting IP is posting a comment. If found and it's spam terminate connection.
-1. Project Honey Pot - If found and it's spam terminate connection, if found and it's set to be a search enigine no further checks will be performed.
+1. Project Honey Pot - If found and it's spam terminate connection, if found and it's set to be a search engine no further checks will be performed.
 1. Spamhaus- If found and it's spam terminate connection.
 
 To my knowledge this plugin is fully compatible with other anti-spam plugins, I have tested it with WP-Spamfree and Akismet.
@@ -88,6 +89,11 @@ I don't believe there is one solution to block all spam. Personally I have great
 
 = Does it conflicts with other spam solutions? =
 I'm currently not aware of any conflicts with other anti-spam solutions.
+
+= What does "Stop comments made without a referrer." mean =
+On the Internet when you click on a link, directing you to another page a HTTP referrer is set. If you type in an address or select a bookmark from your browser this referrer is not set.
+When somebody posts a comment on your blog, they click the submit button and are redirected to another page which handles the submission. At the moment the HTTP referrer is set.
+The plugin checks if there is a referrer, if there's not the connection is terminated. For a more detailed write you can read an [article](http://blog.avirtualhome.com/2012/02/29/investigation-in-a-big-spammer/) I wrote on my site
 
 = How do I define a range in the blacklist or white list? =
 You can define two sorts of ranges:
@@ -115,6 +121,10 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.4-rc2 =
+* Stop comments made without a referrer.
+* When using the plugin Hyper Cache, pages shown to blocked visitors will not be cached. The caching caused to show the blocked page to legit visitors.
+
 = Version 3.3.1 =
 * Bugfix: Problem with accessing the options pages.
 

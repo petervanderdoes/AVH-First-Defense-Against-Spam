@@ -10,10 +10,12 @@ class AVH_FDAS_SpamCheck
 	 */
 	private $_core;
 	/**
+	 *
 	 * @var AVH_Settings_Registry
 	 */
 	private $_settings;
 	/**
+	 *
 	 * @var AVH_Class_registry
 	 */
 	private $_classes;
@@ -35,7 +37,6 @@ class AVH_FDAS_SpamCheck
 
 	/**
 	 * PHP5 Constructor
-	 *
 	 */
 	public function __construct ()
 	{
@@ -60,10 +61,8 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
-	 *
 	 * Run all the checks for the main action.
 	 * We don't check with Stop Forum Spam as this overloads their site.
-	 *
 	 */
 	public function doSpamcheckMain ()
 	{
@@ -76,18 +75,50 @@ class AVH_FDAS_SpamCheck
 
 	/**
 	 * Run the checks for the action pre_comment_on_post.
-	 *
 	 */
 	public function doSpamcheckPreCommentPost ()
 	{
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
+			$this->_checkHttpReferer();
 			$this->_doSpamCheckFunctions();
+		}
+	}
+
+	private function _checkHttpReferer ()
+	{
+		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
+			$_die = false;
+			if (! isset($_SERVER['HTTP_REFERER'])) {
+				$_die = true;
+			}
+			if ($_die) {
+				if (1 == $this->_core_options['general']['useipcache']) {
+					$this->_ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
+					if (is_object($this->_ip_in_cache)) {
+						$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql') ));
+					} else {
+						$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
+					}
+				}
+				// Update the counter
+				$this->_updateSpamCounter();
+				$this->_setNoCaching();
+				if (1 == $this->_core_options['general']['diewithmessage']) {
+					$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('You are trying to beat the system.', 'avh-fdas') . '<BR />');
+					$m .= '<p>' . __('Protected by: ', 'avh-fdas') . 'AVH First Defense Against Spam</p>';
+					if ($this->_core_options['php']['usehoneypot']) {
+						$m .= $this->getHtmlHoneyPotUrl();
+					}
+					wp_die($m);
+				} else {
+					die();
+				}
+			}
 		}
 	}
 
 	/**
 	 * Run the checks for the action register_post.
-	 *
 	 */
 	public function doSpamcheckUserRegister ()
 	{
@@ -98,7 +129,6 @@ class AVH_FDAS_SpamCheck
 
 	/**
 	 * Check the cache for the IP
-	 *
 	 */
 	private function _doIpCheckCache ()
 	{
@@ -129,7 +159,6 @@ class AVH_FDAS_SpamCheck
 	 * In the next release I might add an extra field the the IP cache DB indicating
 	 * which check declared it ham and if all of them declared it ham we can safely
 	 * consider it ham.
-	 *
 	 */
 	private function _doSpamCheckFunctions ()
 	{
@@ -168,7 +197,7 @@ class AVH_FDAS_SpamCheck
 						break;
 				}
 				if ($this->_spammer_detected || ($_did_sfs && is_object($this->_ip_in_cache))) {
-					if (is_object($this->_ip_in_cache) || isset($this->_spaminfo['php']['engine']) || $this->_checkTerminateConnection()) { // When Project Honey Pot detects a search enigine we don't check any further.
+					if (is_object($this->_ip_in_cache) || isset($this->_spaminfo['php']['engine']) || $this->_checkTerminateConnection()) {
 						break;
 					}
 				}
@@ -186,7 +215,6 @@ class AVH_FDAS_SpamCheck
 	 * Do Project Honey Pot with Visitor
 	 *
 	 * Sets the _spaminfo['detected'] to true when a spammer is detected.
-	 *
 	 */
 	private function _doIpCheckProjectHoneyPot ()
 	{
@@ -194,14 +222,15 @@ class AVH_FDAS_SpamCheck
 			$reverse_ip = implode('.', array_reverse(explode('.', $this->_visiting_ip)));
 			$projecthoneypot_api_key = $this->_core_options['php']['phpapikey'];
 			$this->_spaminfo['php'] = null;
-			//
+
 			// Check the IP against projecthoneypot.org
-			//
 			$time_start = microtime(true);
 			$lookup = $projecthoneypot_api_key . '.' . $reverse_ip . '.dnsbl.httpbl.org.';
 			$info = explode('.', gethostbyname($lookup));
 			// The first octet needs to be 127.
-			// Quote from the HTTPBL Api documentation: If the first octet in the response is not 127 it means an error condition has occurred and your query may not have been formatted correctly.
+			// Quote from the HTTPBL Api documentation: If the first octet in
+			// the response is not 127 it means an error condition has occurred
+			// and your query may not have been formatted correctly.
 			// Reference :http://www.projecthoneypot.org/httpbl_api.php
 			if ('127' == $info[0]) {
 				$this->_spammer_detected = true;
@@ -224,16 +253,14 @@ class AVH_FDAS_SpamCheck
 	 * Do Project Honey Pot with Visitor
 	 *
 	 * Sets the _spaminfo['detected'] to true when a spammer is detected.
-	 *
 	 */
 	private function _doIpCheckSpamhaus ()
 	{
 		if ($this->_core_options['general']['use_sh']) {
 			$reverse_ip = implode('.', array_reverse(explode('.', $this->_visiting_ip)));
 			$this->_spaminfo['sh'] = null;
-			//
+
 			// Check the IP against spamhaus.org
-			//
 			$time_start = microtime(true);
 			$lookup = $reverse_ip . '.zen.spamhaus.org.';
 			$info = explode('.', gethostbyname($lookup));
@@ -254,7 +281,6 @@ class AVH_FDAS_SpamCheck
 
 	/**
 	 * Function to handle everything when a potential spammer is detected.
-	 *
 	 */
 	private function _handleResults ()
 	{
@@ -268,12 +294,6 @@ class AVH_FDAS_SpamCheck
 			} else {
 				$this->_accessing = sprintf(__('Accessing:	%s', 'avh-fdas'), $_SERVER['REQUEST_URI']);
 			}
-			/*if (!empty($_POST)) {
-				$this->_accessing .= "\n".'$_POST data'."\n";
-				foreach ($_POST as $key => $value) {
-					$this->_accessing .= $key .' => '.$value."\n";
-				}
-			}*/
 			if (is_object($this->_ip_in_cache) && 1 == $this->_ip_in_cache->spam) {
 				$this->_handleSpammerCache();
 			} else {
@@ -376,7 +396,8 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
-	 * Check the White list table. Return true if in the table
+	 * Check the White list table.
+	 * Return true if in the table
 	 *
 	 * @param string $ip
 	 * @return boolean
@@ -593,6 +614,7 @@ class AVH_FDAS_SpamCheck
 
 	/**
 	 * Handle a spammer found in the IP cache
+	 *
 	 * @param $info
 	 * @return unknown_type
 	 */
@@ -623,12 +645,10 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
-	 *
 	 * Updates the spam counter
 	 */
 	private function _updateSpamCounter ()
 	{
-		// Update the counter
 		$period = date('Ym');
 		if (array_key_exists($period, $this->_core_data['counters'])) {
 			$this->_core_data['counters'][$period] += 1;
@@ -649,17 +669,12 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
-	 *
 	 * Terminates the connection.
 	 */
 	private function _doTerminateConnection ()
 	{
-		/**
-		 * This tells the following plugins to not cache this page
-		 * W3 Total cache
-		 * WP-Supercache
-		 */
-		define('DONOTCACHEPAGE', true);
+		$this->_setNoCaching();
+
 		if (1 == $this->_core_options['general']['diewithmessage']) {
 			if (is_object($this->_ip_in_cache)) {
 				$m = sprintf('<h1>' . __('Access has been blocked.', 'avh-fdas') . '</h1><p>' . __('Your IP [%s] has been identified as spam', 'avh-fdas') . '</p>', $this->_visiting_ip);
@@ -693,7 +708,26 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
-	 *
+	 * Set No Cacheing for several Caching plugins.
+	 */
+	private function _setNoCaching ()
+	{
+		/**
+		 * This tells the following plugins to not cache this page
+		 * W3 Total cache
+		 * WP-Supercache
+		 */
+		define('DONOTCACHEPAGE', true);
+
+		/**
+		 * The following two line tells the plugin Hyper Cache not to cache
+		 * this page.
+		 */
+		global $hyper_cache_stop;
+		$hyper_cache_stop = true;
+	}
+
+	/**
 	 * Display the honeypot URL
 	 */
 	public function getHtmlHoneyPotUrl ()
