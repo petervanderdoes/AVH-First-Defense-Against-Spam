@@ -124,6 +124,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 = Version 3.4-rc2 =
 * Stop comments made without a referrer.
 * When using the plugin Hyper Cache, pages shown to blocked visitors will not be cached. The caching caused to show the blocked page to legit visitors.
+* When no email is provided in a spam comment, you can't report it to Stop Forum Spam as this is against their policy.
 
 = Version 3.3.1 =
 * Bugfix: Problem with accessing the options pages.
