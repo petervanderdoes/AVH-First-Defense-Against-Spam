@@ -1398,12 +1398,16 @@ final class AVH_FDAS_Admin
 		$apikey = $this->_core->getOptionElement('sfs', 'sfsapikey');
 		$add_to_blacklist = $this->_core->getOptionElement('general', 'addblacklist');
 
-		if ((isset($comment->comment_approved) && 'spam' == $comment->comment_approved) && ('' != $apikey || 1 == $add_to_blacklist)) {
-			if ('' != $apikey) {
-				$link_text = __('Report', 'avhfdas');
+		$link_text = '';
+		if ((isset($comment->comment_approved) && 'spam' == $comment->comment_approved) && (('' != $apikey && ! empty($comment->comment_author_email)) || 1 == $add_to_blacklist)) {
+			if ('' != $apikey && ! empty($comment->comment_author_email)) {
+				$link_text .= __('Report', 'avhfdas');
 			}
 			if (1 == $add_to_blacklist) {
-				$link_text .= __(', Blacklist', 'avh-fdas');
+				if (! empty($link_text)) {
+					$link_text .= ', ';
+				}
+				$link_text .= __('Blacklist', 'avh-fdas');
 			}
 			$link_text .= __(' & Delete', 'avhfdas');
 			if (AVH_Common::getWordpressVersion() > 3.0) {
@@ -1470,7 +1474,7 @@ final class AVH_FDAS_Admin
 					$result = $this->_db->updateIpCache(array ( 'ip' => $comment->comment_author_IP, 'spam' => 1, 'lastseen' => $comment_date ));
 				}
 			}
-			if ($options['sfs']['sfsapikey'] != '') {
+			if ($options['sfs']['sfsapikey'] != '' && (! empty($comment->comment_author_email))) {
 				$this->_handleReportSpammer($comment->comment_author, $comment->comment_author_email, $comment->comment_author_IP);
 			}
 			if (1 == $options['general']['addblacklist']) {
@@ -1531,18 +1535,19 @@ final class AVH_FDAS_Admin
 	 */
 	private function _handleReportSpammer ($username, $email, $ip_addr)
 	{
-		$email = empty($email) ? 'meseaffibia@gmail.com' : $email;
-		$url = 'http://www.stopforumspam.com/add.php';
-		$call = wp_remote_post($url, array ( 'body' => array ( 'username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->getOptionElement('sfs', 'sfsapikey') ) ));
-		if (is_wp_error($call) || 200 != $call['response']['code']) {
-			$to = get_option('admin_email');
-			$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error reporting spammer', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
-			if (is_wp_error($call)) {
-				$message = $call->get_error_messages();
-			} else {
-				$message[] = $call['body'];
+		if (! empty($email)) {
+			$url = 'http://www.stopforumspam.com/add.php';
+			$call = wp_remote_post($url, array ( 'user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url'), 'body' => array ( 'username' => $username, 'ip_addr' => $ip_addr, 'email' => $email, 'api_key' => $this->_core->getOptionElement('sfs', 'sfsapikey') ) ));
+			if (is_wp_error($call) || 200 != $call['response']['code']) {
+				$to = get_option('admin_email');
+				$subject = sprintf('[%s] AVH First Defense Against Spam - ' . __('Error reporting spammer', 'avh-fdas'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+				if (is_wp_error($call)) {
+					$message = $call->get_error_messages();
+				} else {
+					$message[] = $call['body'];
+				}
+				AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 			}
-			AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 		}
 	}
 
