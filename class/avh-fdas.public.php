@@ -10,14 +10,17 @@ class AVH_FDAS_Public
 	 */
 	private $_core;
 	/**
+	 *
 	 * @var AVH_Settings_Registry
 	 */
 	private $_settings;
 	/**
+	 *
 	 * @var AVH_Class_registry
 	 */
 	private $_classes;
 	/**
+	 *
 	 * @var AVH_FDAS_SpamCheck
 	 */
 	private $_spamcheck;
@@ -25,7 +28,6 @@ class AVH_FDAS_Public
 
 	/**
 	 * PHP5 Constructor
-	 *
 	 */
 	public function __construct ()
 	{
@@ -62,7 +64,6 @@ class AVH_FDAS_Public
 	 * Add a nonce field to the comments.
 	 *
 	 * @WordPress Action - comment_form
-	 *
 	 */
 	public function actionAddNonceFieldToComment ($post_id)
 	{
@@ -74,7 +75,6 @@ class AVH_FDAS_Public
 	 * Clean up the nonce DB by using Cron
 	 *
 	 * @WordPress: Action avhfdas_clean_nonce
-	 *
 	 */
 	public function actionHandleCronCleanNonce ()
 	{
@@ -102,7 +102,6 @@ class AVH_FDAS_Public
 	 * Cleans the IP cache table
 	 *
 	 * @WordPress: Action avhfdas_clean_ipcache
-	 *
 	 */
 	public function actionHandleCronCleanIpCache ()
 	{
@@ -123,6 +122,7 @@ class AVH_FDAS_Public
 	 * Check the nonce field set with a comment.
 	 *
 	 * @WordPress Filter preprocess_comment
+	 *
 	 * @param mixed $commentdata
 	 * @return mixed
 	 * @since 1.2
@@ -132,7 +132,8 @@ class AVH_FDAS_Public
 	{
 		// When we're in Admin no need to check the nonce.
 		if (! defined('WP_ADMIN')) {
-			if (empty($commentdata['comment_type'])) { // If it's a trackback or pingback this has a value
+			if (empty($commentdata['comment_type'])) { // If it's a trackback or
+			                                           // pingback this has a value
 				$nonce = wp_create_nonce('avh-first-defense-against-spam_' . $commentdata['comment_post_ID']);
 				if (!wp_verify_nonce($_POST['_avh_first_defense_against_spam'],'avh-first-defense-against-spam_' .$commentdata['comment_post_ID'])) {
 					if (1 == $this->_core->getOptionElement('general', 'emailsecuritycheck')) {
@@ -155,7 +156,7 @@ class AVH_FDAS_Public
 						$message[] = $commentdata['comment_content'];
 						$message[] = __('--- END OF COMMENT ---', 'avh-fdas');
 						$message[] = '';
-						if ('' != $sfs_apikey) {
+						if ('' != $sfs_apikey && (! empty($commentdata['comment_author_email']))) {
 							$q['action'] = 'emailreportspammer';
 							$q['a'] = $commentdata['comment_author'];
 							$q['e'] = $commentdata['comment_author_email'];
@@ -171,7 +172,7 @@ class AVH_FDAS_Public
 						AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
 					}
 					// Only keep track if we have the ability to report add Stop Forum Spam
-					if ('' != $sfs_apikey) {
+					if ('' != $sfs_apikey && (! empty($commentdata['comment_author_email']))) {
 						// Prevent a spam attack to overflow the database.
 						if (! ($this->_checkDbNonces($q['_avhnonce']))) {
 							$option = get_option($this->_core->getDbNonces());
@@ -211,7 +212,6 @@ class AVH_FDAS_Public
 
 	/**
 	 * Check during the action get_header
-	 *
 	 */
 	public function handleActionGetHeader ()
 	{
@@ -221,6 +221,7 @@ class AVH_FDAS_Public
 	}
 
 	/**
+	 *
 	 *
 	 * Handle before the comment is processed.
 	 *
@@ -233,7 +234,6 @@ class AVH_FDAS_Public
 
 	/**
 	 * Handle when a user registers
-	 *
 	 */
 	public function handleActionRegisterPost ($sanitized_user_login, $user_email, $errors)
 	{
