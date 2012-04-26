@@ -64,14 +64,8 @@ class AVH_FDAS_Public
 	 * @WordPress Action - comment_form
 	 *
 	 */
-	public function actionAddNonceFieldToComment ()
+	public function actionAddNonceFieldToComment ($post_id)
 	{
-		$post_id = null;
-		$post = get_post($post_id);
-		$post_id = 0;
-		if (is_object($post)) {
-			$post_id = $post->ID;
-		}
 		echo $this->_core->getComment();
 		wp_nonce_field('avh-first-defense-against-spam_' . $post_id, '_avh_first_defense_against_spam', false);
 	}
@@ -140,7 +134,7 @@ class AVH_FDAS_Public
 		if (! defined('WP_ADMIN')) {
 			if (empty($commentdata['comment_type'])) { // If it's a trackback or pingback this has a value
 				$nonce = wp_create_nonce('avh-first-defense-against-spam_' . $commentdata['comment_post_ID']);
-				if ($nonce != $_POST['_avh_first_defense_against_spam']) {
+				if (!wp_verify_nonce($_POST['_avh_first_defense_against_spam'],'avh-first-defense-against-spam_' .$commentdata['comment_post_ID'])) {
 					if (1 == $this->_core->getOptionElement('general', 'emailsecuritycheck')) {
 						$to = get_option('admin_email');
 						$ip = AVH_Visitor::getUserIp();
