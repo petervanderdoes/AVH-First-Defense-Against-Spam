@@ -48,7 +48,6 @@ final class AVH_FDAS_Admin
 		// The Classes Registery
 		$this->_classes = AVH_FDAS_Classes::getInstance();
 		add_action('init', array ( &$this, 'handleActionInit' ));
-
 	}
 
 	public function handleActionInit ()
@@ -190,8 +189,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * This function allows the upgrade notice not to appear
 	 *
-	 * @param
-	 *       	 $option
+	 * @param $option
 	 */
 	public function filterDisableUpgrade ($option)
 	{
@@ -270,7 +268,6 @@ final class AVH_FDAS_Admin
 		echo '</div>';
 		$this->_printAdminFooter();
 		echo '</div>';
-
 	}
 
 	/**
@@ -342,7 +339,6 @@ final class AVH_FDAS_Admin
 				}
 				echo '<span class="b">Spamhaus</span>';
 			}
-
 		}
 		echo '</p></div>';
 		echo '<p class="sub">';
@@ -580,8 +576,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the General Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxGeneral ($data)
@@ -592,8 +587,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the Blacklist Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxBlackList ($data)
@@ -604,8 +598,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the Whitelist Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxWhiteList ($data)
@@ -616,8 +609,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the IP cache Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxIPCache ($data)
@@ -629,8 +621,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the cron Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxCron ($data)
@@ -762,8 +753,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the 3rd Party Stop Forum Spam Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxMenu3rdParty_SFS ($data)
@@ -778,8 +768,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the 3rd Party Project Honey Pot Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxMenu3rdParty_PHP ($data)
@@ -791,8 +780,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the 3rd Party Project Honey Pot Options
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxMenu3rdParty_SH ($data)
@@ -866,8 +854,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Metabox Display the FAQ
 	 *
-	 * @param $data array
-	 *       	 The data is filled menu setup
+	 * @param $data array The data is filled menu setup
 	 * @return none
 	 */
 	public function metaboxFAQ ()
@@ -1060,7 +1047,6 @@ final class AVH_FDAS_Admin
 
 								$result = $this->_db->updateIpCache(array ( 'ip' => $ip, 'spam' => $new_status ));
 								$hamspammed ++;
-
 							}
 							if ($hamspammed) {
 								$arg = ($doaction == 'ham' ? 'hammed' : 'spammed');
@@ -1070,7 +1056,6 @@ final class AVH_FDAS_Admin
 							wp_redirect($redirect_to);
 							exit();
 							break;
-
 					}
 					break;
 
@@ -1118,10 +1103,8 @@ final class AVH_FDAS_Admin
 								$redirect_to = add_query_arg(array ( 'deleted' => 1 ), $redirect_to);
 							}
 							$redirect_to = add_query_arg(array ( 'deleted' => $deleted ), $redirect_to);
-
 					}
 					break;
-
 			}
 		} elseif (! empty($_GET['_wp_http_referer'])) {
 			wp_redirect(remove_query_arg(array ( '_wp_http_referer', '_wpnonce' ), stripslashes($_SERVER['REQUEST_URI'])));
@@ -1149,7 +1132,6 @@ final class AVH_FDAS_Admin
 			if ($spammed > 0) {
 				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP marked as spam', '%s IP\'s marked as spam', $spammed), $spammed);
 			}
-
 		}
 		$this->_ip_cache_list->prepare_items();
 
@@ -1342,8 +1324,7 @@ final class AVH_FDAS_Admin
 	 *
 	 * @WordPress filter screen_meta_screen
 	 *
-	 * @param
-	 *       	 $screen
+	 * @param $screen
 	 * @return strings
 	 */
 	public function filterScreenLayoutColumns ($columns, $screen)
@@ -1768,8 +1749,7 @@ final class AVH_FDAS_Admin
 	/**
 	 * Display error message at bottom of comments.
 	 *
-	 * @param $msg string
-	 *       	 Error Message. Assumed to contain HTML and be sanitized.
+	 * @param $msg string Error Message. Assumed to contain HTML and be sanitized.
 	 */
 	private function _comment_footer_die ($msg)
 	{
