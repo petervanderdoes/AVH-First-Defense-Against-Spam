@@ -122,7 +122,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version v3.4.1-rc.1 =
-* Preparation for hotfix.
+* Bugfix: If WordPress registration page is embedded in a theme page, an error could possibly occur.
 
 = Version 3.4 =
 * Block comments made without a referrer.
