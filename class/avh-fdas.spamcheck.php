@@ -69,7 +69,7 @@ class AVH_FDAS_SpamCheck
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			unset($this->_spamcheck_functions_array[05]); // @TODO make this more flexible
 			$this->_doSpamCheckFunctions();
-			$this->_spamcheck_functions_array[05] = array ( &$this, '_doIpCheckStopForumSpam' );
+			$this->_spamcheck_functions_array[05] = 'StopForumSpam';
 		}
 	}
 
