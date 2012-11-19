@@ -320,6 +320,11 @@ class AVH_FDAS_SpamCheck
 		if (isset($data['Error'])) {
 			return ($data);
 		}
+
+		if (! isset($data['appears'])) {
+			return (array ( 'Error' => array ( 'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($data, true) ) ));
+		}
+
 		$_return['ip']['appears'] = false;
 		$_return['ip']['frequency'] = - 1;
 		$_return['email']['appears'] = false;
@@ -331,9 +336,6 @@ class AVH_FDAS_SpamCheck
 			$_return['email'] = $data['email'];
 		}
 
-		if ($_return === '') {
-			return (array ( 'Error' => array ( 'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($data, true) ) ));
-		}
 		return $_return;
 	}
 
