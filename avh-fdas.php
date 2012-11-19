@@ -3,7 +3,7 @@
 Plugin Name: AVH First Defense Against Spam
 Plugin URI: http://blog.avirtualhome.com/wordpress-plugins
 Description: This plugin gives you the ability to block spammers before content is served.
-Version: 3.4.2-rc.1
+Version: 3.4.2
 Author: Peter van der Does
 Author URI: http://blog.avirtualhome.com/
 
