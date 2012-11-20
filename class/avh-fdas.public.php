@@ -216,19 +216,20 @@ class AVH_FDAS_Public
 	public function handleActionGetHeader ()
 	{
 		if (! (did_action('pre_comment_on_post'))) {
+			$this->_spamcheck->setVisiting_email('');
 			$this->_spamcheck->doSpamcheckMain();
 		}
 	}
 
 	/**
-	 *
-	 *
 	 * Handle before the comment is processed.
 	 *
 	 * @param int $comment_id
 	 */
 	public function handleActionPreCommentOnPost ($comment_id)
 	{
+		$email = isset($_POST['email']) ? $_POST['email'] : '';
+		$this->_spamcheck->setVisiting_email($email);
 		$this->_spamcheck->doSpamcheckPreCommentPost();
 	}
 
@@ -237,6 +238,7 @@ class AVH_FDAS_Public
 	 */
 	public function handleActionRegisterPost ($sanitized_user_login, $user_email, $errors)
 	{
+		$this->_spamcheck->setVisiting_email($user_email);
 		$this->_spamcheck->doSpamcheckUserRegister();
 	}
 }
