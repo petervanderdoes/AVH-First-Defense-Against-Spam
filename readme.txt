@@ -122,7 +122,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.5.0-dev.4 =
-* Preparation for new development cycle.
+*  Do check during WordPress MU user validation
 
 = Version 3.4.2 =
 * When call to Stop Forum Spam fails on during the check, no error message is reported.

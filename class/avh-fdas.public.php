@@ -54,6 +54,7 @@ class AVH_FDAS_Public
 
 		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
 		add_action('register_post', array ( &$this, 'handleActionRegisterPost' ), 10, 3);
+		add_filter('wpmu_validate_user_signup',array ( &$this, 'handleFilterWPMUValidatUserSignup' ),1);
 
 		// Private actions for Cron
 		add_action('avhfdas_clean_nonce', array ( &$this, 'actionHandleCronCleanNonce' ));
@@ -241,4 +242,19 @@ class AVH_FDAS_Public
 		$this->_spamcheck->setVisiting_email($user_email);
 		$this->_spamcheck->doSpamcheckUserRegister();
 	}
+
+	/**
+	 * Handle before the comment is processed.
+	 *
+	 * @param int $comment_id
+	 */
+	public function handleFilterWPMUValidatUserSignup ($userInfoArray)
+	{
+		$email = $userInfoArray['user_email'];
+		$this->_spamcheck->setVisiting_email($email);
+		$this->_spamcheck->doSpamcheckUserRegister();
+
+		return $userInfoArray;
+	}
+
 }
