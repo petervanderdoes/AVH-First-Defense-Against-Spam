@@ -42,9 +42,9 @@ Blocking a potential spammer before content is served has the following advantag
 
 = Usage terms of the 3rd Parties =
 Please read the usage terms of the 3rd party you are activating.
-	* [Stop Forum Spam](http://www.stopforumspam.com/license).
-	* [Project Honey Pot](http://www.projecthoneypot.org/terms_of_service_use.php).
-	* [Spamhaus](http://www.spamhaus.org/organization/dnsblusage.html).
+* [Stop Forum Spam](http://www.stopforumspam.com/license).
+* [Project Honey Pot](http://www.projecthoneypot.org/terms_of_service_use.php).
+* [Spamhaus](http://www.spamhaus.org/organization/dnsblusage.html).
 
 = The IP Caching system. =
 Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it is set at 20,000 calls a day.
