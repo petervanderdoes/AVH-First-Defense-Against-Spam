@@ -48,7 +48,7 @@ class AVH_FDAS_SpamCheck
 		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
 		$this->_ipcachedb = $this->_classes->load_class('DB', 'plugin', true);
 		$this->_visiting_ip = AVH_Visitor::getUserIp();
-		$this->_visiting_email = isset($_POST['email']) ? $_POST['email'] : '';
+		$this->_visiting_email = '';
 		$this->_core_options = $this->_core->getOptions();
 		$this->_core_data = $this->_core->getData();
 		$this->_spaminfo = null;
