@@ -324,8 +324,11 @@ class AVH_FDAS_Core
 			$response = wp_remote_request($url, array ( 'user-agent' => 'WordPress/AVH ' . AVH_FDAS_Define::PLUGIN_VERSION . '; ' . get_bloginfo('url') ));
 			if (! is_wp_error($response)) {
 				$return_array = unserialize($response['body']);
+				if (! isset($return_array['success'])) {
+					$return_array = array ( 'Error' => array ( 'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($response, true) ) );
+				}
 			} else {
-				$return_array = array ( 'Error' => $response->errors );
+				$return_array = array ( 'Error' => $response->get_error_messages() );
 			}
 		}
 		return ($return_array);
@@ -342,7 +345,7 @@ class AVH_FDAS_Core
 		if (is_array($error)) {
 			foreach ($error as $key => $value) {
 				$error_short = $key;
-				$error_long = $value[0];
+				$error_long = $value;
 				$return = $error_short . ' - ' . $error_long;
 			}
 		} else {

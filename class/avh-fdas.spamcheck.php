@@ -25,6 +25,7 @@ class AVH_FDAS_SpamCheck
 	 */
 	private $_ipcachedb;
 	private $_visiting_ip;
+	private $_visiting_email;
 	private $_core_options;
 	private $_core_data;
 	private $_accessing;
@@ -47,6 +48,7 @@ class AVH_FDAS_SpamCheck
 		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
 		$this->_ipcachedb = $this->_classes->load_class('DB', 'plugin', true);
 		$this->_visiting_ip = AVH_Visitor::getUserIp();
+		$this->_visiting_email = '';
 		$this->_core_options = $this->_core->getOptions();
 		$this->_core_data = $this->_core->getData();
 		$this->_spaminfo = null;
@@ -321,10 +323,6 @@ class AVH_FDAS_SpamCheck
 			return ($data);
 		}
 
-		if (! isset($data['appears'])) {
-			return (array ( 'Error' => array ( 'Unknown Return' => 'Stop Forum Spam returned an unknow string: ' . var_export($data, true) ) ));
-		}
-
 		$_return['ip']['appears'] = false;
 		$_return['ip']['frequency'] = - 1;
 		$_return['email']['appears'] = false;
@@ -348,9 +346,8 @@ class AVH_FDAS_SpamCheck
 	private function _doIpCheckStopForumSpam ()
 	{
 		if ($this->_core_options['general']['use_sfs']) {
-			$_email = isset($_POST['email']) ? $_POST['email'] : '';
 			$time_start = microtime(true);
-			$result = $this->_core->handleRestCall($this->_core->getRestIPLookup($this->_visiting_ip, $_email));
+			$result = $this->_core->handleRestCall($this->_core->getRestIPLookup($this->_visiting_ip, $this->_visiting_email));
 			$time_end = microtime(true);
 			$this->_spaminfo['sfs'] = $this->_convertStopForumSpamCall($result);
 			$time = $time_end - $time_start;
@@ -736,4 +733,20 @@ class AVH_FDAS_SpamCheck
 	{
 		return ('<p><div style="display: none;"><a href="' . $this->_core->getOptionElement('php', 'honeypoturl') . '">AVH Software</a></div></p>');
 	}
+	/**
+	 * @return the $_visiting_email
+	 */
+	public function getVisiting_email ()
+	{
+		return $this->_visiting_email;
+	}
+
+	/**
+	 * @param Ambigous <string, unknown> $_visiting_email
+	 */
+	public function setVisiting_email ($_visiting_email)
+	{
+		$this->_visiting_email = $_visiting_email;
+	}
+
 }
