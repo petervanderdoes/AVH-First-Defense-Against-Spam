@@ -1396,7 +1396,11 @@ final class AVH_FDAS_Admin
 			} else {
 				$report_url = clean_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID", "report-comment_$comment->comment_ID"));
 			}
-			$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">' . $link_text . '</a>';
+			if (AVH_Common::getWordpressVersion() >= 3.5) {
+				$actions['report'] = '<a data-wp-lists=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment\' class="delete vim-d vim-destructive" href="' . $report_url . '">' . $link_text . '</a>';
+			} else {
+				$actions['report'] = '<a class=\'delete:the-comment-list:comment-' . $comment->comment_ID . ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' . $report_url . '">' . $link_text . '</a>';
+			}
 		}
 		return $actions;
 	}

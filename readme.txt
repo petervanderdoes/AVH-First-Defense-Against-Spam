@@ -122,7 +122,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.5.1-rc.1 =
-* Preparation for hotfix.
+* Reporting spam doesn't work in WordPress 3.5
 
 = Version 3.5.0 =
 * Do check during WordPress MU user validation
