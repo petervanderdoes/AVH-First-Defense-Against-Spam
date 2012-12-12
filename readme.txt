@@ -121,6 +121,9 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.5.1-rc.1 =
+* Preparation for hotfix.
+
 = Version 3.5.0 =
 * Do check during WordPress MU user validation
 * Fixes Stop Forum Spam error message reporting.
