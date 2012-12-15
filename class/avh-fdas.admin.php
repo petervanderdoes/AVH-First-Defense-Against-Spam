@@ -354,9 +354,9 @@ final class AVH_FDAS_Admin
 		} else {
 			echo '<span class="b">enabled</span>';
 			echo '</p></div>';
-			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache"));
-			$count_clean = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache WHERE spam=0"));
-			$count_spam = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ip) from $wpdb->avhfdasipcache WHERE spam=1"));
+			$count = $wpdb->get_var("SELECT COUNT(ip) from $wpdb->avhfdasipcache");
+			$count_clean = $wpdb->get_var("SELECT COUNT(ip) from $wpdb->avhfdasipcache WHERE spam=0");
+			$count_spam = $wpdb->get_var("SELECT COUNT(ip) from $wpdb->avhfdasipcache WHERE spam=1");
 			if (false === $count) {
 				$count = 0;
 			}
