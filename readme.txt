@@ -122,7 +122,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.5.3-rc.1 =
-* Preparation for hotfix.
+* Detecting remote IP returned wrong information when a loopback address was found.
 
 = Version 3.5.2 =
 * $wpdb->prepare fixes as per WordPress 3.5
