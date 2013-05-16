@@ -53,12 +53,19 @@ class AVH_FDAS_Public
 		add_action('get_header', array ( &$this, 'handleActionGetHeader' ));
 
 		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
-		add_action('register_post', array ( &$this, 'handleActionRegisterPost' ), 10, 3);
-		add_filter('wpmu_validate_user_signup',array ( &$this, 'handleFilterWPMUValidatUserSignup' ),1);
+		add_filter('registration_errors', array ( &$this, 'handleFilterRegistrationErrors' ), 10, 3);
+		add_filter('wpmu_validate_user_signup', array ( &$this, 'handleFilterWPMUValidatUserSignup' ), 1);
 
 		// Private actions for Cron
 		add_action('avhfdas_clean_nonce', array ( &$this, 'actionHandleCronCleanNonce' ));
 		add_action('avhfdas_clean_ipcache', array ( &$this, 'actionHandleCronCleanIpCache' ));
+
+		/**
+		 * Hook in registration process for Events Manager
+		 */
+		if (defined('EM_VERSION')) {
+			add_filter('em_registration_errors', array ( &$this, 'handleFilterRegistrationErrors' ), 10, 3);
+		}
 	}
 
 	/**
@@ -136,7 +143,7 @@ class AVH_FDAS_Public
 			if (empty($commentdata['comment_type'])) { // If it's a trackback or
 			                                           // pingback this has a value
 				$nonce = wp_create_nonce('avh-first-defense-against-spam_' . $commentdata['comment_post_ID']);
-				if (!wp_verify_nonce($_POST['_avh_first_defense_against_spam'],'avh-first-defense-against-spam_' .$commentdata['comment_post_ID'])) {
+				if (! wp_verify_nonce($_POST['_avh_first_defense_against_spam'], 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'])) {
 					if (1 == $this->_core->getOptionElement('general', 'emailsecuritycheck')) {
 						$to = get_option('admin_email');
 						$ip = AVH_Visitor::getUserIp();
@@ -237,10 +244,12 @@ class AVH_FDAS_Public
 	/**
 	 * Handle when a user registers
 	 */
-	public function handleActionRegisterPost ($sanitized_user_login, $user_email, $errors)
+	public function handleFilterRegistrationErrors ($errors, $sanitized_user_login, $user_email)
 	{
 		$this->_spamcheck->setVisiting_email($user_email);
-		$this->_spamcheck->doSpamcheckUserRegister();
+		$errors = $this->_spamcheck->doSpamcheckUserRegister($errors);
+
+		return $errors;
 	}
 
 	/**
@@ -256,5 +265,4 @@ class AVH_FDAS_Public
 
 		return $userInfoArray;
 	}
-
 }

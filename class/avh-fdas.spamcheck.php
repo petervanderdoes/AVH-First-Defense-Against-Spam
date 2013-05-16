@@ -71,6 +71,7 @@ class AVH_FDAS_SpamCheck
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			unset($this->_spamcheck_functions_array[05]); // @TODO make this more flexible
 			$this->_doSpamCheckFunctions();
+			$this->_handleResults();
 			$this->_spamcheck_functions_array[05] = 'StopForumSpam';
 		}
 	}
@@ -83,6 +84,7 @@ class AVH_FDAS_SpamCheck
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			$this->_checkHttpReferer();
 			$this->_doSpamCheckFunctions();
+			$this->_handleResults();
 		}
 	}
 
@@ -122,11 +124,19 @@ class AVH_FDAS_SpamCheck
 	/**
 	 * Run the checks for the action register_post.
 	 */
-	public function doSpamcheckUserRegister ()
+	public function doSpamcheckUserRegister ($errors)
 	{
 		if ($this->_visiting_ip != '0.0.0.0') { // Visiting IP is a private IP, we don't check private IP's
 			$this->_doSpamCheckFunctions();
+			if (true === $this->_spammer_detected) {
+				if (is_wp_error($errors)) {
+					$errors->add('spammer_detected', '<strong>ERROR</strong>: Invalid Credentials');
+				} else {
+					$errors = new WP_Error('spammer_detected', '<strong>ERROR</strong>: Invalid Credentials');
+				}
+			}
 		}
+		return $errors;
 	}
 
 	/**
@@ -209,7 +219,6 @@ class AVH_FDAS_SpamCheck
 			if (isset($this->_spaminfo['php']['engine'])) {
 				$this->_spammer_detected = false;
 			}
-			$this->_handleResults();
 		}
 	}
 
@@ -513,7 +522,6 @@ class AVH_FDAS_SpamCheck
 					if ($this->_spaminfo['sfs']['email']['frequency'] >= $this->_core_options['sfs']['whentodie_email']) {
 						$message[] = '	' . sprintf(__('E-Mail threshold (%s) reached. Connection terminated', 'avh-fdas'), $this->_core_options['sfs']['whentodie_email']);
 					}
-
 				} else {
 					$message[] = 'Stop Forum Spam ' . __('has no information', 'avh-fdas');
 				}
@@ -598,7 +606,6 @@ class AVH_FDAS_SpamCheck
 			if (1 == $this->_core_options['general']['useipcache']) {
 				if (is_object($this->_ip_in_cache)) {
 					$this->_ipcachedb->updateIpCache(array ( 'ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql') ));
-
 				} else {
 					$this->_ipcachedb->insertIp($this->_visiting_ip, 1);
 				}
@@ -733,7 +740,9 @@ class AVH_FDAS_SpamCheck
 	{
 		return ('<p><div style="display: none;"><a href="' . $this->_core->getOptionElement('php', 'honeypoturl') . '">AVH Software</a></div></p>');
 	}
+
 	/**
+	 *
 	 * @return the $_visiting_email
 	 */
 	public function getVisiting_email ()
@@ -742,11 +751,11 @@ class AVH_FDAS_SpamCheck
 	}
 
 	/**
+	 *
 	 * @param Ambigous <string, unknown> $_visiting_email
 	 */
 	public function setVisiting_email ($_visiting_email)
 	{
 		$this->_visiting_email = $_visiting_email;
 	}
-
 }
