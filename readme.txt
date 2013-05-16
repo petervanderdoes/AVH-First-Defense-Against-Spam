@@ -121,6 +121,10 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.6 =
+* Changed behavior when spammer is detected during registration process.
+  The connection will no longer be terminated, but instead it will return an error to the login process. This works better when a plugin uses AJAX for their registration process.
+
 = Version 3.5.3 =
 * Detecting remote IP returned wrong information when a loopback address was found.
 

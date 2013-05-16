@@ -53,7 +53,7 @@ class AVH_FDAS_Public
 		add_action('get_header', array ( &$this, 'handleActionGetHeader' ));
 
 		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
-		add_action('register_post', array ( &$this, 'handleActionRegisterPost' ), 10, 3);
+		add_filter('registration_errors', array ( &$this, 'handleFilterRegistrationErrors' ), 10, 3);
 		add_filter('wpmu_validate_user_signup',array ( &$this, 'handleFilterWPMUValidatUserSignup' ),1);
 
 		// Private actions for Cron
@@ -237,10 +237,12 @@ class AVH_FDAS_Public
 	/**
 	 * Handle when a user registers
 	 */
-	public function handleActionRegisterPost ($sanitized_user_login, $user_email, $errors)
+	public function handleFilterRegistrationErrors ($errors, $sanitized_user_login, $user_email)
 	{
 		$this->_spamcheck->setVisiting_email($user_email);
-		$this->_spamcheck->doSpamcheckUserRegister();
+		$errors = $this->_spamcheck->doSpamcheckUserRegister($errors);
+
+		return $errors;
 	}
 
 	/**
