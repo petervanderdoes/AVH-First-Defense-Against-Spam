@@ -166,7 +166,7 @@ class AVH_FDAS_DB
 		global $wpdb;
 		$ip = AVH_Common::getIp2long($ip);
 		$date = current_time('mysql');
-		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%s, %d, %s, %s)", $ip, $spam, $date, $date));
+		$result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%s, %d, %s, %s) ON DUPLICATE KEY UPDATE lastseen=%s", $ip, $spam, $date, $date, $date));
 		if ($result) {
 			return $result;
 		} else {
