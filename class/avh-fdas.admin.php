@@ -671,12 +671,12 @@ final class AVH_FDAS_Admin
 		$options_php[] = array ( 'avhfdas[php][phpapikey]', __('API Key:', 'avh-fdas'), 'text', 15, __('You need a Project Honey Pot API key to check the Honey Pot Project database.', 'avh-fdas') );
 		$options_php[] = array ( 'avhfdas[php][whentoemailtype]', __('Email type threshold:', 'avh-fdas'), 'dropdown', '0/1/2/3/4/5/6/7', 'Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', __('When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />Both the type threshold and the score threshold have to be reached in order to receive an email.', 'avh-fdas') );
 		$options_php[] = array ( 'avhfdas[php][whentoemail]', __('Email score threshold', 'avh-fdas'), 'text', 3, __('When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<BR />A negative number means an email will never be send.', 'avh-fdas') );
-		$options_php[] = array ( 'avhfdas[php][whentodietype]', __('Termination type threshold', 'avh-fdas'), 'dropdown', '-1/0/1/2/3/4/5/6/7', 'Never/Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', __('When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold an email is send.<br />Both the type threshold and the score threshold have to be reached in order to termnate the connection.', 'avh-fdas') );
-		$options_php[] = array ( 'avhfdas[php][whentodie]', __('Termination score threshold', 'avh-fdas'), 'text', 3, __('When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold the connection is terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>', 'avh-fdas') );
+		$options_php[] = array ( 'avhfdas[php][whentodietype]', __('Termination type threshold', 'avh-fdas'), 'dropdown', '-1/0/1/2/3/4/5/6/7', 'Never/Search Engine/Suspicious/Harvester/Suspicious & Harvester/Comment Spammer/Suspicious & Comment Spammer/Harvester & Comment Spammer/Suspicious & Harvester & Comment Spammer', __('When the type of the spammer in the Project Honey Pot database equals or exceeds this threshold and the score threshold, the connection is terminated.', 'avh-fdas') );
+		$options_php[] = array ( 'avhfdas[php][whentodie]', __('Termination score threshold', 'avh-fdas'), 'text', 3, __('When the score of the spammer in the Project Honey Pot database equals or exceeds this threshold and the type threshold is reached, the connection terminated.<BR />A negative number means the connection will never be terminated.<BR /><strong>This option will always be the last one checked.</strong>', 'avh-fdas') );
 		$options_php[] = array ( 'avhfdas[php][usehoneypot]', __('Use Honey Pot', 'avh-fdas'), 'checkbox', 1, __('If you have set up a Honey Pot you can select to have the URL below to be added to the message when terminating the connection.<BR />You have to select <em>Show Message</em> in the General Options for this to work.', 'avh-fdas') );
 		$options_php[] = array ( 'avhfdas[php][honeypoturl]', __('Honey Pot URL', 'avh-fdas'), 'text', 30, __('The link to the Honey Pot as suggested by Project Honey Pot.', 'avh-fdas') );
 		$options_sh[] = array ( 'avhfdas[general][use_sh]', __('Check with Spamhaus', 'avh-fdas'), 'checkbox', 1, __('If checked, the visitor\'s IP will be checked at Spamhaus', 'avh-fdas') );
-		$options_sh[] = array ( 'avhfdas[spamhaus][email]', __('Email', 'avh-fdas'), 'checkbox', 1, __('Send an email when a connection is terminate based on the IP found in the cache', 'avh-fdas') );
+		$options_sh[] = array ( 'avhfdas[spamhaus][email]', __('Email', 'avh-fdas'), 'checkbox', 1, __('Send an email when a connection is terminated based on the IP found at Spamhaus', 'avh-fdas') );
 
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_options');
@@ -867,6 +867,10 @@ final class AVH_FDAS_Admin
 		echo '<li><a href="http://www.projecthoneypot.org/terms_of_service_use.php" target="_blank">Project Honey Pot.</a>';
 		echo '<li><a href="http://www.spamhaus.org/organization/dnsblusage.html" target="_blank">Spamhaus.</a>';
 		echo '</ul>';
+		echo '<p>';
+		echo '<span class="b">What is ham?</span><br />';
+		echo 'Ham is the opposite of spam';
+		echo '</p>';
 		echo '<p>';
 		echo '<span class="b">Why is there an IP caching system?</span><br />';
 		echo 'Stop Forum spam has set a limit on the amount of API calls you can make a day, currently it iset at 5000 calls a day.<br />';
@@ -1240,7 +1244,7 @@ final class AVH_FDAS_Admin
 							$this->_setBlacklistOption($b);
 							$result = $this->_db->deleteIp($id);
 							if (false === $result) {
-								$x = new WP_Ajax_Response(array ( 'what' => 'ipcachelog', 'position' => - 1, 'id' => new WP_Error('error_deleting', __('Error deleting the IP from the databse table.')) ));
+								$x = new WP_Ajax_Response(array ( 'what' => 'ipcachelog', 'position' => - 1, 'id' => new WP_Error('error_deleting', __('Error deleting the IP from the database table.')) ));
 								$x->send();
 							}
 						} else {
@@ -1256,7 +1260,7 @@ final class AVH_FDAS_Admin
 						check_ajax_referer('delete-ip_' . $id);
 						$result = $this->_db->deleteIp($id);
 						if (false === $result) {
-							$x = new WP_Ajax_Response(array ( 'what' => 'ipcachelog', 'id' => new WP_Error('error_deleting', __('Error deleting the IP from the databse table.')) ));
+							$x = new WP_Ajax_Response(array ( 'what' => 'ipcachelog', 'id' => new WP_Error('error_deleting', __('Error deleting the IP from the database table.')) ));
 							$x->send();
 						}
 						$this->_AjaxIpcacheLogResponse($id);
