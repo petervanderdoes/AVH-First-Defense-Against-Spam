@@ -122,7 +122,9 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.6.1-rc.1 =
-* Preparation for hotfix.
+* Add German translation
+* Bugfix: Database error Duplicate entry.
+  Sometimes this error occurs when MySQL hasn't written to the database yet and the spammer is back on the site already. It causes the logfile to be flooded with this error message.
 
 = Version 3.6.0 =
 * Changed behavior when spammer is detected during registration process.
