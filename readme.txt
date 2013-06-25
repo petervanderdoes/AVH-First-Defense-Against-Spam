@@ -122,7 +122,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.6.2-rc.1 =
-* Preparation for hotfix.
+* Bugfix: Warning given during MU regsitration process.
 
 = Version 3.6.1 =
 * Add German translation
