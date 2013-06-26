@@ -1,58 +1,61 @@
 <?php
 if (! defined('AVH_FRAMEWORK'))
-	die('You are not allowed to call this page directly.');
+    die('You are not allowed to call this page directly.');
 if (! class_exists('AVH_Security')) {
 
-	final class AVH_Security
-	{
+    final class AVH_Security
+    {
 
-		/**
-		 * Local nonce creation. WordPress uses the UID and sometimes I don't want that
-		 * Creates a random, one time use token.
-		 *
-		 * @param string|int $action Scalar value to add context to the nonce.
-		 * @return string The one use form token
-		 *
-		 */
-		public static function createNonce ($action = -1)
-		{
-			$i = self::_nonce_tick();
-			return substr(wp_hash($i . $action, 'nonce'), - 12, 10);
-		}
+        /**
+         * Local nonce creation.
+         * WordPress uses the UID and sometimes I don't want that
+         * Creates a random, one time use token.
+         *
+         * @param string|int $action
+         *            Scalar value to add context to the nonce.
+         * @return string The one use form token
+         *        
+         */
+        public static function createNonce($action = -1)
+        {
+            $i = self::_nonce_tick();
+            return substr(wp_hash($i . $action, 'nonce'), - 12, 10);
+        }
 
-		/**
-		 * Local nonce verification. WordPress uses the UID and sometimes I don't want that
-		 * Verify that correct nonce was used with time limit.
-		 *
-		 * The user is given an amount of time to use the token, so therefore, since the
-		 * $action remain the same, the independent variable is the time.
-		 *
-		 * @param string $nonce Nonce that was used in the form to verify
-		 * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
-		 * @return bool Whether the nonce check passed or failed.
-		 */
-		public static function verifyNonce ($nonce, $action = -1)
-		{
+        /**
+         * Local nonce verification.
+         * WordPress uses the UID and sometimes I don't want that
+         * Verify that correct nonce was used with time limit.
+         *
+         * The user is given an amount of time to use the token, so therefore, since the
+         * $action remain the same, the independent variable is the time.
+         *
+         * @param string $nonce
+         *            Nonce that was used in the form to verify
+         * @param string|int $action
+         *            Should give context to what is taking place and be the same when nonce was created.
+         * @return bool Whether the nonce check passed or failed.
+         */
+        public static function verifyNonce($nonce, $action = -1)
+        {
+            $i = self::_nonce_tick();
+            // Nonce generated 0-12 hours ago
+            if (substr(wp_hash($i . $action, 'nonce'), - 12, 10) == $nonce) {
+                return 1;
+            }
+            if (substr(wp_hash(($i - 1) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
+                return 2;
+            }
+            if (substr(wp_hash(($i - 2) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
+                return 3;
+            }
+            
+            return false;
+        }
 
-			$i = self::_nonce_tick();
-			// Nonce generated 0-12 hours ago
-			if (substr(wp_hash($i . $action, 'nonce'), - 12, 10) == $nonce) {
-				return 1;
-			}
-			if (substr(wp_hash(($i - 1) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
-				return 2;
-			}
-			if (substr(wp_hash(($i - 2) . $action, 'nonce'), - 12, 10) == $nonce) { // Nonce generated 12-24 hours ago
-				return 3;
-			}
-
-			return false;
-		}
-
-		private static function _nonce_tick ()
-		{
-			return ceil(time() / 43200);
-		}
-
-	}
+        private static function _nonce_tick()
+        {
+            return ceil(time() / 43200);
+        }
+    }
 }

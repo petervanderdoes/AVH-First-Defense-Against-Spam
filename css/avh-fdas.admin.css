@@ -32,8 +32,7 @@ table.avhfdas-options {
 }
 
 /* Statistics */
-#avhfdasBoxStats p.sub,#avhfdasBoxStats .table,#avhfdasBoxStats .versions
-	{
+#avhfdasBoxStats p.sub,#avhfdasBoxStats .table,#avhfdasBoxStats .versions {
 	margin: -12px;
 }
 
@@ -43,8 +42,7 @@ table.avhfdas-options {
 
 #avhfdasBoxStats p.sub {
 	font-style: italic;
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times,
-		serif;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
 	padding: 5px 10px 15px;
 	color: #777;
 	font-size: 13px;
@@ -75,8 +73,7 @@ table.avhfdas-options {
 #avhfdasBoxStats td.b {
 	padding-right: 6px;
 	text-align: right;
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times,
-		serif;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
 	font-size: 14px;
 }
 

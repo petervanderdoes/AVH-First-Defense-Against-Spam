@@ -5,6 +5,8 @@ Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
 Tested up to: 3.5.1
 Stable tag: 3.6.1
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl.html
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 

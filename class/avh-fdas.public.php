@@ -47,12 +47,12 @@ class AVH_FDAS_Public
         // Get The Registry
         $this->_settings = AVH_FDAS_Settings::getInstance();
         $this->_classes = AVH_FDAS_Classes::getInstance();
-
+        
         // Initialize the plugin
         $this->_core = $this->_classes->load_class('Core', 'plugin', true);
         $this->_spamcheck = $this->_classes->load_class('SpamCheck', 'plugin', true);
         $this->_core_options = $this->_core->getOptions();
-
+        
         // Public actions and filters
         if (1 == $this->_core_options['general']['commentnonce']) {
             add_action('comment_form', array(
@@ -68,7 +68,7 @@ class AVH_FDAS_Public
             &$this,
             'handleActionGetHeader'
         ));
-
+        
         add_action('pre_comment_on_post', array(
             &$this,
             'handleActionPreCommentOnPost'
@@ -81,7 +81,7 @@ class AVH_FDAS_Public
             &$this,
             'handleFilterWPMUValidatUserSignup'
         ), 1);
-
+        
         // Private actions for Cron
         add_action('avhfdas_clean_nonce', array(
             &$this,
@@ -91,7 +91,7 @@ class AVH_FDAS_Public
             &$this,
             'actionHandleCronCleanIpCache'
         ));
-
+        
         /**
          * Hook in registration process for Events Manager
          */
@@ -166,17 +166,17 @@ class AVH_FDAS_Public
      *
      * @WordPress Filter preprocess_comment
      *
-     * @param mixed $commentdata
+     * @param mixed $commentdata            
      * @return mixed
      * @since 1.2
-     *
+     *       
      */
     public function filterCheckNonceFieldToComment($commentdata)
     {
         // When we're in Admin no need to check the nonce.
         if (! defined('WP_ADMIN')) {
             if (empty($commentdata['comment_type'])) { // If it's a trackback or
-                                                           // pingback this has a value
+                                                       // pingback this has a value
                 $nonce = wp_create_nonce('avh-first-defense-against-spam_' . $commentdata['comment_post_ID']);
                 if (! wp_verify_nonce($_POST['_avh_first_defense_against_spam'], 'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'])) {
                     if (1 == $this->_core->getOptionElement('general', 'emailsecuritycheck')) {
@@ -238,7 +238,7 @@ class AVH_FDAS_Public
     /**
      * Checks if the spammer is in our database.
      *
-     * @param string $nonce
+     * @param string $nonce            
      * @return boolean
      */
     private function _checkDbNonces($nonce)
@@ -267,7 +267,7 @@ class AVH_FDAS_Public
     /**
      * Handle before the comment is processed.
      *
-     * @param int $comment_id
+     * @param int $comment_id            
      */
     public function handleActionPreCommentOnPost($comment_id)
     {
@@ -283,21 +283,21 @@ class AVH_FDAS_Public
     {
         $this->_spamcheck->setVisiting_email($user_email);
         $errors = $this->_spamcheck->doSpamcheckUserRegister($errors);
-
+        
         return $errors;
     }
 
     /**
      * Handle before the comment is processed.
      *
-     * @param int $comment_id
+     * @param int $comment_id            
      */
     public function handleFilterWPMUValidatUserSignup($userInfoArray)
     {
         $email = $userInfoArray['user_email'];
         $this->_spamcheck->setVisiting_email($email);
         $userInfoArray['errors'] = $this->_spamcheck->doSpamcheckUserRegister($userInfoArray['errors']);
-
+        
         return $userInfoArray;
     }
 }
