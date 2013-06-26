@@ -4,7 +4,9 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
 Tested up to: 3.5.1
-Stable tag: 3.6.1
+Stable tag: 3.6.2
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl.html
 
 The AVH First Defense Against Spam plugin gives you the ability to block spammers before any content is served.
 
@@ -123,6 +125,9 @@ Starting with version 3.0 this plugin is for PHP5 only.
 == Changelog ==
 = Version 3.7.0-dev.4 =
 * Preparation for new development cycle.
+
+= Version 3.6.2 =
+* Bugfix: Warning given during MU regsitration process.
 
 = Version 3.6.1 =
 * Add German translation
