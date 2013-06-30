@@ -123,6 +123,9 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.6.3-rc.1 =
+* Preparation for hotfix.
+
 = Version 3.6.2 =
 * Bugfix: Warning given during MU regsitration process.
 
