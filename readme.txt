@@ -127,9 +127,6 @@ Starting with version 3.0 this plugin is for PHP5 only.
 * Updated German language.
 
 = Version 3.6.2 =
-* Preparation for new development cycle.
-
-= Version 3.6.2 =
 * Bugfix: Warning given during MU regsitration process.
 
 = Version 3.6.1 =
