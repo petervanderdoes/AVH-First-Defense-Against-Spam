@@ -35,7 +35,7 @@ class AVH_FDAS_Public
 	 */
 	public function __construct ()
 	{
-		add_action('init', array ( &$this, 'handleInitializePlugin' ), 10);
+		add_action('init', array ( $this, 'handleInitializePlugin' ), 10);
 	}
 
 	public function handleInitializePlugin ()
@@ -51,28 +51,28 @@ class AVH_FDAS_Public
 
 		// Public actions and filters
 		if (1 == $this->_core_options['general']['commentnonce']) {
-			add_action('comment_form', array ( &$this, 'actionAddNonceFieldToComment' ));
-			add_filter('preprocess_comment', array ( &$this, 'filterCheckNonceFieldToComment' ), 1);
+			add_action('comment_form', array ( $this, 'actionAddNonceFieldToComment' ));
+			add_filter('preprocess_comment', array ( $this, 'filterCheckNonceFieldToComment' ), 1);
 		}
-		add_action('get_header', array ( &$this, 'handleActionGetHeader' ));
+		add_action('get_header', array ( $this, 'handleActionGetHeader' ));
 
-		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
-		add_filter('registration_errors', array ( &$this, 'handleFilterRegistrationErrors' ), 10, 3);
-		add_filter('wpmu_validate_user_signup', array ( &$this, 'handleFilterWPMUValidateUserSignup' ), 1);
+		add_action('pre_comment_on_post', array ( $this, 'handleActionPreCommentOnPost' ), 1);
+		add_filter('registration_errors', array ( $this, 'handleFilterRegistrationErrors' ), 10, 3);
+		add_filter('wpmu_validate_user_signup', array ( $this, 'handleFilterWPMUValidateUserSignup' ), 1);
 
 		if ($this->_core_options['php']['usehoneypot']) {
-			add_action('comment_form', array ( &$this, 'handleActionDisplayHoneypotUrl' ));
+			add_action('comment_form', array ( $this, 'handleActionDisplayHoneypotUrl' ));
 			add_action('login_footer', array ( $this, 'handleActionDisplayHoneypotUrl' ));
 		}
 		// Private actions for Cron
-		add_action('avhfdas_clean_nonce', array ( &$this, 'actionHandleCronCleanNonce' ));
-		add_action('avhfdas_clean_ipcache', array ( &$this, 'actionHandleCronCleanIpCache' ));
+		add_action('avhfdas_clean_nonce', array ( $this, 'actionHandleCronCleanNonce' ));
+		add_action('avhfdas_clean_ipcache', array ( $this, 'actionHandleCronCleanIpCache' ));
 
 		/**
 		 * Hook in registration process for Events Manager
 		 */
 		if (defined('EM_VERSION')) {
-			add_filter('em_registration_errors', array ( &$this, 'handleFilterRegistrationErrors' ), 10, 3);
+			add_filter('em_registration_errors', array ( $this, 'handleFilterRegistrationErrors' ), 10, 3);
 		}
 	}
 

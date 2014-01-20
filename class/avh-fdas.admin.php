@@ -52,7 +52,7 @@ final class AVH_FDAS_Admin
 		$this->_settings = AVH_FDAS_Settings::getInstance();
 		// The Classes Registery
 		$this->_classes = AVH_FDAS_Classes::getInstance();
-		add_action('init', array ( &$this, 'handleActionInit' ));
+		add_action('init', array ( $this, 'handleActionInit' ));
 	}
 
 	public function handleActionInit ()
@@ -70,28 +70,28 @@ final class AVH_FDAS_Admin
 		$this->actionInitRoles();
 
 		// Admin menu
-		add_action('admin_menu', array ( &$this, 'actionAdminMenu' ));
+		add_action('admin_menu', array ( $this, 'actionAdminMenu' ));
 		// Add the ajax action
-		add_action('wp_ajax_avh-fdas-reportcomment', array ( &$this, 'actionAjaxReportComment' ));
-		add_action('wp_ajax_dim-ipcachelog', array ( &$this, 'actionAjaxIpcacheLog' ));
-		add_action('wp_ajax_delete-ipcachelog', array ( &$this, 'actionAjaxIpcacheLog' ));
+		add_action('wp_ajax_avh-fdas-reportcomment', array ( $this, 'actionAjaxReportComment' ));
+		add_action('wp_ajax_dim-ipcachelog', array ( $this, 'actionAjaxIpcacheLog' ));
+		add_action('wp_ajax_delete-ipcachelog', array ( $this, 'actionAjaxIpcacheLog' ));
 
 		/**
 		 * Admin actions
 		 */
-		add_action('admin_action_blacklist', array ( &$this, 'actionHandleBlacklistUrl' ));
-		add_action('admin_action_emailreportspammer', array ( &$this, 'actionHandleEmailReportingUrl' ));
-		add_action('in_plugin_update_message-' . AVH_FDAS_Define::PLUGIN_FILE, array ( &$this, 'actionInPluginUpdateMessage' ));
+		add_action('admin_action_blacklist', array ( $this, 'actionHandleBlacklistUrl' ));
+		add_action('admin_action_emailreportspammer', array ( $this, 'actionHandleEmailReportingUrl' ));
+		add_action('in_plugin_update_message-' . AVH_FDAS_Define::PLUGIN_FILE, array ( $this, 'actionInPluginUpdateMessage' ));
 		/**
 		 * Admin Filters
 		 */
-		add_filter('comment_row_actions', array ( &$this, 'filterCommentRowActions' ), 10, 2);
-		add_filter('plugin_action_links_' . AVH_FDAS_Define::PLUGIN_FILE, array ( &$this, 'filterPluginActions' ), 10, 2);
+		add_filter('comment_row_actions', array ( $this, 'filterCommentRowActions' ), 10, 2);
+		add_filter('plugin_action_links_' . AVH_FDAS_Define::PLUGIN_FILE, array ( $this, 'filterPluginActions' ), 10, 2);
 		// If the version compare fails do not display the Upgrade notice.
 		if (version_compare(PHP_VERSION, '5', '<')) {
-			add_filter('transient_update_plugins', array ( &$this, 'filterDisableUpgrade' ));
+			add_filter('transient_update_plugins', array ( $this, 'filterDisableUpgrade' ));
 		}
-		add_filter('set-screen-option', array ( &$this, 'filterSetScreenOption' ), 10, 3);
+		add_filter('set-screen-option', array ( $this, 'filterSetScreenOption' ), 10, 3);
 	}
 
 	/**
@@ -116,24 +116,24 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionAdminMenu ()
 	{
-		add_menu_page('AVH F.D.A.S', 'AVH F.D.A.S', 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG, array ( &$this, 'menuOverview' ));
-		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas'), __('Overview', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array ( &$this, 'menuOverview' ));
-		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_GENERAL, array ( &$this, 'menuGeneralOptions' ));
-		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array ( &$this, 'menu3rdPartyOptions' ));
+		add_menu_page('AVH F.D.A.S', 'AVH F.D.A.S', 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG, array ( $this, 'menuOverview' ));
+		$this->_hooks['avhfdas_menu_overview'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas'), __('Overview', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_OVERVIEW, array ( $this, 'menuOverview' ));
+		$this->_hooks['avhfdas_menu_general'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('General Options', 'avh-fdas'), __('General Options', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_GENERAL, array ( $this, 'menuGeneralOptions' ));
+		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('3rd Party Options', 'avh-fdas'), __('3rd Party Options', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_3RD_PARTY, array ( $this, 'menu3rdPartyOptions' ));
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array ( &$this, 'menuIpCacheLog' ));
+			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('IP Cache Log', 'avh-fdas'), __('IP Cache Log', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_IP_CACHE, array ( $this, 'menuIpCacheLog' ));
 		}
-		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_FAQ, array ( &$this, 'menuFaq' ));
+		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG, 'AVH First Defense Against Spam:' . __('F.A.Q', 'avh-fdas'), __('F.A.Q', 'avh-fdas'), 'avh_fdas_admin', AVH_FDAS_Define::MENU_SLUG_FAQ, array ( $this, 'menuFaq' ));
 
 		// Add actions for menu pages
-		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array ( &$this, 'actionLoadPagehookOverview' ));
-		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array ( &$this, 'actionLoadPagehookGeneral' ));
-		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array ( &$this, 'actionLoadPagehook3rdParty' ));
-		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array ( &$this, 'actionLoadPagehookFaq' ));
+		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array ( $this, 'actionLoadPagehookOverview' ));
+		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array ( $this, 'actionLoadPagehookGeneral' ));
+		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array ( $this, 'actionLoadPagehook3rdParty' ));
+		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array ( $this, 'actionLoadPagehookFaq' ));
 
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array ( &$this, 'actionLoadPagehookHandlePostGetIpCacheLog' ), 5);
-			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array ( &$this, 'actionLoadPagehookIpCacheLog' ));
+			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array ( $this, 'actionLoadPagehookHandlePostGetIpCacheLog' ), 5);
+			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'], array ( $this, 'actionLoadPagehookIpCacheLog' ));
 		}
 
 		// Register Styles and Scripts
@@ -219,11 +219,11 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionLoadPagehookOverview ()
 	{
-		add_meta_box('avhfdasBoxStats', __('Statistics', 'avh-fdas'), array ( &$this, 'metaboxMenuOverview' ), $this->_hooks['avhfdas_menu_overview'], 'normal', 'core');
+		add_meta_box('avhfdasBoxStats', __('Statistics', 'avh-fdas'), array ( $this, 'metaboxMenuOverview' ), $this->_hooks['avhfdas_menu_overview'], 'normal', 'core');
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
 			add_screen_option('layout_columns', array ( 'max' => 2, 'default' => 2 ));
 		} else {
-			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+			add_filter('screen_layout_columns', array ( $this, 'filterScreenLayoutColumns' ), 10, 2);
 		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
@@ -244,7 +244,7 @@ final class AVH_FDAS_Admin
 	{
 		global $screen_layout_columns;
 		// This box can't be unselectd in the the Screen Options
-		add_meta_box('avhfdasBoxDonations', __('Donations', 'avh-fdas'), array ( &$this, 'metaboxDonations' ), $this->_hooks['avhfdas_menu_overview'], 'side', 'core');
+		add_meta_box('avhfdasBoxDonations', __('Donations', 'avh-fdas'), array ( $this, 'metaboxDonations' ), $this->_hooks['avhfdas_menu_overview'], 'side', 'core');
 		$hide2 = '';
 		switch ($screen_layout_columns) {
 			case 2:
@@ -404,15 +404,15 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionLoadPagehookGeneral ()
 	{
-		add_meta_box('avhfdasBoxGeneral', 'General', array ( &$this, 'metaboxGeneral' ), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
-		add_meta_box('avhfdasBoxIPCache', 'IP Caching', array ( &$this, 'metaboxIPCache' ), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
-		add_meta_box('avhfdasBoxCron', 'Cron', array ( &$this, 'metaboxCron' ), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
-		add_meta_box('avhfdasBoxBlackList', 'Blacklist', array ( &$this, 'metaboxBlackList' ), $this->_hooks['avhfdas_menu_general'], 'side', 'core');
-		add_meta_box('avhfdasBoxWhiteList', 'Whitelist', array ( &$this, 'metaboxWhiteList' ), $this->_hooks['avhfdas_menu_general'], 'side', 'core');
+		add_meta_box('avhfdasBoxGeneral', 'General', array ( $this, 'metaboxGeneral' ), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
+		add_meta_box('avhfdasBoxIPCache', 'IP Caching', array ( $this, 'metaboxIPCache' ), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
+		add_meta_box('avhfdasBoxCron', 'Cron', array ( $this, 'metaboxCron' ), $this->_hooks['avhfdas_menu_general'], 'normal', 'core');
+		add_meta_box('avhfdasBoxBlackList', 'Blacklist', array ( $this, 'metaboxBlackList' ), $this->_hooks['avhfdas_menu_general'], 'side', 'core');
+		add_meta_box('avhfdasBoxWhiteList', 'Whitelist', array ( $this, 'metaboxWhiteList' ), $this->_hooks['avhfdas_menu_general'], 'side', 'core');
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
 			add_screen_option('layout_columns', array ( 'max' => 2, 'default' => 2 ));
 		} else {
-			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+			add_filter('screen_layout_columns', array ( $this, 'filterScreenLayoutColumns' ), 10, 2);
 		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
@@ -640,13 +640,13 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionLoadPagehook3rdParty ()
 	{
-		add_meta_box('avhfdasBoxSFS', 'Stop Forum Spam', array ( &$this, 'metaboxMenu3rdParty_SFS' ), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
-		add_meta_box('avhfdasBoxPHP', 'Project Honey Pot', array ( &$this, 'metaboxMenu3rdParty_PHP' ), $this->_hooks['avhfdas_menu_3rd_party'], 'side', 'core');
-		add_meta_box('avhfdasBoxSH', 'Spamhaus', array ( &$this, 'metaboxMenu3rdParty_SH' ), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
+		add_meta_box('avhfdasBoxSFS', 'Stop Forum Spam', array ( $this, 'metaboxMenu3rdParty_SFS' ), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
+		add_meta_box('avhfdasBoxPHP', 'Project Honey Pot', array ( $this, 'metaboxMenu3rdParty_PHP' ), $this->_hooks['avhfdas_menu_3rd_party'], 'side', 'core');
+		add_meta_box('avhfdasBoxSH', 'Spamhaus', array ( $this, 'metaboxMenu3rdParty_SH' ), $this->_hooks['avhfdas_menu_3rd_party'], 'normal', 'core');
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
 			add_screen_option('layout_columns', array ( 'max' => 2, 'default' => 2 ));
 		} else {
-			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+			add_filter('screen_layout_columns', array ( $this, 'filterScreenLayoutColumns' ), 10, 2);
 		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
@@ -799,11 +799,11 @@ final class AVH_FDAS_Admin
 	 */
 	public function actionLoadPagehookFaq ()
 	{
-		add_meta_box('avhfdasBoxFAQ', __('F.A.Q.', 'avh-fdas'), array ( &$this, 'metaboxFAQ' ), $this->_hooks['avhfdas_menu_faq'], 'normal', 'core');
+		add_meta_box('avhfdasBoxFAQ', __('F.A.Q.', 'avh-fdas'), array ( $this, 'metaboxFAQ' ), $this->_hooks['avhfdas_menu_faq'], 'normal', 'core');
 		if (AVH_Common::getWordpressVersion() >= 3.1) {
 			add_screen_option('layout_columns', array ( 'max' => 2, 'default' => 2 ));
 		} else {
-			add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+			add_filter('screen_layout_columns', array ( $this, 'filterScreenLayoutColumns' ), 10, 2);
 		}
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
@@ -824,7 +824,7 @@ final class AVH_FDAS_Admin
 	{
 		global $screen_layout_columns;
 		// This box can't be unselectd in the the Screen Options
-		add_meta_box('avhfdasBoxDonations', __('Donations', 'avh-fdas'), array ( &$this, 'metaboxDonations' ), $this->_hooks['avhfdas_menu_faq'], 'side', 'core');
+		add_meta_box('avhfdasBoxDonations', __('Donations', 'avh-fdas'), array ( $this, 'metaboxDonations' ), $this->_hooks['avhfdas_menu_faq'], 'side', 'core');
 		$hide2 = '';
 		switch ($screen_layout_columns) {
 			case 2:
@@ -963,7 +963,7 @@ final class AVH_FDAS_Admin
 		global $current_screen;
 
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', true);
-		add_filter('screen_layout_columns', array ( &$this, 'filterScreenLayoutColumns' ), 10, 2);
+		add_filter('screen_layout_columns', array ( $this, 'filterScreenLayoutColumns' ), 10, 2);
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
