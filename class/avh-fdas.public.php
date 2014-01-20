@@ -58,8 +58,11 @@ class AVH_FDAS_Public
 
 		add_action('pre_comment_on_post', array ( &$this, 'handleActionPreCommentOnPost' ), 1);
 		add_filter('registration_errors', array ( &$this, 'handleFilterRegistrationErrors' ), 10, 3);
-		add_filter('wpmu_validate_user_signup', array ( &$this, 'handleFilterWPMUValidatUserSignup' ), 1);
+		add_filter('wpmu_validate_user_signup', array ( &$this, 'handleFilterWPMUValidateUserSignup' ), 1);
 
+		if ($this->_core_options['php']['usehoneypot']) {
+		    add_action('login_footer', array($this, 'handleActionLoginFooter'));
+		}
 		// Private actions for Cron
 		add_action('avhfdas_clean_nonce', array ( &$this, 'actionHandleCronCleanNonce' ));
 		add_action('avhfdas_clean_ipcache', array ( &$this, 'actionHandleCronCleanIpCache' ));
@@ -260,12 +263,19 @@ class AVH_FDAS_Public
 	 *
 	 * @param int $comment_id
 	 */
-	public function handleFilterWPMUValidatUserSignup ($userInfoArray)
+	public function handleFilterWPMUValidateUserSignup ($userInfoArray)
 	{
 		$email = $userInfoArray['user_email'];
 		$this->_spamcheck->setVisiting_email($email);
 		$userInfoArray['errors'] = $this->_spamcheck->doSpamcheckUserRegister($userInfoArray['errors']);
 
 		return $userInfoArray;
+	}
+
+	/**
+	 * Display Honeypot Url on the login form
+	 */
+	public function handleActionLoginFooter() {
+		echo $this->_spamcheck->getHtmlHoneyPotUrl();
 	}
 }
