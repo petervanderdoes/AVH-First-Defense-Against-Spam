@@ -61,7 +61,8 @@ class AVH_FDAS_Public
 		add_filter('wpmu_validate_user_signup', array ( &$this, 'handleFilterWPMUValidateUserSignup' ), 1);
 
 		if ($this->_core_options['php']['usehoneypot']) {
-		    add_action('login_footer', array($this, 'handleActionLoginFooter'));
+			add_action('comment_form', array ( &$this, 'handleActionDisplayHoneypotUrl' ));
+			add_action('login_footer', array ( $this, 'handleActionDisplayHoneypotUrl' ));
 		}
 		// Private actions for Cron
 		add_action('avhfdas_clean_nonce', array ( &$this, 'actionHandleCronCleanNonce' ));
@@ -275,7 +276,8 @@ class AVH_FDAS_Public
 	/**
 	 * Display Honeypot Url on the login form
 	 */
-	public function handleActionLoginFooter() {
+	public function handleActionDisplayHoneypotUrl ()
+	{
 		echo $this->_spamcheck->getHtmlHoneyPotUrl();
 	}
 }
