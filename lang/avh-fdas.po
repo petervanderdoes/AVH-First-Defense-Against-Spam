@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AVH First Defense Against Spam\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-10 14:34-0500\n"
+"POT-Creation-Date: 2013-12-13 20:53-0500\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Peter van der Does <avhsoftware@avirtualhome.com>\n"
 "Language-Team: \n"
@@ -18,215 +18,215 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: ..\n"
 
-#: ../avh-fdas.php:71
+#: ../avh-fdas.php:70
 msgid "can't work with this WordPress version!"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:111 ../class/avh-fdas.spamcheck.php:686
-#: ../class/avh-fdas.spamcheck.php:689 ../class/avh-fdas.spamcheck.php:703
+#: ../class/avh-fdas.spamcheck.php:115 ../class/avh-fdas.spamcheck.php:690
+#: ../class/avh-fdas.spamcheck.php:693 ../class/avh-fdas.spamcheck.php:707
 msgid "Access has been blocked."
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:111
+#: ../class/avh-fdas.spamcheck.php:115
 msgid "You are trying to beat the system."
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:112 ../class/avh-fdas.spamcheck.php:706
+#: ../class/avh-fdas.spamcheck.php:116 ../class/avh-fdas.spamcheck.php:710
 msgid "Protected by: "
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:304
+#: ../class/avh-fdas.spamcheck.php:308
 #, php-format
 msgid "Commenting on:\t\"%s\" ( %s )"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:306 ../class/avh-fdas.spamcheck.php:373
+#: ../class/avh-fdas.spamcheck.php:310 ../class/avh-fdas.spamcheck.php:377
 #, php-format
 msgid "Accessing:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:368
+#: ../class/avh-fdas.spamcheck.php:372
 msgid "Error detected"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:369
+#: ../class/avh-fdas.spamcheck.php:373
 msgid "An error has been detected"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:370
+#: ../class/avh-fdas.spamcheck.php:374
 #, php-format
 msgid "Error:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:372 ../class/avh-fdas.public.php:160
+#: ../class/avh-fdas.spamcheck.php:376 ../class/avh-fdas.public.php:163
 #, php-format
 msgid "IP:\t\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:374 ../class/avh-fdas.spamcheck.php:518
+#: ../class/avh-fdas.spamcheck.php:378 ../class/avh-fdas.spamcheck.php:522
 #, php-format
 msgid "Call took:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:499 ../class/avh-fdas.spamcheck.php:632
+#: ../class/avh-fdas.spamcheck.php:503 ../class/avh-fdas.spamcheck.php:636
 #, php-format
 msgid "Spammer detected [%s]"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:507 ../class/avh-fdas.spamcheck.php:536
+#: ../class/avh-fdas.spamcheck.php:511 ../class/avh-fdas.spamcheck.php:540
 msgid "Checked at"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:508 ../class/avh-fdas.spamcheck.php:537
-#: ../class/avh-fdas.spamcheck.php:585
+#: ../class/avh-fdas.spamcheck.php:512 ../class/avh-fdas.spamcheck.php:541
+#: ../class/avh-fdas.spamcheck.php:589
 msgid "Information"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:512
+#: ../class/avh-fdas.spamcheck.php:516
 #, php-format
 msgid "%s information"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:513
+#: ../class/avh-fdas.spamcheck.php:517
 #, php-format
 msgid "Last Seen:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:514
+#: ../class/avh-fdas.spamcheck.php:518
 #, php-format
 msgid "Frequency:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:520
+#: ../class/avh-fdas.spamcheck.php:524
 #, php-format
 msgid "IP threshold (%s) reached. Connection terminated"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:523
+#: ../class/avh-fdas.spamcheck.php:527
 #, php-format
 msgid "E-Mail threshold (%s) reached. Connection terminated"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:526 ../class/avh-fdas.spamcheck.php:576
-#: ../class/avh-fdas.spamcheck.php:590
+#: ../class/avh-fdas.spamcheck.php:530 ../class/avh-fdas.spamcheck.php:580
+#: ../class/avh-fdas.spamcheck.php:594
 msgid "has no information"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:529
+#: ../class/avh-fdas.spamcheck.php:533
 msgid "For more information:"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:538
+#: ../class/avh-fdas.spamcheck.php:542
 #, php-format
 msgid "Days since last activity:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:565
+#: ../class/avh-fdas.spamcheck.php:569
 #, php-format
 msgid "Type:\t\t\t\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:567
+#: ../class/avh-fdas.spamcheck.php:571
 #, php-format
 msgid "Search Engine:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:569
+#: ../class/avh-fdas.spamcheck.php:573
 #, php-format
 msgid "Score:\t\t\t\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:571
+#: ../class/avh-fdas.spamcheck.php:575
 #, php-format
 msgid "Call took:\t\t\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:573
+#: ../class/avh-fdas.spamcheck.php:577
 #, php-format
 msgid "Threshold score (%s) and type (%s) reached. Connection terminated"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:584
+#: ../class/avh-fdas.spamcheck.php:588
 msgid "IP found at"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:586
+#: ../class/avh-fdas.spamcheck.php:590
 #, php-format
 msgid "Classification:\t\t%s."
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:587
+#: ../class/avh-fdas.spamcheck.php:591
 #, php-format
 msgid "Call took:\t\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:588
+#: ../class/avh-fdas.spamcheck.php:592
 msgid "Connection terminated"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:597 ../class/avh-fdas.spamcheck.php:642
-#: ../class/avh-fdas.public.php:179
+#: ../class/avh-fdas.spamcheck.php:601 ../class/avh-fdas.spamcheck.php:646
+#: ../class/avh-fdas.public.php:182
 #, php-format
 msgid "Add to the local blacklist: %s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:634
+#: ../class/avh-fdas.spamcheck.php:638
 #, php-format
 msgid "Spam IP:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:637
+#: ../class/avh-fdas.spamcheck.php:641
 msgid "IP exists in the cache"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:638
+#: ../class/avh-fdas.spamcheck.php:642
 #, php-format
 msgid "Check took:\t\t\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:686
+#: ../class/avh-fdas.spamcheck.php:690
 #, php-format
 msgid "Your IP [%s] has been identified as spam"
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:689
+#: ../class/avh-fdas.spamcheck.php:693
 #, php-format
 msgid "Your IP [%s] is registered in our <em>Blacklisted</em> database."
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:703
+#: ../class/avh-fdas.spamcheck.php:707
 #, php-format
 msgid "Your IP [%s] is found at %s."
 msgstr ""
 
-#: ../class/avh-fdas.spamcheck.php:703
+#: ../class/avh-fdas.spamcheck.php:707
 msgid "If you feel this is incorrect please contact them."
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:126
+#: ../class/avh-fdas.ipcachelist.php:128
 msgid "Nothing in the cache."
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:133 ../class/avh-fdas.admin.php:375
-#: ../class/avh-fdas.admin.php:381 ../class/avh-fdas.admin.php:387
+#: ../class/avh-fdas.ipcachelist.php:135 ../class/avh-fdas.admin.php:380
+#: ../class/avh-fdas.admin.php:386 ../class/avh-fdas.admin.php:392
 msgid "IP"
 msgid_plural "IP's"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class/avh-fdas.ipcachelist.php:133
+#: ../class/avh-fdas.ipcachelist.php:135
 msgid "Ham/Spam"
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:133
+#: ../class/avh-fdas.ipcachelist.php:135
 msgid "Date added"
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:133
+#: ../class/avh-fdas.ipcachelist.php:135
 msgid "Last seen"
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:155
+#: ../class/avh-fdas.ipcachelist.php:157
 #, php-format
 msgid "Ham <span class=\"count\">(<span class=\"ham-count\">%s</span>)</span>"
 msgid_plural ""
@@ -234,7 +234,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class/avh-fdas.ipcachelist.php:155
+#: ../class/avh-fdas.ipcachelist.php:157
 #, php-format
 msgid ""
 "Spam <span class=\"count\">(<span class=\"spam-count\">%s</span>)</span>"
@@ -251,12 +251,12 @@ msgstr ""
 msgid "Mark as ham"
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:189 ../class/avh-fdas.ipcachelist.php:301
+#: ../class/avh-fdas.ipcachelist.php:189 ../class/avh-fdas.ipcachelist.php:300
 msgid "Delete"
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:190 ../class/avh-fdas.ipcachelist.php:300
-#: ../class/avh-fdas.admin.php:1395
+#: ../class/avh-fdas.ipcachelist.php:190 ../class/avh-fdas.ipcachelist.php:299
+#: ../class/avh-fdas.admin.php:1400
 msgid "Blacklist"
 msgstr ""
 
@@ -264,384 +264,384 @@ msgstr ""
 msgid "Clear List"
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:292 ../class/avh-fdas.ipcachelist.php:295
+#: ../class/avh-fdas.ipcachelist.php:291 ../class/avh-fdas.ipcachelist.php:294
 msgid "Spam"
 msgstr ""
 
-#: ../class/avh-fdas.ipcachelist.php:293 ../class/avh-fdas.ipcachelist.php:296
+#: ../class/avh-fdas.ipcachelist.php:292 ../class/avh-fdas.ipcachelist.php:295
 msgid "Ham"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:115 ../class/avh-fdas.admin.php:254
+#: ../class/avh-fdas.admin.php:120 ../class/avh-fdas.admin.php:259
 msgid "Overview"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:116 ../class/avh-fdas.admin.php:553
+#: ../class/avh-fdas.admin.php:121 ../class/avh-fdas.admin.php:558
 msgid "General Options"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:117 ../class/avh-fdas.admin.php:732
+#: ../class/avh-fdas.admin.php:122 ../class/avh-fdas.admin.php:737
 msgid "3rd Party Options"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:119 ../class/avh-fdas.admin.php:1170
+#: ../class/avh-fdas.admin.php:124 ../class/avh-fdas.admin.php:1175
 msgid "IP Cache Log"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:121
+#: ../class/avh-fdas.admin.php:126
 msgid "F.A.Q"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:179
+#: ../class/avh-fdas.admin.php:184
 #, php-format
 msgid "The installed version, %s, is more than one version behind."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:181
+#: ../class/avh-fdas.admin.php:186
 msgid ""
 "More changes have been made since the currently installed version, consider "
 "checking the changelog."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:205
+#: ../class/avh-fdas.admin.php:210
 msgid "You need to have PHP 5.2 or higher for the new version !!!"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:217
+#: ../class/avh-fdas.admin.php:222
 msgid "Statistics"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:242 ../class/avh-fdas.admin.php:822
+#: ../class/avh-fdas.admin.php:247 ../class/avh-fdas.admin.php:827
 msgid "Donations"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:280
+#: ../class/avh-fdas.admin.php:285
 msgid "Spam Statistics for the last 12 months"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:302
+#: ../class/avh-fdas.admin.php:307
 #, php-format
 msgid "Spam stopped in %s"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:311
+#: ../class/avh-fdas.admin.php:316
 msgid "No statistics yet"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:325
+#: ../class/avh-fdas.admin.php:330
 msgid "Checking with "
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:330 ../class/avh-fdas.admin.php:336
+#: ../class/avh-fdas.admin.php:335 ../class/avh-fdas.admin.php:341
 msgid " and "
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:345
+#: ../class/avh-fdas.admin.php:350
 msgid "IP Cache Statistics"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:376
+#: ../class/avh-fdas.admin.php:381
 #, php-format
 msgid "Total of %s in the cache"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:382
+#: ../class/avh-fdas.admin.php:387
 #, php-format
 msgid "Total of %s classified as ham"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:388
+#: ../class/avh-fdas.admin.php:393
 #, php-format
 msgid "Total of %s classified as spam"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:430
+#: ../class/avh-fdas.admin.php:435
 msgid "Show message"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:430
+#: ../class/avh-fdas.admin.php:435
 msgid "Show a message when the connection has been terminated."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:431
+#: ../class/avh-fdas.admin.php:436
 msgid "Email on failed security check:"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:431
+#: ../class/avh-fdas.admin.php:436
 msgid ""
 "Receive an email when a comment is posted and the security check failed."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:432
+#: ../class/avh-fdas.admin.php:437
 msgid "Use comment nonce:"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:432
+#: ../class/avh-fdas.admin.php:437
 msgid ""
 "Block spammers that access wp-comments-post.php directly by using a comment "
 "security check. An email can be send when the check fails."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:433
+#: ../class/avh-fdas.admin.php:438
 msgid "Email result of nonces clean up"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:433
+#: ../class/avh-fdas.admin.php:438
 msgid ""
 "Receive an email with the total number of nonces that are deleted. The "
 "nonces are used to secure the links found in the emails."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:434
+#: ../class/avh-fdas.admin.php:439
 msgid "Email result of IP cache clean up"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:434
+#: ../class/avh-fdas.admin.php:439
 msgid ""
 "Receive an email with the total number of IP's that are deleted from the IP "
 "caching system."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:435
+#: ../class/avh-fdas.admin.php:440
 msgid "Use internal blacklist"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:435
+#: ../class/avh-fdas.admin.php:440
 msgid ""
 "Check the internal blacklist first. If the IP is found terminate the "
 "connection, even when the Termination threshold is a negative number."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:436
+#: ../class/avh-fdas.admin.php:441
 msgid "Add to blacklist link"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:436
+#: ../class/avh-fdas.admin.php:441
 msgid "Adds ability to add IP's from comments marked as spam"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:437
+#: ../class/avh-fdas.admin.php:442
 msgid "Blacklist IP's:"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:437
+#: ../class/avh-fdas.admin.php:442
 msgid ""
 "Each IP should be on a separate line<br />Ranges can be defines as well in "
 "the following two formats<br />IP to IP. i.e. "
 "192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:438
+#: ../class/avh-fdas.admin.php:443
 msgid "Use internal whitelist"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:438
+#: ../class/avh-fdas.admin.php:443
 msgid ""
 "Check the internal whitelist first. If the IP is found don\\t do any further "
 "checking."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:439
+#: ../class/avh-fdas.admin.php:444
 msgid "Whitelist IP's"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:439
+#: ../class/avh-fdas.admin.php:444
 msgid ""
 "Each IP should be on a seperate line<br />Ranges can be defines as well in "
 "the following two formats<br />IP to IP. i.e. "
 "192.168.1.100-192.168.1.105<br />Network in CIDR format. i.e. 192.168.1.0/24"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:440
+#: ../class/avh-fdas.admin.php:445
 msgid "Use IP Caching"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:440
+#: ../class/avh-fdas.admin.php:445
 msgid ""
 "Cache the IP's that meet the 3rd party termination threshold and the IP's "
 "that are not detected by the 3rd party. The connection will be terminated if "
 "an IP is found in the cache that was perviously determined to be a spammer"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:441 ../class/avh-fdas.admin.php:679
+#: ../class/avh-fdas.admin.php:446 ../class/avh-fdas.admin.php:684
 msgid "Email"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:441
+#: ../class/avh-fdas.admin.php:446
 msgid ""
 "Send an email when a connection is terminate based on the IP found in the "
 "cache"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:442
+#: ../class/avh-fdas.admin.php:447
 msgid "Days to keep in cache"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:442
+#: ../class/avh-fdas.admin.php:447
 msgid "Keep the IP in cache for the selected days."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:498 ../class/avh-fdas.admin.php:710
+#: ../class/avh-fdas.admin.php:503 ../class/avh-fdas.admin.php:715
 msgid "Options saved"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:506
+#: ../class/avh-fdas.admin.php:511
 #, php-format
 msgid "IP [%s] Reported and deleted"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:510
+#: ../class/avh-fdas.admin.php:515
 #, php-format
 msgid "IP [%s] has been added to the blacklist"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:514
+#: ../class/avh-fdas.admin.php:519
 #, php-format
 msgid "IP [%s] reported."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:518
+#: ../class/avh-fdas.admin.php:523
 msgid "Invalid request."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:522
+#: ../class/avh-fdas.admin.php:527
 #, php-format
 msgid "IP [%s] not reported. Probably already processed."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:526
+#: ../class/avh-fdas.admin.php:531
 #, php-format
 msgid "IP [%s] already exists in the blacklist."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:569 ../class/avh-fdas.admin.php:747
+#: ../class/avh-fdas.admin.php:574 ../class/avh-fdas.admin.php:752
 msgid "Save Changes"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:617
+#: ../class/avh-fdas.admin.php:622
 msgid ""
 "To use IP caching you must enable it below and set the options. IP's are "
 "stored in the database so if you have a high traffic website the database "
 "can grow quickly"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:629
+#: ../class/avh-fdas.admin.php:634
 msgid ""
 "Once a day cron jobs of this plugin run. You can select to receive an email "
 "with additional information about the jobs that ran."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:664
+#: ../class/avh-fdas.admin.php:669
 msgid "Check with Stop Forum Spam"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:664
+#: ../class/avh-fdas.admin.php:669
 msgid "If checked, the visitor's IP will be checked with Stop Forum Spam"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:665
+#: ../class/avh-fdas.admin.php:670
 msgid "Email threshold"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:665
+#: ../class/avh-fdas.admin.php:670
 msgid ""
 "When the frequency of the IP address of the spammer in the stopforumspam "
 "database equals or exceeds this threshold an email is send.<BR />A negative "
 "number means an email will never be send."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:666
+#: ../class/avh-fdas.admin.php:671
 msgid "IP termination threshold"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:666
+#: ../class/avh-fdas.admin.php:671
 msgid ""
 "When the frequency of the IP address of the spammer in the stopforumspam "
 "database equals or exceeds this threshold the connection is terminated.<BR /"
 ">A negative number means the connection will never be terminated."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:667
+#: ../class/avh-fdas.admin.php:672
 msgid "E-Mail termination threshold"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:667
+#: ../class/avh-fdas.admin.php:672
 msgid ""
 "When the frequency of the e-mail address of the spammer in the stopforumspam "
 "database equals or exceeds this threshold the connection is terminated.<BR /"
 ">A negative number means the connection will never be terminated."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:668
+#: ../class/avh-fdas.admin.php:673
 msgid "API Key"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:668
+#: ../class/avh-fdas.admin.php:673
 msgid "You need a Stop Forum Spam API key to report spam."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:669
+#: ../class/avh-fdas.admin.php:674
 msgid "Email error"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:669
+#: ../class/avh-fdas.admin.php:674
 msgid "Receive an email when the call to Stop Forum Spam Fails"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:670
+#: ../class/avh-fdas.admin.php:675
 msgid "Check with Honey Pot Project"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:670
+#: ../class/avh-fdas.admin.php:675
 msgid "If checked, the visitor's IP will be checked with Honey Pot Project"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:671
+#: ../class/avh-fdas.admin.php:676
 msgid "API Key:"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:671
+#: ../class/avh-fdas.admin.php:676
 msgid ""
 "You need a Project Honey Pot API key to check the Honey Pot Project database."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:672
+#: ../class/avh-fdas.admin.php:677
 msgid "Email type threshold:"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:672
+#: ../class/avh-fdas.admin.php:677
 msgid ""
 "When the type of the spammer in the Project Honey Pot database equals or "
 "exceeds this threshold an email is send.<BR />Both the type threshold and "
 "the score threshold have to be reached in order to receive an email."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:673
+#: ../class/avh-fdas.admin.php:678
 msgid "Email score threshold"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:673
+#: ../class/avh-fdas.admin.php:678
 msgid ""
 "When the score of the spammer in the Project Honey Pot database equals or "
 "exceeds this threshold an email is send.<BR />A negative number means an "
 "email will never be send."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:674
+#: ../class/avh-fdas.admin.php:679
 msgid "Termination type threshold"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:674
+#: ../class/avh-fdas.admin.php:679
 msgid ""
 "When the type of the spammer in the Project Honey Pot database equals or "
 "exceeds this threshold and the score threshold, the connection is terminated."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:675
+#: ../class/avh-fdas.admin.php:680
 msgid "Termination score threshold"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:675
+#: ../class/avh-fdas.admin.php:680
 msgid ""
 "When the score of the spammer in the Project Honey Pot database equals or "
 "exceeds this threshold and the type threshold is reached, the connection "
@@ -650,52 +650,52 @@ msgid ""
 "strong>"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:676
+#: ../class/avh-fdas.admin.php:681
 msgid "Use Honey Pot"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:676
+#: ../class/avh-fdas.admin.php:681
 msgid ""
 "If you have set up a Honey Pot you can select to have the URL below to be "
 "added to the message when terminating the connection.<BR />You have to "
 "select <em>Show Message</em> in the General Options for this to work."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:677
+#: ../class/avh-fdas.admin.php:682
 msgid "Honey Pot URL"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:677
+#: ../class/avh-fdas.admin.php:682
 msgid "The link to the Honey Pot as suggested by Project Honey Pot."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:678
+#: ../class/avh-fdas.admin.php:683
 msgid "Check with Spamhaus"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:678
+#: ../class/avh-fdas.admin.php:683
 msgid "If checked, the visitor's IP will be checked at Spamhaus"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:679
+#: ../class/avh-fdas.admin.php:684
 msgid ""
 "Send an email when a connection is terminated based on the IP found at "
 "Spamhaus"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:707
+#: ../class/avh-fdas.admin.php:712
 msgid ""
 "You can not use Project Honey Pot without an API key. Use of Project Honey "
 "Pot has been disabled"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:761
+#: ../class/avh-fdas.admin.php:766
 msgid ""
 "To check a visitor at Stop Forum Spam you must enable it below. Set the "
 "options to your own liking."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:776
+#: ../class/avh-fdas.admin.php:781
 msgid ""
 "To check a visitor at Project Honey Pot you must enable it below, you must "
 "also have an API key. You can get an API key by signing up for free at the "
@@ -703,180 +703,180 @@ msgid ""
 "\">Honey Pot Project</a>. Set the options to your own liking."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:797
+#: ../class/avh-fdas.admin.php:802
 msgid "F.A.Q."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:834
+#: ../class/avh-fdas.admin.php:839
 msgid "Spam Overview"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:974
+#: ../class/avh-fdas.admin.php:979
 msgid ""
 "You can manage IP's added to the IP cache Log. This screen is customizable "
 "in the same ways as other management screens, and you can act on IP's using "
 "the on-hover action links or the Bulk Actions."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1125
+#: ../class/avh-fdas.admin.php:1130
 #, php-format
 msgid "%s IP permanently deleted"
 msgid_plural "%s IP's deleted"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class/avh-fdas.admin.php:1129
+#: ../class/avh-fdas.admin.php:1134
 #, php-format
 msgid "%s IP added to the blacklist"
 msgid_plural "%s IP's added to the blacklist"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class/avh-fdas.admin.php:1133
+#: ../class/avh-fdas.admin.php:1138
 #, php-format
 msgid "%s IP marked as ham"
 msgid_plural "%s IP's marked as ham"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class/avh-fdas.admin.php:1137
+#: ../class/avh-fdas.admin.php:1142
 #, php-format
 msgid "%s IP marked as spam"
 msgid_plural "%s IP's marked as spam"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class/avh-fdas.admin.php:1173
+#: ../class/avh-fdas.admin.php:1178
 #, php-format
 msgid "Search results for &#8220;%s&#8221;"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1190
+#: ../class/avh-fdas.admin.php:1195
 msgid "Find IP"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1207 ../class/avh-fdas.admin.php:1222
+#: ../class/avh-fdas.admin.php:1212 ../class/avh-fdas.admin.php:1227
 msgid "Unknown status parameter"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1212 ../class/avh-fdas.admin.php:1227
+#: ../class/avh-fdas.admin.php:1217 ../class/avh-fdas.admin.php:1232
 msgid "Error updating the ipcache database table."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1247 ../class/avh-fdas.admin.php:1263
+#: ../class/avh-fdas.admin.php:1252 ../class/avh-fdas.admin.php:1268
 msgid "Error deleting the IP from the database table."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1251
+#: ../class/avh-fdas.admin.php:1256
 #, php-format
 msgid "IP %s already exists in the blacklist."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1271
+#: ../class/avh-fdas.admin.php:1276
 msgid "Invalid AJAX call"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1299
+#: ../class/avh-fdas.admin.php:1304
 #, php-format
 msgid "1 item"
 msgid_plural "%s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class/avh-fdas.admin.php:1366
+#: ../class/avh-fdas.admin.php:1371
 msgid "Settings"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1389
+#: ../class/avh-fdas.admin.php:1394
 msgid "Report"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1397
+#: ../class/avh-fdas.admin.php:1402
 msgid " & Delete"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1452
+#: ../class/avh-fdas.admin.php:1457
 msgid "Oops, no comment with this ID."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1452
+#: ../class/avh-fdas.admin.php:1457
 msgid "Go back"
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1455
+#: ../class/avh-fdas.admin.php:1460
 msgid "You are not allowed to edit comments on this post."
 msgstr ""
 
-#: ../class/avh-fdas.admin.php:1532
+#: ../class/avh-fdas.admin.php:1537
 msgid "Error reporting spammer"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:103
+#: ../class/avh-fdas.public.php:107
 msgid "Clean nonces"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:104
+#: ../class/avh-fdas.public.php:108
 #, php-format
 msgid "Deleted %d nonce's from the database"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:123
+#: ../class/avh-fdas.public.php:127
 msgid "Clean IP cache"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:124
+#: ../class/avh-fdas.public.php:128
 #, php-format
 msgid "Deleted %d IP's from the cache"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:152
+#: ../class/avh-fdas.public.php:155
 msgid "Comment security check failed"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:154
+#: ../class/avh-fdas.public.php:157
 msgid "Reason:\tThe nonce check failed."
 msgstr ""
 
-#: ../class/avh-fdas.public.php:156
+#: ../class/avh-fdas.public.php:159
 msgid "Reason:\tAn attempt was made to directly access wp-comment-post.php"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:158
+#: ../class/avh-fdas.public.php:161
 #, php-format
 msgid "Username:\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:159
+#: ../class/avh-fdas.public.php:162
 #, php-format
 msgid "Email:\t\t%s"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:162
+#: ../class/avh-fdas.public.php:165
 msgid "Comment trying to post:"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:163
+#: ../class/avh-fdas.public.php:166
 msgid "--- START OF COMMENT ---"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:165
+#: ../class/avh-fdas.public.php:168
 msgid "--- END OF COMMENT ---"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:175
+#: ../class/avh-fdas.public.php:178
 #, php-format
 msgid "Report spammer: %s"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:177
+#: ../class/avh-fdas.public.php:180
 #, php-format
 msgid "For more information: http://www.stopforumspam.com/search?q=%s"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:191
+#: ../class/avh-fdas.public.php:194
 msgid "<p>Cheating huh</p>"
 msgstr ""
 
-#: ../class/avh-fdas.public.php:192
+#: ../class/avh-fdas.public.php:195
 msgid "<p>Protected by: AVH First Defense Against Spam</p>"
 msgstr ""

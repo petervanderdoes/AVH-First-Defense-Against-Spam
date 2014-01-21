@@ -742,7 +742,19 @@ class AVH_FDAS_SpamCheck
 	 */
 	public function getHtmlHoneyPotUrl ()
 	{
-		return ('<p><div style="display: none;"><a href="' . $this->_core->getOptionElement('php', 'honeypoturl') . '">AVH Software</a></div></p>');
+		$url = $this->_core->getOptionElement('php', 'honeypoturl');
+		$words = array ( 'intermittently', 'tawse', 'goldurn', 'coemption', 'semipurposive', 'tensibly', 'dissident', 'reductive', 'plowstaff', 'sprang', 'intersoluble', 'mildly', 'unrumpled', 'freeway', 'overappreciative', 'prealliance', 'hypercoagulability', 'makalu', 'aspersive', 'colleagueship', 'feminacy', 'cuirie', 'vanir', 'unvitalized', 'noncreativity', 'interproportional', 'areosystyle', 'exsolve', 'replow', 'septuor', 'comptrollership', 'mortarless', 'ruddily', 'find', 'poppy', 'knowledgeless', 'amenorrheal', 'referenced', 'veranda', 'parishad', 'lexeme', 'expediency', 'anemotropism', 'bangalay', 'complexional', 'uneminent', 'stephenville', 'lozenge', 'archiepiscopacy', 'propitiable' );
+		$keys = array_rand($words, 2);
+		$text = $words[$keys[0]] . '-' . $words[$keys[1]];
+		$url_array[] = '<div style="display: none;"><a href="%s">%s</a></div>';
+		$url_array[] = '<a href="%s" style="display: none;">%s</a>';
+		$url_array[] = '<a href="%s"><span style="display: none;">%s</span></a>';
+		$url_array[] = '<a href="%s"><!-- %s --></a>';
+		$url_array[] = '<!-- <a href="%s">%s</a> -->';
+		$url_array[] = '<div style="position: absolute; top: -250px; left: -250px;"><a href="%s">%s</a></div>';
+		$url_array[] = '<a href="%s"><span style="display: none;">%s</span></a>';
+		$full_url = sprintf($url_array[array_rand($url_array)], $url, $text);
+		return ($full_url);
 	}
 
 	/**

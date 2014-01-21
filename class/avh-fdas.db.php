@@ -17,7 +17,7 @@ class AVH_FDAS_DB
 	public function __construct ()
 	{
 		wp_cache_add_global_groups('avhfdas');
-		register_shutdown_function(array ( &$this, '__destruct' ));
+		register_shutdown_function(array ( $this, '__destruct' ));
 	}
 
 	/**
