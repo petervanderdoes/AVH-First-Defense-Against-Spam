@@ -90,28 +90,11 @@ if (! class_exists('AVH_Class_Registry')) {
 			}
 			require_once ($this->_dir . $in . '/' . strtolower($file));
 			$name = ('system' == $type) ? 'AVH_' . $class : $this->_class_name_prefix . $class;
-			$object = $this->instantiate_class(new $name());
+			$object = new $name();
 			if ($store) {
 				$this->_objects[$class] = $object;
 			}
 			return $object;
-		}
-
-		/**
-		 * Instantiate Class
-		 *
-		 * Returns a new class object by reference, used by load_class() and the DB class.
-		 * Required to make PHP 5.3 cry.
-		 *
-		 * Use: $obj =& instantiate_class(new Foo());
-		 *
-		 * @access public
-		 * @param object
-		 * @return object
-		 */
-		protected function instantiate_class (&$class_object)
-		{
-			return $class_object;
 		}
 
 		/**
