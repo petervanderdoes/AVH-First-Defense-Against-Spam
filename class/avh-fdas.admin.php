@@ -1620,7 +1620,7 @@ final class AVH_FDAS_Admin
 		}
 		// Setup the DB Tables
 		$charset_collate = '';
-		if (version_compare(mysql_get_server_info(), '4.1.0', '>=')) {
+		if (version_compare($wpdb->db_version(), '4.1.0', '>=')) {
 			if (! empty($wpdb->charset))
 				$charset_collate = 'DEFAULT CHARACTER SET ' . $wpdb->charset;
 			if (! empty($wpdb->collate))

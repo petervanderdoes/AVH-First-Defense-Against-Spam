@@ -3,8 +3,8 @@ Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
-Tested up to: 3.6.1
-Stable tag: 3.6.5
+Tested up to: 3.9.1
+Stable tag: 3.6.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -123,6 +123,9 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.6.6 =
+* Preparation for new development cycle.
+
 = Version 3.6.5 =
 * "Display" Honeypot URL on the login and register screen.
 * Randomize the way the Honeyput URL is displayed.
