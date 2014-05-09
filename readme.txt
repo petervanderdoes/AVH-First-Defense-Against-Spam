@@ -123,7 +123,7 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
-= Version 3.7.0-dev.1 =
+= Version 3.6.8-rc.1 =
 * Drop the use of Spamhaus checking the CBL.
 
 = Version 3.6.7 =
