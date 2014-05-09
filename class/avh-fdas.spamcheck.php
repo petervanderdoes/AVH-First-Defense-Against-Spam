@@ -279,7 +279,7 @@ class AVH_FDAS_SpamCheck
 			$time_start = microtime(true);
 			$lookup = $reverse_ip . '.zen.spamhaus.org.';
 			$info = explode('.', gethostbyname($lookup));
-			if ('127' == $info[0] && (int) $info[3] < 10) {
+			if ('127' == $info[0] && (int) $info[3] < 10 && (int) $info[3] != 4) {
 				$this->_spammer_detected = true;
 				$time_end = microtime(true);
 				$time = $time_end - $time_start;
