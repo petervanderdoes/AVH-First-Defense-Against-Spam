@@ -123,6 +123,9 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.7.0-dev.1 =
+* Preparation for new development cycle.
+
 = Version 3.6.7 =
 * Better check for supported MySQL version. (Props: doublesharp)
 
