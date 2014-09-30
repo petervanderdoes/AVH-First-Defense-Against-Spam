@@ -124,7 +124,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.7.0-dev.1 =
-* Preparation for new development cycle.
+* The API URL changed for Stop Forum Spam.
 
 = Version 3.6.8 =
 * Drop the use of Spamhaus checking the CBL.

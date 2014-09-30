@@ -32,7 +32,7 @@ final class AVH_FDAS_Define
 
     const ERROR_EXISTS_IN_BLACKLIST = '202';
     // URL For Stop Forum API
-    const STOPFORUMSPAM_ENDPOINT = 'http://www.stopforumspam.com/api';
+    const STOPFORUMSPAM_ENDPOINT = 'http://api.stopforumspam.org/api';
     // Menu Slugs for Admin menu
     const MENU_SLUG = 'avh-first-defense-against-spam';
 
