@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 2.8
 Tested up to: 4.0
-Stable tag: 3.6.8
+Stable tag: 3.6.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -123,7 +123,7 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
-= Version 3.7.0-dev.1 =
+= Version 3.6.9 =
 * The API URL changed for Stop Forum Spam.
 
 = Version 3.6.8 =
