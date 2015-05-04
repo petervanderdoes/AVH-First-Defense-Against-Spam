@@ -32,7 +32,7 @@ class AVH_FDAS_Public
      */
     public function __construct()
     {
-        add_action('init', array($this, 'handleInitializePlugin'), 10);
+        add_action('init', [$this, 'handleInitializePlugin'], 10);
     }
 
     public function handleInitializePlugin()
@@ -48,28 +48,28 @@ class AVH_FDAS_Public
 
         // Public actions and filters
         if (1 == $this->_core_options['general']['commentnonce']) {
-            add_action('comment_form', array($this, 'actionAddNonceFieldToComment'));
-            add_filter('preprocess_comment', array($this, 'filterCheckNonceFieldToComment'), 1);
+            add_action('comment_form', [$this, 'actionAddNonceFieldToComment']);
+            add_filter('preprocess_comment', [$this, 'filterCheckNonceFieldToComment'], 1);
         }
-        add_action('get_header', array($this, 'handleActionGetHeader'));
+        add_action('get_header', [$this, 'handleActionGetHeader']);
 
-        add_action('pre_comment_on_post', array($this, 'handleActionPreCommentOnPost'), 1);
-        add_filter('registration_errors', array($this, 'handleFilterRegistrationErrors'), 10, 3);
-        add_filter('wpmu_validate_user_signup', array($this, 'handleFilterWPMUValidateUserSignup'), 1);
+        add_action('pre_comment_on_post', [$this, 'handleActionPreCommentOnPost'], 1);
+        add_filter('registration_errors', [$this, 'handleFilterRegistrationErrors'], 10, 3);
+        add_filter('wpmu_validate_user_signup', [$this, 'handleFilterWPMUValidateUserSignup'], 1);
 
         if ($this->_core_options['php']['usehoneypot']) {
-            add_action('comment_form', array($this, 'handleActionDisplayHoneypotUrl'));
-            add_action('login_footer', array($this, 'handleActionDisplayHoneypotUrl'));
+            add_action('comment_form', [$this, 'handleActionDisplayHoneypotUrl']);
+            add_action('login_footer', [$this, 'handleActionDisplayHoneypotUrl']);
         }
         // Private actions for Cron
-        add_action('avhfdas_clean_nonce', array($this, 'actionHandleCronCleanNonce'));
-        add_action('avhfdas_clean_ipcache', array($this, 'actionHandleCronCleanIpCache'));
+        add_action('avhfdas_clean_nonce', [$this, 'actionHandleCronCleanNonce']);
+        add_action('avhfdas_clean_ipcache', [$this, 'actionHandleCronCleanIpCache']);
 
         /**
          * Hook in registration process for Events Manager
          */
         if (defined('EM_VERSION')) {
-            add_filter('em_registration_errors', array($this, 'handleFilterRegistrationErrors'), 10, 3);
+            add_filter('em_registration_errors', [$this, 'handleFilterRegistrationErrors'], 10, 3);
         }
     }
 
@@ -77,6 +77,8 @@ class AVH_FDAS_Public
      * Add a nonce field to the comments.
      *
      * @WordPress Action - comment_form
+     *
+     * @param $post_id
      */
     public function actionAddNonceFieldToComment($post_id)
     {
@@ -251,6 +253,12 @@ class AVH_FDAS_Public
 
     /**
      * Handle when a user registers
+     *
+     * @param $errors
+     * @param $sanitized_user_login
+     * @param $user_email
+     *
+     * @return WP_Error
      */
     public function handleFilterRegistrationErrors($errors, $sanitized_user_login, $user_email)
     {
@@ -263,7 +271,9 @@ class AVH_FDAS_Public
     /**
      * Handle before the comment is processed.
      *
-     * @param int $comment_id
+     * @param array $userInfoArray
+     *
+     * @return array
      */
     public function handleFilterWPMUValidateUserSignup($userInfoArray)
     {

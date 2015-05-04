@@ -17,7 +17,7 @@ class AVH_FDAS_DB
     public function __construct()
     {
         wp_cache_add_global_groups('avhfdas');
-        register_shutdown_function(array($this, '__destruct'));
+        register_shutdown_function([$this, '__destruct']);
     }
 
     /**
@@ -33,9 +33,11 @@ class AVH_FDAS_DB
     /**
      * Get all the DB info of an IP
      *
-     * @param $ip
+     * @param        $_ip
+     * @param string $_output
      *
-     * @return ip Object (false if not found)
+     * @return bool|object ip
+     *
      */
     public function getIP($_ip, $_output = OBJECT)
     {
@@ -87,7 +89,18 @@ class AVH_FDAS_DB
     {
         global $wpdb;
 
-        $defaults = array('ip' => '', 'added' => '', 'lastseen' => '', 'status' => 'all', 'search' => '', 'offset' => '', 'number' => '', 'orderby' => '', 'order' => 'DESC', 'count' => false);
+        $defaults = [
+            'ip'       => '',
+            'added'    => '',
+            'lastseen' => '',
+            'status'   => 'all',
+            'search'   => '',
+            'offset'   => '',
+            'number'   => '',
+            'orderby'  => '',
+            'order'    => 'DESC',
+            'count'    => false
+        ];
         $this->_query_vars = wp_parse_args($query_vars, $defaults);
         extract($this->_query_vars, EXTR_SKIP);
 
@@ -95,7 +108,7 @@ class AVH_FDAS_DB
 
         if (!empty($orderby)) {
             $ordersby = is_array($orderby) ? $orderby : preg_split('/[,\s]/', $orderby);
-            $ordersby = array_intersect($ordersby, array('ip', 'lastseen', 'added', 'spam'));
+            $ordersby = array_intersect($ordersby, ['ip', 'lastseen', 'added', 'spam']);
             $orderby = empty($ordersby) ? 'added' : implode(', ', $ordersby);
         } else {
             $orderby = 'ip';
@@ -138,7 +151,7 @@ class AVH_FDAS_DB
             $where .= $wpdb->prepare(' AND ip = %s', $ip);
         }
         if ('' !== $search) {
-            $where .= $this->_getSearchSql($search, array('ip'));
+            $where .= $this->_getSearchSql($search, ['ip']);
         }
 
         $query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
@@ -176,7 +189,17 @@ class AVH_FDAS_DB
         global $wpdb;
         $ip = AVH_Common::getIp2long($ip);
         $date = current_time('mysql');
-        $result = $wpdb->query($wpdb->prepare("INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%s, %d, %s, %s) ON DUPLICATE KEY UPDATE lastseen=%s", $ip, $spam, $date, $date, $date));
+        $result = $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO $wpdb->avhfdasipcache (ip, spam, added, lastseen) VALUES (%s, %d, %s, %s) ON DUPLICATE KEY UPDATE lastseen=%s",
+                $ip,
+                $spam,
+                $date,
+                $date,
+                $date
+            )
+        )
+        ;
         if ($result) {
             return $result;
         } else {
@@ -187,9 +210,10 @@ class AVH_FDAS_DB
     /**
      * Insert the IP into the DB
      *
-     * @param $ip string
+     * @param $ip_cache_arr
      *
      * @return int false number of rows updated, or false on error.
+     *
      */
     public function updateIpCache($ip_cache_arr)
     {
@@ -217,10 +241,14 @@ class AVH_FDAS_DB
 
         $where = '';
 
-        $count = $wpdb->get_results("SELECT spam, COUNT( * ) AS num_ips FROM {$wpdb->avhfdasipcache} GROUP BY spam", ARRAY_A);
+        $count = $wpdb->get_results(
+            "SELECT spam, COUNT( * ) AS num_ips FROM {$wpdb->avhfdasipcache} GROUP BY spam",
+            ARRAY_A
+        )
+        ;
 
         $total = 0;
-        $status = array('0' => 'ham', '1' => 'spam');
+        $status = ['0' => 'ham', '1' => 'spam'];
         $known_types = array_keys($status);
         foreach ((array) $count as $row) {
             // Don't count post-trashed toward totals
@@ -249,7 +277,7 @@ class AVH_FDAS_DB
         }
         $string = esc_sql(like_escape($string));
 
-        $searches = array();
+        $searches = [];
         foreach ($cols as $col) {
             if ('ip' == $col) {
                 $searches[] = "$col = '$ip'";

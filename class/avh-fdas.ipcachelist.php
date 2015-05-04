@@ -5,6 +5,7 @@ if (!defined('AVH_FRAMEWORK')) {
 
 class AVH_FDAS_IPCacheList extends WP_List_Table
 {
+    public $extra_items;
     /**
      *
      * @var AVH_FDAS_Core
@@ -44,7 +45,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
             $default_status = 'all';
         }
         $status = isset($_REQUEST['avhfdas_ip_cache_list_status']) ? $_REQUEST['avhfdas_ip_cache_list_status'] : $default_status;
-        if (!in_array($status, array('all', 'ham', 'spam', 'search'))) {
+        if (!in_array($status, ['all', 'ham', 'spam', 'search'])) {
             $status = 'all';
         }
         if ($status != $default_status && 'search' != $status) {
@@ -54,9 +55,9 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
         $page = $this->get_pagenum();
 
         if (AVH_Common::getWordpressVersion() >= 3.2) {
-            parent::__construct(array('plural' => 'ips', 'singular' => 'ip', 'ajax' => true));
+            parent::__construct(['plural' => 'ips', 'singular' => 'ip', 'ajax' => true]);
         } else {
-            parent::WP_List_Table(array('plural' => 'ips', 'singular' => 'ip', 'ajax' => true));
+            parent::WP_List_Table(['plural' => 'ips', 'singular' => 'ip', 'ajax' => true]);
         }
     }
 
@@ -70,7 +71,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
         global $post_id, $ip_status, $search, $comment_type;
 
         $ip_status = isset($_REQUEST['ip_status']) ? $_REQUEST['ip_status'] : 'all';
-        if (!in_array($ip_status, array('all', 'ham', 'spam'))) {
+        if (!in_array($ip_status, ['all', 'ham', 'spam'])) {
             $ip_status = 'all';
         }
 
@@ -86,7 +87,10 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
         if (isset($_REQUEST['number'])) {
             $number = (int) $_REQUEST['number'];
         } else {
-            $number = $ips_per_page + min(8, $ips_per_page); // Grab a few extra, when changing the 8 changes are need in avh-fdas.ipcachelist.js
+            $number = $ips_per_page + min(
+                    8,
+                    $ips_per_page
+                ); // Grab a few extra, when changing the 8 changes are need in avh-fdas.ipcachelist.js
         }
 
         $page = $this->get_pagenum();
@@ -101,15 +105,22 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
             $start += $_REQUEST['offset'];
         }
 
-        $args = array('status' => $ip_status, 'search' => $search, 'offset' => $start, 'number' => $number, 'orderby' => $orderby, 'order' => $order);
+        $args = [
+            'status'  => $ip_status,
+            'search'  => $search,
+            'offset'  => $start,
+            'number'  => $number,
+            'orderby' => $orderby,
+            'order'   => $order
+        ];
 
         $_ips = $this->_ipcachedb->getIpCache($args);
         $this->items = array_slice($_ips, 0, $ips_per_page);
         $this->extra_items = array_slice($_ips, $ips_per_page);
 
-        $total_ips = $this->_ipcachedb->getIpCache(array_merge($args, array('count' => true, 'offset' => 0, 'number' => 0)));
+        $total_ips = $this->_ipcachedb->getIpCache(array_merge($args, ['count' => true, 'offset' => 0, 'number' => 0]));
 
-        $this->set_pagination_args(array('total_items' => $total_ips, 'per_page' => $ips_per_page));
+        $this->set_pagination_args(['total_items' => $total_ips, 'per_page' => $ips_per_page]);
 
         $s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
     }
@@ -131,12 +142,18 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
     {
         global $status;
 
-        return array('cb' => '<input type="checkbox" />', 'ip' => __('IP'), 'spam' => __('Ham/Spam', 'avh-fdas'), 'added' => __('Date added', 'avh-fdas'), 'lastseen' => __('Last seen', 'avh-fdas'));
+        return [
+            'cb'       => '<input type="checkbox" />',
+            'ip'       => __('IP'),
+            'spam'     => __('Ham/Spam', 'avh-fdas'),
+            'added'    => __('Date added', 'avh-fdas'),
+            'lastseen' => __('Last seen', 'avh-fdas')
+        ];
     }
 
     function get_sortable_columns()
     {
-        return array('ip' => 'ip', 'added' => 'added', 'lastseen' => 'lastseen');
+        return ['ip' => 'ip', 'added' => 'added', 'lastseen' => 'lastseen'];
     }
 
     function display_tablenav($which)
@@ -152,11 +169,18 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 
         // $total_ips = $this->_ipcachedb->getIpCache(array ( 'count' => true, 'offset' => 0, 'number' => 0 ));
         $num_ips = $this->_ipcachedb->countIps();
-        $status_links = array();
-        $stati = array('all'  => _nx_noop('All', 'All', 'ips'),
-                       'ham'  => _n_noop('Ham <span class="count">(<span class="ham-count">%s</span>)</span>', 'Ham <span class="count">(<span class="ham-count">%s</span>)</span>'),
-                       'spam' => _n_noop('Spam <span class="count">(<span class="spam-count">%s</span>)</span>', 'Spam <span class="count">(<span class="spam-count">%s</span>)</span>')
-        );
+        $status_links = [];
+        $stati = [
+            'all'  => _nx_noop('All', 'All', 'ips'),
+            'ham'  => _n_noop(
+                'Ham <span class="count">(<span class="ham-count">%s</span>)</span>',
+                'Ham <span class="count">(<span class="ham-count">%s</span>)</span>'
+            ),
+            'spam' => _n_noop(
+                'Spam <span class="count">(<span class="spam-count">%s</span>)</span>',
+                'Spam <span class="count">(<span class="spam-count">%s</span>)</span>'
+            )
+        ];
 
         $link = 'admin.php?page=' . AVH_FDAS_Define::MENU_SLUG_IP_CACHE;
 
@@ -170,7 +194,10 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
             /*
              * // I toyed with this, but decided against it. Leaving it in here in case anyone thinks it is a good idea. ~ Mark if ( !empty( $_REQUEST['s'] ) ) $link = add_query_arg( 's', esc_attr( stripslashes( $_REQUEST['s'] ) ), $link );
              */
-            $status_links[$status] = "<a href='$link'$class>" . sprintf(translate_nooped_plural($label, $num_ips->$status), number_format_i18n($num_ips->$status)) . '</a>';
+            $status_links[$status] = "<a href='$link'$class>" . sprintf(
+                    translate_nooped_plural($label, $num_ips->$status),
+                    number_format_i18n($num_ips->$status)
+                ) . '</a>';
         }
 
         return $status_links;
@@ -180,12 +207,12 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
     {
         global $ip_status;
 
-        $actions = array();
+        $actions = [];
 
-        if (in_array($ip_status, array('all', 'ham'))) {
+        if (in_array($ip_status, ['all', 'ham'])) {
             $actions['spam'] = __('Mark as spam');
         }
-        if (in_array($ip_status, array('all', 'spam'))) {
+        if (in_array($ip_status, ['all', 'spam'])) {
             $actions['ham'] = __('Mark as ham');
         }
         $actions['delete'] = __('Delete');
@@ -288,18 +315,36 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
         $blacklist_url = esc_url($url . "&action=blacklistip&$blacklist_nonce");
         $delete_url = esc_url($url . "&action=deleteip&$del_nonce");
 
-        $actions = array('ham' => '', 'spam' => '', 'blacklist' => '', 'delete' => '');
+        $actions = ['ham' => '', 'spam' => '', 'blacklist' => '', 'delete' => ''];
 
         if ($ip_status && 'all' != $ip_status) { // not looking at all spam
-            $actions['spam'] = "<a href='$spam_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:f=hs&amp;ns=1' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
-            $actions['ham'] = "<a href='$ham_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:f=hs&amp;ns=0' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
+            $actions['spam'] = "<a href='$spam_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:f=hs&amp;ns=1' title='" . esc_attr__(
+                    'Mark this IP as spam',
+                    'avh-fdas'
+                ) . "'>" . __('Spam', 'avh-fdas') . '</a>';
+            $actions['ham'] = "<a href='$ham_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:f=hs&amp;ns=0' title='" . esc_attr__(
+                    'Mark this IP as ham',
+                    'avh-fdas'
+                ) . "'>" . __('Ham', 'avh-fdas') . '</a>';
         } else {
-            $actions['spam'] = "<a href='$spam_url' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=1' title='" . esc_attr__('Mark this IP as spam', 'avh-fdas') . "'>" . __('Spam', 'avh-fdas') . '</a>';
-            $actions['ham'] = "<a href='$ham_url' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=0' title='" . esc_attr__('Mark this IP as ham', 'avh-fdas') . "'>" . __('Ham', 'avh-fdas') . '</a>';
+            $actions['spam'] = "<a href='$spam_url' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=1' title='" . esc_attr__(
+                    'Mark this IP as spam',
+                    'avh-fdas'
+                ) . "'>" . __('Spam', 'avh-fdas') . '</a>';
+            $actions['ham'] = "<a href='$ham_url' class='dim:the-ipcache-list:ip-$ip->ip:spammed:e7e7d3:e7e7d3:new_status=0' title='" . esc_attr__(
+                    'Mark this IP as ham',
+                    'avh-fdas'
+                ) . "'>" . __('Ham', 'avh-fdas') . '</a>';
         };
 
-        $actions['blacklist'] = "<a href='$blacklist_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:f=bl delete' title='" . esc_attr__('Blacklist this IP', 'avh-fdas') . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
-        $actions['delete'] = "<a href='$delete_url' class='delete:the-ipcache-list:ip-$ip->ip::f=dl delete' title='" . esc_attr__('Delete this IP', 'avh-fdas') . "'>" . __('Delete', 'avh-fdas') . '</a>';
+        $actions['blacklist'] = "<a href='$blacklist_url' class='delete:the-ipcache-list:ip-$ip->ip:e7e7d3:f=bl delete' title='" . esc_attr__(
+                'Blacklist this IP',
+                'avh-fdas'
+            ) . "'>" . __('Blacklist', 'avh-fdas') . '</a>';
+        $actions['delete'] = "<a href='$delete_url' class='delete:the-ipcache-list:ip-$ip->ip::f=dl delete' title='" . esc_attr__(
+                'Delete this IP',
+                'avh-fdas'
+            ) . "'>" . __('Delete', 'avh-fdas') . '</a>';
         $i = 0;
 
         echo '<div class="row-actions">';
@@ -330,13 +375,19 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 
     function column_lastseen($ip)
     {
-        $date = mysql2date(get_option('date_format'), $ip->lastseen) . ' at ' . mysql2date(get_option('time_format'), $ip->lastseen);
+        $date = mysql2date(get_option('date_format'), $ip->lastseen) . ' at ' . mysql2date(
+                get_option('time_format'),
+                $ip->lastseen
+            );
         echo $date;
     }
 
     function column_added($ip)
     {
-        $date = mysql2date(get_option('date_format'), $ip->added) . ' at ' . mysql2date(get_option('time_format'), $ip->added);
+        $date = mysql2date(get_option('date_format'), $ip->added) . ' at ' . mysql2date(
+                get_option('time_format'),
+                $ip->added
+            );
         echo $date;
     }
 }

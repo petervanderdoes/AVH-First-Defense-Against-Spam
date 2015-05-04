@@ -70,7 +70,6 @@ if (!class_exists('AVH_Form')) {
          * Instead of using the standard WordPress function, we duplicate the function but using the methods of this class.
          * This will create a more standard looking HTML output.
          *
-         * @param string  $nonce
          * @param boolean $referer
          *
          * @return string
@@ -118,8 +117,14 @@ if (!class_exists('AVH_Form')) {
             return $_return;
         }
 
-        public function select($label, $description, $name, array $options = null, $selected = null, array $attributes = null)
-        {
+        public function select(
+            $label,
+            $description,
+            $name,
+            array $options = null,
+            $selected = null,
+            array $attributes = null
+        ) {
             $_label = $this->_label($name, $label);
             $_field = $this->_select($name, $options, $selected, $attributes);
 
@@ -134,6 +139,7 @@ if (!class_exists('AVH_Form')) {
          * @param string $name       input name
          * @param string $value      input value
          * @param array  $attributes html attributes
+         * @param bool   $use_option_name
          *
          * @return string
          * @uses $this->input
@@ -198,6 +204,8 @@ if (!class_exists('AVH_Form')) {
          * @param string $name       input name
          * @param string $value      input value
          * @param array  $attributes html attributes
+         *
+         * @param bool   $use_option_name
          *
          * @return string
          * @uses AVH_Common::attributes
@@ -334,7 +342,7 @@ if (!class_exists('AVH_Form')) {
             $attributes['name'] = $name;
 
             // Add default rows and cols attributes (required)
-            $attributes += array('rows' => 10, 'cols' => 50);
+            $attributes += ['rows' => 10, 'cols' => 50];
 
             return '<textarea' . AVH_Common::attributes($attributes) . '>' . esc_textarea($body) . '</textarea>';
         }
@@ -371,10 +379,10 @@ if (!class_exists('AVH_Form')) {
             if (!is_array($selected)) {
                 if ($selected === null) {
                     // Use an empty array
-                    $selected = array();
+                    $selected = [];
                 } else {
                     // Convert the selected options to an array
-                    $selected = array((string) $selected);
+                    $selected = [(string) $selected];
                 }
             }
 
@@ -385,17 +393,17 @@ if (!class_exists('AVH_Form')) {
                 foreach ($options as $value => $name) {
                     if (is_array($name)) {
                         // Create a new optgroup
-                        $group = array('label' => $value);
+                        $group = ['label' => $value];
 
                         // Create a new list of options
-                        $_options = array();
+                        $_options = [];
 
                         foreach ($name as $_value => $_name) {
                             // Force value to be string
                             $_value = (string) $_value;
 
                             // Create a new attribute set for this option
-                            $option = array('value' => $_value);
+                            $option = ['value' => $_value];
 
                             if (in_array($_value, $selected)) {
                                 // This option is selected
@@ -403,19 +411,23 @@ if (!class_exists('AVH_Form')) {
                             }
 
                             // Change the option to the HTML string
-                            $_options[] = '<option' . AVH_Common::attributes($option) . '>' . esc_html($name) . '</option>';
+                            $_options[] = '<option' . AVH_Common::attributes($option) . '>' . esc_html(
+                                    $name
+                                ) . '</option>';
                         }
 
                         // Compile the options into a string
                         $_options = "\n" . implode("\n", $_options) . "\n";
 
-                        $options[$value] = '<optgroup' . AVH_Common::attributes($group) . '>' . $_options . '</optgroup>';
+                        $options[$value] = '<optgroup' . AVH_Common::attributes(
+                                $group
+                            ) . '>' . $_options . '</optgroup>';
                     } else {
                         // Force value to be string
                         $value = (string) $value;
 
                         // Create a new attribute set for this option
-                        $option = array('value' => $value);
+                        $option = ['value' => $value];
 
                         if (in_array($value, $selected)) {
                             // This option is selected
@@ -423,7 +435,9 @@ if (!class_exists('AVH_Form')) {
                         }
 
                         // Change the option to the HTML string
-                        $options[$value] = '<option' . AVH_Common::attributes($option) . '>' . esc_html($name) . '</option>';
+                        $options[$value] = '<option' . AVH_Common::attributes($option) . '>' . esc_html(
+                                $name
+                            ) . '</option>';
                     }
                 }
 
@@ -518,7 +532,7 @@ if (!class_exists('AVH_Form')) {
         // __________________________________________
         /**
          *
-         * @param field_type $_option_name
+         * @param $_option_name field_type
          */
         public function setOption_name($_option_name)
         {

@@ -11,7 +11,7 @@ if (!class_exists('AVH_Common')) {
          * @var array preferred order of attributes
          */
         // @format_off
-        public static $attribute_order = array(
+        public static $attribute_order = [
             'action',
             'method',
             'type',
@@ -40,12 +40,17 @@ if (!class_exists('AVH_Common')) {
             'checked',
             'readonly',
             'disabled',
-        );
+        ];
         // @format_on
         /**
          * Sends the email
+         *
+         * @param       $to
+         * @param       $subject
+         * @param       $message
+         * @param array $footer
          */
-        public static function sendMail($to, $subject, $message, $footer = array())
+        public static function sendMail($to, $subject, $message, $footer = [])
         {
             $message = array_merge($message, $footer);
             $msg = '';
@@ -135,6 +140,8 @@ if (!class_exists('AVH_Common')) {
          * HexInt            => 3232300909 => 3232300909    => 192.168.255.109
          *
          * @param string /numeric $ip
+         *
+         * @return string
          */
         public static function getIp2long($ip)
         {
@@ -163,7 +170,7 @@ if (!class_exists('AVH_Common')) {
                 return '';
             }
 
-            $sorted = array();
+            $sorted = [];
             foreach (self::$attribute_order as $key) {
                 if (isset($attributes[$key])) {
                     // Add the attribute to the sorted list
