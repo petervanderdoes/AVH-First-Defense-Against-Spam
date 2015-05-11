@@ -222,13 +222,8 @@ class AVH_FDAS_SpamCheck
                         call_user_func($spam_check);
                         break;
                 }
-                if ($this->_spammer_detected || ($_did_sfs && is_object($this->_ip_in_cache))) {
-                    if (is_object(
-                            $this->_ip_in_cache
-                        ) || isset($this->_spaminfo['php']['engine']) || $this->_checkTerminateConnection()
-                    ) {
+                if ($this->_spammer_detected) {
                         break;
-                    }
                 }
             }
 
@@ -261,7 +256,6 @@ class AVH_FDAS_SpamCheck
             // and your query may not have been formatted correctly.
             // Reference :http://www.projecthoneypot.org/httpbl_api.php
             if ('127' == $info[0]) {
-                $this->_spammer_detected = true;
                 $time_end = microtime(true);
                 $time = $time_end - $time_start;
                 $this->_spaminfo['php']['time'] = $time;
@@ -272,6 +266,7 @@ class AVH_FDAS_SpamCheck
                     $this->_spaminfo['php']['engine'] = $this->_settings->searchengines[$info[2]];
                 } else {
                     $this->_spaminfo['php']['score'] = $info[2];
+                    $this->_spammer_detected = $this->_spaminfo['php']['type'] >= $this->_core_options['php']['whentodietype'] && $this->_spaminfo['php']['score'] >= $this->_core_options['php']['whentodie'];
                 }
             }
         }
@@ -409,7 +404,7 @@ class AVH_FDAS_SpamCheck
                     $this->_spaminfo['sfs']['appears'] = true;
                 }
                 if (true === $this->_spaminfo['sfs']['appears']) {
-                    $this->_spammer_detected = true;
+                    $this->_spammer_detected = ($this->_spaminfo['sfs']['ip']['frequency'] >= $this->_core_options['sfs']['whentodie'] || $this->_spaminfo['sfs']['email']['frequency'] >= $this->_core_options['sfs']['whentodie_email']);
                 }
             }
         }
