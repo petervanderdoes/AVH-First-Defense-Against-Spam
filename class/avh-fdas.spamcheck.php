@@ -35,7 +35,6 @@ class AVH_FDAS_SpamCheck
     private $_ip_in_white_list;
     private $_ip_in_cache;
     private $_spaminfo;
-    private $_doing_sfs;
 
     /**
      * PHP5 Constructor
@@ -191,12 +190,6 @@ class AVH_FDAS_SpamCheck
         $this->_spammer_detected = false;
         ksort($this->_spamcheck_functions_array);
 
-        $_did_sfs = false;
-        // We're not checking with Stop Forum Spam. We set the value as if we did.
-        if (!in_array('StopForumSpam', $this->_spamcheck_functions_array)) {
-            $_did_sfs == true;
-        }
-
         $this->_checkWhitelist();
         if ($this->_ip_in_white_list === false) {
             foreach ($this->_spamcheck_functions_array as $key => $spam_check) {
@@ -210,7 +203,6 @@ class AVH_FDAS_SpamCheck
                         break;
                     case 'StopForumSpam':
                         $this->_doIpCheckStopForumSpam();
-                        $_did_sfs = true;
                         break;
                     case 'ProjectHoneyPot':
                         $this->_doIpCheckProjectHoneyPot();

@@ -52,8 +52,6 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
             update_user_meta(get_current_user_id(), 'avhfdas_ip_cache_list_last_view', $status);
         }
 
-        $page = $this->get_pagenum();
-
         if (AVH_Common::getWordpressVersion() >= 3.2) {
             parent::__construct(['plural' => 'ips', 'singular' => 'ip', 'ajax' => true]);
         } else {
@@ -68,7 +66,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 
     function prepare_items()
     {
-        global $post_id, $ip_status, $search, $comment_type;
+        global $ip_status, $search;
 
         $ip_status = isset($_REQUEST['ip_status']) ? $_REQUEST['ip_status'] : 'all';
         if (!in_array($ip_status, ['all', 'ham', 'spam'])) {
@@ -122,7 +120,6 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 
         $this->set_pagination_args(['total_items' => $total_ips, 'per_page' => $ips_per_page]);
 
-        $s = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
     }
 
     function get_per_page($ip_status = 'all')
@@ -140,8 +137,6 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 
     function get_columns()
     {
-        global $status;
-
         return [
             'cb'       => '<input type="checkbox" />',
             'ip'       => __('IP'),
@@ -158,14 +153,12 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 
     function display_tablenav($which)
     {
-        global $status;
-
         parent::display_tablenav($which);
     }
 
     function get_views()
     {
-        global $totals, $ip_status;
+        global $ip_status;
 
         // $total_ips = $this->_ipcachedb->getIpCache(array ( 'count' => true, 'offset' => 0, 'number' => 0 ));
         $num_ips = $this->_ipcachedb->countIps();

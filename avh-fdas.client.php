@@ -26,6 +26,6 @@ function avh_FDAS_init()
         ));
     }
     require_once ($_settings->plugin_working_dir . '/class/avh-fdas.public.php');
-    $avhfdas_public = new AVH_FDAS_Public();
+    new AVH_FDAS_Public();
 } // End avh_FDAS__init()
 add_action('plugins_loaded', 'avh_FDAS_init');

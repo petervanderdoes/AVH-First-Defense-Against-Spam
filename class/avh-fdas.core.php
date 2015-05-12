@@ -5,12 +5,6 @@ if (!defined('AVH_FRAMEWORK')) {
 
 class AVH_FDAS_Core
 {
-    /**
-     * Version of AVH First Defense Against Spam
-     *
-     * @var string
-     */
-    private $_version;
     private $_db_version;
     /**
      * Comments used in HTML do identify the plugin
@@ -326,9 +320,9 @@ class AVH_FDAS_Core
 				DROP INDEX `date`,
 				ADD INDEX `added`(`added`),
 				ADD INDEX `lastseen`(`lastseen`);';
-        $result = $wpdb->query($sql);
+        $wpdb->query($sql);
         $sql = 'UPDATE ' . $wpdb->avhfdasipcache . ' SET `lastseen` = `added`;';
-        $result = $wpdb->query($sql);
+        $wpdb->query($sql);
 
         return [$new_options, $new_data];
     }

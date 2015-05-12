@@ -2002,7 +2002,6 @@ final class AVH_FDAS_Admin
      */
     public function actionAjaxReportComment()
     {
-        global $wpdb;
         if ('avh-fdas-reportcomment' == $_REQUEST['action']) {
             $comment_id = absint($_REQUEST['id']);
             check_ajax_referer('report-comment_' . $comment_id);
@@ -2024,7 +2023,7 @@ final class AVH_FDAS_Admin
                 $ip_info = $this->_db->getIP($comment->comment_author_IP, OBJECT);
                 if (is_object($ip_info) && 0 == $ip_info->spam) {
                     $comment_date = get_comment_date('Y-m-d H:i:s', $comment_id);
-                    $result = $this->_db->updateIpCache(
+                    $this->_db->updateIpCache(
                         ['ip' => $comment->comment_author_IP, 'spam' => 1, 'lastseen' => $comment_date]
                     )
                     ;
@@ -2232,7 +2231,7 @@ final class AVH_FDAS_Admin
   					KEY `added` (`added`),
   					KEY `lastseen` (`lastseen`)
 					) ' . $charset_collate . ';';
-            $result = $wpdb->query($sql);
+           $wpdb->query($sql);
         }
     }
 

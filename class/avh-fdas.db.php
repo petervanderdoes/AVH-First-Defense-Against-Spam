@@ -239,8 +239,6 @@ class AVH_FDAS_DB
     {
         global $wpdb;
 
-        $where = '';
-
         $count = $wpdb->get_results(
             "SELECT spam, COUNT( * ) AS num_ips FROM {$wpdb->avhfdasipcache} GROUP BY spam",
             ARRAY_A
