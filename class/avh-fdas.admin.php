@@ -1979,8 +1979,6 @@ final class AVH_FDAS_Admin
      */
     public function filterSetScreenOption($error_value, $option, $value)
     {
-        $return = $error_value;
-
         switch ($option) {
             case 'ipcachelog_per_page':
                 $value = (int) $value;
