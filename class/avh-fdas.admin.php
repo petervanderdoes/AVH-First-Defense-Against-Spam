@@ -1607,7 +1607,7 @@ final class AVH_FDAS_Admin
      */
     public function menuIpCacheLog()
     {
-        global $screen_layout_columns, $ip_status;
+        global $ip_status;
         if (!empty($this->_ip_cache_list->messages)) {
             echo '<div id="moderated" class="updated"><p>' . implode(
                     "<br/>\n",
