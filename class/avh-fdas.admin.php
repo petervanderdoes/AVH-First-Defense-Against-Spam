@@ -425,7 +425,6 @@ final class AVH_FDAS_Admin
         $use_sh = $this->_core->getOptionElement('general', 'use_sh');
         if ($use_sfs || $use_php || $use_sh) {
             echo __('Checking with ', 'avh-fdas');
-            $x = 0;
             echo($use_sfs ? '<span class="b">Stop Forum Spam</span>' : '');
             if ($use_php) {
                 if ($use_sfs) {
@@ -1493,7 +1492,9 @@ final class AVH_FDAS_Admin
                             foreach ($ips as $ip) {
 
                                 $result = $this->_db->updateIpCache(['ip' => $ip, 'spam' => $new_status]);
-                                $hamspammed++;
+                                if ($result !== false) {
+                                    $hamspammed++;
+                                }
                             }
                             if ($hamspammed) {
                                 $arg = ($doaction == 'ham' ? 'hammed' : 'spammed');
