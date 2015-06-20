@@ -265,7 +265,9 @@ class AVH_FDAS_IPCacheList extends WP_List_Table
 
         echo '<tbody id="the-extra-ipcache-list" class="list:ipcachelog" style="display: none;">';
         $this->items = $this->extra_items;
-        $this->display_rows();
+        if ($this->has_items()) {
+            $this->display_rows();
+        }
         echo '</tbody>';
         echo '</table>';
 
