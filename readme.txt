@@ -124,7 +124,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.7.0-rc.1 =
-* Preparation for new development cycle.
+* Bugfix: Error on IP Cache log page
 
 = Version 3.6.9 =
 * The API URL changed for Stop Forum Spam.
