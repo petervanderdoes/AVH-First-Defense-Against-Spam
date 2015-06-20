@@ -11,4 +11,3 @@ if ('avh-first-defense-against-spam' == dirname($file)) {
     $ipcache = $wpdb->prefix . 'avhfdas_ipcache';
     $result = $wpdb->query('DROP TABLE IF EXISTS `' . $ipcache . '`');
 }
-?>

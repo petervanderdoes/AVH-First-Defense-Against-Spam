@@ -8,34 +8,36 @@
  */
 final class AVH_FDAS_Settings extends AVH_Settings_Registry
 {
+    // prevent directly access.
+    public function __construct()
+    {
+    }
 
-	// prevent directly access.
-	public function __construct ()
-	{}
+    // prevent clone.
+    public function __clone()
+    {
+    }
 
-	// prevent clone.
-	public function __clone ()
-	{}
+    /**
+     * The instance of the registry
+     *
+     * @access private
+     */
+    private static $_instance = null;
 
-	/**
-	 * The instance of the registry
-	 *
-	 * @access private
-	 */
-	private static $_instance = null;
+    /**
+     * Singleton method to access the Registry
+     *
+     * @access public
+     */
+    public static function getInstance()
+    {
+        if (self::$_instance === null) {
+            self::$_instance = new self();
+        }
 
-	/**
-	 * Singleton method to access the Registry
-	 *
-	 * @access public
-	 */
-	public static function getInstance ()
-	{
-		if (self::$_instance === null) {
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
+        return self::$_instance;
+    }
 }
 
 /**
@@ -46,32 +48,34 @@ final class AVH_FDAS_Settings extends AVH_Settings_Registry
  */
 final class AVH_FDAS_Classes extends AVH_Class_Registry
 {
+    // prevent directly access.
+    public function __construct()
+    {
+    }
 
-	// prevent directly access.
-	public function __construct ()
-	{}
+    // prevent clone.
+    public function __clone()
+    {
+    }
 
-	// prevent clone.
-	public function __clone ()
-	{}
+    /**
+     * The instance of the registry
+     *
+     * @access private
+     */
+    private static $_instance = null;
 
-	/**
-	 * The instance of the registry
-	 *
-	 * @access private
-	 */
-	private static $_instance = null;
+    /**
+     * Singleton method to access the Registry
+     *
+     * @access public
+     */
+    public static function getInstance()
+    {
+        if (self::$_instance === null) {
+            self::$_instance = new self();
+        }
 
-	/**
-	 * Singleton method to access the Registry
-	 *
-	 * @access public
-	 */
-	public static function getInstance ()
-	{
-		if (self::$_instance === null) {
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
+        return self::$_instance;
+    }
 }
