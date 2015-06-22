@@ -43,7 +43,12 @@ if (!class_exists('AVH_Security')) {
             // Nonce generated 0-12 hours ago
             if (substr(wp_hash($i . $action, 'nonce'), -12, 10) == $nonce) {
                 $r = 1;
-            } elseif (substr(wp_hash(($i - 1) . $action, 'nonce'), -12, 10) == $nonce) { // Nonce generated 12-24 hours ago
+            } elseif (substr(
+                    wp_hash(($i - 1) . $action, 'nonce'),
+                    -12,
+                    10
+                ) == $nonce
+            ) { // Nonce generated 12-24 hours ago
                 $r = 2;
             }
 

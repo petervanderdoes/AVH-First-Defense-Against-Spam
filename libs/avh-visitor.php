@@ -14,7 +14,16 @@ if (!class_exists('AVH_Visitor')) {
         public static function getUserIp()
         {
             $ip = array();
-            foreach (array('HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+            foreach (array(
+                         'HTTP_CF_CONNECTING_IP',
+                         'HTTP_CLIENT_IP',
+                         'HTTP_X_FORWARDED_FOR',
+                         'HTTP_X_FORWARDED',
+                         'HTTP_X_CLUSTER_CLIENT_IP',
+                         'HTTP_FORWARDED_FOR',
+                         'HTTP_FORWARDED',
+                         'REMOTE_ADDR'
+                     ) as $key) {
                 if (array_key_exists($key, $_SERVER) === true) {
                     foreach (explode(',', $_SERVER[$key]) as $visitors_ip) {
                         $ip[] = str_replace(' ', '', $visitors_ip);
@@ -30,7 +39,11 @@ if (!class_exists('AVH_Visitor')) {
             // In PHP 5.3 and up the function filter_var can be used, much quicker as the regular expression check
             if (AVH_Common::isPHP('5.3')) {
                 foreach ($ip as $i) {
-                    if (filter_var($i, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    if (filter_var(
+                        $i,
+                        FILTER_VALIDATE_IP,
+                        FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+                    )) {
                         $return = $i;
                         break;
                     }

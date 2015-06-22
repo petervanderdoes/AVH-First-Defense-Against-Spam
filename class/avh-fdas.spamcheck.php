@@ -100,7 +100,7 @@ class AVH_FDAS_SpamCheck
                     $this->_ip_in_cache = $this->_ipcachedb->getIP($this->_visiting_ip);
                     if (is_object($this->_ip_in_cache)) {
                         $this->_ipcachedb->updateIpCache(
-                            ['ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql')]
+                            array('ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql'))
                         )
                         ;
                     } else {
@@ -215,7 +215,7 @@ class AVH_FDAS_SpamCheck
                         break;
                 }
                 if ($this->_spammer_detected) {
-                        break;
+                    break;
                 }
             }
 
@@ -322,7 +322,7 @@ class AVH_FDAS_SpamCheck
             if (1 == $this->_core_options['general']['useipcache'] && (!isset($this->_spaminfo['blacklist']))) {
                 if (is_object($this->_ip_in_cache)) {
                     $this->_ipcachedb->updateIpCache(
-                        ['ip' => $this->_visiting_ip, 'lastseen' => current_time('mysql')]
+                        array('ip' => $this->_visiting_ip, 'lastseen' => current_time('mysql'))
                     )
                     ;
                 } else {
@@ -519,7 +519,7 @@ class AVH_FDAS_SpamCheck
                 if ($this->_spaminfo['sfs']['appears']) {
                     $message[] = __('Checked at', 'avh-fdas') . ' Stop Forum Spam';
                     $message[] = '	' . __('Information', 'avh-fdas');
-                    $_checks = ['ip' => 'IP', 'email' => 'E-Mail'];
+                    $_checks = array('ip' => 'IP', 'email' => 'E-Mail');
                     foreach ($_checks as $key => $value) {
                         if ($this->_spaminfo['sfs'][$key]['appears']) {
                             $message[] = '	' . sprintf(__('%s information', 'avh-fdas'), $value);
@@ -658,7 +658,7 @@ class AVH_FDAS_SpamCheck
             if (1 == $this->_core_options['general']['useipcache']) {
                 if (is_object($this->_ip_in_cache)) {
                     $this->_ipcachedb->updateIpCache(
-                        ['ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql')]
+                        array('ip' => $this->_visiting_ip, 'spam' => 1, 'lastseen' => current_time('mysql'))
                     )
                     ;
                 } else {
@@ -687,7 +687,7 @@ class AVH_FDAS_SpamCheck
                 wp_specialchars_decode(get_option('blogname'), ENT_QUOTES),
                 $this->_visiting_ip
             );
-            $message = [];
+            $message = array();
             $message[] = sprintf(__('Spam IP:	%s', 'avh-fdas'), $this->_visiting_ip);
             $message[] = $this->_accessing;
             $message[] = '';
@@ -707,7 +707,7 @@ class AVH_FDAS_SpamCheck
         // Update the counter
         $this->_updateSpamCounter();
         // Update Last seen value
-        $this->_ipcachedb->updateIpCache(['ip' => $this->_visiting_ip, 'lastseen' => current_time('mysql')]);
+        $this->_ipcachedb->updateIpCache(array('ip' => $this->_visiting_ip, 'lastseen' => current_time('mysql')));
         // Terminate the connection
         $this->_doTerminateConnection();
     }
@@ -820,7 +820,7 @@ class AVH_FDAS_SpamCheck
     public function getHtmlHoneyPotUrl()
     {
         $url = $this->_core->getOptionElement('php', 'honeypoturl');
-        $words = [
+        $words = array(
             'intermittently',
             'tawse',
             'goldurn',
@@ -871,7 +871,7 @@ class AVH_FDAS_SpamCheck
             'lozenge',
             'archiepiscopacy',
             'propitiable'
-        ];
+        );
         $keys = array_rand($words, 2);
         $text = $words[$keys[0]] . '-' . $words[$keys[1]];
         $url_array[] = '<div style="display: none;"><a href="%s">%s</a></div>';

@@ -22,17 +22,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (! defined('AVH_FRAMEWORK')) {
+if (!defined('AVH_FRAMEWORK')) {
     define('AVH_FRAMEWORK', true);
 }
 $_dir = dirname(__FILE__);
 $_basename = plugin_basename(__FILE__);
-require_once ($_dir . '/libs/avh-registry.php');
-require_once ($_dir . '/libs/avh-common.php');
-require_once ($_dir . '/libs/avh-security.php');
-require_once ($_dir . '/libs/avh-visitor.php');
-require_once ($_dir . '/class/avh-fdas.registry.php');
-require_once ($_dir . '/class/avh-fdas.define.php');
+require_once($_dir . '/libs/avh-registry.php');
+require_once($_dir . '/libs/avh-common.php');
+require_once($_dir . '/libs/avh-security.php');
+require_once($_dir . '/libs/avh-visitor.php');
+require_once($_dir . '/class/avh-fdas.registry.php');
+require_once($_dir . '/class/avh-fdas.define.php');
 
 if (AVH_Common::getWordpressVersion() >= 2.8) {
     $_classes = AVH_FDAS_Classes::getInstance();
@@ -44,7 +44,7 @@ if (AVH_Common::getWordpressVersion() >= 2.8) {
     $_settings = AVH_FDAS_Settings::getInstance();
     $_settings->storeSetting('plugin_dir', $_dir);
     $_settings->storeSetting('plugin_basename', $_basename);
-    require ($_dir . '/avh-fdas.client.php');
+    require($_dir . '/avh-fdas.client.php');
 } else {
     add_action('activate_' . AVH_FDAS_Define::PLUGIN_FILE, 'avh_fdas_remove_plugin');
 }
