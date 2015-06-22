@@ -123,6 +123,9 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
+= Version 3.7.2-dev.1 =
+* Preparation for new development cycle.
+
 = Version 3.7.1 =
 * PHP 5.3 is dead, long live PHP 5.3
   Forgot people still run 5.3 which doesn't support shorthand for arrays.
