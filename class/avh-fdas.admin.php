@@ -175,7 +175,7 @@ final class AVH_FDAS_Admin
         }
 
         // Register Styles and Scripts
-        $suffix_js = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.closure';
+        $suffix_js = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
         $suffix_css = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
         wp_register_script(
             'avhfdas-ipcachelog-js',
