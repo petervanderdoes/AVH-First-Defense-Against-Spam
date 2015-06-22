@@ -17,7 +17,7 @@ class AVH_FDAS_DB
     public function __construct()
     {
         wp_cache_add_global_groups('avhfdas');
-        register_shutdown_function([$this, '__destruct']);
+        register_shutdown_function(array($this, '__destruct'));
     }
 
     /**
@@ -89,7 +89,7 @@ class AVH_FDAS_DB
     {
         global $wpdb;
 
-        $defaults = [
+        $defaults = array(
             'ip'       => '',
             'added'    => '',
             'lastseen' => '',
@@ -100,7 +100,7 @@ class AVH_FDAS_DB
             'orderby'  => '',
             'order'    => 'DESC',
             'count'    => false
-        ];
+        );
         $this->_query_vars = wp_parse_args($query_vars, $defaults);
         extract($this->_query_vars, EXTR_SKIP);
 
@@ -108,7 +108,7 @@ class AVH_FDAS_DB
 
         if (!empty($orderby)) {
             $ordersby = is_array($orderby) ? $orderby : preg_split('/[,\s]/', $orderby);
-            $ordersby = array_intersect($ordersby, ['ip', 'lastseen', 'added', 'spam']);
+            $ordersby = array_intersect($ordersby, array('ip', 'lastseen', 'added', 'spam'));
             $orderby = empty($ordersby) ? 'added' : implode(', ', $ordersby);
         } else {
             $orderby = 'ip';
@@ -151,7 +151,7 @@ class AVH_FDAS_DB
             $where .= $wpdb->prepare(' AND ip = %s', $ip);
         }
         if ('' !== $search) {
-            $where .= $this->_getSearchSql($search, ['ip']);
+            $where .= $this->_getSearchSql($search, array('ip'));
         }
 
         $query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
@@ -246,7 +246,7 @@ class AVH_FDAS_DB
         ;
 
         $total = 0;
-        $status = ['0' => 'ham', '1' => 'spam'];
+        $status = array('0' => 'ham', '1' => 'spam');
         $known_types = array_keys($status);
         foreach ((array) $count as $row) {
             // Don't count post-trashed toward totals
@@ -275,7 +275,7 @@ class AVH_FDAS_DB
         }
         $string = esc_sql(like_escape($string));
 
-        $searches = [];
+        $searches = array();
         foreach ($cols as $col) {
             if ('ip' == $col) {
                 $searches[] = "$col = '$ip'";

@@ -11,7 +11,7 @@ if (!class_exists('AVH_Common')) {
          * @var array preferred order of attributes
          */
         // @format_off
-        public static $attribute_order = [
+        public static $attribute_order = array(
             'action',
             'method',
             'type',
@@ -40,7 +40,7 @@ if (!class_exists('AVH_Common')) {
             'checked',
             'readonly',
             'disabled',
-        ];
+        );
         // @format_on
         /**
          * Sends the email
@@ -50,7 +50,7 @@ if (!class_exists('AVH_Common')) {
          * @param       $message
          * @param array $footer
          */
-        public static function sendMail($to, $subject, $message, $footer = [])
+        public static function sendMail($to, $subject, $message, $footer = array())
         {
             $message = array_merge($message, $footer);
             $msg = '';
@@ -170,7 +170,7 @@ if (!class_exists('AVH_Common')) {
                 return '';
             }
 
-            $sorted = [];
+            $sorted = array();
             foreach (self::$attribute_order as $key) {
                 if (isset($attributes[$key])) {
                     // Add the attribute to the sorted list

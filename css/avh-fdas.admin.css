@@ -1,167 +1,167 @@
 .footer_avhfdas {
-	font-size: 0.8em;
-	text-align: center;
+  font-size  : 0.8em;
+  text-align : center;
 }
 
 div.clearer {
-	clear: both;
-	line-height: 1px;
-	font-size: 1px;
-	height: 1px;
+  clear       : both;
+  line-height : 1px;
+  font-size   : 1px;
+  height      : 1px;
 }
 
 /* Metabox in General */
 table.avhfdas-options {
-	font-size: 11px;
+  font-size : 11px;
 }
 
 .avhfdas-wrap span.description {
-	font-size: 11px;
+  font-size : 11px;
 }
 
 .avhfdas-wrap .b {
-	font-weight: bold;
+  font-weight : bold;
 }
 
 #avhfdas-options input {
-	font-size: 11px;
+  font-size : 11px;
 }
 
 #avhfdas-generaloptions input {
-	font-size: 11px;
+  font-size : 11px;
 }
 
 /* Statistics */
-#avhfdasBoxStats p.sub,#avhfdasBoxStats .table,#avhfdasBoxStats .versions {
-	margin: -12px;
+#avhfdasBoxStats p.sub, #avhfdasBoxStats .table, #avhfdasBoxStats .versions {
+  margin : -12px;
 }
 
 #avhfdasBoxStats .inside {
-	font-size: 12px;
+  font-size : 12px;
 }
 
 #avhfdasBoxStats p.sub {
-	font-style: italic;
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
-	padding: 5px 10px 15px;
-	color: #777;
-	font-size: 13px;
+  font-style  : italic;
+  font-family : Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+  padding     : 5px 10px 15px;
+  color       : #777;
+  font-size   : 13px;
 }
 
 #avhfdasBoxStats .table {
-	background: #f9f9f9;
-	border-top: #ececec 1px solid;
-	border-bottom: #ececec 1px solid;
-	margin: 0 -9px 10px;
-	padding: 0 10px;
+  background    : #f9f9f9;
+  border-top    : #ececec 1px solid;
+  border-bottom : #ececec 1px solid;
+  margin        : 0 -9px 10px;
+  padding       : 0 10px;
 }
 
 #avhfdasBoxStats table {
-	width: 100%;
+  width : 100%;
 }
 
-#avhfdasBoxStats table  td {
-	border-top: #ececec 1px solid;
-	padding: 3px 0;
-	white-space: nowrap;
+#avhfdasBoxStats table td {
+  border-top  : #ececec 1px solid;
+  padding     : 3px 0;
+  white-space : nowrap;
 }
 
 #avhfdasBoxStats table tr.first td {
-	border-top: none;
+  border-top : none;
 }
 
 #avhfdasBoxStats td.b {
-	padding-right: 6px;
-	text-align: right;
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
-	font-size: 14px;
+  padding-right : 6px;
+  text-align    : right;
+  font-family   : Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+  font-size     : 14px;
 }
 
 #avhfdasBoxStats td.b a {
-	font-size: 18px;
+  font-size : 18px;
 }
 
 #avhfdasBoxStats td.b a:hover {
-	color: #d54e21;
+  color : #d54e21;
 }
 
 #avhfdasBoxStats .t {
-	font-size: 12px;
-	padding-right: 12px;
-	padding-top: 6px;
-	color: #777;
+  font-size     : 12px;
+  padding-right : 12px;
+  padding-top   : 6px;
+  color         : #777;
 }
 
-#avhfdasBoxStats td.first,#avhfdasBoxStats td.last {
-	width: 1px;
+#avhfdasBoxStats td.first, #avhfdasBoxStats td.last {
+  width : 1px;
 }
 
 #avhfdasBoxStats .versions {
-	padding: 6px 10px 12px;
+  padding : 6px 10px 12px;
 }
 
 #avhfdasBoxStats a.button {
-	float: right;
-	clear: right;
-	position: relative;
-	top: -5px;
+  float    : right;
+  clear    : right;
+  position : relative;
+  top      : -5px;
 }
 
 /* Donations */
 #avhfdasBoxDonations .inside {
-	font-size: 12px;
+  font-size : 12px;
 }
 
 /* FAQ */
 #avhfdasBoxFAQ ul {
-	list-style-image: none;
-	list-style-position: inside;
-	list-style-type: disc;
+  list-style-image    : none;
+  list-style-position : inside;
+  list-style-type     : disc;
 }
 
 #avhfdasBoxFAQ li {
-	margin-bottom: 0px;
+  margin-bottom : 0px;
 }
 
 #avhfdasBoxFAQ table {
-	padding-left: 2em;
+  padding-left : 2em;
 }
 
 #avhfdasBoxFAQ table th {
-	font-size: 11px;
-	font-weight: normal;
-	padding-right: 0.5em;
-	vertical-align: bottom;
+  font-size      : 11px;
+  font-weight    : normal;
+  padding-right  : 0.5em;
+  vertical-align : bottom;
 }
 
 #avhfdasBoxFAQ table td {
-	font-size: 11px;
-	border-top: #ececec 1px solid;
-	padding: 3px 0;
-	white-space: nowrap;
+  font-size   : 11px;
+  border-top  : #ececec 1px solid;
+  padding     : 3px 0;
+  white-space : nowrap;
 }
 
 #avhfdasBoxFAQ table tr.first td {
-	border-top: none;
+  border-top : none;
 }
 
 #avhfdasBoxFAQ .t {
-	font-size: 11px;
-	padding-right: 11px;
-	padding-top: 6px;
+  font-size     : 11px;
+  padding-right : 11px;
+  padding-top   : 6px;
 }
 
-#avhfdasBoxFAQ td.first,#avhfdasBoxFAQ td.last {
-	width: 1px;
+#avhfdasBoxFAQ td.first, #avhfdasBoxFAQ td.last {
+  width : 1px;
 }
 
 /* IP Cache Log List */
 #the-ipcache-list td {
-	vertical-align: top;
+  vertical-align : top;
 }
 
 #ipcachelist-form .fixed .column-ip {
-	width: 10%;
+  width : 10%;
 }
 
 /*#ipcachelist-form .fixed .column-spam {
@@ -169,37 +169,37 @@ table.avhfdas-options {
 }
 */
 #ipcachelist-form .fixed .column-lastseen {
-	width: 30%;
+  width : 30%;
 }
 
 #ipcachelist-form .fixed .column-added {
-	width: 30%;
+  width : 30%;
 }
 
 #the-ipcache-list .set_delete a {
-	color: #BC0B0B;
+  color : #BC0B0B;
 }
 
 #the-ipcache-list .ip a:hover {
-	color: #D54E21;
+  color : #D54E21;
 }
 
 #the-ipcache-list .set_spam a {
-	color: #D98500;
+  color : #D98500;
 }
 
 #the-ipcache-list .set_ham a {
-	color: #006505;
+  color : #006505;
 }
 
 .set_ham {
-	display: none;
+  display : none;
 }
 
 .spammed .set_ham {
-	display: inline;
+  display : inline;
 }
 
 .spammed .set_spam {
-	display: none;
+  display : none;
 }
