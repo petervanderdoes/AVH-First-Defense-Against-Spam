@@ -124,7 +124,8 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.7.1-rc.1 =
-* Preparation for new development cycle.
+* PHP 5.3 is dead, long live PHP 5.3
+  Forgot people still run 5.3 which doesn't support shorthand for arrays.
 
 = Version 3.7.0 =
 * Bugfix: Error on IP Cache log page
