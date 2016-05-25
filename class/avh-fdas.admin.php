@@ -17,7 +17,7 @@ final class AVH_FDAS_Admin {
 	 * @var AVH_FDAS_DB
 	 */
 	private $_db;
-	private $_hooks               = array();
+	private $_hooks = array();
 	/**
 	 *
 	 * @var AVH_FDAS_IpcacheList
@@ -32,7 +32,7 @@ final class AVH_FDAS_Admin {
 	 * @var AVH_FDAS_Settings
 	 */
 	private $_settings;
-	private $_status  = '';
+	private $_status = '';
 
 	/**
 	 * PHP5 Constructor

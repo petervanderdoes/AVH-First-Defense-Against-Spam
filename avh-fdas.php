@@ -22,10 +22,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('AVH_FRAMEWORK')) {
-    define('AVH_FRAMEWORK', true);
+if ( ! defined('AVH_FRAMEWORK')) {
+	define('AVH_FRAMEWORK', true);
 }
-$_dir = dirname(__FILE__);
+$_dir      = dirname(__FILE__);
 $_basename = plugin_basename(__FILE__);
 require_once($_dir . '/libs/avh-registry.php');
 require_once($_dir . '/libs/avh-common.php');
@@ -35,37 +35,36 @@ require_once($_dir . '/class/avh-fdas.registry.php');
 require_once($_dir . '/class/avh-fdas.define.php');
 
 if (AVH_Common::getWordpressVersion() >= 2.8) {
-    $_classes = AVH_FDAS_Classes::getInstance();
-    $_classes->setDir($_dir);
-    $_classes->setClassFilePrefix('avh-fdas.');
-    $_classes->setClassNamePrefix('AVH_FDAS_');
-    unset($_classes);
+	$_classes = AVH_FDAS_Classes::getInstance();
+	$_classes->setDir($_dir);
+	$_classes->setClassFilePrefix('avh-fdas.');
+	$_classes->setClassNamePrefix('AVH_FDAS_');
+	unset($_classes);
 
-    $_settings = AVH_FDAS_Settings::getInstance();
-    $_settings->storeSetting('plugin_dir', $_dir);
-    $_settings->storeSetting('plugin_basename', $_basename);
-    require($_dir . '/avh-fdas.client.php');
+	$_settings = AVH_FDAS_Settings::getInstance();
+	$_settings->storeSetting('plugin_dir', $_dir);
+	$_settings->storeSetting('plugin_basename', $_basename);
+	require($_dir . '/avh-fdas.client.php');
 } else {
-    add_action('activate_' . AVH_FDAS_Define::PLUGIN_FILE, 'avh_fdas_remove_plugin');
+	add_action('activate_' . AVH_FDAS_Define::PLUGIN_FILE, 'avh_fdas_remove_plugin');
 }
 
-function avh_fdas_remove_plugin()
-{
-    $active_plugins = (array) get_option('active_plugins');
+function avh_fdas_remove_plugin() {
+	$active_plugins = (array) get_option('active_plugins');
 
-    // workaround for WPMU deactivation bug
-    remove_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE, 'deactivate_sitewide_plugin');
-    $key = array_search(AVH_FDAS_Define::PLUGIN_FILE, $active_plugins);
+	// workaround for WPMU deactivation bug
+	remove_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE, 'deactivate_sitewide_plugin');
+	$key = array_search(AVH_FDAS_Define::PLUGIN_FILE, $active_plugins);
 
-    if ($key !== false) {
-        do_action('deactivate_plugin', AVH_FDAS_Define::PLUGIN_FILE);
-        array_splice($active_plugins, $key, 1);
-        do_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE);
-        do_action('deactivated_plugin', AVH_FDAS_Define::PLUGIN_FILE);
-        update_option('active_plugins', $active_plugins);
-    } else {
-        do_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE);
-    }
-    ob_end_clean();
-    wp_die('AVH First Defense Against Spam ' . __('can\'t work with this WordPress version!', 'avh-fdas'));
+	if ($key !== false) {
+		do_action('deactivate_plugin', AVH_FDAS_Define::PLUGIN_FILE);
+		array_splice($active_plugins, $key, 1);
+		do_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE);
+		do_action('deactivated_plugin', AVH_FDAS_Define::PLUGIN_FILE);
+		update_option('active_plugins', $active_plugins);
+	} else {
+		do_action('deactivate_' . AVH_FDAS_Define::PLUGIN_FILE);
+	}
+	ob_end_clean();
+	wp_die('AVH First Defense Against Spam ' . __('can\'t work with this WordPress version!', 'avh-fdas'));
 }
