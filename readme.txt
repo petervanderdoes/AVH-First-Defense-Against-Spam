@@ -124,7 +124,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 
 == Changelog ==
 = Version 3.7.2-dev.1 =
-* Preparation for new development cycle.
+* Clean up code
 
 = Version 3.7.1 =
 * PHP 5.3 is dead, long live PHP 5.3
