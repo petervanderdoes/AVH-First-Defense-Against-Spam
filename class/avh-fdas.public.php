@@ -109,7 +109,6 @@ class AVH_FDAS_Public {
 		// When we're in Admin no need to check the nonce.
 		if (( ! defined('WP_ADMIN')) && ( ! defined('XMLRPC_REQUEST'))) {
 			if (empty($commentdata['comment_type'])) { // If it's a trackback or pingback this has a value
-				$nonce = wp_create_nonce('avh-first-defense-against-spam_' . $commentdata['comment_post_ID']);
 				if ( ! wp_verify_nonce($_POST['_avh_first_defense_against_spam'],
 				                       'avh-first-defense-against-spam_' . $commentdata['comment_post_ID'])
 				) {
