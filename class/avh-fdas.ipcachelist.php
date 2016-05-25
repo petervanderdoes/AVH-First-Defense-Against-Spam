@@ -5,8 +5,8 @@ if ( ! defined('AVH_FRAMEWORK')) {
 
 class AVH_FDAS_IPCacheList extends WP_List_Table {
 	public $extra_items;
-	public  $messages;
-	public  $screen;
+	public $messages;
+	public $screen;
 	/**
 	 *
 	 * @var AVH_Class_registry
