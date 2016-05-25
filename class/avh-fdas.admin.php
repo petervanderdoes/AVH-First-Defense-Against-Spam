@@ -386,66 +386,6 @@ final class AVH_FDAS_Admin {
 	}
 
 	/**
-	 * This function is called when there's an update of the plugin available @ WordPress
-	 */
-	public function actionInPluginUpdateMessage() {
-		$response = wp_remote_get(AVH_FDAS_Define::PLUGIN_README_URL,
-		                          array(
-			                          'user-agent' => 'WordPress/AVH ' .
-			                                          AVH_FDAS_Define::PLUGIN_VERSION .
-			                                          '; ' .
-			                                          get_bloginfo('url')
-		                          ));
-		if ( ! is_wp_error($response) || is_array($response)) {
-			$data    = $response['body'];
-			$matches = null;
-			if (preg_match('~==\s*Changelog\s*==\s*=\s*Version\s*[0-9.]+\s*=(.*)(=\s*Version\s*[0-9.]+\s*=|$)~Uis',
-			               $data,
-			               $matches)) {
-				$changelog    = (array) preg_split('~[\r\n]+~', trim($matches[1]));
-				$prev_version = null;
-				preg_match('([0-9.]+)', $matches[2], $prev_version);
-				echo '<div style="color: #f00;">What\'s new in this version:</div><div style="font-weight: normal;">';
-				$ul = false;
-				foreach ($changelog as $index => $line) {
-					if (preg_match('~^\s*\*\s*~', $line)) {
-						if ( ! $ul) {
-							echo '<ul style="list-style: disc; margin-left: 20px;">';
-							$ul = true;
-						}
-						$line = preg_replace('~^\s*\*\s*~', '', htmlspecialchars($line));
-						echo '<li style="width: 50%; margin: 0; float: left; ' .
-						     ($index % 2 == 0 ? 'clear: left;' : '') .
-						     '">' .
-						     $line .
-						     '</li>';
-					} else {
-						if ($ul) {
-							echo '</ul><div style="clear: left;"></div>';
-							$ul = false;
-						}
-						echo '<p style="margin: 5px 0;">' . htmlspecialchars($line) . '</p>';
-					}
-				}
-				if ($ul) {
-					echo '</ul><div style="clear: left;"></div>';
-				}
-				if ($prev_version[0] != AVH_FDAS_Define::PLUGIN_VERSION) {
-					echo '<div style="color: #f00; font-weight: bold;">';
-					echo '<br />';
-					echo sprintf(__('The installed version, %s, is more than one version behind.', 'avh-fdas'),
-					             AVH_FDAS_Define::PLUGIN_VERSION);
-					echo '<br />';
-					echo __('More changes have been made since the currently installed version, consider checking the changelog.',
-					        'avh-fdas');
-					echo '</div><div style="clear: left;"></div>';
-				}
-				echo '</div>';
-			}
-		}
-	}
-
-	/**
 	 * Setup Roles
 	 *
 	 * @WordPress Action init
@@ -1017,8 +957,6 @@ final class AVH_FDAS_Admin {
 		 */
 		add_action('admin_action_blacklist', array($this, 'actionHandleBlacklistUrl'));
 		add_action('admin_action_emailreportspammer', array($this, 'actionHandleEmailReportingUrl'));
-		add_action('in_plugin_update_message-' . AVH_FDAS_Define::PLUGIN_FILE,
-		           array($this, 'actionInPluginUpdateMessage'));
 		/**
 		 * Admin Filters
 		 */
@@ -2291,19 +2229,6 @@ final class AVH_FDAS_Admin {
 		natsort($blacklist);
 		$blacklist_formatted        = implode("\r\n", $blacklist);
 		$data['lists']['blacklist'] = $blacklist_formatted;
-		$this->_core->saveData($data);
-	}
-
-	/**
-	 * Update the whitelist in the proper format
-	 *
-	 * @param $b array
-	 */
-	private function _setWhitelistOption($b) {
-		$data = $this->_core->getData();
-		natsort($b);
-		$x                          = implode("\r\n", $b);
-		$data['lists']['whitelist'] = $x;
 		$this->_core->saveData($data);
 	}
 }
