@@ -364,7 +364,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		$ip     = $a_ip;
 		$status = ($ip->spam == 0 ? '' : 'spammed');
 		echo '<tr id="ip-' . $ip->ip . '" class="' . $status . '">';
-		echo $this->single_row_columns($ip);
+		$this->single_row_columns($ip);
 		echo "</tr>";
 	}
 }
