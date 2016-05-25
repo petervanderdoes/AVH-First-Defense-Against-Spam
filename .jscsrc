@@ -1,6 +1,6 @@
 {
-	"preset": "airbnb",
-	"excludeFiles": [
-	],
+  "preset": "airbnb",
+  "excludeFiles": [
+  ],
   "maxErrors": 1000
 }
