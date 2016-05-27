@@ -123,19 +123,19 @@ final class AVH_FDAS_Admin {
 			                  AVH_FDAS_Define::PLUGIN_VERSION,
 			                  'screen');
 		} else {
-			$js_ipcachelog_version = '';
+			$js_ipcachelog_version = 'ef1dd23';
 			wp_register_script('avhfdas-ipcachelog-js',
 			                   $this->_settings->js_url . '/avh-fdas.ipcachelog-' . $js_ipcachelog_version . '.js',
 			                   array('jquery'),
 			                   AVH_FDAS_Define::PLUGIN_VERSION,
 			                   true);
-			$js_admin_version = '';
+			$js_admin_version = 'ef1dd23';
 			wp_register_script('avhfdas-admin-js',
 			                   $this->_settings->js_url . '/avh-fdas.admin-' . $js_admin_version . '.js',
 			                   array('jquery'),
 			                   AVH_FDAS_Define::PLUGIN_VERSION,
 			                   true);
-			$css_admin_version = '';
+			$css_admin_version = 'd91157e';
 			wp_register_style('avhfdas-admin-css',
 			                  $this->_settings->css_url . '/avh-fdas.admin-' . $css_admin_version . '.css',
 			                  array(),
