@@ -78,22 +78,21 @@ final class AVH_FDAS_Admin {
 		                                                           'avh_fdas_admin',
 		                                                           AVH_FDAS_Define::MENU_SLUG_3RD_PARTY,
 		                                                           array($this, 'menu3rdPartyOptions'));
-		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
-			                                                              'AVH First Defense Against Spam:' .
-			                                                              __('IP Cache Log', 'avh-fdas'),
-			                                                              __('IP Cache Log', 'avh-fdas'),
-			                                                              'avh_fdas_admin',
-			                                                              AVH_FDAS_Define::MENU_SLUG_IP_CACHE,
-			                                                              array($this, 'menuIpCacheLog'));
-		}
-		$this->_hooks['avhfdas_menu_faq'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
-		                                                     'AVH First Defense Against Spam:' .
-		                                                     __('F.A.Q', 'avh-fdas'),
-		                                                     __('F.A.Q', 'avh-fdas'),
-		                                                     'avh_fdas_admin',
-		                                                     AVH_FDAS_Define::MENU_SLUG_FAQ,
-		                                                     array($this, 'menuFaq'));
+
+		$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
+		                                                              'AVH First Defense Against Spam:' .
+		                                                              __('IP Cache Log', 'avh-fdas'),
+		                                                              __('IP Cache Log', 'avh-fdas'),
+		                                                              'avh_fdas_admin',
+		                                                              AVH_FDAS_Define::MENU_SLUG_IP_CACHE,
+		                                                              array($this, 'menuIpCacheLog'));
+		$this->_hooks['avhfdas_menu_faq']          = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
+		                                                              'AVH First Defense Against Spam:' .
+		                                                              __('F.A.Q', 'avh-fdas'),
+		                                                              __('F.A.Q', 'avh-fdas'),
+		                                                              'avh_fdas_admin',
+		                                                              AVH_FDAS_Define::MENU_SLUG_FAQ,
+		                                                              array($this, 'menuFaq'));
 
 		// Add actions for menu pages
 		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array($this, 'actionLoadPagehookOverview'));
@@ -101,14 +100,12 @@ final class AVH_FDAS_Admin {
 		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array($this, 'actionLoadPagehook3rdParty'));
 		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array($this, 'actionLoadPagehookFaq'));
 
-		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'],
-			           array($this, 'actionLoadPagehookHandlePostGetIpCacheLog'),
-			           5);
-			add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'],
-			           array($this, 'actionLoadPagehookIpCacheLog'));
-		}// Register Styles and Scripts
-		;
+		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'],
+		           array($this, 'actionLoadPagehookHandlePostGetIpCacheLog'),
+		           5);
+		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'],
+		           array($this, 'actionLoadPagehookIpCacheLog'));
+
 		if (WP_LOCAL_DEV == true) {
 			wp_register_script('avhfdas-ipcachelog-js',
 			                   $this->_settings->js_url . '/avh-fdas.ipcachelog.js',
@@ -421,11 +418,8 @@ final class AVH_FDAS_Admin {
 		             $this->_hooks['avhfdas_menu_3rd_party'],
 		             'normal',
 		             'core');
-		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
-		} else {
-			add_filter('screen_layout_columns', array($this, 'filterScreenLayoutColumns'), 10, 2);
-		}
+		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
+
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -446,11 +440,8 @@ final class AVH_FDAS_Admin {
 		             $this->_hooks['avhfdas_menu_faq'],
 		             'normal',
 		             'core');
-		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
-		} else {
-			add_filter('screen_layout_columns', array($this, 'filterScreenLayoutColumns'), 10, 2);
-		}
+		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
+
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -495,11 +486,8 @@ final class AVH_FDAS_Admin {
 		             $this->_hooks['avhfdas_menu_general'],
 		             'side',
 		             'core');
-		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
-		} else {
-			add_filter('screen_layout_columns', array($this, 'filterScreenLayoutColumns'), 10, 2);
-		}
+		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
+
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -704,7 +692,6 @@ final class AVH_FDAS_Admin {
 	 * Setup everything needed for the IP Cache page
 	 */
 	public function actionLoadPagehookIpCacheLog() {
-		global $current_screen;
 
 		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', true);
 		add_filter('screen_layout_columns', array($this, 'filterScreenLayoutColumns'), 10, 2);
@@ -719,16 +706,20 @@ final class AVH_FDAS_Admin {
 
 		wp_enqueue_style('avhfdas-admin-css');
 
-		add_screen_option('per_page',
-		                  array(
-			                  'label'   => _x('IP\'s', 'ip\'s per page (screen options)'),
-			                  'default' => 20,
-			                  'option'  => 'ipcachelog_per_page'
-		                  ));
-		add_contextual_help($current_screen,
-		                    '<p>' .
-		                    __('You can manage IP\'s added to the IP cache Log. This screen is customizable in the same ways as other management screens, and you can act on IP\'s using the on-hover action links or the Bulk Actions.') .
-		                    '</p>');
+		$current_screen = get_current_screen();
+		$current_screen->add_option('per_page',
+		                            array(
+			                            'label'   => _x('IP\'s', 'ip\'s per page (screen options)'),
+			                            'default' => 20,
+			                            'option'  => 'ipcachelog_per_page'
+		                            ));
+		$current_screen->add_help_tab(array(
+			                              'id'      => 'avh_fdas_ipcachelog',
+			                              'title'   => 'IP Cache Log Help',
+			                              'content' => '<p>' .
+			                                           __('You can manage IP\'s added to the IP cache Log. This screen is customizable in the same ways as other management screens, and you can act on IP\'s using the on-hover action links or the Bulk Actions.') .
+			                                           '</p>'
+		                              ));
 	}
 
 	/**
@@ -741,11 +732,8 @@ final class AVH_FDAS_Admin {
 		             $this->_hooks['avhfdas_menu_overview'],
 		             'normal',
 		             'core');
-		if (AVH_Common::getWordpressVersion() >= 3.1) {
-			add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
-		} else {
-			add_filter('screen_layout_columns', array($this, 'filterScreenLayoutColumns'), 10, 2);
-		}
+		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
+
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
@@ -799,30 +787,16 @@ final class AVH_FDAS_Admin {
 				$link_text .= __('Blacklist', 'avh-fdas');
 			}
 			$link_text .= __(' & Delete', 'avhfdas');
-			if (AVH_Common::getWordpressVersion() > 3.0) {
-				$report_url = esc_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID",
-				                                   "report-comment_$comment->comment_ID"));
-			} else {
-				$report_url = clean_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID",
-				                                     "report-comment_$comment->comment_ID"));
-			}
-			if (AVH_Common::getWordpressVersion() >= 3.5) {
-				$actions['report'] = '<a data-wp-lists=\'delete:the-comment-list:comment-' .
-				                     $comment->comment_ID .
-				                     ':e7e7d3:action=avh-fdas-reportcomment\' class="delete vim-d vim-destructive" href="' .
-				                     $report_url .
-				                     '">' .
-				                     $link_text .
-				                     '</a>';
-			} else {
-				$actions['report'] = '<a class=\'delete:the-comment-list:comment-' .
-				                     $comment->comment_ID .
-				                     ':e7e7d3:action=avh-fdas-reportcomment vim-d vim-destructive\' href="' .
-				                     $report_url .
-				                     '">' .
-				                     $link_text .
-				                     '</a>';
-			}
+			$report_url = esc_url(wp_nonce_url("admin.php?avhfdas_ajax_action=avh-fdas-reportcomment&id=$comment->comment_ID",
+			                                   "report-comment_$comment->comment_ID"));
+
+			$actions['report'] = '<a data-wp-lists=\'delete:the-comment-list:comment-' .
+			                     $comment->comment_ID .
+			                     ':e7e7d3:action=avh-fdas-reportcomment\' class="delete vim-d vim-destructive" href="' .
+			                     $report_url .
+			                     '">' .
+			                     $link_text .
+			                     '</a>';
 		}
 
 		return $actions;

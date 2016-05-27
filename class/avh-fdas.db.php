@@ -252,10 +252,11 @@ class AVH_FDAS_DB {
 	}
 
 	private function _getSearchSql($string, $cols) {
+		global $wpdb;
 		if (in_array('ip', $cols)) {
 			$ip = esc_sql(AVH_Common::getIp2long($string));
 		}
-		$string = esc_sql(like_escape($string));
+		$string = esc_sql($wpdb->esc_like($string));
 
 		$searches = array();
 		foreach ($cols as $col) {

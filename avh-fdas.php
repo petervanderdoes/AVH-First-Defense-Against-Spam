@@ -34,7 +34,7 @@ require_once($_dir . '/libs/avh-visitor.php');
 require_once($_dir . '/class/avh-fdas.registry.php');
 require_once($_dir . '/class/avh-fdas.define.php');
 
-if (AVH_Common::getWordpressVersion() >= 2.8) {
+if (AVH_Common::getWordpressVersion() >= 4.5) {
 	$_classes = AVH_FDAS_Classes::getInstance();
 	$_classes->setDir($_dir);
 	$_classes->setClassFilePrefix('avh-fdas.');

@@ -50,11 +50,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			update_user_meta(get_current_user_id(), 'avhfdas_ip_cache_list_last_view', $status);
 		}
 
-		if (AVH_Common::getWordpressVersion() >= 3.2) {
-			parent::__construct(array('plural' => 'ips', 'singular' => 'ip', 'ajax' => true));
-		} else {
-			parent::WP_List_Table(array('plural' => 'ips', 'singular' => 'ip', 'ajax' => true));
-		}
+		parent::__construct(array('plural' => 'ips', 'singular' => 'ip', 'ajax' => true));
 	}
 
 	function ajax_user_can() {
