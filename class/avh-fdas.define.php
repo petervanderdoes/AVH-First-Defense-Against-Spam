@@ -11,7 +11,7 @@ final class AVH_FDAS_Define {
 	/**
 	 * Plugin Specfic Constants
 	 */
-	// Message Numbers	const MENU_SLUG           = 'avh-first-defense-against-spam';
+	const MENU_SLUG           = 'avh-first-defense-against-spam';
 	const MENU_SLUG_3RD_PARTY = 'avh-first-defense-against-3rd-party';
 	const MENU_SLUG_FAQ       = 'avh-first-defense-against-spam-faq';
 	const MENU_SLUG_GENERAL   = 'avh-first-defense-against-spam-general';
