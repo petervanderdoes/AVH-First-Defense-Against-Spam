@@ -812,7 +812,7 @@ final class AVH_FDAS_Admin {
 	public function filterDisableUpgrade($option) {
 		$this_plugin = $this->_settings->plugin_basename;
 		// Allow upgrade for version 2
-		if (version_compare($option->response[ $this_plugin ]->new_version, '2', '>=')) {
+		if (version_compare($option->response[ $this_plugin ]->new_version, '4', '>=')) {
 			return $option;
 		}
 		if (isset($option->response[ $this_plugin ])) {
@@ -823,7 +823,7 @@ final class AVH_FDAS_Admin {
 				add_action("in_plugin_update_message-$this->plugin_name",
 				           create_function('',
 				                           'echo \'<br /><span style="color:red">' .
-				                           __('You need to have PHP 5.2 or higher for the new version !!!',
+				                           __('You need to have PHP 5.6 or higher for the new version !!!',
 				                              'avh-fdas') .
 				                           '</span>\';'));
 				$this->_add_disabled_notice = true;
@@ -939,7 +939,7 @@ final class AVH_FDAS_Admin {
 		add_filter('comment_row_actions', array($this, 'filterCommentRowActions'), 10, 2);
 		add_filter('plugin_action_links_' . AVH_FDAS_Define::PLUGIN_FILE, array($this, 'filterPluginActions'), 10, 2);
 		// If the version compare fails do not display the Upgrade notice.
-		if (version_compare(PHP_VERSION, '5', '<')) {
+		if (version_compare(PHP_VERSION, '5.6', '<')) {
 			add_filter('transient_update_plugins', array($this, 'filterDisableUpgrade'));
 		}
 		add_filter('set-screen-option', array($this, 'filterSetScreenOption'), 10, 3);

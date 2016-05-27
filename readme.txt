@@ -121,10 +121,12 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 
 == Upgrade Notice ==
 Starting with version 3.0 this plugin is for PHP5 only.
+Starting with version 4.0.0 PHP 5.6 will be required.
 
 == Changelog ==
 = Version 3.7.2-dev.1 =
 * Clean up code
+* Starting with version 4.x PHP 5.6 will be required.
 
 = Version 3.7.1 =
 * PHP 5.3 is dead, long live PHP 5.3
