@@ -49,6 +49,10 @@ if (AVH_Common::getWordpressVersion() >= 4.5) {
 	add_action('activate_' . AVH_FDAS_Define::PLUGIN_FILE, 'avh_fdas_remove_plugin');
 }
 
+/**
+ * Remove the plugin
+ *
+ */
 function avh_fdas_remove_plugin() {
 	$active_plugins = (array) get_option('active_plugins');
 
