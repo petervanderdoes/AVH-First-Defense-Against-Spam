@@ -806,6 +806,8 @@ final class AVH_FDAS_Admin {
 	 * This function allows the upgrade notice not to appear
 	 *
 	 * @param $option
+	 *
+	 * @return mixed
 	 */
 	public function filterDisableUpgrade($option) {
 		$this_plugin = $this->_settings->plugin_basename;

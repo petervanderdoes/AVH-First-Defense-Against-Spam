@@ -338,6 +338,8 @@ class AVH_FDAS_SpamCheck {
 	 * Convert the Stop Forum Spam data to something I already was using.
 	 *
 	 * @param $data
+	 *
+	 * @return mixed
 	 */
 	private function _convertStopForumSpamCall($data) {
 		if (isset($data['Error'])) {
