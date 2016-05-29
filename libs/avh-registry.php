@@ -10,7 +10,7 @@ if ( ! class_exists('AVH_Settings_Registry')) {
 		 *
 		 * @access protected
 		 */
-		private $_settings = array();
+		private $settings = array();
 
 		/**
 		 * Stores settings in the registry
@@ -21,8 +21,8 @@ if ( ! class_exists('AVH_Settings_Registry')) {
 		 * @return void
 		 */
 		public function storeSetting($key, $data) {
-			$this->_settings[ $key ] = $data;
-			$this->$key              = $data;
+			$this->settings[ $key ] = $data;
+			$this->$key             = $data;
 		}
 
 		/**
@@ -33,7 +33,7 @@ if ( ! class_exists('AVH_Settings_Registry')) {
 		 * @return mixed
 		 */
 		public function getSetting($key) {
-			return $this->_settings[ $key ];
+			return $this->settings[ $key ];
 		}
 
 		/**
@@ -42,7 +42,7 @@ if ( ! class_exists('AVH_Settings_Registry')) {
 		 * @param string $key The key for the array
 		 */
 		public function removeSetting($key) {
-			unset($this->_settings[ $key ]);
+			unset($this->settings[ $key ]);
 		}
 	}
 }
@@ -58,10 +58,10 @@ if ( ! class_exists('AVH_Class_Registry')) {
 		 * @access protected
 		 * @var array
 		 */
-		private $_objects = array();
-		private $_dir;
-		private $_class_file_prefix;
-		private $_class_name_prefix;
+		private $objects = array();
+		private $dir;
+		private $class_file_prefix;
+		private $class_name_prefix;
 
 		/**
 		 * Loads a class
@@ -73,24 +73,24 @@ if ( ! class_exists('AVH_Class_Registry')) {
 		 * @return object
 		 */
 		public function load_class($class, $type = 'system', $store = false) {
-			if (isset($this->_objects[ $class ])) {
-				return ($this->_objects[ $class ]);
+			if (isset($this->objects[ $class ])) {
+				return ($this->objects[ $class ]);
 			}
 			switch ($type) {
 				case 'plugin':
 					$in   = '/class';
-					$file = $this->_class_file_prefix . $class . '.php';
+					$file = $this->class_file_prefix . $class . '.php';
 					break;
 				case 'system':
 				default:
 					$in   = '/libs';
 					$file = 'avh-' . $class . '.php';
 			}
-			require_once($this->_dir . $in . '/' . strtolower($file));
-			$name   = ('system' == $type) ? 'AVH_' . $class : $this->_class_name_prefix . $class;
+			require_once($this->dir . $in . '/' . strtolower($file));
+			$name   = ('system' == $type) ? 'AVH_' . $class : $this->class_name_prefix . $class;
 			$object = new $name();
 			if ($store) {
-				$this->_objects[ $class ] = $object;
+				$this->objects[ $class ] = $object;
 			}
 
 			return $object;
@@ -101,7 +101,7 @@ if ( ! class_exists('AVH_Class_Registry')) {
 		 * @param string $dir The directory to set
 		 */
 		public function setDir($dir) {
-			$this->_dir = $dir;
+			$this->dir = $dir;
 		}
 
 		/**
@@ -109,7 +109,7 @@ if ( ! class_exists('AVH_Class_Registry')) {
 		 * @param string $prefix The class file prefix to set
 		 */
 		public function setClassFilePrefix($prefix) {
-			$this->_class_file_prefix = $prefix;
+			$this->class_file_prefix = $prefix;
 		}
 
 		/**
@@ -117,7 +117,7 @@ if ( ! class_exists('AVH_Class_Registry')) {
 		 * @param string $prefix The class name prefix to set
 		 */
 		public function setClassNamePrefix($prefix) {
-			$this->_class_name_prefix = $prefix;
+			$this->class_name_prefix = $prefix;
 		}
 
 		public function setClassProperties($properties) {

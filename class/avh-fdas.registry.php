@@ -50,7 +50,7 @@ final class AVH_FDAS_Settings extends AVH_Settings_Registry {
 	 *
 	 * @access private
 	 */
-	private static $_instance = null;
+	private static $instance = null;
 
 	// prevent clone.
 
@@ -63,11 +63,11 @@ final class AVH_FDAS_Settings extends AVH_Settings_Registry {
 	 * @access public
 	 */
 	public static function getInstance() {
-		if (self::$_instance === null) {
-			self::$_instance = new self();
+		if (self::$instance === null) {
+			self::$instance = new self();
 		}
 
-		return self::$_instance;
+		return self::$instance;
 	}
 
 	public function __clone() {

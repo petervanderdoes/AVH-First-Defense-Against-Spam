@@ -1,38 +1,38 @@
 <?php
 
 final class AVH_FDAS_Admin {
-	private $_add_disabled_notice = false;
+	private $add_disabled_notice = false;
 	/**
 	 *
 	 * @var AVH_FDAS_Classes
 	 */
-	private $_classes;
+	private $classes;
 	/**
 	 *
 	 * @var AVH_FDAS_Core
 	 */
-	private $_core;
+	private $core;
 	/**
 	 *
 	 * @var AVH_FDAS_DB
 	 */
-	private $_db;
-	private $_hooks = array();
+	private $db;
+	private $hooks = array();
 	/**
 	 *
 	 * @var AVH_FDAS_IpcacheList
 	 */
-	private $_ip_cache_list;
+	private $ip_cache_list;
 	/**
 	 * Message management
 	 */
-	private $_message = '';
+	private $message = '';
 	/**
 	 *
 	 * @var AVH_FDAS_Settings
 	 */
-	private $_settings;
-	private $_status = '';
+	private $settings;
+	private $status = '';
 
 	/**
 	 * PHP5 Constructor
@@ -40,9 +40,9 @@ final class AVH_FDAS_Admin {
 	 */
 	public function __construct() {
 		// The Settings Registery
-		$this->_settings = AVH_FDAS_Settings::getInstance();
+		$this->settings = AVH_FDAS_Settings::getInstance();
 		// The Classes Registery
-		$this->_classes = AVH_FDAS_Classes::getInstance();
+		$this->classes = AVH_FDAS_Classes::getInstance();
 		add_action('init', array($this, 'handleActionInit'));
 	}
 
@@ -57,87 +57,87 @@ final class AVH_FDAS_Admin {
 		              'avh_fdas_admin',
 		              AVH_FDAS_Define::MENU_SLUG,
 		              array($this, 'menuOverview'));
-		$this->_hooks['avhfdas_menu_overview']  = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
+		$this->hooks['avhfdas_menu_overview']  = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
 		                                                           'AVH First Defense Against Spam: ' .
 		                                                           __('Overview', 'avh-fdas'),
-		                                                           __('Overview', 'avh-fdas'),
-		                                                           'avh_fdas_admin',
-		                                                           AVH_FDAS_Define::MENU_SLUG_OVERVIEW,
-		                                                           array($this, 'menuOverview'));
-		$this->_hooks['avhfdas_menu_general']   = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
+		                                                          __('Overview', 'avh-fdas'),
+		                                                          'avh_fdas_admin',
+		                                                          AVH_FDAS_Define::MENU_SLUG_OVERVIEW,
+		                                                          array($this, 'menuOverview'));
+		$this->hooks['avhfdas_menu_general']   = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
 		                                                           'AVH First Defense Against Spam:' .
 		                                                           __('General Options', 'avh-fdas'),
-		                                                           __('General Options', 'avh-fdas'),
-		                                                           'avh_fdas_admin',
-		                                                           AVH_FDAS_Define::MENU_SLUG_GENERAL,
-		                                                           array($this, 'menuGeneralOptions'));
-		$this->_hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
+		                                                          __('General Options', 'avh-fdas'),
+		                                                          'avh_fdas_admin',
+		                                                          AVH_FDAS_Define::MENU_SLUG_GENERAL,
+		                                                          array($this, 'menuGeneralOptions'));
+		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
 		                                                           'AVH First Defense Against Spam:' .
 		                                                           __('3rd Party Options', 'avh-fdas'),
-		                                                           __('3rd Party Options', 'avh-fdas'),
-		                                                           'avh_fdas_admin',
-		                                                           AVH_FDAS_Define::MENU_SLUG_3RD_PARTY,
-		                                                           array($this, 'menu3rdPartyOptions'));
+		                                                          __('3rd Party Options', 'avh-fdas'),
+		                                                          'avh_fdas_admin',
+		                                                          AVH_FDAS_Define::MENU_SLUG_3RD_PARTY,
+		                                                          array($this, 'menu3rdPartyOptions'));
 
-		$this->_hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
+		$this->hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
 		                                                              'AVH First Defense Against Spam:' .
 		                                                              __('IP Cache Log', 'avh-fdas'),
-		                                                              __('IP Cache Log', 'avh-fdas'),
-		                                                              'avh_fdas_admin',
-		                                                              AVH_FDAS_Define::MENU_SLUG_IP_CACHE,
-		                                                              array($this, 'menuIpCacheLog'));
-		$this->_hooks['avhfdas_menu_faq']          = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
+		                                                             __('IP Cache Log', 'avh-fdas'),
+		                                                             'avh_fdas_admin',
+		                                                             AVH_FDAS_Define::MENU_SLUG_IP_CACHE,
+		                                                             array($this, 'menuIpCacheLog'));
+		$this->hooks['avhfdas_menu_faq']          = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
 		                                                              'AVH First Defense Against Spam:' .
 		                                                              __('F.A.Q', 'avh-fdas'),
-		                                                              __('F.A.Q', 'avh-fdas'),
-		                                                              'avh_fdas_admin',
-		                                                              AVH_FDAS_Define::MENU_SLUG_FAQ,
-		                                                              array($this, 'menuFaq'));
+		                                                             __('F.A.Q', 'avh-fdas'),
+		                                                             'avh_fdas_admin',
+		                                                             AVH_FDAS_Define::MENU_SLUG_FAQ,
+		                                                             array($this, 'menuFaq'));
 
 		// Add actions for menu pages
-		add_action('load-' . $this->_hooks['avhfdas_menu_overview'], array($this, 'actionLoadPagehookOverview'));
-		add_action('load-' . $this->_hooks['avhfdas_menu_general'], array($this, 'actionLoadPagehookGeneral'));
-		add_action('load-' . $this->_hooks['avhfdas_menu_3rd_party'], array($this, 'actionLoadPagehook3rdParty'));
-		add_action('load-' . $this->_hooks['avhfdas_menu_faq'], array($this, 'actionLoadPagehookFaq'));
+		add_action('load-' . $this->hooks['avhfdas_menu_overview'], array($this, 'actionLoadPagehookOverview'));
+		add_action('load-' . $this->hooks['avhfdas_menu_general'], array($this, 'actionLoadPagehookGeneral'));
+		add_action('load-' . $this->hooks['avhfdas_menu_3rd_party'], array($this, 'actionLoadPagehook3rdParty'));
+		add_action('load-' . $this->hooks['avhfdas_menu_faq'], array($this, 'actionLoadPagehookFaq'));
 
-		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'],
+		add_action('load-' . $this->hooks['avhfdas_menu_ip_cache_log'],
 		           array($this, 'actionLoadPagehookHandlePostGetIpCacheLog'),
 		           5);
-		add_action('load-' . $this->_hooks['avhfdas_menu_ip_cache_log'],
+		add_action('load-' . $this->hooks['avhfdas_menu_ip_cache_log'],
 		           array($this, 'actionLoadPagehookIpCacheLog'));
 
 		if (WP_LOCAL_DEV == true) {
 			wp_register_script('avhfdas-ipcachelog-js',
-			                   $this->_settings->js_url . '/avh-fdas.ipcachelog.js',
+			                   $this->settings->js_url . '/avh-fdas.ipcachelog.js',
 			                   array('jquery'),
 			                   AVH_FDAS_Define::PLUGIN_VERSION,
 			                   true);
 			wp_register_script('avhfdas-admin-js',
-			                   $this->_settings->js_url . '/avh-fdas.admin.js',
+			                   $this->settings->js_url . '/avh-fdas.admin.js',
 			                   array('jquery'),
 			                   AVH_FDAS_Define::PLUGIN_VERSION,
 			                   true);
 			wp_register_style('avhfdas-admin-css',
-			                  $this->_settings->css_url . '/avh-fdas.admin.css',
+			                  $this->settings->css_url . '/avh-fdas.admin.css',
 			                  array(),
 			                  AVH_FDAS_Define::PLUGIN_VERSION,
 			                  'screen');
 		} else {
 			$js_ipcachelog_version = 'ef1dd23';
 			wp_register_script('avhfdas-ipcachelog-js',
-			                   $this->_settings->js_url . '/avh-fdas.ipcachelog-' . $js_ipcachelog_version . '.js',
+			                   $this->settings->js_url . '/avh-fdas.ipcachelog-' . $js_ipcachelog_version . '.js',
 			                   array('jquery'),
 			                   AVH_FDAS_Define::PLUGIN_VERSION,
 			                   true);
 			$js_admin_version = 'ef1dd23';
 			wp_register_script('avhfdas-admin-js',
-			                   $this->_settings->js_url . '/avh-fdas.admin-' . $js_admin_version . '.js',
+			                   $this->settings->js_url . '/avh-fdas.admin-' . $js_admin_version . '.js',
 			                   array('jquery'),
 			                   AVH_FDAS_Define::PLUGIN_VERSION,
 			                   true);
 			$css_admin_version = 'd91157e';
 			wp_register_style('avhfdas-admin-css',
-			                  $this->_settings->css_url . '/avh-fdas.admin-' . $css_admin_version . '.css',
+			                  $this->settings->css_url . '/avh-fdas.admin-' . $css_admin_version . '.css',
 			                  array(),
 			                  AVH_FDAS_Define::PLUGIN_VERSION,
 			                  'screen');
@@ -158,7 +158,7 @@ final class AVH_FDAS_Admin {
 					                          ));
 					$x->send();
 				}
-				$result = $this->_db->updateIpCache(array('ip' => $id, 'spam' => $status));
+				$result = $this->db->updateIpCache(array('ip' => $id, 'spam' => $status));
 				if (false === $result) {
 					$x = new WP_Ajax_Response(array(
 						                          'what' => 'ipcachelog',
@@ -183,7 +183,7 @@ final class AVH_FDAS_Admin {
 							                          ));
 							$x->send();
 						}
-						$result = $this->_db->updateIpCache(array('ip' => $id, 'spam' => $status));
+						$result = $this->db->updateIpCache(array('ip' => $id, 'spam' => $status));
 						if (false === $result) {
 							$x = new WP_Ajax_Response(array(
 								                          'what' => 'ipcachelog',
@@ -198,7 +198,7 @@ final class AVH_FDAS_Admin {
 
 					case 'bl': // Adding the IP to the local Blacklist
 						check_ajax_referer('blacklist-ip_' . $id);
-						$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+						$blacklist = $this->core->getDataElement('lists', 'blacklist');
 						if ( ! empty($blacklist)) {
 							$b = explode("\r\n", $blacklist);
 						} else {
@@ -207,8 +207,8 @@ final class AVH_FDAS_Admin {
 						$ip = long2ip($id);
 						if ( ! (in_array($ip, $b))) {
 							array_push($b, $ip);
-							$this->_setBlacklistOption($b);
-							$result = $this->_db->deleteIp($id);
+							$this->setBlacklistOption($b);
+							$result = $this->db->deleteIp($id);
 							if (false === $result) {
 								$x = new WP_Ajax_Response(array(
 									                          'what'     => 'ipcachelog',
@@ -229,13 +229,13 @@ final class AVH_FDAS_Admin {
 							$x->send();
 						}
 
-						$this->_AjaxIpcacheLogResponse($id);
+						$this->ajaxIpcacheLogResponse($id);
 						die('0');
 						break;
 
 					case 'dl': // Delete the IP from the Database.
 						check_ajax_referer('delete-ip_' . $id);
-						$result = $this->_db->deleteIp($id);
+						$result = $this->db->deleteIp($id);
 						if (false === $result) {
 							$x = new WP_Ajax_Response(array(
 								                          'what' => 'ipcachelog',
@@ -244,7 +244,7 @@ final class AVH_FDAS_Admin {
 							                          ));
 							$x->send();
 						}
-						$this->_AjaxIpcacheLogResponse($id);
+						$this->ajaxIpcacheLogResponse($id);
 						die('0');
 						break;
 				}
@@ -267,20 +267,20 @@ final class AVH_FDAS_Admin {
 			$comment_id = absint($_REQUEST['id']);
 			check_ajax_referer('report-comment_' . $comment_id);
 			if ( ! $comment = get_comment($comment_id)) {
-				$this->_comment_footer_die(__('Oops, no comment with this ID.') .
-				                           sprintf(' <a href="%s">' . __('Go back') . '</a>!',
+				$this->comment_footer_die(__('Oops, no comment with this ID.') .
+				                          sprintf(' <a href="%s">' . __('Go back') . '</a>!',
 				                                   'edit-comments.php'));
 			}
 			if ( ! current_user_can('edit_post', $comment->comment_post_ID)) {
-				$this->_comment_footer_die(__('You are not allowed to edit comments on this post.'));
+				$this->comment_footer_die(__('You are not allowed to edit comments on this post.'));
 			}
-			$options = $this->_core->getOptions();
+			$options = $this->core->getOptions();
 			// If we use IP Cache and the Reported IP isn't spam, delete it from the IP cache.
 			if (1 == $options['general']['useipcache']) {
-				$ip_info = $this->_db->getIP($comment->comment_author_IP, OBJECT);
+				$ip_info = $this->db->getIP($comment->comment_author_IP, OBJECT);
 				if (is_object($ip_info) && 0 == $ip_info->spam) {
 					$comment_date = get_comment_date('Y-m-d H:i:s', $comment_id);
-					$this->_db->updateIpCache(array(
+					$this->db->updateIpCache(array(
 						                          'ip'       => $comment->comment_author_IP,
 						                          'spam'     => 1,
 						                          'lastseen' => $comment_date
@@ -288,12 +288,12 @@ final class AVH_FDAS_Admin {
 				}
 			}
 			if ($options['sfs']['sfsapikey'] != '' && ( ! empty($comment->comment_author_email))) {
-				$this->_handleReportSpammer($comment->comment_author,
-				                            $comment->comment_author_email,
-				                            $comment->comment_author_IP);
+				$this->handleReportSpammer($comment->comment_author,
+				                           $comment->comment_author_email,
+				                           $comment->comment_author_IP);
 			}
 			if (1 == $options['general']['addblacklist']) {
-				$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+				$blacklist = $this->core->getDataElement('lists', 'blacklist');
 				if ( ! empty($blacklist)) {
 					$b = explode("\r\n", $blacklist);
 				} else {
@@ -301,7 +301,7 @@ final class AVH_FDAS_Admin {
 				}
 				if ( ! (in_array($comment->comment_author_IP, $b))) {
 					array_push($b, $comment->comment_author_IP);
-					$this->_setBlacklistOption($b);
+					$this->setBlacklistOption($b);
 				}
 			}
 			// Delete the comment
@@ -321,7 +321,7 @@ final class AVH_FDAS_Admin {
 		}
 		$ip = $_REQUEST['i'];
 		if ( ! (false === AVH_Security::verifyNonce($_REQUEST['_avhnonce'], $ip))) {
-			$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+			$blacklist = $this->core->getDataElement('lists', 'blacklist');
 			if ( ! empty($blacklist)) {
 				$b = explode("\r\n", $blacklist);
 			} else {
@@ -329,7 +329,7 @@ final class AVH_FDAS_Admin {
 			}
 			if ( ! (in_array($ip, $b))) {
 				array_push($b, $ip);
-				$this->_setBlacklistOption($b);
+				$this->setBlacklistOption($b);
 				wp_redirect(admin_url('admin.php?page=' .
 				                      AVH_FDAS_Define::MENU_SLUG_GENERAL .
 				                      '&m=' .
@@ -369,12 +369,12 @@ final class AVH_FDAS_Admin {
 		$i     = esc_html($_REQUEST['i']);
 		$extra = '&m=' . AVH_FDAS_Define::ERROR_INVALID_REQUEST . '&i=' . $i;
 		if ( ! (false === AVH_Security::verifyNonce($_REQUEST['_avhnonce'], $a . $e . $i))) {
-			$all   = get_option($this->_core->getDbNonces());
+			$all   = get_option($this->core->getDbNonces());
 			$extra = '&m=' . AVH_FDAS_Define::ERROR_NOT_REPORTED . '&i=' . $i;
 			if (isset($all[ $_REQUEST['_avhnonce'] ])) {
-				$this->_handleReportSpammer($a, $e, $i);
+				$this->handleReportSpammer($a, $e, $i);
 				unset($all[ $_REQUEST['_avhnonce'] ]);
-				update_option($this->_core->db_nonce, $all);
+				update_option($this->core->db_nonce, $all);
 				$extra = '&m=' . AVH_FDAS_Define::REPORTED . '&i=' . $i;
 			}
 			unset($all);
@@ -403,19 +403,19 @@ final class AVH_FDAS_Admin {
 		add_meta_box('avhfdasBoxSFS',
 		             'Stop Forum Spam',
 		             array($this, 'metaboxMenu3rdParty_SFS'),
-		             $this->_hooks['avhfdas_menu_3rd_party'],
+		             $this->hooks['avhfdas_menu_3rd_party'],
 		             'normal',
 		             'core');
 		add_meta_box('avhfdasBoxPHP',
 		             'Project Honey Pot',
 		             array($this, 'metaboxMenu3rdParty_PHP'),
-		             $this->_hooks['avhfdas_menu_3rd_party'],
+		             $this->hooks['avhfdas_menu_3rd_party'],
 		             'side',
 		             'core');
 		add_meta_box('avhfdasBoxSH',
 		             'Spamhaus',
 		             array($this, 'metaboxMenu3rdParty_SH'),
-		             $this->_hooks['avhfdas_menu_3rd_party'],
+		             $this->hooks['avhfdas_menu_3rd_party'],
 		             'normal',
 		             'core');
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
@@ -437,7 +437,7 @@ final class AVH_FDAS_Admin {
 		add_meta_box('avhfdasBoxFAQ',
 		             __('F.A.Q.', 'avh-fdas'),
 		             array($this, 'metaboxFAQ'),
-		             $this->_hooks['avhfdas_menu_faq'],
+		             $this->hooks['avhfdas_menu_faq'],
 		             'normal',
 		             'core');
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
@@ -459,31 +459,31 @@ final class AVH_FDAS_Admin {
 		add_meta_box('avhfdasBoxGeneral',
 		             'General',
 		             array($this, 'metaboxGeneral'),
-		             $this->_hooks['avhfdas_menu_general'],
+		             $this->hooks['avhfdas_menu_general'],
 		             'normal',
 		             'core');
 		add_meta_box('avhfdasBoxIPCache',
 		             'IP Caching',
 		             array($this, 'metaboxIPCache'),
-		             $this->_hooks['avhfdas_menu_general'],
+		             $this->hooks['avhfdas_menu_general'],
 		             'normal',
 		             'core');
 		add_meta_box('avhfdasBoxCron',
 		             'Cron',
 		             array($this, 'metaboxCron'),
-		             $this->_hooks['avhfdas_menu_general'],
+		             $this->hooks['avhfdas_menu_general'],
 		             'normal',
 		             'core');
 		add_meta_box('avhfdasBoxBlackList',
 		             'Blacklist',
 		             array($this, 'metaboxBlackList'),
-		             $this->_hooks['avhfdas_menu_general'],
+		             $this->hooks['avhfdas_menu_general'],
 		             'side',
 		             'core');
 		add_meta_box('avhfdasBoxWhiteList',
 		             'Whitelist',
 		             array($this, 'metaboxWhiteList'),
-		             $this->_hooks['avhfdas_menu_general'],
+		             $this->hooks['avhfdas_menu_general'],
 		             'side',
 		             'core');
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
@@ -504,10 +504,10 @@ final class AVH_FDAS_Admin {
 	 * @WordPress Action load-$page_hook
 	 */
 	public function actionLoadPagehookHandlePostGetIpCacheLog() {
-		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', true);
+		$this->ip_cache_list = $this->classes->load_class('IPCacheList', 'plugin', true);
 
-		$pagenum  = $this->_ip_cache_list->get_pagenum();
-		$doaction = $this->_ip_cache_list->current_action();
+		$pagenum  = $this->ip_cache_list->get_pagenum();
+		$doaction = $this->ip_cache_list->current_action();
 
 		if ($doaction) {
 			switch ($doaction) {
@@ -531,7 +531,7 @@ final class AVH_FDAS_Admin {
 						case 'delete':
 							$deleted = 0;
 							foreach ($ips as $ip) {
-								$this->_db->deleteIp($ip);
+								$this->db->deleteIp($ip);
 								$deleted ++;
 							}
 
@@ -544,7 +544,7 @@ final class AVH_FDAS_Admin {
 							break;
 						case 'blacklist':
 							$blacklisted = 0;
-							$blacklist   = $this->_core->getDataElement('lists', 'blacklist');
+							$blacklist   = $this->core->getDataElement('lists', 'blacklist');
 							if ( ! empty($blacklist)) {
 								$b = explode("\r\n", $blacklist);
 							} else {
@@ -555,12 +555,12 @@ final class AVH_FDAS_Admin {
 								$ip = long2ip($ip);
 								if ( ! (in_array($ip, $b))) {
 									array_push($b, $ip);
-									$this->_db->deleteIp($ip);
+									$this->db->deleteIp($ip);
 									$blacklisted ++;
 								}
 							}
 							if ($blacklisted) {
-								$this->_setBlacklistOption($b);
+								$this->setBlacklistOption($b);
 								$redirect_to = add_query_arg(array('blacklisted' => $blacklisted), $redirect_to);
 							}
 
@@ -573,7 +573,7 @@ final class AVH_FDAS_Admin {
 							$new_status = ($doaction == 'ham' ? 0 : 1);
 							foreach ($ips as $ip) {
 
-								$result = $this->_db->updateIpCache(array('ip' => $ip, 'spam' => $new_status));
+								$result = $this->db->updateIpCache(array('ip' => $ip, 'spam' => $new_status));
 								if ($result !== false) {
 									$hamspammed ++;
 								}
@@ -602,7 +602,7 @@ final class AVH_FDAS_Admin {
 						case 'hamip':
 							check_admin_referer('hamspam-ip_' . $ip);
 							$new_status = ($doaction == 'hamip' ? 0 : 1);
-							$result     = $this->_db->updateIpCache(array('ip' => $ip, 'spam' => $new_status));
+							$result     = $this->db->updateIpCache(array('ip' => $ip, 'spam' => $new_status));
 							if ($result) {
 								$arg         = ($doaction == 'hamip' ? 'hammed' : 'spammed');
 								$redirect_to = add_query_arg(array($arg => 1), $redirect_to);
@@ -611,7 +611,7 @@ final class AVH_FDAS_Admin {
 							exit();
 							break;
 						case 'blacklistip':
-							$blacklist = $this->_core->getDataElement('lists', 'blacklist');
+							$blacklist = $this->core->getDataElement('lists', 'blacklist');
 							if ( ! empty($blacklist)) {
 								$b = explode("\r\n", $blacklist);
 							} else {
@@ -620,15 +620,15 @@ final class AVH_FDAS_Admin {
 							$ip_human = long2ip($ip);
 							if ( ! (in_array($ip_human, $b))) {
 								array_push($b, $ip_human);
-								$this->_db->deleteIp($ip);
-								$this->_setBlacklistOption($b);
+								$this->db->deleteIp($ip);
+								$this->setBlacklistOption($b);
 								$redirect_to = add_query_arg(array('blacklisted' => 1), $redirect_to);
 							}
 							wp_redirect($redirect_to);
 							exit();
 							break;
 						case 'deleteip':
-							$result = $this->_db->deleteIp($ip);
+							$result = $this->db->deleteIp($ip);
 							if ($result) {
 								$redirect_to = add_query_arg(array('deleted' => 1), $redirect_to);
 							}
@@ -652,36 +652,36 @@ final class AVH_FDAS_Admin {
 			$spammed     = isset($_REQUEST['spammed']) ? (int) $_REQUEST['spammed'] : 0;
 
 			if ($deleted > 0) {
-				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP permanently deleted',
-				                                               '%s IP\'s deleted',
-				                                               $deleted),
-				                                            $deleted);
+				$this->ip_cache_list->messages[] = sprintf(_n('%s IP permanently deleted',
+				                                              '%s IP\'s deleted',
+				                                              $deleted),
+				                                           $deleted);
 			}
 
 			if ($blacklisted > 0) {
-				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP added to the blacklist',
-				                                               '%s IP\'s added to the blacklist',
-				                                               $blacklisted),
-				                                            $blacklisted);
+				$this->ip_cache_list->messages[] = sprintf(_n('%s IP added to the blacklist',
+				                                              '%s IP\'s added to the blacklist',
+				                                              $blacklisted),
+				                                           $blacklisted);
 			}
 
 			if ($hammed > 0) {
-				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP marked as ham',
-				                                               '%s IP\'s marked as ham',
-				                                               $hammed),
-				                                            $hammed);
+				$this->ip_cache_list->messages[] = sprintf(_n('%s IP marked as ham',
+				                                              '%s IP\'s marked as ham',
+				                                              $hammed),
+				                                           $hammed);
 			}
 
 			if ($spammed > 0) {
-				$this->_ip_cache_list->messages[] = sprintf(_n('%s IP marked as spam',
-				                                               '%s IP\'s marked as spam',
-				                                               $spammed),
-				                                            $spammed);
+				$this->ip_cache_list->messages[] = sprintf(_n('%s IP marked as spam',
+				                                              '%s IP\'s marked as spam',
+				                                              $spammed),
+				                                           $spammed);
 			}
 		}
-		$this->_ip_cache_list->prepare_items();
+		$this->ip_cache_list->prepare_items();
 
-		$total_pages = $this->_ip_cache_list->get_pagination_arg('total_pages');
+		$total_pages = $this->ip_cache_list->get_pagination_arg('total_pages');
 		if ($pagenum > $total_pages && $total_pages > 0) {
 			wp_redirect(add_query_arg('paged', $total_pages));
 			exit();
@@ -693,7 +693,7 @@ final class AVH_FDAS_Admin {
 	 */
 	public function actionLoadPagehookIpCacheLog() {
 
-		$this->_ip_cache_list = $this->_classes->load_class('IPCacheList', 'plugin', true);
+		$this->ip_cache_list = $this->classes->load_class('IPCacheList', 'plugin', true);
 		add_filter('screen_layout_columns', array($this, 'filterScreenLayoutColumns'), 10, 2);
 		// WordPress core Styles and Scripts
 		wp_enqueue_script('common');
@@ -729,7 +729,7 @@ final class AVH_FDAS_Admin {
 		add_meta_box('avhfdasBoxStats',
 		             __('Statistics', 'avh-fdas'),
 		             array($this, 'metaboxMenuOverview'),
-		             $this->_hooks['avhfdas_menu_overview'],
+		             $this->hooks['avhfdas_menu_overview'],
 		             'normal',
 		             'core');
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2));
@@ -770,8 +770,8 @@ final class AVH_FDAS_Admin {
 	 * @since     1.0
 	 */
 	public function filterCommentRowActions($actions, $comment) {
-		$apikey           = $this->_core->getOptionElement('sfs', 'sfsapikey');
-		$add_to_blacklist = $this->_core->getOptionElement('general', 'addblacklist');
+		$apikey           = $this->core->getOptionElement('sfs', 'sfsapikey');
+		$add_to_blacklist = $this->core->getOptionElement('general', 'addblacklist');
 
 		$link_text = '';
 		if ((isset($comment->comment_approved) && 'spam' == $comment->comment_approved) &&
@@ -810,7 +810,7 @@ final class AVH_FDAS_Admin {
 	 * @return mixed
 	 */
 	public function filterDisableUpgrade($option) {
-		$this_plugin = $this->_settings->plugin_basename;
+		$this_plugin = $this->settings->plugin_basename;
 		// Allow upgrade for version 2
 		if (version_compare($option->response[ $this_plugin ]->new_version, '4', '>=')) {
 			return $option;
@@ -819,14 +819,14 @@ final class AVH_FDAS_Admin {
 			// Clear its download link:
 			$option->response[ $this_plugin ]->package = '';
 			// Add a notice message
-			if ($this->_add_disabled_notice == false) {
+			if ($this->add_disabled_notice == false) {
 				add_action("in_plugin_update_message-$this->plugin_name",
 				           create_function('',
 				                           'echo \'<br /><span style="color:red">' .
 				                           __('You need to have PHP 5.6 or higher for the new version !!!',
 				                              'avh-fdas') .
 				                           '</span>\';'));
-				$this->_add_disabled_notice = true;
+				$this->add_disabled_notice = true;
 			}
 		}
 
@@ -845,7 +845,7 @@ final class AVH_FDAS_Admin {
 	 * @since     1.0
 	 */
 	public function filterPluginActions($links) {
-		$folder        = AVH_Common::getBaseDirectory($this->_settings->plugin_basename);
+		$folder        = AVH_Common::getBaseDirectory($this->settings->plugin_basename);
 		$settings_link = '<a href="admin.php?page=' . $folder . '">' . __('Settings', 'avh-fdas') . '</a>';
 		array_unshift($links, $settings_link); // before other links
 		return $links;
@@ -863,17 +863,17 @@ final class AVH_FDAS_Admin {
 	 */
 	public function filterScreenLayoutColumns($columns, $screen) {
 		switch ($screen) {
-			case $this->_hooks['avhfdas_menu_overview']:
-				$columns[ $this->_hooks['avhfdas_menu_overview'] ] = 2;
+			case $this->hooks['avhfdas_menu_overview']:
+				$columns[ $this->hooks['avhfdas_menu_overview'] ] = 2;
 				break;
-			case $this->_hooks['avhfdas_menu_general']:
-				$columns[ $this->_hooks['avhfdas_menu_general'] ] = 2;
+			case $this->hooks['avhfdas_menu_general']:
+				$columns[ $this->hooks['avhfdas_menu_general'] ] = 2;
 				break;
-			case $this->_hooks['avhfdas_menu_3rd_party']:
-				$columns[ $this->_hooks['avhfdas_menu_3rd_party'] ] = 2;
+			case $this->hooks['avhfdas_menu_3rd_party']:
+				$columns[ $this->hooks['avhfdas_menu_3rd_party'] ] = 2;
 				break;
-			case $this->_hooks['avhfdas_menu_faq']:
-				$columns[ $this->_hooks['avhfdas_menu_faq'] ] = 2;
+			case $this->hooks['avhfdas_menu_faq']:
+				$columns[ $this->hooks['avhfdas_menu_faq'] ] = 2;
 				break;
 		}
 
@@ -910,12 +910,12 @@ final class AVH_FDAS_Admin {
 
 	public function handleActionInit() {
 		// Initialize the plugin
-		$this->_core = $this->_classes->load_class('Core', 'plugin', true);
-		$this->_db   = $this->_classes->load_class('DB', 'plugin', true);
+		$this->core = $this->classes->load_class('Core', 'plugin', true);
+		$this->db   = $this->classes->load_class('DB', 'plugin', true);
 		// Admin URL and Pagination
-		$this->_core->admin_base_url = $this->_settings->siteurl . '/wp-admin/admin.php?page=';
+		$this->core->admin_base_url = $this->settings->siteurl . '/wp-admin/admin.php?page=';
 		if (isset($_GET['pagination'])) {
-			$this->_core->actual_page = (int) $_GET['pagination'];
+			$this->core->actual_page = (int) $_GET['pagination'];
 		}
 		$this->installPlugin();
 		// Admin Capabilities
@@ -955,8 +955,8 @@ final class AVH_FDAS_Admin {
 			wp_schedule_event(time(), 'daily', 'avhfdas_clean_nonce');
 		}
 		// Setup nonces db in options
-		if ( ! (get_option($this->_core->getDbNonces()))) {
-			update_option($this->_core->getDbNonces(), $this->_core->getDefaultNonces());
+		if ( ! (get_option($this->core->getDbNonces()))) {
+			update_option($this->core->getDbNonces(), $this->core->getDefaultNonces());
 			wp_cache_flush(); // Delete cache
 		}
 		// Setup the DB Tables
@@ -1115,7 +1115,7 @@ final class AVH_FDAS_Admin {
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_options');
 			$formoptions = $_POST['avhfdas'];
-			$options     = $this->_core->getOptions();
+			$options     = $this->core->getOptions();
 			$all_data    = array_merge($options_sfs, $options_php, $options_sh);
 			foreach ($all_data as $option) {
 				$section       = substr($option[0], strpos($option[0], '[') + 1);
@@ -1144,13 +1144,13 @@ final class AVH_FDAS_Admin {
 				                                 __('You can not use Project Honey Pot without an API key. Use of Project Honey Pot has been disabled',
 				                                    'avh-fdas');
 			}
-			$this->_core->saveOptions($options);
-			$this->_message = __('Options saved', 'avh-fdas');
-			$this->_message .= $note;
-			$this->_status = 'updated fade';
-			$this->_displayMessage();
+			$this->core->saveOptions($options);
+			$this->message = __('Options saved', 'avh-fdas');
+			$this->message .= $note;
+			$this->status = 'updated fade';
+			$this->displayMessage();
 		}
-		$actual_options = array_merge($this->_core->getOptions(), $this->_core->getData());
+		$actual_options = array_merge($this->core->getOptions(), $this->core->getData());
 		$hide2          = '';
 		switch ($screen_layout_columns) {
 			case 2:
@@ -1166,7 +1166,7 @@ final class AVH_FDAS_Admin {
 		$data['actual_options'] = $actual_options;
 
 		echo '<div class="wrap avhfdas-wrap">';
-		echo $this->_displayIcon('options-general');
+		echo $this->displayIcon('options-general');
 		echo '<h2>AVH First Defense Against Spam: ' . __('3rd Party Options', 'avh-fdas') . '</h2>';
 		echo '<form name="avhfdas-options" id="avhfdas-options" method="POST" action="admin.php?page=' .
 		     AVH_FDAS_Define::MENU_SLUG_3RD_PARTY .
@@ -1177,19 +1177,19 @@ final class AVH_FDAS_Admin {
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_3rd_party'], 'normal', $data);
+		do_meta_boxes($this->hooks['avhfdas_menu_3rd_party'], 'normal', $data);
 		echo '			</div>';
 		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_3rd_party'], 'side', $data);
+		do_meta_boxes($this->hooks['avhfdas_menu_3rd_party'], 'side', $data);
 		echo '			</div>';
 		echo '		</div>';
 		echo '	</div>'; // dashboard-widgets-wrap
-		echo '<p class="submit"><input class="button-primary" type="submit" name="updateoptions" value="' .
+		echo '<p class="submit"><getInput class="button-primary" type="submit" name="updateoptions" value="' .
 		     __('Save Changes',
 		        'avh-fdas') .
 		     '" /></p>';
 		echo '</form>';
-		$this->_printAdminFooter();
+		$this->printAdminFooter();
 		echo '</div>';
 	}
 
@@ -1203,7 +1203,7 @@ final class AVH_FDAS_Admin {
 		add_meta_box('avhfdasBoxDonations',
 		             __('Donations', 'avh-fdas'),
 		             array($this, 'metaboxDonations'),
-		             $this->_hooks['avhfdas_menu_faq'],
+		             $this->hooks['avhfdas_menu_faq'],
 		             'side',
 		             'core');
 		$hide2 = '';
@@ -1216,7 +1216,7 @@ final class AVH_FDAS_Admin {
 				$hide2 = 'display:none;';
 		}
 		echo '<div class="wrap avhfdas-wrap">';
-		echo $this->_displayIcon('index');
+		echo $this->displayIcon('index');
 		echo '<h2>AVH First Defense Against Spam: ' . __('Spam Overview', 'avh-fdas') . '</h2>';
 		echo '<form method="get" action="">';
 		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
@@ -1225,15 +1225,15 @@ final class AVH_FDAS_Admin {
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_faq'], 'normal', '');
+		do_meta_boxes($this->hooks['avhfdas_menu_faq'], 'normal', '');
 		echo '			</div>';
 		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_faq'], 'side', '');
+		do_meta_boxes($this->hooks['avhfdas_menu_faq'], 'side', '');
 		echo '			</div>';
 		echo '		</div>';
 		echo ' </div>'; // dashboard-widgets-wrap
 
-		$this->_printAdminFooter();
+		$this->printAdminFooter();
 		echo '</div>';
 	}
 
@@ -1346,8 +1346,8 @@ final class AVH_FDAS_Admin {
 		if (isset($_POST['updateoptions'])) {
 			check_admin_referer('avh_fdas_generaloptions');
 			$formoptions = $_POST['avhfdas'];
-			$options     = $this->_core->getOptions();
-			$data        = $this->_core->getData();
+			$options     = $this->core->getOptions();
+			$data        = $this->core->getData();
 			$all_data    = array_merge($options_general,
 			                           $options_blacklist,
 			                           $options_whitelist,
@@ -1400,48 +1400,48 @@ final class AVH_FDAS_Admin {
 					wp_clear_scheduled_hook('avhfdas_clean_ipcache');
 				}
 			}
-			$this->_core->saveOptions($options);
-			$this->_core->saveData($data);
-			$this->_message = __('Options saved', 'avh-fdas');
-			$this->_status  = 'updated fade';
+			$this->core->saveOptions($options);
+			$this->core->saveData($data);
+			$this->message = __('Options saved', 'avh-fdas');
+			$this->status  = 'updated fade';
 		}
 		// Show messages if needed.
 		if (isset($_REQUEST['m'])) {
 			switch ($_REQUEST['m']) {
 				case AVH_FDAS_Define::REPORTED_DELETED:
-					$this->_status  = 'updated fade';
-					$this->_message = sprintf(__('IP [%s] Reported and deleted', 'avh-fdas'), esc_attr($_REQUEST['i']));
+					$this->status  = 'updated fade';
+					$this->message = sprintf(__('IP [%s] Reported and deleted', 'avh-fdas'), esc_attr($_REQUEST['i']));
 					break;
 				case AVH_FDAS_Define::ADDED_BLACKLIST:
-					$this->_status  = 'updated fade';
-					$this->_message = sprintf(__('IP [%s] has been added to the blacklist', 'avh-fdas'),
-					                          esc_attr($_REQUEST['i']));
+					$this->status  = 'updated fade';
+					$this->message = sprintf(__('IP [%s] has been added to the blacklist', 'avh-fdas'),
+					                         esc_attr($_REQUEST['i']));
 					break;
 				case AVH_FDAS_Define::REPORTED:
-					$this->_status  = 'updated fade';
-					$this->_message = sprintf(__('IP [%s] reported.', 'avh-fdas'), esc_attr($_REQUEST['i']));
+					$this->status  = 'updated fade';
+					$this->message = sprintf(__('IP [%s] reported.', 'avh-fdas'), esc_attr($_REQUEST['i']));
 					break;
 				case AVH_FDAS_Define::ERROR_INVALID_REQUEST:
-					$this->_status  = 'error';
-					$this->_message = sprintf(__('Invalid request.', 'avh-fdas'));
+					$this->status  = 'error';
+					$this->message = sprintf(__('Invalid request.', 'avh-fdas'));
 					break;
 				case AVH_FDAS_Define::ERROR_NOT_REPORTED:
-					$this->_status  = 'error';
-					$this->_message = sprintf(__('IP [%s] not reported. Probably already processed.', 'avh-fdas'),
-					                          esc_attr($_REQUEST['i']));
+					$this->status  = 'error';
+					$this->message = sprintf(__('IP [%s] not reported. Probably already processed.', 'avh-fdas'),
+					                         esc_attr($_REQUEST['i']));
 					break;
 				case AVH_FDAS_Define::ERROR_EXISTS_IN_BLACKLIST:
-					$this->_status  = 'error';
-					$this->_message = sprintf(__('IP [%s] already exists in the blacklist.', 'avh-fdas'),
-					                          esc_attr($_REQUEST['i']));
+					$this->status  = 'error';
+					$this->message = sprintf(__('IP [%s] already exists in the blacklist.', 'avh-fdas'),
+					                         esc_attr($_REQUEST['i']));
 					break;
 				default:
-					$this->_status  = 'error';
-					$this->_message = 'Unknown message request';
+					$this->status  = 'error';
+					$this->message = 'Unknown message request';
 			}
 		}
-		$this->_displayMessage();
-		$actual_options = array_merge($this->_core->getOptions(), $this->_core->getData());
+		$this->displayMessage();
+		$actual_options = array_merge($this->core->getOptions(), $this->core->getData());
 		$hide2          = '';
 		switch ($screen_layout_columns) {
 			case 2:
@@ -1459,7 +1459,7 @@ final class AVH_FDAS_Admin {
 		$data['actual_options']    = $actual_options;
 		echo '<div class="wrap avhfdas-wrap">';
 		echo '<div class="wrap">';
-		echo $this->_displayIcon('options-general');
+		echo $this->displayIcon('options-general');
 		echo '<h2>AVH First Defense Against Spam: ' . __('General Options', 'avh-fdas') . '</h2>';
 		echo '<form name="avhfdas-generaloptions" id="avhfdas-generaloptions" method="POST" action="admin.php?page=' .
 		     AVH_FDAS_Define::MENU_SLUG_GENERAL .
@@ -1470,21 +1470,21 @@ final class AVH_FDAS_Admin {
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_general'], 'normal', $data);
+		do_meta_boxes($this->hooks['avhfdas_menu_general'], 'normal', $data);
 		echo '			</div>';
 		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_general'], 'side', $data);
+		do_meta_boxes($this->hooks['avhfdas_menu_general'], 'side', $data);
 		echo '			</div>';
 		echo '		</div>';
 		echo '<br class="clear"/>';
 		echo '	</div>'; // dashboard-widgets-wrap
-		echo '<p class="submit"><input	class="button-primary"	type="submit" name="updateoptions" value="' .
+		echo '<p class="submit"><getInput	class="button-primary"	type="submit" name="updateoptions" value="' .
 		     __('Save Changes',
 		        'avh-fdas') .
 		     '" /></p>';
 		echo '</form>';
 		echo '</div>';
-		$this->_printAdminFooter();
+		$this->printAdminFooter();
 		echo '</div>';
 	}
 
@@ -1493,22 +1493,22 @@ final class AVH_FDAS_Admin {
 	 */
 	public function menuIpCacheLog() {
 		global $ip_status;
-		if ( ! empty($this->_ip_cache_list->messages)) {
+		if ( ! empty($this->ip_cache_list->messages)) {
 			echo '<div id="moderated" class="updated"><p>' . implode("<br/>\n",
-			                                                         $this->_ip_cache_list->messages) . '</p></div>';
+			                                                         $this->ip_cache_list->messages) . '</p></div>';
 		}
 		$_SERVER['REQUEST_URI'] = remove_query_arg(array('error', 'deleted', '_error_nonce'), $_SERVER['REQUEST_URI']);
-		$this->_ip_cache_list->prepare_items();
+		$this->ip_cache_list->prepare_items();
 
-		$total_pages = $this->_ip_cache_list->get_pagination_arg('total_pages');
-		$pagenum     = $this->_ip_cache_list->get_pagenum();
+		$total_pages = $this->ip_cache_list->get_pagination_arg('total_pages');
+		$pagenum     = $this->ip_cache_list->get_pagenum();
 		if ($pagenum > $total_pages && $total_pages > 0) {
 			wp_redirect(add_query_arg('paged', $total_pages));
 			exit();
 		}
 
 		echo '<div class="wrap avhfdas-wrap">';
-		echo $this->_displayIcon('index');
+		echo $this->displayIcon('index');
 		echo '<h2>AVH First Defense Against Spam: ' . __('IP Cache Log', 'avh-fdas');
 
 		if (isset($_REQUEST['s']) && $_REQUEST['s']) {
@@ -1519,31 +1519,31 @@ final class AVH_FDAS_Admin {
 		}
 		echo '</h2>';
 
-		$this->_ip_cache_list->views();
+		$this->ip_cache_list->views();
 		echo '<form id="ipcachelist-form" action="" method="get">';
 		echo '<input type="hidden" name="page" value="' . AVH_FDAS_Define::MENU_SLUG_IP_CACHE . '"';
 		echo '<input type="hidden" name="ip_status" value="' . esc_attr($ip_status) . '" />';
 		echo '<input type="hidden" name="pagegen_timestamp" value="' . esc_attr(current_time('mysql', 1)) . '" />';
 
 		echo '<input type="hidden" name="_total" value="' .
-		     esc_attr($this->_ip_cache_list->get_pagination_arg('total_items')) .
+		     esc_attr($this->ip_cache_list->get_pagination_arg('total_items')) .
 		     '" />';
 		echo '<input type="hidden" name="_per_page" value="' .
-		     esc_attr($this->_ip_cache_list->get_pagination_arg('per_page')) .
+		     esc_attr($this->ip_cache_list->get_pagination_arg('per_page')) .
 		     '" />';
 		echo '<input type="hidden" name="_page" value="' .
-		     esc_attr($this->_ip_cache_list->get_pagination_arg('page')) .
+		     esc_attr($this->ip_cache_list->get_pagination_arg('page')) .
 		     '" />';
 
 		if (isset($_REQUEST['paged'])) {
 			echo '<input type="hidden" name="paged"	value="' . esc_attr(absint($_REQUEST['paged'])) . '" />';
 		}
-		$this->_ip_cache_list->search_box(__('Find IP', 'avh-fdas'), 'find_ip');
-		$this->_ip_cache_list->display();
+		$this->ip_cache_list->search_box(__('Find IP', 'avh-fdas'), 'find_ip');
+		$this->ip_cache_list->display();
 		echo '</form>';
 
 		echo '<div id="ajax-response"></div>';
-		$this->_printAdminFooter();
+		$this->printAdminFooter();
 		echo '</div>';
 	}
 
@@ -1557,7 +1557,7 @@ final class AVH_FDAS_Admin {
 		add_meta_box('avhfdasBoxDonations',
 		             __('Donations', 'avh-fdas'),
 		             array($this, 'metaboxDonations'),
-		             $this->_hooks['avhfdas_menu_overview'],
+		             $this->hooks['avhfdas_menu_overview'],
 		             'side',
 		             'core');
 		$hide2 = '';
@@ -1570,7 +1570,7 @@ final class AVH_FDAS_Admin {
 				$hide2 = 'display:none;';
 		}
 		echo '<div class="wrap avhfdas-wrap">';
-		echo $this->_displayIcon('index');
+		echo $this->displayIcon('index');
 		echo '<h2>AVH First Defense Against Spam: ' . __('Overview', 'avh-fdas') . '</h2>';
 		echo '<form method="get" action="">';
 		wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
@@ -1579,14 +1579,14 @@ final class AVH_FDAS_Admin {
 		echo '	<div id="dashboard-widgets-wrap">';
 		echo '		<div id="dashboard-widgets" class="metabox-holder">';
 		echo '			<div class="postbox-container" style="' . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_overview'], 'normal', '');
+		do_meta_boxes($this->hooks['avhfdas_menu_overview'], 'normal', '');
 		echo '			</div>';
 		echo '			<div class="postbox-container" style="' . $hide2 . $width . '">' . "\n";
-		do_meta_boxes($this->_hooks['avhfdas_menu_overview'], 'side', '');
+		do_meta_boxes($this->hooks['avhfdas_menu_overview'], 'side', '');
 		echo '			</div>';
 		echo '		</div>';
 		echo '</div>';
-		$this->_printAdminFooter();
+		$this->printAdminFooter();
 		echo '</div>';
 	}
 
@@ -1597,7 +1597,7 @@ final class AVH_FDAS_Admin {
 	 *
 	 */
 	public function metaboxBlackList($data) {
-		echo $this->_printOptions($data['options_blacklist'], $data['actual_options']);
+		echo $this->printOptions($data['options_blacklist'], $data['actual_options']);
 	}
 
 	/**
@@ -1610,7 +1610,7 @@ final class AVH_FDAS_Admin {
 		echo '<p>' .
 		     __('Once a day cron jobs of this plugin run. You can select to receive an email with additional information about the jobs that ran.',
 		        'avh-fdas');
-		echo $this->_printOptions($data['options_cron'], $data['actual_options']);
+		echo $this->printOptions($data['options_cron'], $data['actual_options']);
 	}
 
 	/**
@@ -1623,7 +1623,7 @@ final class AVH_FDAS_Admin {
 		echo '<span class="b">Amazon</span><br />';
 		echo 'If you decide to buy something from Amazon click the button.<br />';
 		echo '<a href="https://www.amazon.com/?tag=petervanderdoes-20" target="_blank" title="Amazon Homepage"><img alt="Amazon Button" src="' .
-		     $this->_settings->graphics_url .
+		     $this->settings->graphics_url .
 		     '/us_banner_logow_120x60.gif" /></a></p>';
 		echo '<p>';
 		echo 'You can send me something from my <a href="http://www.amazon.com/registry/wishlist/1U3DTWZ72PI7W?tag=petervanderdoes-20">Amazon Wish List</a>';
@@ -1739,7 +1739,7 @@ final class AVH_FDAS_Admin {
 	 *
 	 */
 	public function metaboxGeneral($data) {
-		echo $this->_printOptions($data['options_general'], $data['actual_options']);
+		echo $this->printOptions($data['options_general'], $data['actual_options']);
 	}
 
 	/**
@@ -1752,7 +1752,7 @@ final class AVH_FDAS_Admin {
 		echo '<p>' .
 		     __('To use IP caching you must enable it below and set the options. IP\'s are stored in the database so if you have a high traffic website the database can grow quickly',
 		        'avh-fdas');
-		echo $this->_printOptions($data['options_ipcache'], $data['actual_options']);
+		echo $this->printOptions($data['options_ipcache'], $data['actual_options']);
 	}
 
 	/**
@@ -1765,7 +1765,7 @@ final class AVH_FDAS_Admin {
 		echo '<p>' .
 		     __('To check a visitor at Project Honey Pot you must enable it below, you must also have an API key. You can get an API key by signing up for free at the <a href="http://www.projecthoneypot.org/create_account.php" target="_blank">Honey Pot Project</a>. Set the options to your own liking.',
 		        'avh-fdas');
-		echo $this->_printOptions($data['options_php'], $data['actual_options']);
+		echo $this->printOptions($data['options_php'], $data['actual_options']);
 	}
 
 	/**
@@ -1778,7 +1778,7 @@ final class AVH_FDAS_Admin {
 		echo '<p>' .
 		     __('To check a visitor at Stop Forum Spam you must enable it below. Set the options to your own liking.',
 		        'avh-fdas');
-		echo $this->_printOptions($data['options_sfs'], $data['actual_options']);
+		echo $this->printOptions($data['options_sfs'], $data['actual_options']);
 
 		// echo '<p>' . __( 'Currently the plugin can not check with Stop Forum Spam untill a better solution has been coded.' );
 		// echo __( 'I apologize for this and will be looking for a solutin in the short run.' ).'</p>';
@@ -1792,7 +1792,7 @@ final class AVH_FDAS_Admin {
 	 */
 	public function metaboxMenu3rdParty_SH($data) {
 		// echo '<p>' . __('To check a visitor at Spamhaus you must enable it below.', 'avh-fdas');
-		echo $this->_printOptions($data['options_sh'], $data['actual_options']);
+		echo $this->printOptions($data['options_sh'], $data['actual_options']);
 	}
 
 	/**
@@ -1807,7 +1807,7 @@ final class AVH_FDAS_Admin {
 		echo '<table>';
 		echo '<tbody>';
 		echo '<tr class="first">';
-		$data       = $this->_core->getData();
+		$data       = $this->core->getData();
 		$spam_count = $data['counters'];
 		krsort($spam_count);
 		$have_spam_count_data = false;
@@ -1842,9 +1842,9 @@ final class AVH_FDAS_Admin {
 		echo '</tbody></table></div>';
 		echo '<div class="versions">';
 		echo '<p>';
-		$use_sfs = $this->_core->getOptionElement('general', 'use_sfs');
-		$use_php = $this->_core->getOptionElement('general', 'use_php');
-		$use_sh  = $this->_core->getOptionElement('general', 'use_sh');
+		$use_sfs = $this->core->getOptionElement('general', 'use_sfs');
+		$use_php = $this->core->getOptionElement('general', 'use_php');
+		$use_sh  = $this->core->getOptionElement('general', 'use_sh');
 		if ($use_sfs || $use_php || $use_sh) {
 			echo __('Checking with ', 'avh-fdas');
 			echo($use_sfs ? '<span class="b">Stop Forum Spam</span>' : '');
@@ -1871,7 +1871,7 @@ final class AVH_FDAS_Admin {
 		echo '<div class="versions">';
 		echo '<p>';
 		echo 'IP caching is ';
-		if (0 == $this->_core->getOptionElement('general', 'useipcache')) {
+		if (0 == $this->core->getOptionElement('general', 'useipcache')) {
 			echo '<span class="b">disabled</span>';
 			echo '</p></div>';
 		} else {
@@ -1924,7 +1924,7 @@ final class AVH_FDAS_Admin {
 	 *
 	 */
 	public function metaboxWhiteList($data) {
-		echo $this->_printOptions($data['options_whitelist'], $data['actual_options']);
+		echo $this->printOptions($data['options_whitelist'], $data['actual_options']);
 	}
 
 	/**
@@ -1936,7 +1936,7 @@ final class AVH_FDAS_Admin {
 	 * @param int $delta
 	 *
 	 */
-	private function _AjaxIpcacheLogResponse($ip, $delta = - 1) {
+	private function ajaxIpcacheLogResponse($ip, $delta = - 1) {
 		$total    = array_key_exists("_total", $_POST) ? (int) $_POST['_total'] : false;
 		$per_page = array_key_exists("_per_page", $_POST) ? (int) $_POST['_per_page'] : false;
 		$page     = array_key_exists("_page", $_POST) ? (int) $_POST['_page'] : false;
@@ -1973,7 +1973,7 @@ final class AVH_FDAS_Admin {
 	 *
 	 * @param $msg string Error Message. Assumed to contain HTML and be sanitized.
 	 */
-	private function _comment_footer_die($msg) {
+	private function comment_footer_die($msg) {
 		echo "<div class='wrap'><p>$msg</p></div>";
 		die();
 	}
@@ -1986,18 +1986,18 @@ final class AVH_FDAS_Admin {
 	 *
 	 * @return string
 	 */
-	private function _displayIcon($icon) {
+	private function displayIcon($icon) {
 		return ('<div class="icon32" id="icon-' . $icon . '"><br/></div>');
 	}
 
 	/**
 	 * Display WP alert
 	 */
-	private function _displayMessage() {
-		if ($this->_message != '') {
-			$message        = $this->_message;
-			$status         = $this->_status;
-			$this->_message = $this->_status = ''; // Reset
+	private function displayMessage() {
+		if ($this->message != '') {
+			$message       = $this->message;
+			$status        = $this->status;
+			$this->message = $this->status = ''; // Reset
 		}
 		if (isset($message)) {
 			$status = ($status != '') ? $status : 'updated fade';
@@ -2015,7 +2015,7 @@ final class AVH_FDAS_Admin {
 	 * @param string $email
 	 * @param string $ip_addr
 	 */
-	private function _handleReportSpammer($username, $email, $ip_addr) {
+	private function handleReportSpammer($username, $email, $ip_addr) {
 		if ( ! empty($email)) {
 			$url  = 'http://www.stopforumspam.com/add.php';
 			$call = wp_remote_post($url,
@@ -2028,7 +2028,7 @@ final class AVH_FDAS_Admin {
 					                       'username' => $username,
 					                       'ip_addr'  => $ip_addr,
 					                       'email'    => $email,
-					                       'api_key'  => $this->_core->getOptionElement('sfs', 'sfsapikey')
+					                       'api_key'  => $this->core->getOptionElement('sfs', 'sfsapikey')
 				                       )
 			                       ));
 			if (is_wp_error($call) || 200 != $call['response']['code']) {
@@ -2040,7 +2040,7 @@ final class AVH_FDAS_Admin {
 				} else {
 					$message[] = $call['body'];
 				}
-				AVH_Common::sendMail($to, $subject, $message, $this->_settings->getSetting('mail_footer'));
+				AVH_Common::sendMail($to, $subject, $message, $this->settings->getSetting('mail_footer'));
 			}
 		}
 	}
@@ -2048,7 +2048,7 @@ final class AVH_FDAS_Admin {
 	/**
 	 * Display plugin Copyright
 	 */
-	private function _printAdminFooter() {
+	private function printAdminFooter() {
 		echo '<br class="clear" />';
 		echo '<p class="footer_avhfdas">';
 		printf('&copy; Copyright 2010-2013 <a href="http://blog.avirtualhome.com/" title="My Thoughts">Peter van der Does</a> | AVH First Defense Against Spam version %s',
@@ -2065,7 +2065,7 @@ final class AVH_FDAS_Admin {
 	 *
 	 * @return string
 	 */
-	private function _printOptions($option_data, $option_actual) {
+	private function printOptions($option_data, $option_actual) {
 		// Generate output
 		$output = '';
 		$output .= "\n" . '<table class="form-table avhfdas-options">' . "\n";
@@ -2200,11 +2200,11 @@ final class AVH_FDAS_Admin {
 	 * @param array $blacklist
 	 *
 	 */
-	private function _setBlacklistOption($blacklist) {
-		$data = $this->_core->getData();
+	private function setBlacklistOption($blacklist) {
+		$data = $this->core->getData();
 		natsort($blacklist);
 		$blacklist_formatted        = implode("\r\n", $blacklist);
 		$data['lists']['blacklist'] = $blacklist_formatted;
-		$this->_core->saveData($data);
+		$this->core->saveData($data);
 	}
 }

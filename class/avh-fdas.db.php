@@ -7,7 +7,7 @@
  * @copyright 2009
  */
 class AVH_FDAS_DB {
-	private $_query_vars;
+	private $query_vars;
 
 	/**
 	 * PHP5 Constructor
@@ -112,7 +112,7 @@ class AVH_FDAS_DB {
 	public function getIpCache($query_vars, $output = OBJECT) {
 		global $wpdb;
 
-		$defaults          = array(
+		$defaults         = array(
 			'ip'       => '',
 			'added'    => '',
 			'lastseen' => '',
@@ -124,8 +124,8 @@ class AVH_FDAS_DB {
 			'order'    => 'DESC',
 			'count'    => false
 		);
-		$this->_query_vars = wp_parse_args($query_vars, $defaults);
-		extract($this->_query_vars, EXTR_SKIP);
+		$this->query_vars = wp_parse_args($query_vars, $defaults);
+		extract($this->query_vars, EXTR_SKIP);
 
 		$order = ('ASC' == strtoupper($order)) ? 'ASC' : 'DESC';
 
@@ -174,7 +174,7 @@ class AVH_FDAS_DB {
 			$where .= $wpdb->prepare(' AND ip = %s', $ip);
 		}
 		if ('' !== $search) {
-			$where .= $this->_getSearchSql($search, array('ip'));
+			$where .= $this->getSearchSql($search, array('ip'));
 		}
 
 		$query = "SELECT $fields FROM $wpdb->avhfdasipcache $join WHERE $where ORDER BY $orderby $order $limits";
@@ -251,7 +251,7 @@ class AVH_FDAS_DB {
 		return $return;
 	}
 
-	private function _getSearchSql($string, $cols) {
+	private function getSearchSql($string, $cols) {
 		global $wpdb;
 		if (in_array('ip', $cols)) {
 			$ip = esc_sql(AVH_Common::getIp2long($string));

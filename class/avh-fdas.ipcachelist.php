@@ -11,31 +11,31 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 	 *
 	 * @var AVH_Class_registry
 	 */
-	private $_classes;
+	private $classes;
 	/**
 	 *
 	 * @var AVH_FDAS_Core
 	 */
-	private $_core;
+	private $core;
 	/**
 	 *
 	 * @var AVH_FDAS_DB
 	 */
-	private $_ipcachedb;
+	private $ipcachedb;
 	/**
 	 *
 	 * @var AVH_Settings_Registry
 	 */
-	private $_settings;
+	private $settings;
 
 	function __construct() {
 
 		// Get The Registry
-		$this->_settings = AVH_FDAS_Settings::getInstance();
-		$this->_classes  = AVH_FDAS_Classes::getInstance();
+		$this->settings = AVH_FDAS_Settings::getInstance();
+		$this->classes  = AVH_FDAS_Classes::getInstance();
 		// Initialize the plugin
-		$this->_core      = $this->_classes->load_class('Core', 'plugin', true);
-		$this->_ipcachedb = $this->_classes->load_class('DB', 'plugin', true);
+		$this->core      = $this->classes->load_class('Core', 'plugin', true);
+		$this->ipcachedb = $this->classes->load_class('DB', 'plugin', true);
 
 		$this->screen   = 'avh_f_d_a_s_page_avh_first_defense_against_spam_ip_cache_';
 		$default_status = get_user_option('avhfdas_ip_cache_list_last_view');
@@ -266,7 +266,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 		global $ip_status;
 
 		// $total_ips = $this->_ipcachedb->getIpCache(array ( 'count' => true, 'offset' => 0, 'number' => 0 ));
-		$num_ips      = $this->_ipcachedb->countIps();
+		$num_ips      = $this->ipcachedb->countIps();
 		$status_links = array();
 		$stati        = array(
 			'all'  => _nx_noop('All', 'All', 'ips'),
@@ -346,12 +346,12 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			'order'   => $order,
 		);
 
-		$_ips              = $this->_ipcachedb->getIpCache($args);
+		$_ips              = $this->ipcachedb->getIpCache($args);
 		$this->items       = array_slice($_ips, 0, $ips_per_page);
 		$this->extra_items = array_slice($_ips, $ips_per_page);
 
-		$total_ips = $this->_ipcachedb->getIpCache(array_merge($args,
-		                                                       array('count' => true, 'offset' => 0, 'number' => 0)));
+		$total_ips = $this->ipcachedb->getIpCache(array_merge($args,
+		                                                      array('count' => true, 'offset' => 0, 'number' => 0)));
 
 		$this->set_pagination_args(array('total_items' => $total_ips, 'per_page' => $ips_per_page));
 	}
