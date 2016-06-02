@@ -4,7 +4,7 @@ var theExtraList;
 
 function avhfdasIpCacheLog($) {
   var setIpCacheLogList;
-  setIpCacheLogList = function avhfasLogList() {
+  setIpCacheLogList = function avhfdasLogList() {
     var refillTheExtraList;
     var totalInput;
     var perPageInput;
