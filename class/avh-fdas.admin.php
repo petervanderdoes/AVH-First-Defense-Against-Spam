@@ -940,7 +940,7 @@ final class AVH_FDAS_Admin {
 		add_filter('plugin_action_links_' . AVH_FDAS_Define::PLUGIN_FILE, array($this, 'filterPluginActions'), 10, 2);
 		// If the version compare fails do not display the Upgrade notice.
 		if (version_compare(PHP_VERSION, '5.6', '<')) {
-			add_filter('transient_update_plugins', array($this, 'filterDisableUpgrade'));
+			add_filter('site_transient_update_plugins', array($this, 'filterDisableUpgrade'));
 		}
 		add_filter('set-screen-option', array($this, 'filterSetScreenOption'), 10, 3);
 	}
