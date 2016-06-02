@@ -8,11 +8,11 @@ if ( ! defined('AVH_FRAMEWORK')) {
  * Initialize the plugin
  */
 function avh_FDAS_init() {
-	$_settings = AVH_FDAS_Settings::getInstance();
-	$_settings->storeSetting('plugin_working_dir', pathinfo(__FILE__, PATHINFO_DIRNAME));
+	$settings = AVH_FDAS_Settings::getInstance();
+	$settings->storeSetting('plugin_working_dir', pathinfo(__FILE__, PATHINFO_DIRNAME));
 	// Admin
 	if (is_admin()) {
-		require_once($_settings->plugin_working_dir . '/class/avh-fdas.admin.php');
+		require_once($settings->plugin_working_dir . '/class/avh-fdas.admin.php');
 		$avhfdas_admin = new AVH_FDAS_Admin();
 		// Activation Hook
 		register_activation_hook(__FILE__,
@@ -27,7 +27,7 @@ function avh_FDAS_init() {
 			                           'deactivatePlugin'
 		                           ));
 	}
-	require_once($_settings->plugin_working_dir . '/class/avh-fdas.public.php');
+	require_once($settings->plugin_working_dir . '/class/avh-fdas.public.php');
 	new AVH_FDAS_Public();
 } // End avh_FDAS__init()
 add_action('plugins_loaded', 'avh_FDAS_init');

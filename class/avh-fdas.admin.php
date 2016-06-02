@@ -58,37 +58,37 @@ final class AVH_FDAS_Admin {
 		              AVH_FDAS_Define::MENU_SLUG,
 		              array($this, 'menuOverview'));
 		$this->hooks['avhfdas_menu_overview']  = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
-		                                                           'AVH First Defense Against Spam: ' .
-		                                                           __('Overview', 'avh-fdas'),
+		                                                          'AVH First Defense Against Spam: ' .
+		                                                          __('Overview', 'avh-fdas'),
 		                                                          __('Overview', 'avh-fdas'),
 		                                                          'avh_fdas_admin',
 		                                                          AVH_FDAS_Define::MENU_SLUG_OVERVIEW,
 		                                                          array($this, 'menuOverview'));
 		$this->hooks['avhfdas_menu_general']   = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
-		                                                           'AVH First Defense Against Spam:' .
-		                                                           __('General Options', 'avh-fdas'),
+		                                                          'AVH First Defense Against Spam:' .
+		                                                          __('General Options', 'avh-fdas'),
 		                                                          __('General Options', 'avh-fdas'),
 		                                                          'avh_fdas_admin',
 		                                                          AVH_FDAS_Define::MENU_SLUG_GENERAL,
 		                                                          array($this, 'menuGeneralOptions'));
 		$this->hooks['avhfdas_menu_3rd_party'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
-		                                                           'AVH First Defense Against Spam:' .
-		                                                           __('3rd Party Options', 'avh-fdas'),
+		                                                          'AVH First Defense Against Spam:' .
+		                                                          __('3rd Party Options', 'avh-fdas'),
 		                                                          __('3rd Party Options', 'avh-fdas'),
 		                                                          'avh_fdas_admin',
 		                                                          AVH_FDAS_Define::MENU_SLUG_3RD_PARTY,
 		                                                          array($this, 'menu3rdPartyOptions'));
 
 		$this->hooks['avhfdas_menu_ip_cache_log'] = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
-		                                                              'AVH First Defense Against Spam:' .
-		                                                              __('IP Cache Log', 'avh-fdas'),
+		                                                             'AVH First Defense Against Spam:' .
+		                                                             __('IP Cache Log', 'avh-fdas'),
 		                                                             __('IP Cache Log', 'avh-fdas'),
 		                                                             'avh_fdas_admin',
 		                                                             AVH_FDAS_Define::MENU_SLUG_IP_CACHE,
 		                                                             array($this, 'menuIpCacheLog'));
 		$this->hooks['avhfdas_menu_faq']          = add_submenu_page(AVH_FDAS_Define::MENU_SLUG,
-		                                                              'AVH First Defense Against Spam:' .
-		                                                              __('F.A.Q', 'avh-fdas'),
+		                                                             'AVH First Defense Against Spam:' .
+		                                                             __('F.A.Q', 'avh-fdas'),
 		                                                             __('F.A.Q', 'avh-fdas'),
 		                                                             'avh_fdas_admin',
 		                                                             AVH_FDAS_Define::MENU_SLUG_FAQ,
@@ -269,7 +269,7 @@ final class AVH_FDAS_Admin {
 			if ( ! $comment = get_comment($comment_id)) {
 				$this->comment_footer_die(__('Oops, no comment with this ID.') .
 				                          sprintf(' <a href="%s">' . __('Go back') . '</a>!',
-				                                   'edit-comments.php'));
+				                                  'edit-comments.php'));
 			}
 			if ( ! current_user_can('edit_post', $comment->comment_post_ID)) {
 				$this->comment_footer_die(__('You are not allowed to edit comments on this post.'));
@@ -281,10 +281,10 @@ final class AVH_FDAS_Admin {
 				if (is_object($ip_info) && 0 == $ip_info->spam) {
 					$comment_date = get_comment_date('Y-m-d H:i:s', $comment_id);
 					$this->db->updateIpCache(array(
-						                          'ip'       => $comment->comment_author_IP,
-						                          'spam'     => 1,
-						                          'lastseen' => $comment_date
-					                          ));
+						                         'ip'       => $comment->comment_author_IP,
+						                         'spam'     => 1,
+						                         'lastseen' => $comment_date
+					                         ));
 				}
 			}
 			if ($options['sfs']['sfsapikey'] != '' && ( ! empty($comment->comment_author_email))) {

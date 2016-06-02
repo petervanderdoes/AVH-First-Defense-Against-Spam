@@ -25,26 +25,26 @@
 if ( ! defined('AVH_FRAMEWORK')) {
 	define('AVH_FRAMEWORK', true);
 }
-$_dir      = dirname(__FILE__);
-$_basename = plugin_basename(__FILE__);
-require_once($_dir . '/libs/avh-registry.php');
-require_once($_dir . '/libs/avh-common.php');
-require_once($_dir . '/libs/avh-security.php');
-require_once($_dir . '/libs/avh-visitor.php');
-require_once($_dir . '/class/avh-fdas.registry.php');
-require_once($_dir . '/class/avh-fdas.define.php');
+$avhfdas_dir      = dirname(__FILE__);
+$avhfdas_basename = plugin_basename(__FILE__);
+require_once($avhfdas_dir . '/libs/avh-registry.php');
+require_once($avhfdas_dir . '/libs/avh-common.php');
+require_once($avhfdas_dir . '/libs/avh-security.php');
+require_once($avhfdas_dir . '/libs/avh-visitor.php');
+require_once($avhfdas_dir . '/class/avh-fdas.registry.php');
+require_once($avhfdas_dir . '/class/avh-fdas.define.php');
 
 if (AVH_Common::getWordpressVersion() >= 4.5) {
-	$_classes = AVH_FDAS_Classes::getInstance();
-	$_classes->setDir($_dir);
-	$_classes->setClassFilePrefix('avh-fdas.');
-	$_classes->setClassNamePrefix('AVH_FDAS_');
-	unset($_classes);
+	$classes = AVH_FDAS_Classes::getInstance();
+	$classes->setDir($avhfdas_dir);
+	$classes->setClassFilePrefix('avh-fdas.');
+	$classes->setClassNamePrefix('AVH_FDAS_');
+	unset($classes);
 
-	$_settings = AVH_FDAS_Settings::getInstance();
-	$_settings->storeSetting('plugin_dir', $_dir);
-	$_settings->storeSetting('plugin_basename', $_basename);
-	require($_dir . '/avh-fdas.client.php');
+	$settings = AVH_FDAS_Settings::getInstance();
+	$settings->storeSetting('plugin_dir', $avhfdas_dir);
+	$settings->storeSetting('plugin_basename', $avhfdas_basename);
+	require($avhfdas_dir . '/avh-fdas.client.php');
 } else {
 	add_action('activate_' . AVH_FDAS_Define::PLUGIN_FILE, 'avh_fdas_remove_plugin');
 }

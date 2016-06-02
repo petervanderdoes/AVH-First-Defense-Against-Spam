@@ -142,20 +142,20 @@ class AVH_FDAS_Core {
 		$this->settings->storeSetting('lang_dir', AVH_FDAS_Define::PLUGIN_PATH . '/lang/');
 		$this->settings->storeSetting('searchengines',
 		                              array(
-			                               '0'  => 'Undocumented',
-			                               '1'  => 'AltaVista',
-			                               '2'  => 'Ask',
-			                               '3'  => 'Baidu',
-			                               '4'  => 'Excite',
-			                               '5'  => 'Google',
-			                               '6'  => 'Looksmart',
-			                               '7'  => 'Lycos',
-			                               '8'  => 'MSN',
-			                               '9'  => 'Yahoo',
-			                               '10' => 'Cuil',
-			                               '11' => 'InfoSeek',
-			                               '12' => 'Miscellaneous'
-		                               ));
+			                              '0'  => 'Undocumented',
+			                              '1'  => 'AltaVista',
+			                              '2'  => 'Ask',
+			                              '3'  => 'Baidu',
+			                              '4'  => 'Excite',
+			                              '5'  => 'Google',
+			                              '6'  => 'Looksmart',
+			                              '7'  => 'Lycos',
+			                              '8'  => 'MSN',
+			                              '9'  => 'Yahoo',
+			                              '10' => 'Cuil',
+			                              '11' => 'InfoSeek',
+			                              '12' => 'Miscellaneous'
+		                              ));
 
 		$footer[] = '';
 		$footer[] = '--';
@@ -388,6 +388,25 @@ class AVH_FDAS_Core {
 	}
 
 	/**
+	 * Upgrade DB 23
+	 *
+	 * Change: Remove option to email Project Honey Pot info when Stop Forum Spam threshold is reached
+	 *
+	 * @param array $old_options
+	 * @param array $old_data
+	 *
+	 * @return array
+	 *
+	 */
+	private function _doUpgrade23($old_options, $old_data) {
+		$new_options = $old_options;
+		$new_data    = $old_data;
+		unset($new_options['general']['emailphp']);
+
+		return array($new_options, $new_data);
+	}
+
+	/**
 	 * Checks if running version is newer and do upgrades if necessary
 	 */
 	private function doUpgrade() {
@@ -501,6 +520,14 @@ class AVH_FDAS_Core {
 	}
 
 	/**
+	 * ****************************
+	 * *
+	 * Methods for variable: data *
+	 * *
+	 * ***************************
+	 */
+
+	/**
 	 * Upgrade to version 2.2
 	 *
 	 * @param $old_options
@@ -525,33 +552,6 @@ class AVH_FDAS_Core {
 		return array($new_options, $new_data);
 	}
 
-	/**
-	 * ****************************
-	 * *
-	 * Methods for variable: data *
-	 * *
-	 * ***************************
-	 */
-
-	/**
-	 * Upgrade DB 23
-	 *
-	 * Change: Remove option to email Project Honey Pot info when Stop Forum Spam threshold is reached
-	 *
-	 * @param array $old_options
-	 * @param array $old_data
-	 *
-	 * @return array
-	 *
-	 */
-	private function _doUpgrade23($old_options, $old_data) {
-		$new_options = $old_options;
-		$new_data    = $old_data;
-		unset($new_options['general']['emailphp']);
-
-		return array($new_options, $new_data);
-	}
-
 	private function doUpgrade26($old_options, $old_data) {
 		global $wp_roles;
 		$new_options = $old_options;
@@ -560,14 +560,14 @@ class AVH_FDAS_Core {
 			$wp_roles = new WP_Roles();
 		}
 
-		foreach ($wp_roles->roles as $role => $info) {
-			$_role = get_role($role);
-			if ($_role != null && $_role->has_cap('role_admin_avh_fdas')) {
-				$_role->remove_cap('role_admin_avh_fdas');
+		foreach ($wp_roles->roles as $wp_role => $info) {
+			$role = get_role($wp_role);
+			if ($role != null && $role->has_cap('role_admin_avh_fdas')) {
+				$role->remove_cap('role_admin_avh_fdas');
 			}
-			if ($_role != null && $_role->has_cap('role_avh_fdas')) {
-				$_role->remove_cap('role_avh_fdas');
-				$_role->add_cap('avh_fdas_admin');
+			if ($role != null && $role->has_cap('role_avh_fdas')) {
+				$role->remove_cap('role_avh_fdas');
+				$role->add_cap('avh_fdas_admin');
 			}
 		}
 

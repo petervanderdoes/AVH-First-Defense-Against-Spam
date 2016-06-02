@@ -346,9 +346,9 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 			'order'   => $order,
 		);
 
-		$_ips              = $this->ipcachedb->getIpCache($args);
-		$this->items       = array_slice($_ips, 0, $ips_per_page);
-		$this->extra_items = array_slice($_ips, $ips_per_page);
+		$ips               = $this->ipcachedb->getIpCache($args);
+		$this->items       = array_slice($ips, 0, $ips_per_page);
+		$this->extra_items = array_slice($ips, $ips_per_page);
 
 		$total_ips = $this->ipcachedb->getIpCache(array_merge($args,
 		                                                      array('count' => true, 'offset' => 0, 'number' => 0)));

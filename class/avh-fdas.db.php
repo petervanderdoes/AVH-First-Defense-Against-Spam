@@ -78,34 +78,34 @@ class AVH_FDAS_DB {
 	/**
 	 * Get all the DB info of an IP
 	 *
-	 * @param        $_ip
-	 * @param string $_output
+	 * @param        $ip
+	 * @param string $output
 	 *
 	 * @return bool|object ip
 	 *
 	 */
-	public function getIP($_ip, $_output = OBJECT) {
+	public function getIP($ip, $output = OBJECT) {
 		global $wpdb;
-		$_ip = AVH_Common::getIp2long($_ip);
+		$ip = AVH_Common::getIp2long($ip);
 
 		// Query database
-		$_result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %s", $_ip));
+		$row = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->avhfdasipcache WHERE ip = %s", $ip));
 
-		if (null === $_result) {
+		if (null === $row) {
 			return false;
 		}
-		if ($_output == OBJECT) {
-			return $_result;
-		} elseif ($_output == ARRAY_A) {
-			$__result = get_object_vars($_result);
+		if ($output == OBJECT) {
+			return $row;
+		} elseif ($output == ARRAY_A) {
+			$row_array = get_object_vars($row);
 
-			return $__result;
-		} elseif ($_output == ARRAY_N) {
-			$__result = array_values(get_object_vars($_result));
+			return $row_array;
+		} elseif ($output == ARRAY_N) {
+			$row_array = array_values(get_object_vars($row));
 
-			return $__result;
+			return $row_array;
 		} else {
-			return $_result;
+			return $row;
 		}
 	}
 
@@ -183,19 +183,19 @@ class AVH_FDAS_DB {
 			return $wpdb->get_var($query);
 		}
 
-		$_ips = $wpdb->get_results($query);
+		$ips = $wpdb->get_results($query);
 		if ($output == OBJECT) {
-			return $_ips;
+			return $ips;
 		} elseif ($output == ARRAY_A) {
-			$_ips_array = get_object_vars($_ips);
+			$ips_array = get_object_vars($ips);
 
-			return $_ips_array;
+			return $ips_array;
 		} elseif ($output == ARRAY_N) {
-			$_ips_array = array_values(get_object_vars($_ips));
+			$ips_array = array_values(get_object_vars($ips));
 
-			return $_ips_array;
+			return $ips_array;
 		} else {
-			return $_ips;
+			return $ips;
 		}
 	}
 
@@ -237,11 +237,11 @@ class AVH_FDAS_DB {
 
 		$ip_cache_arr['ip'] = AVH_Common::getIp2long($ip_cache_arr['ip']);
 
-		$_ip = $this->getIP($ip_cache_arr['ip'], ARRAY_A);
+		$ip = $this->getIP($ip_cache_arr['ip'], ARRAY_A);
 
-		$_ip = esc_sql($_ip);
+		$ip = esc_sql($ip);
 
-		$ip_cache_arr = array_merge($_ip, $ip_cache_arr);
+		$ip_cache_arr = array_merge($ip, $ip_cache_arr);
 
 		extract(stripslashes_deep($ip_cache_arr), EXTR_SKIP);
 

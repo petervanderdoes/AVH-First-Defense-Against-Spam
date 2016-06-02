@@ -67,14 +67,14 @@ if ( ! class_exists('AVH_Common')) {
 		 * @return float
 		 */
 		public static function getWordpressVersion() {
-			static $_version = null;
-			if ( ! isset($_version)) {
+			static $wp_version = null;
+			if ( ! isset($wp_version)) {
 				// Include WordPress version
 				require(ABSPATH . WPINC . '/version.php');
-				$_version = (float) $wp_version;
+				$wp_version = (float) $wp_version;
 			}
 
-			return $_version;
+			return $wp_version;
 		}
 
 		/**
@@ -85,13 +85,13 @@ if ( ! class_exists('AVH_Common')) {
 		 * @return bool False if the version is lower than the given version.
 		 */
 		public static function isPHP($version = '5.0.0') {
-			static $_is_php = null;
+			static $is_php = null;
 			$version = (string) $version;
-			if ( ! isset($_is_php[ $version ])) {
-				$_is_php[ $version ] = (version_compare(PHP_VERSION, $version) < 0) ? false : true;
+			if ( ! isset($is_php[ $version ])) {
+				$is_php[ $version ] = (version_compare(PHP_VERSION, $version) < 0) ? false : true;
 			}
 
-			return $_is_php[ $version ];
+			return $is_php[ $version ];
 		}
 
 		/**

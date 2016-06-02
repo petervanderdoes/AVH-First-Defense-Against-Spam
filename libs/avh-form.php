@@ -80,46 +80,46 @@ if ( ! class_exists('AVH_Form')) {
 		}
 
 		public function settings_fields($action, $nonce) {
-			$_return = $this->hidden('action', $action);
-			$_return .= $this->nonce_field();
+			$return = $this->hidden('action', $action);
+			$return .= $this->nonce_field();
 
-			return $_return;
+			return $return;
 		}
 
-		public function text($label, $description, $name, $value = null, array $attributes = null) {
-			$_label = $this->getLabel($name, $label);
-			$_field = $this->getInput($name, $value, $attributes);
+		public function text($label_text, $description, $name, $value = null, array $attributes = null) {
+			$label = $this->getLabel($name, $label_text);
+			$input = $this->getInput($name, $value, $attributes);
 
-			return $this->getOutput($_label, $_field);
+			return $this->getOutput($label, $input);
 		}
 
-		public function checkboxes($label, $descripton, $name, array $options, array $attributes = null) {
-			$_label  = $this->getLabel($name, $label);
-			$_return = $this->getOutputLabel($_label);
-			$_field  = '';
+		public function checkboxes($label_text, $descripton, $name, array $options, array $attributes = null) {
+			$label       = $this->getLabel($name, $label_text);
+			$outputLabel = $this->getOutputLabel($label);
+			$field       = '';
 			foreach ($options as $value => $attr) {
-				$_checked = (isset($attr['checked']) ? $attr['checked'] : false);
-				$_field .= $this->getCheckbox($value, true, $_checked, $attributes);
-				$_field .= $this->getLabel($value, $attr['text']);
-				$_field .= '<br>';
+				$is_checked = (isset($attr['checked']) ? $attr['checked'] : false);
+				$field .= $this->getCheckbox($value, true, $is_checked, $attributes);
+				$field .= $this->getLabel($value, $attr['text']);
+				$field .= '<br>';
 			}
-			$_return .= $this->getOutputField($_field);
+			$outputLabel .= $this->getOutputField($field);
 
-			return $_return;
+			return $outputLabel;
 		}
 
 		public function select(
-			$label,
+			$label_text,
 			$description,
 			$name,
 			array $options = null,
 			$selected = null,
 			array $attributes = null
 		) {
-			$_label = $this->getLabel($name, $label);
-			$_field = $this->getSelect($name, $options, $selected, $attributes);
+			$label = $this->getLabel($name, $label_text);
+			$field = $this->getSelect($name, $options, $selected, $attributes);
 
-			return $this->getOutput($_label, $_field);
+			return $this->getOutput($label, $field);
 		}
 
 		/**
@@ -377,35 +377,35 @@ if ( ! class_exists('AVH_Form')) {
 						$group = array('label' => $value);
 
 						// Create a new list of options
-						$_options = array();
+						$new_options = array();
 
-						foreach ($name as $_value => $_name) {
+						foreach ($name as $name_key => $name_value) {
 							// Force value to be string
-							$_value = (string) $_value;
+							$name_key = (string) $name_key;
 
 							// Create a new attribute set for this option
-							$option = array('value' => $_value);
+							$option = array('value' => $name_key);
 
-							if (in_array($_value, $selected)) {
+							if (in_array($name_key, $selected)) {
 								// This option is selected
 								$option[] = 'selected';
 							}
 
 							// Change the option to the HTML string
-							$_options[] = '<option' .
-							              AVH_Common::attributes($option) .
-							              '>' .
-							              esc_html($name) .
-							              '</option>';
+							$new_options[] = '<option' .
+							                 AVH_Common::attributes($option) .
+							                 '>' .
+							                 esc_html($name) .
+							                 '</option>';
 						}
 
 						// Compile the options into a string
-						$_options = "\n" . implode("\n", $_options) . "\n";
+						$new_options = "\n" . implode("\n", $new_options) . "\n";
 
 						$options[ $value ] = '<optgroup' .
 						                     AVH_Common::attributes($group) .
 						                     '>' .
-						                     $_options .
+						                     $new_options .
 						                     '</optgroup>';
 					} else {
 						// Force value to be string
@@ -487,10 +487,10 @@ if ( ! class_exists('AVH_Form')) {
 		}
 
 		private function getOutput($label, $field) {
-			$_return = $this->getOutputLabel($label);
-			$_return .= $this->getOutputField($field);
+			$return = $this->getOutputLabel($label);
+			$return .= $this->getOutputField($field);
 
-			return $_return;
+			return $return;
 		}
 
 		private function getOutputLabel($label) {
@@ -524,8 +524,8 @@ if ( ! class_exists('AVH_Form')) {
 			return $this->option_name;
 		}
 
-		public function setNonce_action($_nonce) {
-			$this->nonce = $this->option_name . '-' . $_nonce;
+		public function setNonce_action($nonce) {
+			$this->nonce = $this->option_name . '-' . $nonce;
 		}
 
 		public function getNonce_action() {
