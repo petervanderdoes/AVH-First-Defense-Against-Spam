@@ -124,6 +124,9 @@ Starting with version 3.0 this plugin is for PHP5 only.
 Starting with version 4.0.0 PHP 5.6 will be required.
 
 == Changelog ==
+= Version 3.7.3-dev.1 =
+* Preparation for new development cycle.
+
 = Version 3.7.2 =
 * Clean up code
 * Starting with version 4.x PHP 5.6 will be required.
