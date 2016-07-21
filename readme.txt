@@ -2,9 +2,9 @@
 Contributors: petervanderdoes
 Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
-Requires at least: 2.8
-Tested up to: 4.0
-Stable tag: 3.7.1
+Requires at least: 4.5
+Tested up to: 4.5
+Stable tag: 3.7.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -121,8 +121,13 @@ You will have to sign up on their site, [http://www.projecthoneypot.org/create_a
 
 == Upgrade Notice ==
 Starting with version 3.0 this plugin is for PHP5 only.
+Starting with version 4.0.0 PHP 5.6 will be required.
 
 == Changelog ==
+= Version 3.7.2 =
+* Clean up code
+* Starting with version 4.x PHP 5.6 will be required.
+
 = Version 3.7.1 =
 * PHP 5.3 is dead, long live PHP 5.3
   Forgot people still run 5.3 which doesn't support shorthand for arrays.

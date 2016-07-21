@@ -1,0 +1,17 @@
+{
+  "extends": "airbnb-base/legacy",
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
+  "globals": {
+    "_": false,
+    "Backbone": false,
+    "jQuery": false,
+    "JSON": false,
+    "wp": false
+  },
+  "rules": {
+    "no-underscore-dangle": "off"
+  }
+}
