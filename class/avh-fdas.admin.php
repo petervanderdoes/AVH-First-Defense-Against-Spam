@@ -123,7 +123,7 @@ final class AVH_FDAS_Admin {
 			                  AVH_FDAS_Define::PLUGIN_VERSION,
 			                  'screen');
 		} else {
-			$js_ipcachelog_version = 'ef1dd23';
+			$js_ipcachelog_version = 'cbb45d0';
 			wp_register_script('avhfdas-ipcachelog-js',
 			                   $this->settings->js_url . '/avh-fdas.ipcachelog-' . $js_ipcachelog_version . '.js',
 			                   array('jquery'),
