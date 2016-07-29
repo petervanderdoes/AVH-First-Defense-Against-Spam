@@ -237,11 +237,11 @@ class AVH_FDAS_DB {
 
 		$ip_cache_arr['ip'] = AVH_Common::getIp2long($ip_cache_arr['ip']);
 
-		$ip = $this->getIP($ip_cache_arr['ip'], ARRAY_A);
+		$ip_data = $this->getIP($ip_cache_arr['ip'], ARRAY_A);
 
-		$ip = esc_sql($ip);
+		$ip_data = esc_sql($ip_data);
 
-		$ip_cache_arr = array_merge($ip, $ip_cache_arr);
+		$ip_cache_arr = array_merge($ip_data, $ip_cache_arr);
 
 		extract(stripslashes_deep($ip_cache_arr), EXTR_SKIP);
 
