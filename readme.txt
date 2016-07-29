@@ -124,7 +124,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 Starting with version 4.0.0 PHP 5.6 will be required.
 
 == Changelog ==
-= Version 3.7.3-dev.1 =
+= Version 3.7.3-rc.1 =
 * Missing buttons in the admin section.
 * MySQLi error.
 
