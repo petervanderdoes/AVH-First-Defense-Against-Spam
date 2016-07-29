@@ -125,7 +125,8 @@ Starting with version 4.0.0 PHP 5.6 will be required.
 
 == Changelog ==
 = Version 3.7.3-dev.1 =
-* Preparation for new development cycle.
+* Missing buttons in the admin section.
+* MySQLi error.
 
 = Version 3.7.2 =
 * Clean up code
