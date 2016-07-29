@@ -4,7 +4,7 @@ Donate link: http://blog.avirtualhome.com/wordpress-plugins/
 Tags: spam, block, blacklist, whitelist, comment, anti-spam, comments
 Requires at least: 4.5
 Tested up to: 4.5
-Stable tag: 3.7.2
+Stable tag: 3.7.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -124,7 +124,7 @@ Starting with version 3.0 this plugin is for PHP5 only.
 Starting with version 4.0.0 PHP 5.6 will be required.
 
 == Changelog ==
-= Version 3.7.3-rc.1 =
+= Version 3.7.3 =
 * Missing buttons in the admin section.
 * MySQLi error.
 
