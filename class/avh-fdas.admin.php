@@ -1184,7 +1184,7 @@ final class AVH_FDAS_Admin {
 		echo '			</div>';
 		echo '		</div>';
 		echo '	</div>'; // dashboard-widgets-wrap
-		echo '<p class="submit"><getInput class="button-primary" type="submit" name="updateoptions" value="' .
+		echo '<p class="submit"><input class="button-primary" type="submit" name="updateoptions" value="' .
 		     __('Save Changes',
 		        'avh-fdas') .
 		     '" /></p>';
@@ -1478,7 +1478,7 @@ final class AVH_FDAS_Admin {
 		echo '		</div>';
 		echo '<br class="clear"/>';
 		echo '	</div>'; // dashboard-widgets-wrap
-		echo '<p class="submit"><getInput	class="button-primary"	type="submit" name="updateoptions" value="' .
+		echo '<p class="submit"><input class="button-primary"	type="submit" name="updateoptions" value="' .
 		     __('Save Changes',
 		        'avh-fdas') .
 		     '" /></p>';
