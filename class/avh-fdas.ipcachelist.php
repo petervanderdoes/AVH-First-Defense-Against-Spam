@@ -178,7 +178,7 @@ class AVH_FDAS_IPCacheList extends WP_List_Table {
 
 		$this->display_tablenav('top');
 
-		echo '<table class="' . implode(' ', $this->get_table_classes()) . '" cellspacing="0">';
+		echo '<table class="wp-list-table ' . implode(' ', $this->get_table_classes()) . '" cellspacing="0">';
 		echo '<thead>';
 		echo '<tr>';
 		$this->print_column_headers();
